@@ -1,0 +1,16 @@
+apiVersion: v1
+description: Pairing peer answers for deeper learning through comparison
+keywords:
+  - compair
+  - acj
+  - peer learning
+  - education
+name: compair
+version: 0.1.0
+home: http://ubc.github.io/compair/
+sources:
+  - http://github.com/ubc/compair
+maintainers:
+  - name: Pan Luo
+    email: pan.luo@ubc.ca
+engine: gotpl

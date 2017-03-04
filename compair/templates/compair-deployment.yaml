@@ -1,0 +1,148 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-app
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        stage: {{ .Values.stage }}
+        tier: app
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        - name: DB_HOST
+          value: {{ template "fullname" . }}-db
+        - name: DB_PORT
+          value: {{ .Values.dbPort | quote }}
+        - name: DB_USERNAME
+          value: {{ .Values.dbUsername }}
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: mysql_password
+        - name: DB_NAME
+          value: {{ .Values.dbName }}
+        - name: CELERY_BROKER_URL
+          value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
+        - name: CAS_SERVER
+          value: {{ .Values.casServer }}
+        - name: CAS_LOGIN_ROUTE
+          value: {{ .Values.casLoginRoute }}
+        - name: CAS_LOGOUT_ROUTE
+          value: {{ .Values.casLogoutRoute }}
+        - name: CAS_VALIDATE_ROUTE
+          value: {{ .Values.casValidateRoute }}
+        - name: CAS_AFTER_LOGOUT
+          value: {{ .Values.casAfterLogout }}
+        - name: CAS_ATTRIBUTES_TO_STORE
+          value: {{ .Values.casAttributesToStore }}
+        - name: XAPI_ENABLED
+          value: {{ .Values.xapiEnabled | quote }}
+        - name: XAPI_APP_BASE_URL
+          value: {{ .Values.xapiAppBaseURL }}
+        - name: LRS_STATEMENT_ENDPOINT
+          value: {{ .Values.lrsStatementEndpoint }}
+        - name: LRS_USERNAME
+          value: {{ .Values.lrsUsername }}
+        - name: LRS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: lrs_password
+        - name: LRS_ACTOR_ACCOUNT_USE_CAS
+          value: {{ .Values.lrsActorAccountUseCas | quote }}
+        - name: LRS_ACTOR_ACCOUNT_CAS_IDENTIFIER
+          value: {{ .Values.lrsActorAccountCasIdentifier }}
+        - name: LRS_ACTOR_ACCOUNT_CAS_HOMEPAGE
+          value: {{ .Values.lrsActorAccountCasHomepage }}
+        - name: ASSET_LOCATION
+          value: {{ .Values.assetLocation }}
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: secret_key
+        - name: ENFORCE_SSL
+          value: {{ .Values.enforceSSL | quote }}
+        ports:
+        - containerPort: {{ .Values.app.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.app.service.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.app.service.internalPort }}
+      {{- if .Values.app.persistence.enabled }}
+        volumeMounts:
+        - name: {{ template "fullname" . }}-persistent-storage
+          mountPath: /code/persistent
+      volumes:
+      - name: {{ template "fullname" . }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-app-pvc
+      {{- end }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-app
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.externalPort }}
+      targetPort: {{ .Values.app.service.internalPort }}
+  selector:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+
+{{- if .Values.app.ingress.enabled }}
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: {{ .Values.app.ingress.class }}
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.app.ingress.host }}
+    secretName: {{ .Values.app.ingress.host | replace "." "-" }}-tls
+  rules:
+  - host: {{ .Values.app.ingress.host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "fullname" . }}-app
+          servicePort: {{ .Values.app.service.externalPort }}
+{{ end }}

@@ -1,0 +1,111 @@
+{{- if .Values.app.persistence.enabled }}
+  {{- if ne .Values.app.persistence.storageClass }}
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ template "fullname" . }}-app-pv
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    tier: filestore
+spec:
+  accessModes:
+    - {{ .Values.app.persistence.accessMode | quote }}
+  capacity:
+    storage: {{ .Values.app.persistence.size | quote }}
+{{ toYaml .Values.app.persistence.resources | indent 2 }}
+
+---
+  {{- end }}
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "fullname" . }}-app-pvc
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    tier: filestore
+  annotations:
+  {{- if .Values.app.persistence.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.app.persistence.storageClass | quote }}
+  {{- else }}
+    volume.alpha.kubernetes.io/storage-class: default
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.app.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.app.persistence.size | quote }}
+  {{- if ne .Values.app.persistence.storageClass }}
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: filestore
+  {{- end }}
+
+---
+{{- end }}
+
+{{- if .Values.db.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}-db-pvc
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    tier: mysql
+  annotations:
+  {{- if .Values.db.persistence.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.db.persistence.storageClass | quote }}
+  {{- else }}
+    volume.alpha.kubernetes.io/storage-class: default
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.db.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.db.persistence.size | quote }}
+
+---
+{{- end }}
+
+{{- if .Values.redis.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}-redis-pvc
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    tier: redis
+  annotations:
+  {{- if .Values.redis.persistence.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.redis.persistence.storageClass | quote }}
+  {{- else }}
+    volume.alpha.kubernetes.io/storage-class: default
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.redis.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.redis.persistence.size | quote }}
+{{- end }}

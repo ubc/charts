@@ -1,0 +1,89 @@
+# Default values for compair.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+stage: dev
+dbPort: "3306"
+dbName: compair
+dbUsername: compair
+dbPassword: PLEASE_CHANGE_ME
+celeryBrokerURL: redis://{{ template "fullname" . }}-redis:6379
+assetLocation: local
+enforceSSL: "0"
+cForceRoot: "1"
+
+# CAS settings
+casServer: https://cas.example.com
+casLoginRoute: /cas/login
+casLogoutRoute: /cas/logout
+casValidateRoute: /cas/serviceValidate
+casAfterLogout: https://compair.example.com/
+casAttributesToStore: "(uid)"
+
+
+xapiEnabled: "false"
+xapiAppBaseURL: https://archive.org/services/purl/compair/ctlt/
+lrsStatementEndpoint: https://lrs.example.com/data/xAPI/
+lrsActorAccountUseCas: 1
+lrsActorAccountCasIdentifier: uid
+lrsActorAccountCasHomepage: http://www.example.com/
+lrsUsername: lrs
+lrsPassword: LRS_PASSWORD
+secretKey: LRS_RANDOM_KEY
+
+
+app:
+  replicaCount: 1
+  image:
+    repository: ubcctlt/compair-app
+    tag: latest
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: false
+    # auto provision
+    #storageClass: fast
+    #accessMode: ReadWriteOnce
+    #size: 10Gi
+    # NFS
+    #accessMode: ReadWriteMany
+    #resources:
+    #  nfs:
+    #    server: NSF_SERVER_IP
+    #    path: "/export/data/compair"
+  service:
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 3031
+  ingress:
+    enabled: true
+    class: nginx
+    host: compair.example.com
+
+worker:
+  replicaCount: 1
+  image:
+    repository: ubcctlt/compair-app
+    tag: latest
+    pullPolicy: IfNotPresent
+
+db:
+  image:
+    repository: mariadb
+    tag: 10.1
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: false
+    #storageClass: fast
+    #accessMode: ReadWriteOnce
+    #size: 8Gi
+redis:
+  image:
+    repository: redis
+    tag: 3.2.4
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: false
+    #storageClass: fast
+    #accessMode: ReadWriteOnce
+    #size: 1Gi
