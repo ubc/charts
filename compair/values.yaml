@@ -13,11 +13,7 @@ cForceRoot: "1"
 
 # CAS settings
 casServer: https://cas.example.com
-casLoginRoute: /cas/login
-casLogoutRoute: /cas/logout
-casValidateRoute: /cas/serviceValidate
-casAfterLogout: https://compair.example.com/
-casAttributesToStore: "(uid)"
+casAuthPrefix: /cas
 
 
 xapiEnabled: "false"
@@ -56,7 +52,7 @@ app:
   ingress:
     enabled: true
     class: nginx
-    host: compair.example.com
+    #host: compair.example.com
 
 worker:
   replicaCount: 1

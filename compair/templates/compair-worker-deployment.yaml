@@ -41,16 +41,8 @@ spec:
           value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
         - name: CAS_SERVER
           value: {{ .Values.casServer }}
-        - name: CAS_LOGIN_ROUTE
-          value: {{ .Values.casLoginRoute }}
-        - name: CAS_LOGOUT_ROUTE
-          value: {{ .Values.casLogoutRoute }}
-        - name: CAS_VALIDATE_ROUTE
-          value: {{ .Values.casValidateRoute }}
-        - name: CAS_AFTER_LOGOUT
-          value: {{ .Values.casAfterLogout }}
-        - name: CAS_ATTRIBUTES_TO_STORE
-          value: {{ .Values.casAttributesToStore }}
+        - name: CAS_AUTH_PREFIX
+          value: {{ .Values.casAuthPrefix }}
         - name: XAPI_ENABLED
           value: {{ .Values.xapiEnabled | quote }}
         - name: XAPI_APP_BASE_URL

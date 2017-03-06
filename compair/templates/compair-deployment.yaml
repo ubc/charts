@@ -40,16 +40,8 @@ spec:
           value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
         - name: CAS_SERVER
           value: {{ .Values.casServer }}
-        - name: CAS_LOGIN_ROUTE
-          value: {{ .Values.casLoginRoute }}
-        - name: CAS_LOGOUT_ROUTE
-          value: {{ .Values.casLogoutRoute }}
-        - name: CAS_VALIDATE_ROUTE
-          value: {{ .Values.casValidateRoute }}
-        - name: CAS_AFTER_LOGOUT
-          value: {{ .Values.casAfterLogout }}
-        - name: CAS_ATTRIBUTES_TO_STORE
-          value: {{ .Values.casAttributesToStore }}
+        - name: CAS_AUTH_PREFIX
+          value: {{ .Values.casAuthPrefix }}
         - name: XAPI_ENABLED
           value: {{ .Values.xapiEnabled | quote }}
         - name: XAPI_APP_BASE_URL
@@ -135,9 +127,15 @@ metadata:
 spec:
   tls:
   - hosts:
+    {{- if .Values.app.ingress.host }}
     - {{ .Values.app.ingress.host }}
-    secretName: {{ .Values.app.ingress.host | replace "." "-" }}-tls
+    {{- end }}
+    {{- if .Values.CI_ENVIRONMENT_HOSTNAME }}
+    - {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
+    {{- end }}
+    secretName: {{ .Values.app.ingress.host | default .Values.CI_ENVIRONMENT_HOSTNAME | replace "." "-" }}-tls
   rules:
+  {{- if .Values.app.ingress.host }}
   - host: {{ .Values.app.ingress.host }}
     http:
       paths:
@@ -145,4 +143,14 @@ spec:
         backend:
           serviceName: {{ template "fullname" . }}-app
           servicePort: {{ .Values.app.service.externalPort }}
+  {{- end }}
+  {{- if .Values.CI_ENVIRONMENT_HOSTNAME }}
+  - host: {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "fullname" . }}-app
+          servicePort: {{ .Values.app.service.externalPort }}
+  {{- end }}
 {{ end }}

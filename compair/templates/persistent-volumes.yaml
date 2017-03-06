@@ -1,5 +1,5 @@
 {{- if .Values.app.persistence.enabled }}
-  {{- if ne .Values.app.persistence.storageClass }}
+  {{- if not .Values.app.persistence.storageClass }}
 
 kind: PersistentVolume
 apiVersion: v1
@@ -36,8 +36,6 @@ metadata:
   annotations:
   {{- if .Values.app.persistence.storageClass }}
     volume.beta.kubernetes.io/storage-class: {{ .Values.app.persistence.storageClass | quote }}
-  {{- else }}
-    volume.alpha.kubernetes.io/storage-class: default
   {{- end }}
 spec:
   accessModes:
@@ -45,7 +43,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.app.persistence.size | quote }}
-  {{- if ne .Values.app.persistence.storageClass }}
+  {{- if not .Values.app.persistence.storageClass }}
   selector:
     matchLabels:
       app: {{ template "fullname" . }}
