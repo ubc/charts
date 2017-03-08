@@ -2,9 +2,9 @@ apiVersion: v1
 entries:
   compair:
   - apiVersion: v1
-    created: 2017-03-08T00:25:23.354336755-08:00
+    created: 2017-03-08T11:07:52.838079229-08:00
     description: Pairing peer answers for deeper learning through comparison
-    digest: bfade5fbe379037fd8da1f5c9f5adac9838f7f97e8425b4f293ef050aa1eb4e9
+    digest: 128615e509b0e92f67eb531924a967151db5c06193ea23bb0651603296bdd5a1
     engine: gotpl
     home: http://ubc.github.io/compair/
     keywords:
@@ -19,46 +19,6 @@ entries:
     sources:
     - http://github.com/ubc/compair
     urls:
-    - https://ubc.github.io/charts/compair-0.2.1.tgz
-    version: 0.2.1
-  - apiVersion: v1
-    created: 2017-03-08T00:25:23.354019383-08:00
-    description: Pairing peer answers for deeper learning through comparison
-    digest: 6fcb10749953a92bdc583999ba694879b96c8403de6a2c1d42c3e17300b4a33c
-    engine: gotpl
-    home: http://ubc.github.io/compair/
-    keywords:
-    - compair
-    - acj
-    - peer learning
-    - education
-    maintainers:
-    - email: pan.luo@ubc.ca
-      name: Pan Luo
-    name: compair
-    sources:
-    - http://github.com/ubc/compair
-    urls:
-    - https://ubc.github.io/charts/compair-0.2.0.tgz
-    version: 0.2.0
-  - apiVersion: v1
-    created: 2017-03-08T00:25:23.352403461-08:00
-    description: Pairing peer answers for deeper learning through comparison
-    digest: 8991aea35e0a402adf4fd5d081315452d879428b743003c18c7f1fd774a9eb75
-    engine: gotpl
-    home: http://ubc.github.io/compair/
-    keywords:
-    - compair
-    - acj
-    - peer learning
-    - education
-    maintainers:
-    - email: pan.luo@ubc.ca
-      name: Pan Luo
-    name: compair
-    sources:
-    - http://github.com/ubc/compair
-    urls:
-    - https://ubc.github.io/charts/compair-0.1.0.tgz
-    version: 0.1.0
-generated: 2017-03-08T00:25:23.351669064-08:00
+    - https://ubc.github.io/charts/compair-0.2.2.tgz
+    version: 0.2.2
+generated: 2017-03-08T11:07:52.837561352-08:00
