@@ -7,6 +7,19 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+  annotations:
+    pod.beta.kubernetes.io/init-containers: '[
+        {
+            "name": "init-db",
+            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
+            "command": ["sh", "-c", "python manage.py database create"]
+        },
+        {
+            "name": "upgrade-db",
+            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
+            "command": ["sh", "-c", "alembic upgrade head"]
+        }
+    ]'
 spec:
   replicas: {{ .Values.app.replicaCount }}
   strategy:
