@@ -20,6 +20,12 @@ spec:
       annotations:
         pod.beta.kubernetes.io/init-containers: '[
           {
+            "name": "wait-for-db-service",
+            "image": "busybox",
+            "command": ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"],
+            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
+          },
+          {
             "name": "init-db",
             "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
             "command": ["sh", "-c", "python manage.py database create"],
