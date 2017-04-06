@@ -28,7 +28,7 @@ spec:
           {
             "name": "init-db",
             "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
-            "command": ["sh", "-c", "python manage.py database create"],
+            "command": ["sh", "-c", "python manage.py database create {{ if .Values.demoInstance }}--sample_data{{ end }}"],
             "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}",
             "env": [
               {
@@ -149,6 +149,10 @@ spec:
               key: secret_key
         - name: ENFORCE_SSL
           value: {{ .Values.enforceSSL | quote }}
+        - name: DEMO_INSTALLATION
+          value: {{ .Values.demoInstance | quote }}
+        - name: CELERY_TIMEZONE
+          value: {{ .Values.celeryTimezone | quote }}
         ports:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:

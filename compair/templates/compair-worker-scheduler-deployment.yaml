@@ -1,14 +1,15 @@
+{{- if .Values.workerSchedulerEnabled }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-worker
+  name: {{ template "fullname" . }}-worker-scheduler
   labels:
     app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  replicas: {{ .Values.worker.replicaCount }}
+  replicas: 1
   strategy:
     type: Recreate
   template:
@@ -16,13 +17,13 @@ spec:
       labels:
         app: {{ template "fullname" . }}
         stage: {{ .Values.stage }}
-        tier: worker
+        tier: worker-scheduler
     spec:
       containers:
-      - name: {{ .Chart.Name }}-worker
+      - name: {{ .Chart.Name }}-worker-scheduler
         image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
         imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
-        command: ["celery", "worker", "--app=celery_worker.celery"]
+        command: ["celery", "beat", "--app=celery_worker.celery"]
         env:
         - name: DB_HOST
           value: {{ template "fullname" . }}-db
@@ -77,12 +78,4 @@ spec:
           value: {{ .Values.demoInstance | quote }}
         - name: CELERY_TIMEZONE
           value: {{ .Values.celeryTimezone | quote }}
-      {{- if .Values.app.persistence.enabled }}
-        volumeMounts:
-        - name: {{ template "fullname" . }}-persistent-storage
-          mountPath: /code/persistent
-      volumes:
-      - name: {{ template "fullname" . }}-persistent-storage
-        persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-app-pvc
-      {{- end }}
+{{- end }}

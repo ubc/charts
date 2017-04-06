@@ -25,7 +25,9 @@ lrsActorAccountCasHomepage: http://www.example.com/
 lrsUsername: lrs
 lrsPassword: LRS_PASSWORD
 secretKey: LRS_RANDOM_KEY
-
+workerSchedulerEnabled: false
+demoInstance: false
+celeryTimezone: America/Vancouver
 
 app:
   replicaCount: 1
