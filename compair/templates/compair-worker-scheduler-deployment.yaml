@@ -8,6 +8,13 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
 spec:
   replicas: 1
   strategy:
@@ -18,6 +25,13 @@ spec:
         app: {{ template "fullname" . }}
         stage: {{ .Values.stage }}
         tier: worker-scheduler
+        {{- if .Values.CI_PIPELINE_ID }}
+        autodeployed: "true"
+        pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+        {{- end }}
+        {{- if .Values.CI_BUILD_ID }}
+        build_id: "{{ .Values.CI_BUILD_ID }}"
+        {{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}-worker-scheduler

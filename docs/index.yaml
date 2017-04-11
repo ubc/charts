@@ -2,7 +2,27 @@ apiVersion: v1
 entries:
   compair:
   - apiVersion: v1
-    created: 2017-04-10T14:34:51.864885873-07:00
+    created: 2017-04-11T16:51:05.554056476-07:00
+    description: Pairing peer answers for deeper learning through comparison
+    digest: 65411f2abbc7668904d5a5db0da473613aea214d8d643dbd472c40d1e28cc234
+    engine: gotpl
+    home: http://ubc.github.io/compair/
+    keywords:
+    - compair
+    - acj
+    - peer learning
+    - education
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: compair
+    sources:
+    - http://github.com/ubc/compair
+    urls:
+    - https://ubc.github.io/charts/compair-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v1
+    created: 2017-04-11T16:51:05.553706546-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: f6d17cdd889005e58da18a41ef51247e6cb87090ee4c0696c49c523993ee2f37
     engine: gotpl
@@ -22,7 +42,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v1
-    created: 2017-04-10T14:34:51.86451101-07:00
+    created: 2017-04-11T16:51:05.553058165-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: dead70ba34189cf94e12590282a0765e67db4cb55ee34b643f1d902bc65c7411
     engine: gotpl
@@ -42,7 +62,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
-    created: 2017-04-10T14:34:51.863771214-07:00
+    created: 2017-04-11T16:51:05.552428434-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 128615e509b0e92f67eb531924a967151db5c06193ea23bb0651603296bdd5a1
     engine: gotpl
@@ -62,7 +82,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: 2017-04-10T14:34:51.863025096-07:00
+    created: 2017-04-11T16:51:05.551830153-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: bfade5fbe379037fd8da1f5c9f5adac9838f7f97e8425b4f293ef050aa1eb4e9
     engine: gotpl
@@ -82,7 +102,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: 2017-04-10T14:34:51.86150564-07:00
+    created: 2017-04-11T16:51:05.551046626-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 6fcb10749953a92bdc583999ba694879b96c8403de6a2c1d42c3e17300b4a33c
     engine: gotpl
@@ -102,7 +122,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: 2017-04-10T14:34:51.860942668-07:00
+    created: 2017-04-11T16:51:05.550138256-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 8991aea35e0a402adf4fd5d081315452d879428b743003c18c7f1fd774a9eb75
     engine: gotpl
@@ -121,4 +141,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/compair-0.1.0.tgz
     version: 0.1.0
-generated: 2017-04-10T14:34:51.860206792-07:00
+generated: 2017-04-11T16:51:05.549458226-07:00

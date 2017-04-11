@@ -17,6 +17,13 @@ spec:
         app: {{ template "fullname" . }}
         stage: {{ .Values.stage }}
         tier: app
+        {{- if .Values.CI_PIPELINE_ID }}
+        autodeployed: "true"
+        pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+        {{- end }}
+        {{- if .Values.CI_BUILD_ID }}
+        build_id: "{{ .Values.CI_BUILD_ID }}"
+        {{- end }}
       annotations:
         pod.beta.kubernetes.io/init-containers: '[
           {
@@ -183,6 +190,13 @@ metadata:
     app: {{ template "fullname" . }}
     stage: {{ .Values.stage }}
     tier: app
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
 spec:
   type: {{ .Values.app.service.type }}
   ports:
@@ -207,6 +221,13 @@ metadata:
     app: {{ template "fullname" . }}
     stage: {{ .Values.stage }}
     tier: app
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
 spec:
   tls:
   - hosts:
