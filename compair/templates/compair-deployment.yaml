@@ -7,6 +7,13 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
 spec:
   replicas: {{ .Values.app.replicaCount }}
   strategy:
@@ -17,13 +24,6 @@ spec:
         app: {{ template "fullname" . }}
         stage: {{ .Values.stage }}
         tier: app
-        {{- if .Values.CI_PIPELINE_ID }}
-        autodeployed: "true"
-        pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
-        {{- end }}
-        {{- if .Values.CI_BUILD_ID }}
-        build_id: "{{ .Values.CI_BUILD_ID }}"
-        {{- end }}
       annotations:
         pod.beta.kubernetes.io/init-containers: '[
           {
@@ -234,7 +234,9 @@ spec:
     {{- if .Values.app.ingress.host }}
     - {{ .Values.app.ingress.host }}
     {{- end }}
-    {{- if .Values.CI_ENVIRONMENT_HOSTNAME }}
+    {{ $ingress :=  or (.Values.app.ingress.host) "" }}
+    {{ $hostname := or (.Values.CI_ENVIRONMENT_HOSTNAME) "" }}
+    {{- if ne $hostname $ingress }}
     - {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
     {{- end }}
     secretName: {{ .Values.app.ingress.host | default .Values.CI_ENVIRONMENT_HOSTNAME | replace "." "-" }}-tls
@@ -248,7 +250,7 @@ spec:
           serviceName: {{ template "fullname" . }}-app
           servicePort: {{ .Values.app.service.externalPort }}
   {{- end }}
-  {{- if .Values.CI_ENVIRONMENT_HOSTNAME }}
+  {{- if ne $hostname $ingress }}
   - host: {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
     http:
       paths:
