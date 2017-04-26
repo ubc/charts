@@ -1,0 +1,166 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-app
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        stage: {{ .Values.stage }}
+        tier: app
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+          {
+            "name": "wait-for-db-service",
+            "image": "busybox",
+            "command": ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"],
+            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
+          },
+          {
+            "name": "init-db",
+            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
+            "command": ["sh", "-c", "rake alchemy:ubc RAILS_ENV=production"],
+            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
+          },
+          {
+            "name": "upgrade-db",
+            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
+            "command": ["sh", "-c", "rake db:migrate RAILS_ENV=production"],
+            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
+          }
+        ]'
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        - name: DB_HOST
+          value: {{ template "fullname" . }}-db
+        - name: DB_PORT
+          value: {{ .Values.dbPort | quote }}
+        - name: DB_USERNAME
+          value: {{ .Values.dbUsername }}
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: mysql_password
+        - name: DB_NAME
+          value: {{ .Values.dbName }}
+        ports:
+        - containerPort: {{ .Values.app.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.app.service.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.app.service.internalPort }}
+      {{- if .Values.app.persistence.enabled }}
+        volumeMounts:
+        - name: {{ template "fullname" . }}-persistent-storage
+          mountPath: /code/persistent
+      volumes:
+      - name: {{ template "fullname" . }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-app-pvc
+      {{- end }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-app
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.externalPort }}
+      targetPort: {{ .Values.app.service.internalPort }}
+  selector:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+
+{{- if .Values.app.ingress.enabled }}
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: {{ .Values.app.ingress.class }}
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  tls:
+  - hosts:
+    {{- if .Values.app.ingress.host }}
+    - {{ .Values.app.ingress.host }}
+    {{- end }}
+    {{ $ingress :=  or (.Values.app.ingress.host) "" }}
+    {{ $hostname := or (.Values.CI_ENVIRONMENT_HOSTNAME) "" }}
+    {{- if ne $hostname $ingress }}
+    - {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
+    {{- end }}
+    secretName: {{ .Values.app.ingress.host | default .Values.CI_ENVIRONMENT_HOSTNAME | replace "." "-" }}-tls
+  rules:
+  {{- if .Values.app.ingress.host }}
+  - host: {{ .Values.app.ingress.host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "fullname" . }}-app
+          servicePort: {{ .Values.app.service.externalPort }}
+  {{- end }}
+  {{- if ne $hostname $ingress }}
+  - host: {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "fullname" . }}-app
+          servicePort: {{ .Values.app.service.externalPort }}
+  {{- end }}
+{{ end }}

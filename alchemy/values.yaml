@@ -1,0 +1,46 @@
+# Default values for compair.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+stage: dev
+dbPort: "3306"
+dbName: alchemy
+dbUsername: alchemy
+dbPassword: PLEASE_CHANGE_ME
+
+app:
+  replicaCount: 1
+  image:
+    repository: ubcctlt/alchemy
+    tag: latest
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: false
+    # auto provision
+    #storageClass: fast
+    #accessMode: ReadWriteOnce
+    #size: 10Gi
+    # NFS
+    #accessMode: ReadWriteMany
+    #resources:
+    #  nfs:
+    #    server: NSF_SERVER_IP
+    #    path: "/export/data/alchemy"
+  service:
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 3031
+  ingress:
+    enabled: true
+    class: nginx
+    #host: alchemy.example.com
+
+db:
+  image:
+    repository: mariadb
+    tag: 10.1
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: false
+    #storageClass: fast
+    #accessMode: ReadWriteOnce
+    #size: 8Gi
