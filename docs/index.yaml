@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   alchemy:
   - apiVersion: v1
-    created: 2017-04-26T15:28:09.146230503-07:00
+    created: 2017-04-28T18:31:05.660302705-07:00
     description: Analytical Chemisty Learning Platform
     digest: c1485dee37da71d259e54536e68fdb357740c27d69e3e44f4002db1df4e784d7
     engine: gotpl
@@ -15,7 +15,7 @@ entries:
     version: 0.1.0
   compair:
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.250125717-07:00
+    created: 2017-04-28T18:31:05.666454731-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: c632a190ac357b998aacad4d1e3b344af1a6af26a759f37160332b37a523ad38
     engine: gotpl
@@ -35,7 +35,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.6.tgz
     version: 0.2.6
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.249785108-07:00
+    created: 2017-04-28T18:31:05.665529606-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 65411f2abbc7668904d5a5db0da473613aea214d8d643dbd472c40d1e28cc234
     engine: gotpl
@@ -55,7 +55,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.5.tgz
     version: 0.2.5
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.249446881-07:00
+    created: 2017-04-28T18:31:05.664738715-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: f6d17cdd889005e58da18a41ef51247e6cb87090ee4c0696c49c523993ee2f37
     engine: gotpl
@@ -75,7 +75,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.249110144-07:00
+    created: 2017-04-28T18:31:05.663885561-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: dead70ba34189cf94e12590282a0765e67db4cb55ee34b643f1d902bc65c7411
     engine: gotpl
@@ -95,7 +95,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.248803213-07:00
+    created: 2017-04-28T18:31:05.663087558-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 128615e509b0e92f67eb531924a967151db5c06193ea23bb0651603296bdd5a1
     engine: gotpl
@@ -115,7 +115,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.248476026-07:00
+    created: 2017-04-28T18:31:05.662354207-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: bfade5fbe379037fd8da1f5c9f5adac9838f7f97e8425b4f293ef050aa1eb4e9
     engine: gotpl
@@ -135,7 +135,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.247927031-07:00
+    created: 2017-04-28T18:31:05.661612209-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 6fcb10749953a92bdc583999ba694879b96c8403de6a2c1d42c3e17300b4a33c
     engine: gotpl
@@ -155,7 +155,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: 2017-04-12T16:54:08.247144087-07:00
+    created: 2017-04-28T18:31:05.661075254-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 8991aea35e0a402adf4fd5d081315452d879428b743003c18c7f1fd774a9eb75
     engine: gotpl
@@ -174,4 +174,21 @@ entries:
     urls:
     - https://ubc.github.io/charts/compair-0.1.0.tgz
     version: 0.1.0
-generated: 2017-04-12T16:54:08.246619209-07:00
+  patroni:
+  - created: 2017-04-28T18:31:05.666779654-07:00
+    description: 'Highly available elephant herd: HA PostgreSQL cluster.'
+    digest: 76d3d84269002ec39e72b31106f5160d431f1d94eb7ed1d23d8ca8108a03c858
+    home: https://github.com/zalando/patroni
+    maintainers:
+    - email: team-acid@zalando.de
+      name: Team ACID @ Zalando SE
+    - email: team-teapot@zalando.de
+      name: Team Teapot @ Zalando SE
+    name: patroni
+    sources:
+    - https://github.com/zalando/patroni
+    - https://github.com/zalando/spilo
+    urls:
+    - https://ubc.github.io/charts/patroni-0.2.0.tgz
+    version: 0.2.0
+generated: 2017-04-28T18:31:05.659573021-07:00
