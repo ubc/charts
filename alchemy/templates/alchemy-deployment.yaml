@@ -25,26 +25,50 @@ spec:
         stage: {{ .Values.stage }}
         tier: app
       annotations:
-        pod.beta.kubernetes.io/init-containers: '[
-          {
-            "name": "wait-for-db-service",
-            "image": "busybox",
-            "command": ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"],
-            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
-          },
-          {
-            "name": "init-db",
-            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
-            "command": ["sh", "-c", "rake alchemy:ubc RAILS_ENV=production"],
-            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
-          },
-          {
-            "name": "upgrade-db",
-            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
-            "command": ["sh", "-c", "rake db:migrate RAILS_ENV=production"],
-            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
-          }
-        ]'
+        pod.beta.kubernetes.io/init-containers: |-
+          [
+            {
+              "name": "wait-for-db-service",
+              "image": "busybox",
+              "command": ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"],
+              "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
+            },
+            {
+              "name": "init-db-and-migrate",
+              "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
+              "command": ["sh", "-c", "rake alchemy:ubc RAILS_ENV=production"],
+              "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}",
+              "env": [
+                {
+                  "name": "DB_HOST",
+                  "value": "{{ template "fullname" . }}-db"
+                },
+                {
+                  "name": "DB_PORT",
+                  "value": "{{ .Values.dbPort }}"
+                },
+                {
+                  "name": "DB_USERNAME",
+                  "value": "{{ .Values.dbUsername }}"
+                },
+                {
+                  "name": "DB_PASSWORD",
+                  "valueFrom":
+                  {
+                    "secretKeyRef":
+                      {
+                          "name": "{{ template "fullname" . }}",
+                          "key": "mysql_password"
+                      }
+                  }
+                },
+                {
+                  "name": "DB_NAME",
+                  "value": "{{ .Values.dbName }}"
+                }
+              ]
+            }
+          ]
     spec:
       containers:
       - name: {{ .Chart.Name }}
@@ -64,6 +88,8 @@ spec:
               key: mysql_password
         - name: DB_NAME
           value: {{ .Values.dbName }}
+        - name: RAILS_ENV
+          value: production
         ports:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:
@@ -77,7 +103,7 @@ spec:
       {{- if .Values.app.persistence.enabled }}
         volumeMounts:
         - name: {{ template "fullname" . }}-persistent-storage
-          mountPath: /code/persistent
+          mountPath: /src/public/system
       volumes:
       - name: {{ template "fullname" . }}-persistent-storage
         persistentVolumeClaim:

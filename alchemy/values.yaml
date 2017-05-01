@@ -28,7 +28,7 @@ app:
   service:
     type: ClusterIP
     externalPort: 80
-    internalPort: 3031
+    internalPort: 80
   ingress:
     enabled: true
     class: nginx
