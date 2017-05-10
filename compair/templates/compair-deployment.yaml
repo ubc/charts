@@ -164,11 +164,11 @@ spec:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:
           httpGet:
-            path: /
+            path: /app/
             port: {{ .Values.app.service.internalPort }}
         readinessProbe:
           httpGet:
-            path: /
+            path: /app/
             port: {{ .Values.app.service.internalPort }}
       {{- if .Values.app.persistence.enabled }}
         volumeMounts:

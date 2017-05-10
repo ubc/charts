@@ -29,7 +29,7 @@ spec:
       - name: {{ .Chart.Name }}-worker
         image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
         imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
-        command: ["celery", "worker", "--app=celery_worker.celery"]
+        command: ["celery", "worker", "--app=celery_worker.celery", "--loglevel=INFO"]
         env:
         - name: DB_HOST
           value: {{ template "fullname" . }}-db
