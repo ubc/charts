@@ -88,6 +88,14 @@ spec:
               key: mysql_password
         - name: DB_NAME
           value: {{ .Values.dbName }}
+        - name: APP_LOGIN_ENABLED
+          value: {{ .Values.appLoginEnabled | quote }}
+        - name: CAS_LOGIN_ENABLED
+          value: {{ .Values.casLoginEnabled | quote }}
+        - name: CAS_SERVER
+          value: {{ .Values.casServer }}
+        - name: CAS_SERVICE_VALIDATE_URL
+          value: {{ .Values.casServiceValidateUrl }}
         - name: RAILS_ENV
           value: production
         ports:

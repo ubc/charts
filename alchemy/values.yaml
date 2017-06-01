@@ -7,6 +7,10 @@ dbName: alchemy
 dbUsername: alchemy
 dbPassword: PLEASE_CHANGE_ME
 adminDefaultPassword: PLEASE_CHANGE_ME
+appLoginEnabled: true
+casLoginEnabled: false
+casServer: null
+casServiceValidateUrl: null
 
 app:
   replicaCount: 1
