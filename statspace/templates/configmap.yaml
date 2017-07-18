@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}-config
+  labels:
+    chart: {{ print .Chart.Name "-" .Chart.Version | replace "+" "_" | quote }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+data:
+  dspace.cfg: |-
+{{ include "dspace.cfg" . | indent 4 }}

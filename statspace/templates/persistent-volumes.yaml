@@ -1,0 +1,54 @@
+{{- if .Values.persistence.enabled }}
+  {{- if not .Values.persistence.storageClass }}
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ template "fullname" . }}-app-pv
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    tier: filestore
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode | quote }}
+  capacity:
+    storage: {{ .Values.persistence.size | quote }}
+{{ toYaml .Values.persistence.resources | indent 2 }}
+
+---
+  {{- end }}
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "fullname" . }}-app-pvc
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    tier: filestore
+  annotations:
+  {{- if .Values.persistence.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.persistence.storageClass | quote }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{- if not .Values.persistence.storageClass }}
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: filestore
+  {{- end }}
+
+---
+{{- end }}

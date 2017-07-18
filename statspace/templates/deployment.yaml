@@ -1,0 +1,87 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: {{ print .Chart.Name "-" .Chart.Version | replace "+" "_" | quote }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        stage: {{ .Values.stage | quote }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum  }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        env:
+        - name: POSTGRES_DB_HOST
+          value: {{ .Values.dbHost | quote }}
+        - name: POSTGRES_DB_PORT
+          value: {{ .Values.dbPort | quote }}
+        - name: POSTGRES_SCHEMA
+          value: {{ .Values.dbName }}
+        - name: POSTGRES_USER
+          value: {{ .Values.dbUsername }}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: db_password
+        - name: POSTGRES_ADMIN_USER
+          value: {{ .Values.dbAdminUser }}
+        - name: POSTGRES_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: admin_password
+        volumeMounts:
+        {{- if .Values.persistence.enabled }}
+        - name: {{ template "fullname" . }}-persistent-storage
+          mountPath: /dspace/persistent
+        {{- end }}
+        - name: {{ template "fullname" . }}-config
+          mountPath: /statspace-config
+#        livenessProbe:
+#          httpGet:
+#            path: /
+#            port: {{ .Values.service.internalPort }}
+#        readinessProbe:
+#          httpGet:
+#            path: /
+#            port: {{ .Values.service.internalPort }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        # symbol link the config file as the file can't be project to config directory directly
+#        lifecycle:
+#          postStart:
+#            exec:
+#              command:
+#                - "sh"
+#                - "-c"
+#                - >
+#                  "ln -fs /statspace-config/dspace.cfg /dspace/config/dspace.cfg;
+#                  until nc -z localhost {{ .Values.service.internalPort }};
+#                  do
+#                    sleep 1;
+#                  done;
+#                  sleep 5;
+#                  dspace index-discovery"
+      volumes:
+      {{- if .Values.persistence.enabled }}
+      - name: {{ template "fullname" . }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-app-pvc
+      {{- end }}
+      - name: {{ template "fullname" . }}-config
+        configMap:
+          name: {{ template "fullname" . }}-config
+          items:
+            - key: dspace.cfg
+              path: dspace.cfg
