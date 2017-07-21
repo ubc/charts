@@ -22,20 +22,26 @@ spec:
         - containerPort: {{ .Values.service.internalPort }}
         env:
         - name: POSTGRES_DB_HOST
-          value: {{ .Values.dbHost | quote }}
+          value: {{ template "postgresql.fullname" . }}
         - name: POSTGRES_DB_PORT
-          value: {{ .Values.dbPort | quote }}
+          value: {{ .Values.postgresql.service.port | quote }}
         - name: POSTGRES_SCHEMA
-          value: {{ .Values.dbName }}
+          value: {{ .Values.postgresql.postgresDatabase | quote }}
         - name: POSTGRES_USER
-          value: {{ .Values.dbUsername }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: db_user
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: db_password
         - name: POSTGRES_ADMIN_USER
-          value: {{ .Values.dbAdminUser }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: admin_user
         - name: POSTGRES_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:

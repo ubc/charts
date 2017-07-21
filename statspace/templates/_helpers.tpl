@@ -11,6 +11,15 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname" -}}
-{{- $name := default .Release.Name .Values.nameOverride -}}
-{{- printf "%s" $name | trunc 63 | trimSuffix "-" -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified postgresql name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "postgresql.fullname" -}}
+{{- $name := printf "%s-%s" .Release.Name "postgresql" -}}
+{{- default $name .Values.postgresql.service.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
