@@ -5,18 +5,29 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}
+  annotations:
+  {{- $tls := false }}
+  {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
   labels:
     app: {{ template "fullname" . }}
     chart: {{ print .Chart.Name "-" .Chart.Version | replace "+" "_" | quote }}
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
-  annotations:
-    {{- range $key, $value := .Values.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
+    stage: {{ .Values.stage }}
+    tier: app
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
     {{- end }}
 spec:
   rules:
-    {{- range $host := .Values.ingress.hosts }}
+    {{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
+    {{- range $host := $hosts }}
     - host: {{ $host }}
       http:
         paths:
@@ -25,8 +36,15 @@ spec:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
     {{- end -}}
-  {{- if .Values.ingress.tls }}
+  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
   tls:
+    - secretName: {{ template "fullname" . }}-tls
+      hosts:
+      {{- range $host := $hosts }}
+        - {{ $host }}
+      {{- end -}}
+{{- if .Values.ingress.tls }}
 {{ toYaml .Values.ingress.tls | indent 4 }}
+{{- end }}
   {{- end -}}
 {{- end -}}
