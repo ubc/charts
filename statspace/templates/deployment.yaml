@@ -54,31 +54,35 @@ spec:
         {{- end }}
         - name: {{ template "fullname" . }}-config
           mountPath: /statspace-config
-#        livenessProbe:
-#          httpGet:
-#            path: /
-#            port: {{ .Values.service.internalPort }}
-#        readinessProbe:
-#          httpGet:
-#            path: /
-#            port: {{ .Values.service.internalPort }}
+        livenessProbe:
+          initialDelaySeconds: 240
+          periodSeconds: 10
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+        readinessProbe:
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         # symbol link the config file as the file can't be project to config directory directly
-#        lifecycle:
-#          postStart:
-#            exec:
-#              command:
-#                - "sh"
-#                - "-c"
-#                - >
-#                  "ln -fs /statspace-config/dspace.cfg /dspace/config/dspace.cfg;
-#                  until nc -z localhost {{ .Values.service.internalPort }};
-#                  do
-#                    sleep 1;
-#                  done;
-#                  sleep 5;
-#                  dspace index-discovery"
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - >
+                  ln -fs /statspace-config/dspace.cfg /dspace/config/dspace.cfg;
+                  until nc -z localhost {{ .Values.service.internalPort }};
+                  do
+                    sleep 1;
+                  done;
+                  sleep 5;
+                  dspace index-discovery
       volumes:
       {{- if .Values.persistence.enabled }}
       - name: {{ template "fullname" . }}-persistent-storage
