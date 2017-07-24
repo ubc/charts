@@ -22,7 +22,7 @@ spec:
         - containerPort: {{ .Values.service.internalPort }}
         env:
         - name: POSTGRES_DB_HOST
-          value: {{ template "postgresql.fullname" . }}
+          value: {{ template "postgresql.fullname" . | default .Values.postgresql.service.name }}
         - name: POSTGRES_DB_PORT
           value: {{ .Values.postgresql.service.port | quote }}
         - name: POSTGRES_SCHEMA

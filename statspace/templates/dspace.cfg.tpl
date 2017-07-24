@@ -28,16 +28,16 @@
 dspace.dir = /dspace
 
 # DSpace host name - should match base URL.  Do not include port number.
-dspace.hostname = localhost
+dspace.hostname = {{ index .Values.ingress.hosts 0 }}
 
 # DSpace base host URL.  Include port number etc.
-dspace.baseUrl = https://localhost
+dspace.baseUrl = https://{{ index .Values.ingress.hosts 0 }}
 
 # DSpace base URL.  Include port number etc., but NOT trailing slash
 # Change to xmlui if you wish to use the xmlui as the default, or remove
 # "/jspui" and set webapp of your choice as the "ROOT" webapp in
 # the servlet engine.
-dspace.url = https://statspaceverf.elearning.ubc.ca
+dspace.url = https://{{ index .Values.ingress.hosts 0 }}
 
 # Optional: DSpace URL for mobile access
 # This
@@ -52,14 +52,14 @@ default.language = en_US
 ##### Database settings #####
 
 # URL for connecting to database
-db.url = jdbc:postgresql://postgres-patroni:5432/statspace
+db.url = jdbc:postgresql://{{ template "postgresql.fullname" . | default .Values.postgresql.service.name }}:{{ .Values.postgresql.service.port }}/{{ .Values.postgresql.postgresDatabase }}
 
 # JDBC Driver
 db.driver = org.postgresql.Driver
 
 # Database username and password
-db.username = postgres
-db.password = 99bobotw
+db.username = {{ .Values.postgresql.dbUser }}
+db.password = {{ .Values.postgresql.dbPassword }}
 
 # Schema name - if your database contains multiple schemas, you can avoid
 # problems with retrieving the definitions of duplicate object names by
@@ -96,17 +96,17 @@ db.poolname = dspacepool
 ##### Email settings ######
 
 # SMTP mail server
-mail.server = smtp.interchange.ubc.ca
+mail.server = {{ .Values.dspace.email.host }}
 
 # SMTP mail server authentication username and password (if required)
-mail.server.username =
-mail.server.password =
+mail.server.username = {{ .Values.dspace.email.username }}
+mail.server.password = {{ .Values.dspace.email.password }}
 
 # SMTP mail server alternate port (defaults to 25)
-mail.server.port = 25
+mail.server.port = {{ .Values.dspace.email.port }}
 
 # From address for mail
-mail.from.address = lt.support@science.ubc.ca
+mail.from.address = {{ .Values.dspace.email.from }}
 
 # Name of a pre-configured Session object to be fetched from a directory.
 # This overrides the Session settings above.  If none can be found, then DSpace
@@ -114,16 +114,16 @@ mail.from.address = lt.support@science.ubc.ca
 #mail.session.name = Session
 
 # Currently limited to one recipient!
-feedback.recipient = pan.luo@ubc.ca
+feedback.recipient = {{ .Values.dspace.email.feedback }}
 
 # General site administration (Webmaster) e-mail
-mail.admin = pan.luo@ubc.ca
+mail.admin = {{ .Values.dspace.email.admin }}
 
 # Recipient for server errors and alerts
-alert.recipient = pan.luo@ubc.ca
+alert.recipient = {{ .Values.dspace.email.alert }}
 
 # Recipient for new user registration emails
-registration.notify = pan.luo@ubc.ca
+registration.notify = {{ .Values.dspace.email.registration }}
 
 # Set the default mail character set. This may be overridden by providing a line
 # inside the email template "charset: <encoding>", otherwise this default is used.
@@ -341,7 +341,7 @@ search.index.12 = language:dc.language.iso
 # in JSPUI's 'identifier' message on item record pages for existing items.
 #
 # If omitted, the canonical URL prefix will be http://hdl.handle.net/
-handle.canonical.prefix = https://statspaceverf.elearning.ubc.ca/handle/
+handle.canonical.prefix = https://{{ index .Values.ingress.hosts 0 }}/handle/
 
 # CNRI Handle prefix
 handle.prefix = 123456789
@@ -1504,11 +1504,11 @@ websvc.opensearch.autolink = true
 websvc.opensearch.validity = 48
 # short name used in browsers for search service
 # should be 16 or fewer characters
-websvc.opensearch.shortname = DSpace
+websvc.opensearch.shortname = {{ .Values.dspace.opensearch.shortname }}
 # longer (up to 48 characters) name
-websvc.opensearch.longname = UBC StatSpace
+websvc.opensearch.longname = {{ .Values.dspace.opensearch.longname }}
 # brief service description
-websvc.opensearch.description = UBC StatSpace DSpace repository
+websvc.opensearch.description = {{ .Values.dspace.opensearch.description }}
 # location of favicon for service, if any must be 16X16 pixels
 websvc.opensearch.faviconurl = http://www.dspace.org/images/favicon.ico
 # sample query - should return results

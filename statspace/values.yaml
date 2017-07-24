@@ -10,6 +10,12 @@ image:
   pullPolicy: Always
 persistence:
   enabled: false
+#  accessMode: ReadWriteOnce
+#  size: 10Gi
+#  resources:
+#    nfs:
+#      server: 10.1.1.1
+#      path: "/export/data/dspace"
 service:
   name: statspace
   type: ClusterIP
@@ -19,6 +25,7 @@ ingress:
   enabled: true
   # Used to create Ingress record (should used with service.type: ClusterIP).
   hosts:
+    # if there are multiple host names, first one will be the primary.
     - statspace.example.local
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -32,15 +39,29 @@ ingress:
 #    memory: 128Mi
 dspace:
   name: Dspace
+  email:
+    host: smtp.example.com
+    port: 25
+    username: ""
+    password: ""
+    from: admin@example.com
+    feedback: admin@example.com
+    admin: admin@example.com
+    alert: admin@example.com
+    registration: admin@example.com
+  opensearch:
+    shortname: Dspace
+    longname: Dspace
+    description: Dspace
 
 
 # database setup, https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 
 postgresql:
   # enable the build in Postgres database. Set to false to use external db.
-  enabled: true
   # If "enabled" is set to false, the values below still in effect and will
   # be used for external database
+  enabled: true
   # DB name and username has to be same, otherwise, migration script will throw error on startup.
   # admin password to be used to create postgres user and db
   postgresUser: postgres
@@ -51,7 +72,8 @@ postgresql:
   dbPassword: dspace
 
   service:
-    # service name of postgres. Chart will figure it out. When using 
-    # external db, this has to be set.
+    # service name of postgres. When postgres.enabled is set to true. This should be commented
+    # out as the service name will be set automatically as "postgresql.fullname".
+    # When using  external db, this has to be set.
     #name:
     port: 5432
