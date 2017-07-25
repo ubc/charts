@@ -17,6 +17,7 @@ spec:
     - {{ .Values.app.persistence.accessMode | quote }}
   capacity:
     storage: {{ .Values.app.persistence.size | quote }}
+  storageClassName: ""
 {{ toYaml .Values.app.persistence.resources | indent 2 }}
 
 ---
@@ -44,6 +45,7 @@ spec:
     requests:
       storage: {{ .Values.app.persistence.size | quote }}
   {{- if not .Values.app.persistence.storageClass }}
+  storageClassName: ""
   selector:
     matchLabels:
       app: {{ template "fullname" . }}
