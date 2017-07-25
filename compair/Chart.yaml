@@ -6,11 +6,13 @@ keywords:
   - peer learning
   - education
 name: compair
-version: 0.2.9
+version: 0.3.0
 home: http://ubc.github.io/compair/
 sources:
   - http://github.com/ubc/compair
 maintainers:
   - name: Pan Luo
     email: pan.luo@ubc.ca
+  - name: Andrew Gardener
+    email: andrew.gardener@ubc.ca
 engine: gotpl

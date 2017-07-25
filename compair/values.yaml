@@ -8,26 +8,52 @@ dbUsername: compair
 dbPassword: PLEASE_CHANGE_ME
 celeryBrokerURL: redis://{{ template "fullname" . }}-redis:6379
 assetLocation: local
-enforceSSL: "0"
-cForceRoot: "1"
-
-# CAS settings
-casServer: https://cas.example.com
-casAuthPrefix: /cas
-
-
-xapiEnabled: "false"
-xapiAppBaseURL: https://archive.org/services/purl/compair/ctlt/
-lrsStatementEndpoint: https://lrs.example.com/data/xAPI/
-lrsActorAccountUseCas: 1
-lrsActorAccountCasIdentifier: uid
-lrsActorAccountCasHomepage: http://www.example.com/
-lrsUsername: lrs
-lrsPassword: LRS_PASSWORD
+enforceSSL: true
+cForceRoot: true
+attachmentUploadLimit: 262144000 #1024 * 1024 * 250 -> max 250MB
 secretKey: LRS_RANDOM_KEY
 workerSchedulerEnabled: false
 demoInstance: false
 celeryTimezone: America/Vancouver
+appLoginEnabled: true
+
+# cas settings
+cas:
+  enabled: false
+  server: https://cas.example.com
+  authPrefix: /cas
+  useSAML: false
+
+# email notifications settings
+mail:
+  enabled: false
+  server: https://mail.example.com
+  port: "1025"
+  useSSL: true
+  useTLS: false
+  username: compair
+  password: PLEASE_CHANGE_ME
+  defaultSender: compair@example.com
+
+# kaltura media attachments settings
+kaltura:
+  enabled: false
+  serviceURL: https://kaltura.example.com
+  partnerId: "1234"
+  secret: PLEASE_CHANGE_ME
+  userId: "1234"
+  playerId: "1234"
+
+# xapi settings
+xapi:
+  enabled: false
+  appBaseURL: https://archive.org/services/purl/compair/ctlt/
+  lrsStatementEndpoint: https://lrs.example.com/data/xAPI/
+  lrsActorAccountUseCas: false
+  lrsActorAccountCasIdentifier: uid
+  lrsActorAccountCasHomepage: http://www.example.com/
+  lrsUsername: lrs
+  lrsPassword: LRS_PASSWORD
 
 app:
   replicaCount: 1

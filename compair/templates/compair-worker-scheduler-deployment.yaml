@@ -35,7 +35,7 @@ spec:
         - name: DB_HOST
           value: {{ template "fullname" . }}-db
         - name: DB_PORT
-          value: {{ .Values.dbPort | quote }}
+          value: {{ .Values.dbPort }}
         - name: DB_USERNAME
           value: {{ .Values.dbUsername }}
         - name: DB_PASSWORD
@@ -47,29 +47,41 @@ spec:
           value: {{ .Values.dbName }}
         - name: CELERY_BROKER_URL
           value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
+        - name: ATTACHMENT_UPLOAD_LIMIT
+          value: {{ .Values.attachmentUploadLimit | quote }}
+        - name: APP_LOGIN_ENABLED
+          value: {{ .Values.appLoginEnabled | quote }}
+        - name: CAS_ENABLED
+          value: {{ .Values.cas.enabled | quote }}
+        {{- if .Values.cas.enabled }}
         - name: CAS_SERVER
-          value: {{ .Values.casServer }}
+          value: {{ .Values.cas.server }}
         - name: CAS_AUTH_PREFIX
-          value: {{ .Values.casAuthPrefix }}
+          value: {{ .Values.cas.authPrefix }}
+        - name: CAS_USE_SAML
+          value: {{ .Values.cas.useSAML | quote }}
+        {{- end }}
         - name: XAPI_ENABLED
-          value: {{ .Values.xapiEnabled | quote }}
+          value: {{ .Values.xapi.enabled | quote }}
+        {{- if .Values.xapi.enabled }}
         - name: XAPI_APP_BASE_URL
-          value: {{ .Values.xapiAppBaseURL }}
+          value: {{ .Values.xapi.appBaseURL }}
         - name: LRS_STATEMENT_ENDPOINT
-          value: {{ .Values.lrsStatementEndpoint }}
+          value: {{ .Values.xapi.lrsStatementEndpoint }}
         - name: LRS_USERNAME
-          value: {{ .Values.lrsUsername }}
+          value: {{ .Values.xapi.lrsUsername }}
         - name: LRS_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: lrs_password
         - name: LRS_ACTOR_ACCOUNT_USE_CAS
-          value: {{ .Values.lrsActorAccountUseCas | quote }}
+          value: {{ .Values.xapi.lrsActorAccountUseCas | quote }}
         - name: LRS_ACTOR_ACCOUNT_CAS_IDENTIFIER
-          value: {{ .Values.lrsActorAccountCasIdentifier }}
+          value: {{ .Values.xapi.lrsActorAccountCasIdentifier }}
         - name: LRS_ACTOR_ACCOUNT_CAS_HOMEPAGE
-          value: {{ .Values.lrsActorAccountCasHomepage }}
+          value: {{ .Values.xapi.lrsActorAccountCasHomepage }}
+        {{- end }}
         - name: ASSET_LOCATION
           value: {{ .Values.assetLocation }}
         - name: SECRET_KEY
@@ -85,4 +97,44 @@ spec:
           value: {{ .Values.demoInstance | quote }}
         - name: CELERY_TIMEZONE
           value: {{ .Values.celeryTimezone | quote }}
+        - name: MAIL_NOTIFICATION_ENABLED
+          value: {{ .Values.mail.enabled | quote }}
+        {{- if .Values.mail.enabled }}
+        - name: MAIL_SERVER
+          value: {{ .Values.mail.server }}
+        - name: MAIL_PORT
+          value: {{ .Values.mail.port | quote }}
+        - name: MAIL_USE_SSL
+          value: {{ .Values.mail.useSSL | quote }}
+        - name: MAIL_USE_TLS
+          value: {{ .Values.mail.useTLS | quote }}
+        - name: MAIL_USERNAME
+          value: {{ .Values.mail.username }}
+        - name: MAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: mail_password
+        - name: MAIL_DEFAULT_SENDER
+          value: {{ .Values.mail.defaultSender }}
+        {{- end }}
+        - name: KALTURA_ENABLED
+          value: {{ .Values.kaltura.enabled | quote }}
+        {{- if .Values.mail.enabled }}
+        - name: KALTURA_SERVICE_URL
+          value: {{ .Values.kaltura.serviceURL }}
+        - name: KALTURA_PARTNER_ID
+          value: {{ .Values.kaltura.partnerId | quote }}
+        - name: KALTURA_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: kaltura_secret
+        - name: MAIL_DEFAULT_SENDER
+          value: {{ .Values.mail.defaultSender }}
+        - name: KALTURA_USER_ID
+          value: {{ .Values.kaltura.userId | quote }}
+        - name: KALTURA_PLAYER_ID
+          value: {{ .Values.kaltura.playerId | quote }}
+        {{- end }}
 {{- end }}
