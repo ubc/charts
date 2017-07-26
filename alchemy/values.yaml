@@ -11,6 +11,7 @@ appLoginEnabled: true
 casLoginEnabled: false
 casServer: null
 casServiceValidateUrl: null
+secret: PLEASE_CHANGE_ME
 
 app:
   replicaCount: 1
