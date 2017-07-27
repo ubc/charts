@@ -1,0 +1,40 @@
+{{- if .Values.ingress.enabled -}}
+{{- $serviceName := include "fullname" . -}}
+{{- $servicePort := .Values.service.externalPort -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}
+  annotations:
+  {{- $tls := false }}
+  {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: app
+spec:
+  rules:
+    {{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
+    {{- range $host := $hosts }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+    {{- end -}}
+  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
+  tls:
+    - secretName: {{ template "fullname" . }}-tls
+      hosts:
+      {{- range $host := $hosts }}
+        - {{ $host }}
+      {{- end -}}
+{{- if .Values.ingress.tls }}
+{{ toYaml .Values.ingress.tls | indent 4 }}
+{{- end }}
+  {{- end -}}
+{{- end -}}
+
