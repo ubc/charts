@@ -13,3 +13,41 @@ spec:
     name: {{ .Values.service.name }}
   selector:
     app: {{ template "fullname" . }}
+
+{{- if .Values.node_services.enabled }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-parsoid
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8142
+    targetPort: 8142
+    protocol: TCP
+    name: parsoid
+  selector:
+    app: {{ template "fullname" . }}-node-services
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-restbase
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 7231
+    targetPort: 7231
+    protocol: TCP
+    name: restbase
+  selector:
+    app: {{ template "fullname" . }}-node-services
+{{- end -}}

@@ -78,6 +78,20 @@ db:
     #name:
     port: 3306
 
+node_services:
+  enabled: true
+  image:
+    repository: ubcctlt/mediawiki-node-services
+    # tag: 
+  # imagePullPolicy:
+  replicas: 1
+  persistence:
+    enabled: false
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
 service:
   name: mediawiki
   type: ClusterIP

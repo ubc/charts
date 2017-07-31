@@ -65,6 +65,14 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: smtp_password
+        {{- if .Values.node_services.enabled }}
+        - name: PARSOID_URL
+          value: http://{{ template "fullname" . }}-parsoid:8142
+        - name: PARSOID_DOMAIN
+          value: localhost
+        - name: RESTBASE_URL
+          value: http://{{ template "fullname" . }}-restbase:7231
+        {{- end }}
         ports:
         - name: http
           containerPort: 80
@@ -72,7 +80,7 @@ spec:
           httpGet:
             path: /index.php/Main_Page
             port: http
-          initialDelaySeconds: 120
+          initialDelaySeconds: 60
         readinessProbe:
           httpGet:
             path: /index.php/Main_Page
@@ -91,3 +99,56 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
+
+{{- if .Values.node_services.enabled }}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-node-services
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: services
+spec:
+  replicas: {{ .Values.node_services.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}-node-services
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-node-services
+        image: '{{ .Values.node_services.image.repository }}:{{ .Values.node_services.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.node_services.imagePullPolicy | quote }}
+        env:
+        - name: MEDIAWIKI_API_URL
+          value: http://{{ template "fullname" . }}/w/api.php
+        ports:
+        - name: parsoid
+          containerPort: 8142
+        - name: restbase
+          containerPort: 7231
+        livenessProbe:
+          httpGet:
+            path: /
+            port: parsoid
+          initialDelaySeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: parsoid
+          initialDelaySeconds: 15
+        resources:
+{{ toYaml .Values.node_services.resources | indent 10 }}
+        volumeMounts:
+        - name: node-services-data
+          mountPath: /data
+      volumes:
+      - name: node-services-data
+      {{- if .Values.node_services.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-services-pvc
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+{{- end -}}
