@@ -69,11 +69,13 @@ spec:
           value: {{ .Values.xapi.lrsStatementEndpoint }}
         - name: LRS_USERNAME
           value: {{ .Values.xapi.lrsUsername }}
+        {{- if .Values.xapi.lrsPassword }}
         - name: LRS_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: lrs_password
+        {{- end }}
         - name: LRS_ACTOR_ACCOUNT_USE_CAS
           value: {{ .Values.xapi.lrsActorAccountUseCas | quote }}
         - name: LRS_ACTOR_ACCOUNT_CAS_IDENTIFIER
@@ -109,11 +111,13 @@ spec:
           value: {{ .Values.mail.useTLS | quote }}
         - name: MAIL_USERNAME
           value: {{ .Values.mail.username }}
+        {{- if .Values.mail.password }}
         - name: MAIL_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: mail_password
+        {{- end }}
         - name: MAIL_DEFAULT_SENDER
           value: {{ .Values.mail.defaultSender }}
         {{- end }}
@@ -124,11 +128,13 @@ spec:
           value: {{ .Values.kaltura.serviceURL }}
         - name: KALTURA_PARTNER_ID
           value: {{ .Values.kaltura.partnerId | quote }}
+        {{- if .Values.kaltura.secret }}
         - name: KALTURA_SECRET
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: kaltura_secret
+        {{- end }}
         - name: MAIL_DEFAULT_SENDER
           value: {{ .Values.mail.defaultSender }}
         - name: KALTURA_USER_ID
