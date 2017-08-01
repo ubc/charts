@@ -16,6 +16,7 @@ workerSchedulerEnabled: false
 demoInstance: false
 celeryTimezone: America/Vancouver
 appLoginEnabled: true
+ltiLoginEnabled: false
 
 # cas settings
 cas:

@@ -51,7 +51,9 @@ spec:
           value: {{ .Values.attachmentUploadLimit | quote }}
         - name: APP_LOGIN_ENABLED
           value: {{ .Values.appLoginEnabled | quote }}
-        - name: CAS_ENABLED
+        - name: LTI_LOGIN_ENABLED
+          value: {{ .Values.ltiLoginEnabled | quote }}
+        - name: CAS_LOGIN_ENABLED
           value: {{ .Values.cas.enabled | quote }}
         {{- if .Values.cas.enabled }}
         - name: CAS_SERVER
