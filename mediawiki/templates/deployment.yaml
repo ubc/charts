@@ -73,6 +73,25 @@ spec:
         - name: RESTBASE_URL
           value: http://{{ template "fullname" . }}-restbase:7231
         {{- end }}
+        {{- if .Values.ldap.enabled }}
+        - name: LDAP_DOMAIN
+          value: {{ .Values.ldap.domain }}
+        - name: LDAP_SERVER
+          value: {{ .Values.ldap.server }}
+        - name: LDAP_BASE_DN
+          value: {{ .Values.ldap.baseDn }}
+        - name: LDAP_SEARCH_STRINGS
+          value: {{ .Values.ldap.searchStrings }}
+        - name: LDAP_SEARCH_ATTRS
+          value: {{ .Values.ldap.searchAttrs }}
+        - name: LDAP_PROXY_AGENT
+          value: {{ .Values.ldap.proxyAgent }}
+        - name: LDAP_PROXY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: ldap_proxy_password
+        {{- end }}
         ports:
         - name: http
           containerPort: 80

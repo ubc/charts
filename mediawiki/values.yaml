@@ -92,6 +92,16 @@ node_services:
       memory: 256Mi
       cpu: 100m
 
+ldap:
+  enabled: false
+  domain: CWL
+  server: ldap
+  baseDN: dc=example,dc=com
+  searchStrings: cn=USER-NAME,dc=example,dc=com
+  searchAttrs: cn
+  proxyAgent: admin
+  proxyPassword: admin
+
 service:
   name: mediawiki
   type: ClusterIP
