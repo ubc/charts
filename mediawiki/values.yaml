@@ -36,6 +36,8 @@ mediawikiLang: en
 # Comma separated extension list
 mediawikiExts: ""
 
+mainCache: "CACHE_NONE"
+
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
 ##
@@ -101,6 +103,22 @@ ldap:
   searchAttrs: cn
   proxyAgent: admin
   proxyPassword: admin
+
+memcached:
+  # enable internal memcached deployment and services, set to false to 
+  # use external memcached cluster
+  enabled: false
+  # Amount of memory allocated, for internal memcached deployment only
+  memory: 64
+  image:
+    repository: memcached
+    tag: 1.5-alpine
+  # imagePullPolicy:
+  replicas: 1
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 50m
 
 service:
   name: mediawiki

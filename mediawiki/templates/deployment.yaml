@@ -92,6 +92,12 @@ spec:
               name: {{ template "fullname" . }}
               key: ldap_proxy_password
         {{- end }}
+        - name: MEDIAWIKI_MAIN_CACHE
+          value: {{ .Values.mainCache }}
+        {{- if .Values.memcached.enabled }}
+        - name: MEDIAWIKI_MEMCACHED_SERVERS
+          value: '["{{ template "fullname" . }}-memcached:11211"]'
+        {{- end }}
         ports:
         - name: http
           containerPort: 80
@@ -170,4 +176,39 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
+{{- end -}}
+
+
+{{- if .Values.memcached.enabled }}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-memcached
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: cache
+spec:
+  replicas: {{ .Values.memcached.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}-memcached
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-memcached
+        image: '{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.memcached.imagePullPolicy | quote }}
+        args: ["-m", "{{ .Values.memcached.memory }}"]
+        ports:
+        - name: memcached
+          containerPort: 11211
+        livenessProbe:
+          tcpSocket:
+            port: 11211
+        readinessProbe:
+          tcpSocket:
+            port: 11211
+        resources:
+{{ toYaml .Values.memcached.resources | indent 10 }}
 {{- end -}}
