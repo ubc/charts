@@ -32,18 +32,18 @@ spec:
         command: ["celery", "worker", "--app=celery_worker.celery", "--loglevel=INFO"]
         env:
         - name: DB_HOST
-          value: {{ template "fullname" . }}-db
+          value: "{{ template "fullname" . }}-db"
         - name: DB_PORT
-          value: {{ .Values.dbPort }}
+          value: {{ .Values.dbPort | quote }}
         - name: DB_USERNAME
-          value: {{ .Values.dbUsername }}
+          value: {{ .Values.dbUsername | quote }}
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: mysql_password
         - name: DB_NAME
-          value: {{ .Values.dbName }}
+          value: {{ .Values.dbName | quote }}
         - name: CELERY_BROKER_URL
           value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
         - name: ATTACHMENT_UPLOAD_LIMIT
@@ -56,9 +56,9 @@ spec:
           value: {{ .Values.cas.enabled | quote }}
         {{- if .Values.cas.enabled }}
         - name: CAS_SERVER
-          value: {{ .Values.cas.server }}
+          value: {{ .Values.cas.server | quote }}
         - name: CAS_AUTH_PREFIX
-          value: {{ .Values.cas.authPrefix }}
+          value: {{ .Values.cas.authPrefix | quote }}
         - name: CAS_USE_SAML
           value: {{ .Values.cas.useSAML | quote }}
         {{- end }}
@@ -66,11 +66,11 @@ spec:
           value: {{ .Values.xapi.enabled | quote }}
         {{- if .Values.xapi.enabled }}
         - name: XAPI_APP_BASE_URL
-          value: {{ .Values.xapi.appBaseURL }}
+          value: {{ .Values.xapi.appBaseURL | quote }}
         - name: LRS_STATEMENT_ENDPOINT
-          value: {{ .Values.xapi.lrsStatementEndpoint }}
+          value: {{ .Values.xapi.lrsStatementEndpoint | quote }}
         - name: LRS_USERNAME
-          value: {{ .Values.xapi.lrsUsername }}
+          value: {{ .Values.xapi.lrsUsername | quote }}
         {{- if .Values.xapi.lrsPassword }}
         - name: LRS_PASSWORD
           valueFrom:
@@ -81,12 +81,12 @@ spec:
         - name: LRS_ACTOR_ACCOUNT_USE_CAS
           value: {{ .Values.xapi.lrsActorAccountUseCas | quote }}
         - name: LRS_ACTOR_ACCOUNT_CAS_IDENTIFIER
-          value: {{ .Values.xapi.lrsActorAccountCasIdentifier }}
+          value: {{ .Values.xapi.lrsActorAccountCasIdentifier | quote }}
         - name: LRS_ACTOR_ACCOUNT_CAS_HOMEPAGE
-          value: {{ .Values.xapi.lrsActorAccountCasHomepage }}
+          value: {{ .Values.xapi.lrsActorAccountCasHomepage | quote }}
         {{- end }}
         - name: ASSET_LOCATION
-          value: {{ .Values.assetLocation }}
+          value: {{ .Values.assetLocation | quote }}
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
@@ -104,7 +104,7 @@ spec:
           value: {{ .Values.mail.enabled | quote }}
         {{- if .Values.mail.enabled }}
         - name: MAIL_SERVER
-          value: {{ .Values.mail.server }}
+          value: {{ .Values.mail.server | quote }}
         - name: MAIL_PORT
           value: {{ .Values.mail.port | quote }}
         - name: MAIL_USE_SSL
@@ -112,7 +112,7 @@ spec:
         - name: MAIL_USE_TLS
           value: {{ .Values.mail.useTLS | quote }}
         - name: MAIL_USERNAME
-          value: {{ .Values.mail.username }}
+          value: {{ .Values.mail.username | quote }}
         {{- if .Values.mail.password }}
         - name: MAIL_PASSWORD
           valueFrom:
@@ -121,13 +121,13 @@ spec:
               key: mail_password
         {{- end }}
         - name: MAIL_DEFAULT_SENDER
-          value: {{ .Values.mail.defaultSender }}
+          value: {{ .Values.mail.defaultSender | quote }}
         {{- end }}
         - name: KALTURA_ENABLED
           value: {{ .Values.kaltura.enabled | quote }}
         {{- if .Values.mail.enabled }}
         - name: KALTURA_SERVICE_URL
-          value: {{ .Values.kaltura.serviceURL }}
+          value: {{ .Values.kaltura.serviceURL | quote }}
         - name: KALTURA_PARTNER_ID
           value: {{ .Values.kaltura.partnerId | quote }}
         {{- if .Values.kaltura.secret }}
@@ -138,7 +138,7 @@ spec:
               key: kaltura_secret
         {{- end }}
         - name: MAIL_DEFAULT_SENDER
-          value: {{ .Values.mail.defaultSender }}
+          value: {{ .Values.mail.defaultSender | quote }}
         - name: KALTURA_USER_ID
           value: {{ .Values.kaltura.userId | quote }}
         - name: KALTURA_PLAYER_ID

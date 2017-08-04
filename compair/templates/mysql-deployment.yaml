@@ -35,9 +35,9 @@ spec:
               name: {{ template "fullname" . }}
               key: mysql_password
         - name: MYSQL_DATABASE
-          value: {{ .Values.dbName }}
+          value: {{ .Values.dbName | quote }}
         - name: MYSQL_USER
-          value: {{ .Values.dbUsername }}
+          value: {{ .Values.dbUsername | quote }}
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
