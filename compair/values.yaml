@@ -10,7 +10,7 @@ celeryBrokerURL: redis://{{ template "fullname" . }}-redis:6379
 assetLocation: local
 enforceSSL: true
 cForceRoot: true
-attachmentUploadLimit: 262144000 #1024 * 1024 * 250 -> max 250MB
+attachmentUploadLimit: "262144000" #1024 * 1024 * 250 -> max 250MB
 secretKey: LRS_RANDOM_KEY
 workerSchedulerEnabled: false
 demoInstance: false
