@@ -70,7 +70,7 @@ spec:
             cpu: "{{.Values.Resources.Cpu}}"
             memory: "{{.Values.Resources.Memory}}"
         volumeMounts:
-        - name: storage-volume
+        - name: pgdata
           mountPath: "{{ .Values.persistentVolume.mountPath }}"
           subPath: "{{ .Values.persistentVolume.subPath }}"
         - mountPath: /etc/patroni
@@ -83,7 +83,7 @@ spec:
 
   volumeClaimTemplates:
     - metadata:
-        name: storage-volume
+        name: pgdata
         annotations:
         {{- if .Values.persistentVolume.storageClass }}
           volume.beta.kubernetes.io/storage-class: "{{ .Values.persistentVolume.storageClass }}"
