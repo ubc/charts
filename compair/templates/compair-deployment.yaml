@@ -201,7 +201,7 @@ spec:
         {{- end }}
         - name: KALTURA_ENABLED
           value: {{ .Values.kaltura.enabled | quote }}
-        {{- if .Values.mail.enabled }}
+        {{- if .Values.kaltura.enabled }}
         - name: KALTURA_SERVICE_URL
           value: {{ .Values.kaltura.serviceURL | quote }}
         - name: KALTURA_PARTNER_ID
@@ -213,8 +213,6 @@ spec:
               name: {{ template "fullname" . }}
               key: kaltura_secret
         {{- end }}
-        - name: MAIL_DEFAULT_SENDER
-          value: {{ .Values.mail.defaultSender | quote }}
         - name: KALTURA_USER_ID
           value: {{ .Values.kaltura.userId | quote }}
         - name: KALTURA_PLAYER_ID
