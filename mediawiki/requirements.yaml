@@ -1,6 +1,6 @@
 dependencies:
 - name: mysql
-  version: 0.2.6
+  version: 0.2.8
   repository: https://kubernetes-charts.storage.googleapis.com/
   #  condition: db.mariadb
   alias: db
