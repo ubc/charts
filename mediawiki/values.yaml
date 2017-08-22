@@ -98,11 +98,12 @@ ldap:
   enabled: false
   domain: CWL
   server: ldap
-  baseDN: dc=example,dc=com
-  searchStrings: cn=USER-NAME,dc=example,dc=com
-  searchAttrs: cn
-  proxyAgent: admin
-  proxyPassword: admin
+  port: 389
+  baseDn: dc=example,dc=com
+  #searchStrings: cn=USER-NAME,dc=example,dc=com
+  #searchAttrs: cn
+  #proxyAgent: admin
+  #proxyPassword: admin
   debug: 0
   encryption: clear
 

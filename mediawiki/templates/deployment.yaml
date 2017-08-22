@@ -78,23 +78,33 @@ spec:
           value: {{ .Values.ldap.domain }}
         - name: LDAP_SERVER
           value: {{ .Values.ldap.server }}
+        - name: LDAP_PORT
+          value: {{ .Values.ldap.port | quote }}
         - name: LDAP_BASE_DN
           value: {{ .Values.ldap.baseDn }}
+        {{- if .Values.ldap.searchStrings }}
         - name: LDAP_SEARCH_STRINGS
           value: {{ .Values.ldap.searchStrings }}
+        {{- end }}
+        {{- if .Values.ldap.searchAttrs }}
         - name: LDAP_SEARCH_ATTRS
           value: {{ .Values.ldap.searchAttrs }}
+        {{- end }}
+        {{- if .Values.ldap.proxyAgent }}
         - name: LDAP_PROXY_AGENT
           value: {{ .Values.ldap.proxyAgent }}
+        {{- end }}
+        {{- if .Values.ldap.proxyPassword }}
         - name: LDAP_PROXY_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: ldap_proxy_password
+        {{- end }}
         - name: LDAP_DEBUG
           value: {{ .Values.ldap.debug | quote }}
         - name: LDAP_ENCRYPTION_TYPE
-          value: {{ .Values.ldap.entryption }}
+          value: {{ .Values.ldap.encryption }}
         {{- end }}
         - name: MEDIAWIKI_MAIN_CACHE
           value: {{ .Values.mainCache }}
