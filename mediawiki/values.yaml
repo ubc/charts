@@ -103,6 +103,8 @@ ldap:
   searchAttrs: cn
   proxyAgent: admin
   proxyPassword: admin
+  debug: 0
+  encryption: clear
 
 memcached:
   # enable internal memcached deployment and services, set to false to 

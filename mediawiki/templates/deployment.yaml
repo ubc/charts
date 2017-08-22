@@ -91,6 +91,10 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: ldap_proxy_password
+        - name: LDAP_DEBUG
+          value: {{ .Values.ldap.debug | quote }}
+        - name: LDAP_ENCRYPTION_TYPE
+          value: {{ .Values.ldap.entryption }}
         {{- end }}
         - name: MEDIAWIKI_MAIN_CACHE
           value: {{ .Values.mainCache }}
