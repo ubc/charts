@@ -47,6 +47,16 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: admin_password
+        - name: ADMIN_EMAIL
+          value: {{ .Values.adminEmail }}
+        - name: ADMIN_FIRSTNAME
+          value: {{ .Values.adminFirstName }}
+        - name: ADMIN_LASTNAME
+          value: {{ .Values.adminLastName }}
+        - name: ADMIN_PASSWORD
+          value: {{ .Values.adminPassword }}
+        - name: ADMIN_LANGUAGE
+          value: {{ .Values.adminLanguage }}
         volumeMounts:
         {{- if .Values.persistence.enabled }}
         - name: {{ template "fullname" . }}-persistent-storage

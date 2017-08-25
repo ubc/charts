@@ -4,6 +4,12 @@
 replicaCount: 1
 stage: dev
 
+adminEmail: admin@example.com
+adminFirstName: DSpace
+adminLastName: Admin
+adminPassword: admin123
+adminLanguage: en
+
 image:
   repository: ubcctlt/dspace
   tag: statspace
