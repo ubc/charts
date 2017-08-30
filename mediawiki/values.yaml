@@ -38,6 +38,8 @@ mediawikiExts: ""
 
 mainCache: "CACHE_NONE"
 
+apiPath: /w/api.php
+
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
 ##

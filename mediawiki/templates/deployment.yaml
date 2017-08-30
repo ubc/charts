@@ -161,7 +161,7 @@ spec:
         imagePullPolicy: {{ default "" .Values.node_services.imagePullPolicy | quote }}
         env:
         - name: MEDIAWIKI_API_URL
-          value: http://{{ template "fullname" . }}/w/api.php
+          value: http://{{ template "fullname" . }}{{ .Values.apiPath }}
         ports:
         - name: parsoid
           containerPort: 8142
