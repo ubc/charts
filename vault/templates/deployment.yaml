@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "vault.fullname" . }}
+  labels:
+    app: {{ template "vault.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "vault.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.vault.dev }}
+        command: ["vault", "server", "-dev", "-dev-listen-address", "[::]:8200"]
+        {{- else }}
+        command: ["vault", "server", "-config", "/vault/config/config.json", "-log-level", "{{ .Values.logLevel }}"]
+        {{- end }}
+        env:
+        # added below for vault ha setup
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: VAULT_CLUSTER_ADDR
+          value: http://$(POD_IP):8201
+        # added below for using in-container vault command, note the port is variable defined from value file
+        - name: VAULT_ADDR
+          value: http://127.0.0.1:8200
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.service.port }}
+        readinessProbe:
+          httpGet:
+            path: /v1/sys/health?standbyok=true
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          #tcpSocket:
+          #  port: {{ .Values.service.port }}
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            add:
+            - IPC_LOCK
+        volumeMounts:
+        - name: vault-config
+          mountPath: /vault/config/
+        - name: vault-root
+          mountPath: /root/
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      volumes:
+        - name: vault-config
+          configMap:
+            name: "{{ template "vault.fullname" . }}-config-{{ .Release.Revision }}"
+        - name: vault-root
+          emptyDir: {}
