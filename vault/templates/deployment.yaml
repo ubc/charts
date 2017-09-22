@@ -58,6 +58,10 @@ spec:
           mountPath: /vault/config/
         - name: vault-root
           mountPath: /root/
+        {{- if .Values.vault.logs.persist }}
+        - name: {{ template "vault.fullname" . }}-persistent-storage
+          mountPath: /vault/logs
+        {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
@@ -66,3 +70,58 @@ spec:
             name: "{{ template "vault.fullname" . }}-config-{{ .Release.Revision }}"
         - name: vault-root
           emptyDir: {}
+        {{- if .Values.vault.logs.persist }}
+        - name: {{ template "vault.fullname" . }}-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ template "vault.fullname" . }}-logs-{{ .Release.Revision }}
+        {{- end }}
+
+{{- if .Values.vault.logs.persist }}
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ template "vault.fullname" . }}-logs-{{ .Release.Revision }}
+  labels:
+    app: {{ template "vault.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - {{ .Values.vault.logs.accessMode | quote }}
+  capacity:
+    storage: {{ .Values.vault.logs.size | quote }}
+  storageClassName: ""
+{{ toYaml .Values.vault.logs.resources | indent 2 }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "vault.fullname" . }}-logs-{{ .Release.Revision }}
+  labels:
+    app: {{ template "vault.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+  {{- if .Values.vault.logs.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.app.persistence.storageClass | quote }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.vault.logs.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.vault.logs.size | quote }}
+  {{- if not .Values.vault.logs.storageClass }}
+  storageClassName: ""
+  selector:
+    matchLabels:
+      app: {{ template "vault.name" . }}
+      chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+  {{- end }}
+{{- end }}

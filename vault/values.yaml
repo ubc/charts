@@ -65,3 +65,9 @@ vault:
       #  access_key: ""
       #  secret_key: ""
       #  endpoint: "" # When not using AWS S3
+  logs:
+    persist: false
+    #storageClass: fast
+    accessMode: ReadWriteOnce
+    size: 2Gi
+
