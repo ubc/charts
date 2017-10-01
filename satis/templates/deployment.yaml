@@ -1,0 +1,143 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: 8080
+        env:
+        {{- if .Values.github.token }}
+        - name: GITHUB_TOKEN
+          value: {{ .Values.github.token }}
+        {{- end }}
+        - name: SATIS_GO_DB_PATH
+          value: /build/db
+        - name: SATIS_GO_REPOUI_PATH
+          value: /build/output
+        - name: SATIS_GO_REPO_NAME
+          value: {{ .Values.satisGo.repoName | quote }}
+        {{- if .Values.ingress.hosts }}
+        - name: SATIS_GO_REPO_HOST
+          value: "http://{{ index .Values.ingress.hosts 0 }}"
+        {{- end }}
+        {{- if .Values.git.sshKeyName }}
+        - name: GIT_SSH_COMMAND
+          value: 'ssh -i /ssh-keys/id_rsa -o StrictHostKeyChecking=no'
+        {{- end }}
+        volumeMounts:
+        - name: build
+          mountPath: /build
+        - name: satis-json
+          mountPath: /config
+        {{- if .Values.git.sshKeyName }}
+        - name: ssh-keys
+          mountPath: /ssh-keys
+          readOnly: true
+        {{- end}}
+      - name: nginx
+        image: "nginx:1.13-alpine"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        #command: ["sleep", "50"]
+        ports:
+          - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 120
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        volumeMounts:
+        - name: build
+          mountPath: /usr/share/nginx/html
+          subPath: output
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: satis-json
+          configMap:
+            name: "{{ template "fullname" . }}-config"
+            optional: true
+        {{- if .Values.persistent.enabled }}
+        - name: build
+          persistentVolumeClaim:
+            claimName: {{ template "fullname" . }}
+        {{- end }}
+        {{- if .Values.git.sshKeyName }}
+        - name: ssh-keys
+          secret:
+            secretName: {{ .Values.git.sshKeyName }}
+            defaultMode: 0400
+        {{- end}}
+
+{{- if .Values.persistent.enabled }}
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - {{ .Values.persistent.accessMode | quote }}
+  capacity:
+    storage: {{ .Values.persistent.size | quote }}
+  storageClassName: ""
+{{ toYaml .Values.persistent.resources | indent 2 }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+  {{- if .Values.persistent.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.persistent.storageClass | quote }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistent.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistent.size | quote }}
+  {{- if not .Values.persistent.storageClass }}
+  storageClassName: ""
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}
+      chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+  {{- end }}
+{{- end }}
