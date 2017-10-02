@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Dspace chart to deploy Statspace
 name: statspace
-version: 0.2.3
+version: 0.2.4

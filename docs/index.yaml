@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   alchemy:
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.724012293-07:00
+    created: 2017-10-02T00:56:51.86406245-07:00
     description: Analytical Chemisty Learning Platform
     digest: 15be5f746be6aea1256237fa6cee739ec62598ae2bf0a05d7ed046f3c42264cf
     engine: gotpl
@@ -14,7 +14,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.6.tgz
     version: 0.1.6
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.723554252-07:00
+    created: 2017-10-02T00:56:51.863625546-07:00
     description: Analytical Chemisty Learning Platform
     digest: 2c14e7103deb3b77710ab77a0ba01ee58b782d9868ec6a3c8db416b3bfbfe19b
     engine: gotpl
@@ -26,7 +26,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.5.tgz
     version: 0.1.5
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.723110057-07:00
+    created: 2017-10-02T00:56:51.863222255-07:00
     description: Analytical Chemisty Learning Platform
     digest: 0a0b5e6a824422647a3fecf6419949eadc270048b92d6f8ea4c830b503150f1d
     engine: gotpl
@@ -38,7 +38,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.4.tgz
     version: 0.1.4
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.722633127-07:00
+    created: 2017-10-02T00:56:51.862814947-07:00
     description: Analytical Chemisty Learning Platform
     digest: 97c4db7d00243d0416b88579dc442820ca6485317cbdd1dcb02f937e57146d4f
     engine: gotpl
@@ -50,7 +50,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.722188077-07:00
+    created: 2017-10-02T00:56:51.862398038-07:00
     description: Analytical Chemisty Learning Platform
     digest: 9333b8fb741112b9a5c5952f4eb44998b550de5e375ac388356b0abb8f8578e4
     engine: gotpl
@@ -62,7 +62,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.721759479-07:00
+    created: 2017-10-02T00:56:51.861959129-07:00
     description: Analytical Chemisty Learning Platform
     digest: fdccfd7519d579f82e7e03ed908d8516c94fc7b70a41dc4710bc102dc001679a
     engine: gotpl
@@ -74,7 +74,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.721299738-07:00
+    created: 2017-10-02T00:56:51.861495194-07:00
     description: Analytical Chemisty Learning Platform
     digest: c1485dee37da71d259e54536e68fdb357740c27d69e3e44f4002db1df4e784d7
     engine: gotpl
@@ -87,7 +87,7 @@ entries:
     version: 0.1.0
   compair:
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.73577554-07:00
+    created: 2017-10-02T00:56:51.876803987-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 8d50c94ffb8723e00978f41b182f7fd191b8024e3173d24e70c88b518b81acad
     engine: gotpl
@@ -109,7 +109,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.5.tgz
     version: 0.3.5
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.735054436-07:00
+    created: 2017-10-02T00:56:51.876140906-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 0d4a8048c4b7ee9d393052e61d5733a0bdaedcaa8f3cd4bb3f0553be13ae2110
     engine: gotpl
@@ -131,7 +131,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.4.tgz
     version: 0.3.4
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.734347465-07:00
+    created: 2017-10-02T00:56:51.875457286-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 1dae421f6cc7cedb93ac83f667f851c39fc144ee94ff716b4708ba9b4192ae85
     engine: gotpl
@@ -153,7 +153,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.3.tgz
     version: 0.3.3
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.733692323-07:00
+    created: 2017-10-02T00:56:51.874793882-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 1f040bad3ea52c2bd967e954daf3da262ec3135d5fb72459db51ca56bcb6d0c4
     engine: gotpl
@@ -175,7 +175,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.2.tgz
     version: 0.3.2
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.733045344-07:00
+    created: 2017-10-02T00:56:51.874091901-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 1e126a6a3ba52a560239ca9df0806cff7a734aefd03d4082c97567a134635417
     engine: gotpl
@@ -197,7 +197,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.732350309-07:00
+    created: 2017-10-02T00:56:51.873414206-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 3aef8cd004dff8c8e1cc0b6c7ed6b7112cf703a105bdc52a928df38ff78d0030
     engine: gotpl
@@ -219,7 +219,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.731690512-07:00
+    created: 2017-10-02T00:56:51.872730352-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: d8683c1eaae2eed405febf81cabd4bc2a7898f63a9248a132ca707a46f6233f5
     engine: gotpl
@@ -239,7 +239,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.9.tgz
     version: 0.2.9
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.731064824-07:00
+    created: 2017-10-02T00:56:51.872068132-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 31ed69424f6f45cb0a278a8e372ac05e23ebed78537e1311cb61222bc52e9a91
     engine: gotpl
@@ -259,7 +259,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.8.tgz
     version: 0.2.8
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.730432358-07:00
+    created: 2017-10-02T00:56:51.870055642-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: e9ac70af0e7abcb6117dff51d610e7f3059841460c522de54d00765d5d40edd9
     engine: gotpl
@@ -279,7 +279,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.7.tgz
     version: 0.2.7
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.729808229-07:00
+    created: 2017-10-02T00:56:51.86939622-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: c632a190ac357b998aacad4d1e3b344af1a6af26a759f37160332b37a523ad38
     engine: gotpl
@@ -299,7 +299,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.6.tgz
     version: 0.2.6
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.729016909-07:00
+    created: 2017-10-02T00:56:51.868727462-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 65411f2abbc7668904d5a5db0da473613aea214d8d643dbd472c40d1e28cc234
     engine: gotpl
@@ -319,7 +319,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.5.tgz
     version: 0.2.5
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.727853076-07:00
+    created: 2017-10-02T00:56:51.868041726-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: f6d17cdd889005e58da18a41ef51247e6cb87090ee4c0696c49c523993ee2f37
     engine: gotpl
@@ -339,7 +339,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.727124154-07:00
+    created: 2017-10-02T00:56:51.867278811-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: dead70ba34189cf94e12590282a0765e67db4cb55ee34b643f1d902bc65c7411
     engine: gotpl
@@ -359,7 +359,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.726447633-07:00
+    created: 2017-10-02T00:56:51.866583336-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 128615e509b0e92f67eb531924a967151db5c06193ea23bb0651603296bdd5a1
     engine: gotpl
@@ -379,7 +379,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.725788368-07:00
+    created: 2017-10-02T00:56:51.865871099-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: bfade5fbe379037fd8da1f5c9f5adac9838f7f97e8425b4f293ef050aa1eb4e9
     engine: gotpl
@@ -399,7 +399,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.725118968-07:00
+    created: 2017-10-02T00:56:51.86516198-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 6fcb10749953a92bdc583999ba694879b96c8403de6a2c1d42c3e17300b4a33c
     engine: gotpl
@@ -419,7 +419,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.724544208-07:00
+    created: 2017-10-02T00:56:51.864642733-07:00
     description: Pairing peer answers for deeper learning through comparison
     digest: 8991aea35e0a402adf4fd5d081315452d879428b743003c18c7f1fd774a9eb75
     engine: gotpl
@@ -440,7 +440,7 @@ entries:
     version: 0.1.0
   mediawiki:
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.746802515-07:00
+    created: 2017-10-02T00:56:51.887919676-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: b3e255696e3e7d066b02878b9b7554503deb377cee6b372f448899f06a5de106
@@ -461,7 +461,7 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.2.6.tgz
     version: 0.2.6
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.745875343-07:00
+    created: 2017-10-02T00:56:51.887003301-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: b1ffa858aac76b19b02284f5f5e8fca1b1874f1b10d56442e07afaa5fd8f6623
@@ -482,7 +482,7 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.2.5.tgz
     version: 0.2.5
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.744918304-07:00
+    created: 2017-10-02T00:56:51.886073458-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: 83ae081fd2b2cdda58094a8eac6eb0f8acb5c77fb43755d72a258c2379f2dd29
@@ -503,7 +503,7 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.2.4.tgz
     version: 0.2.4
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.743918998-07:00
+    created: 2017-10-02T00:56:51.884198522-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: 15c01aafb09f6976621b2119165887520b40e1bd41851b47f32660efa4f29516
@@ -524,7 +524,7 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.2.3.tgz
     version: 0.2.3
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.741633879-07:00
+    created: 2017-10-02T00:56:51.882707875-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: 15d35ffd2a609af04f091305f1a9351ea9c58402385e80a6d3b1ea7d1555e06b
@@ -545,7 +545,7 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.2.2.tgz
     version: 0.2.2
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.740170987-07:00
+    created: 2017-10-02T00:56:51.880989541-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: 44f8eeac698ad0e043e551ff3ecb54d272ccad494ffd0176790b2efc0d883d62
@@ -566,7 +566,7 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.2.1.tgz
     version: 0.2.1
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.738615069-07:00
+    created: 2017-10-02T00:56:51.879573914-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: 4b7a7f3a242db2906bd328de69e3588e233245c7d62f91362d65d8ed590e4cf1
@@ -587,7 +587,7 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.2.0.tgz
     version: 0.2.0
   - appVersion: 1.28.2
-    created: 2017-10-01T10:25:11.737201082-07:00
+    created: 2017-10-02T00:56:51.878140959-07:00
     description: Extremely powerful, scalable software and a feature-rich wiki implementation
       that uses PHP to process and display data stored in a database.
     digest: 0cd8caa8b4548314216e09bc08554b0bef94cbdf19f4a405b888bbb9fbb92224
@@ -609,7 +609,7 @@ entries:
     version: 0.1.0
   patroni:
   - appVersion: 1.0-p5
-    created: 2017-10-01T10:25:11.747841845-07:00
+    created: 2017-10-02T00:56:51.888966612-07:00
     description: 'Highly available elephant herd: HA PostgreSQL cluster.'
     digest: ee7bec02c36c6f00840e3b6fc21fc8ddf3cb349cb4f4564bcaf1b58104b617e0
     home: https://github.com/zalando/patroni
@@ -625,7 +625,7 @@ entries:
     urls:
     - https://ubc.github.io/charts/patroni-0.2.2.tgz
     version: 0.2.2
-  - created: 2017-10-01T10:25:11.747265636-07:00
+  - created: 2017-10-02T00:56:51.88837383-07:00
     description: 'Highly available elephant herd: HA PostgreSQL cluster.'
     digest: 76d3d84269002ec39e72b31106f5160d431f1d94eb7ed1d23d8ca8108a03c858
     home: https://github.com/zalando/patroni
@@ -643,7 +643,7 @@ entries:
     version: 0.2.0
   satis:
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.748087494-07:00
+    created: 2017-10-02T00:56:51.889371178-07:00
     description: Chart for Satis server
     digest: aab8db57833da084f92a26995330aae73d8f9bd727e22087d94b3444861e9af0
     name: satis
@@ -652,7 +652,15 @@ entries:
     version: 0.1.0
   statspace:
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.757328895-07:00
+    created: 2017-10-02T00:56:51.900119329-07:00
+    description: A Dspace chart to deploy Statspace
+    digest: bb6550712d3ae319fab41691e2f816e4a98baa8f556264e1755493c8401c481e
+    name: statspace
+    urls:
+    - https://ubc.github.io/charts/statspace-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v1
+    created: 2017-10-02T00:56:51.898440529-07:00
     description: A Dspace chart to deploy Statspace
     digest: 1f3c5749385d1013e5fb1211796883081a183f78699a32695a2ea17c9b9ea901
     name: statspace
@@ -660,7 +668,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.755337639-07:00
+    created: 2017-10-02T00:56:51.896561741-07:00
     description: A Dspace chart to deploy Statspace
     digest: f4d280a5e83db7ff3368451bd1074421d16924b707b5e90b3f3110136ab8d6a5
     name: statspace
@@ -668,7 +676,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.75347973-07:00
+    created: 2017-10-02T00:56:51.894678771-07:00
     description: A Dspace chart to deploy Statspace
     digest: 255b8f21baaf0f11989f8743aa1c4701ec1a3b84b6b035a3621ee8268122d819
     name: statspace
@@ -676,7 +684,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.751610814-07:00
+    created: 2017-10-02T00:56:51.892782304-07:00
     description: A Dspace chart to deploy Statspace
     digest: 243941c2d4862af51a91391730f01031485585f16cd3116d57fefbb29994025b
     name: statspace
@@ -684,7 +692,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: 2017-10-01T10:25:11.749651658-07:00
+    created: 2017-10-02T00:56:51.89097819-07:00
     description: A Dspace chart to deploy Statspace
     digest: 218affffe1267bdb6d67e34287abbc52248cee80b5e523c7c07818aef4cc7d4e
     name: statspace
@@ -694,7 +702,7 @@ entries:
   vault:
   - apiVersion: v1
     appVersion: 0.8.2
-    created: 2017-10-01T10:25:11.759410631-07:00
+    created: 2017-10-02T00:56:51.90150272-07:00
     description: A Helm chart for Vault, a tool for managing secrets
     digest: 444c429bd062795c21f1878f9fffc735d671a5daefed76591cad0a1ce6686b9e
     home: https://www.vaultproject.io/
@@ -711,7 +719,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: 0.8.2
-    created: 2017-10-01T10:25:11.757976461-07:00
+    created: 2017-10-02T00:56:51.900908101-07:00
     description: A Helm chart for Vault, a tool for managing secrets
     digest: bee6e072526bff38594eeddc053dbe42a2f39181573fc9d299e5da6050822323
     home: https://www.vaultproject.io/
@@ -726,4 +734,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/vault-0.1.0.tgz
     version: 0.1.0
-generated: 2017-10-01T10:25:11.720697107-07:00
+generated: 2017-10-02T00:56:51.86091354-07:00
