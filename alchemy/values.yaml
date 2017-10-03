@@ -51,6 +51,14 @@ app:
     class: nginx
     #host: alchemy.example.com
 
+worker:
+  replicaCount: 1
+  image:
+    repository: ubcctlt/alchemy
+    # should be passed through API variables
+    #tag: latest
+    pullPolicy: Always
+
 db:
   image:
     repository: mariadb
