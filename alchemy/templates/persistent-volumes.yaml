@@ -81,4 +81,31 @@ spec:
     requests:
       storage: {{ .Values.db.persistence.size | quote }}
 
+---
+{{- end }}
+
+{{- if .Values.redis.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}-redis-pvc
+  labels:
+    app: {{ template "fullname" . }}
+    stage: {{ .Values.stage }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    tier: redis
+  annotations:
+  {{- if .Values.redis.persistence.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.redis.persistence.storageClass | quote }}
+  {{- else }}
+    volume.alpha.kubernetes.io/storage-class: default
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.redis.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.redis.persistence.size | quote }}
 {{- end }}

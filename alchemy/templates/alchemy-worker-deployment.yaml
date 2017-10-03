@@ -1,0 +1,95 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-worker
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        stage: {{ .Values.stage }}
+        tier: worker
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-worker
+        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+        imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+        command: ["bundle", "exec", "sidekiq"]
+        env:
+        - name: DB_HOST
+          value: "{{ template "fullname" . }}-db"
+        - name: DB_PORT
+          value: {{ .Values.dbPort | quote }}
+        - name: DB_USERNAME
+          value: {{ .Values.dbUsername | quote }}
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: mysql_password
+        - name: DB_NAME
+          value: {{ .Values.dbName }}
+        - name: APP_LOGIN_ENABLED
+          value: {{ .Values.appLoginEnabled | quote }}
+        - name: CAS_LOGIN_ENABLED
+          value: {{ .Values.casLoginEnabled | quote }}
+        - name: CAS_SERVER
+          value: {{ .Values.casServer | quote  }}
+        - name: CAS_SERVICE_VALIDATE_URL
+          value: {{ .Values.casServiceValidateUrl | quote  }}
+        - name: SIDEKIQ_REDIS_URL
+          value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
+        - name: RAILS_ENV
+          value: production
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: rails_secret
+        - name: XAPI_ENABLED
+          value: {{ .Values.xapi.enabled | quote }}
+        {{- if .Values.xapi.enabled }}
+        - name: XAPI_APP_BASE_URL
+          value: {{ .Values.xapi.appBaseURL | quote }}
+        - name: LRS_STATEMENT_ENDPOINT
+          value: {{ .Values.xapi.lrsStatementEndpoint | quote }}
+        - name: LRS_USERNAME
+          value: {{ .Values.xapi.lrsUsername | quote }}
+        {{- if .Values.xapi.lrsPassword }}
+        - name: LRS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: lrs_password
+        {{- end }}
+        - name: LRS_ACTOR_ACCOUNT_USE_CAS
+          value: {{ .Values.xapi.lrsActorAccountUseCas | quote }}
+        - name: LRS_ACTOR_ACCOUNT_CAS_IDENTIFIER
+          value: {{ .Values.xapi.lrsActorAccountCasIdentifier | quote }}
+        - name: LRS_ACTOR_ACCOUNT_CAS_HOMEPAGE
+          value: {{ .Values.xapi.lrsActorAccountCasHomepage | quote }}
+        {{- end }}
+      {{- if .Values.app.persistence.enabled }}
+        volumeMounts:
+        - name: {{ template "fullname" . }}-persistent-storage
+          mountPath: /src/public/system
+      volumes:
+      - name: {{ template "fullname" . }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-app-pvc
+      {{- end }}

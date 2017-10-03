@@ -76,11 +76,11 @@ spec:
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
         - name: DB_HOST
-          value: {{ template "fullname" . }}-db
+          value: "{{ template "fullname" . }}-db"
         - name: DB_PORT
           value: {{ .Values.dbPort | quote }}
         - name: DB_USERNAME
-          value: {{ .Values.dbUsername }}
+          value: {{ .Values.dbUsername | quote }}
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -96,6 +96,8 @@ spec:
           value: {{ .Values.casServer }}
         - name: CAS_SERVICE_VALIDATE_URL
           value: {{ .Values.casServiceValidateUrl }}
+        - name: SIDEKIQ_REDIS_URL
+          value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
         - name: RAILS_ENV
           value: production
         - name: SECRET
@@ -103,6 +105,29 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: rails_secret
+        - name: XAPI_ENABLED
+          value: {{ .Values.xapi.enabled | quote }}
+        {{- if .Values.xapi.enabled }}
+        - name: XAPI_APP_BASE_URL
+          value: {{ .Values.xapi.appBaseURL | quote }}
+        - name: LRS_STATEMENT_ENDPOINT
+          value: {{ .Values.xapi.lrsStatementEndpoint | quote }}
+        - name: LRS_USERNAME
+          value: {{ .Values.xapi.lrsUsername | quote }}
+        {{- if .Values.xapi.lrsPassword }}
+        - name: LRS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: lrs_password
+        {{- end }}
+        - name: LRS_ACTOR_ACCOUNT_USE_CAS
+          value: {{ .Values.xapi.lrsActorAccountUseCas | quote }}
+        - name: LRS_ACTOR_ACCOUNT_CAS_IDENTIFIER
+          value: {{ .Values.xapi.lrsActorAccountCasIdentifier | quote }}
+        - name: LRS_ACTOR_ACCOUNT_CAS_HOMEPAGE
+          value: {{ .Values.xapi.lrsActorAccountCasHomepage | quote }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:

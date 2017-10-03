@@ -100,6 +100,7 @@ db:
     #storageClass: fast
     #accessMode: ReadWriteOnce
     #size: 8Gi
+
 redis:
   image:
     repository: redis
