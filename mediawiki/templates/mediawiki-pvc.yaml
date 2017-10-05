@@ -2,7 +2,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: {{ template "fullname" . }}-app-pv
+  name: {{ template "mediawiki.fullname" . }}-app-pv
   labels:
     {{- include "common_labels" . | indent 4 }}
     tier: filestore
@@ -19,7 +19,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "fullname" . }}-app-pvc
+  name: {{ template "mediawiki.fullname" . }}-app-pvc
   labels:
     {{- include "common_labels" . | indent 4 }}
     tier: filestore
@@ -32,7 +32,7 @@ spec:
   storageClassName: {{ .Values.persistence.storageClass | quote }}
   selector:
     matchLabels:
-      app: {{ template "fullname" . }}
+      app: {{ template "mediawiki.fullname" . }}
       stage: {{ .Values.stage }}
       tier: filestore
 {{- end -}}

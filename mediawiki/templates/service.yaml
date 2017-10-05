@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "mediawiki.fullname" . }}
   labels:
     {{- include "common_labels" . | indent 4 }}
 spec:
@@ -12,7 +12,7 @@ spec:
     protocol: TCP
     name: {{ .Values.service.name }}
   selector:
-    app: {{ template "fullname" . }}
+    app: {{ template "mediawiki.fullname" . }}
 
 {{- if .Values.node_services.enabled }}
 ---
@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}-parsoid
+  name: {{ template "mediawiki.fullname" . }}-parsoid
   labels:
     {{- include "common_labels" . | indent 4 }}
 spec:
@@ -31,14 +31,14 @@ spec:
     protocol: TCP
     name: parsoid
   selector:
-    app: {{ template "fullname" . }}-node-services
+    app: {{ template "mediawiki.fullname" . }}-node-services
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}-restbase
+  name: {{ template "mediawiki.fullname" . }}-restbase
   labels:
     {{- include "common_labels" . | indent 4 }}
 spec:
@@ -49,7 +49,7 @@ spec:
     protocol: TCP
     name: restbase
   selector:
-    app: {{ template "fullname" . }}-node-services
+    app: {{ template "mediawiki.fullname" . }}-node-services
 {{- end -}}
 
 {{- if .Values.memcached.enabled }}
@@ -58,7 +58,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}-memcached
+  name: {{ template "mediawiki.fullname" . }}-memcached
   labels:
     {{- include "common_labels" . | indent 4 }}
 spec:
@@ -69,5 +69,5 @@ spec:
     protocol: TCP
     name: memcached
   selector:
-    app: {{ template "fullname" . }}-memcached
+    app: {{ template "mediawiki.fullname" . }}-memcached
 {{- end -}}

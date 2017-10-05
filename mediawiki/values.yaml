@@ -161,3 +161,8 @@ resources:
   requests:
     memory: 512Mi
     cpu: 300m
+
+mediawikiFiles:
+  CustomSettings.php: |-
+    <?php ?>
+
