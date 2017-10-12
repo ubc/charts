@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      {{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: [
+            "--canvas.url={{ .Values.canvas.url }}",
+            "--canvas.token={{ .Values.canvas.token }}",
+            "--canvas.lti.key.consumer={{ .Values.canvas.ltiKeyConsumer }}",
+            "--canvas.lti.key.secret={{ .Values.canvas.ltiKeySecret }}",
+            "--ltps.v1.url={{ .Values.ltps.v1.url }}",
+            "--ltps.v1.username={{ .Values.ltps.v1.username }}",
+            "--ltps.v1.password={{ .Values.ltps.v1.password }}",
+            "--ltps.v2.url={{ .Values.ltps.v2.url }}",
+            "--ltps.v2.username={{ .Values.ltps.v2.username }}",
+            "--ltps.v2.password={{ .Values.ltps.v2.password }}"
+          ]
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          livenessProbe:
+            httpGet:
+              path: /application/status
+              port: {{ .Values.service.internalPort }}
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /application/status
+              port: {{ .Values.service.internalPort }}
+            initialDelaySeconds: 10
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
