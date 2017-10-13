@@ -24,6 +24,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args: [
+            "--logging.level.ca.ubc={{ .Values.logging.level }}",
             "--canvas.url={{ .Values.canvas.url }}",
             "--canvas.token={{ .Values.canvas.token }}",
             "--canvas.lti.key.consumer={{ .Values.canvas.ltiKeyConsumer }}",

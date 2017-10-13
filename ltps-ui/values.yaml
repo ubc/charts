@@ -37,6 +37,8 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
+logging:
+  level: INFO
 canvas:
   url: https://beta.instructure.com
   token:
