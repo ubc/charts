@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
   # pullSecret:
 service:
-  name: nginx
+  name: ltps-ui
   type: ClusterIP
   externalPort: 8280
   internalPort: 8280
