@@ -1,0 +1,42 @@
+{{- define "authentication-password.cfg" -}}
+#---------------------------------------------------------------#
+#----------PASSWORD AUTHENTICATION CONFIGURATIONS---------------#
+#---------------------------------------------------------------#
+# Configuration properties used by the Password                 #
+# Authentication plugin, when it is enabled.                    #
+#---------------------------------------------------------------#
+#
+# In order to enable Password Authentication, you must first ensure the
+# 'org.dspace.authenticate.PasswordAuthentication' class is added to the 
+# list of enabled AuthenticationMethods in 'authenticate.cfg'.  
+# See 'authenticate.cfg' for more info.
+#
+
+# Only emails ending in the following domains are allowed to self-register
+# Example - example.com domain : @example.com
+# Example - MIT domain and all .ac.uk domains: @mit.edu, .ac.uk
+{{- if .Values.dspace.auth.domainValid }}
+domain.valid = {{ .Values.dspace.auth.domainValid }}
+{{- end }}
+
+##### Password users group #####
+
+# If required, a group name can be given here, and all users who log in
+# using the DSpace password system will automatically become members of
+# this group. This is useful if you want a group made up of all internal
+# authenticated users.
+{{- if .Values.dspace.auth.loginGroup }}
+login.specialgroup = {{ .Values.dspace.auth.loginGroup }}
+{{- end }}
+
+##### Password hashing algorithm #####
+
+# You may select any digest algorithm available through 
+# java.security.MessageDigest on your system.  At least MD2, MD5, SHA-1, 
+# SHA-256, SHA-384, and SHA-512 should be available, but you may have 
+# installed others.  If not set, SHA-512 will be used.
+{{- if .Values.dspace.auth.digestAlgorithm }}
+digestAlgorithm = {{ .Values.dspace.auth.digestAlgorithm }}
+{{- end }}
+
+{{- end -}}

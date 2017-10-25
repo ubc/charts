@@ -9,3 +9,6 @@ metadata:
 data:
   dspace.cfg: |-
 {{ include "dspace.cfg" . | indent 4 }}
+
+  authentication-password.cfg: |-
+{{ include "authentication-password.cfg" . | indent 4 }}

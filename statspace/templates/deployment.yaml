@@ -87,6 +87,7 @@ spec:
                 - "-c"
                 - >
                   ln -fs /statspace-config/dspace.cfg /dspace/config/dspace.cfg;
+                  ln -fs /statspace-config/authentication-password.cfg /dspace/config/modules/authentication-password.cfg;
                   until nc -z localhost {{ .Values.service.internalPort }};
                   do
                     sleep 1;
@@ -105,3 +106,5 @@ spec:
           items:
             - key: dspace.cfg
               path: dspace.cfg
+            - key: authentication-password.cfg
+              path: authentication-password.cfg

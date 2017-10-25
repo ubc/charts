@@ -59,7 +59,11 @@ dspace:
     shortname: Dspace
     longname: Dspace
     description: Dspace
-
+  auth:
+    # password auth configs
+    domainValid:
+    loginGroup:
+    digestAlgorithm:
 
 # database setup, https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 
