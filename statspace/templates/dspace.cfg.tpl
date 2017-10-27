@@ -28,16 +28,17 @@
 dspace.dir = /dspace
 
 # DSpace host name - should match base URL.  Do not include port number.
-dspace.hostname = {{ index .Values.ingress.hosts 0 }}
+{{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
+dspace.hostname = {{ index $hosts 0 }}
 
 # DSpace base host URL.  Include port number etc.
-dspace.baseUrl = https://{{ index .Values.ingress.hosts 0 }}
+dspace.baseUrl = https://{{ index $hosts 0 }}
 
 # DSpace base URL.  Include port number etc., but NOT trailing slash
 # Change to xmlui if you wish to use the xmlui as the default, or remove
 # "/jspui" and set webapp of your choice as the "ROOT" webapp in
 # the servlet engine.
-dspace.url = https://{{ index .Values.ingress.hosts 0 }}
+dspace.url = https://{{ index $hosts 0 }}
 
 # Optional: DSpace URL for mobile access
 # This
@@ -341,7 +342,7 @@ search.index.12 = language:dc.language.iso
 # in JSPUI's 'identifier' message on item record pages for existing items.
 #
 # If omitted, the canonical URL prefix will be http://hdl.handle.net/
-handle.canonical.prefix = https://{{ index .Values.ingress.hosts 0 }}/handle/
+handle.canonical.prefix = https://{{ index $hosts 0 }}/handle/
 
 # CNRI Handle prefix
 handle.prefix = 123456789

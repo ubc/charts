@@ -30,7 +30,7 @@ service:
 ingress:
   enabled: true
   # Used to create Ingress record (should used with service.type: ClusterIP).
-  hosts:
+  hosts: []
     # if there are multiple host names, first one will be the primary.
     # - statspace.example.local
   annotations:
