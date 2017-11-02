@@ -56,6 +56,11 @@ xapi:
   lrsUsername: lrs
   lrsPassword: LRS_PASSWORD
 
+# data privacy settings
+expose:
+  emailToInstructor: false
+  casUsernameToInstructor: false
+
 app:
   replicaCount: 1
   image:

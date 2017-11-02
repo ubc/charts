@@ -218,6 +218,10 @@ spec:
         - name: KALTURA_PLAYER_ID
           value: {{ .Values.kaltura.playerId | quote }}
         {{- end }}
+        - name: EXPOSE_EMAIL_TO_INSTRUCTOR
+          value: {{ .Values.expose.emailToInstructor | quote }}
+        - name: EXPOSE_CAS_USERNAME_TO_INSTRUCTOR
+          value: {{ .Values.expose.casUsernameToInstructor | quote }}
         ports:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:
