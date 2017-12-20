@@ -58,6 +58,10 @@ spec:
           mountPath: /vault/config/
         - name: vault-root
           mountPath: /root/
+        {{- range .Values.vault.customSecrets }}
+        - name: {{ .secretName }}
+          mountPath: {{ .mountPath }}
+        {{- end }}
         {{- if .Values.vault.logs.persist }}
         - name: {{ template "vault.fullname" . }}-persistent-storage
           mountPath: /vault/logs
@@ -70,6 +74,11 @@ spec:
             name: "{{ template "vault.fullname" . }}-config-{{ .Release.Revision }}"
         - name: vault-root
           emptyDir: {}
+        {{- range .Values.vault.customSecrets }}
+        - name: {{ .secretName }}
+          secret:
+            secretName: {{ .secretName }}
+        {{- end }}
         {{- if .Values.vault.logs.persist }}
         - name: {{ template "vault.fullname" . }}-persistent-storage
           persistentVolumeClaim:
