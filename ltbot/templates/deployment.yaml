@@ -1,0 +1,96 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: BACKEND
+              value: {{ .Values.bot.backend | quote }}
+            - name: STORAGE
+              value: {{ .Values.bot.storage | quote }}
+            {{- if .Values.bot.token }}
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: bot-token
+            {{- end }}
+            - name: BOT_ADMINS
+              value: {{ .Values.bot.admins | quote }}
+            - name: CHATROOM_FN
+              value: {{ .Values.bot.chatroomFN | quote }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: {{ .Values.service.internalPort }}
+#            initialDelaySeconds: 10
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: {{ .Values.service.internalPort }}
+#            initialDelaySeconds: 10
+          volumeMounts:
+            - name: srv
+              mountPath: /srv
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+      volumes:
+        {{- if .Values.persistent.enabled }}
+        - name: srv
+          persistentVolumeClaim:
+            claimName: {{ template "fullname" . }}
+        {{- end }}
+
+{{- if .Values.persistent.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+  {{- if .Values.persistent.storageClass }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.persistent.storageClass | quote }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistent.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistent.size | quote }}
+  {{- if not .Values.persistent.storageClass }}
+  storageClassName: ""
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}
+      chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+  {{- end }}
+{{- end }}
