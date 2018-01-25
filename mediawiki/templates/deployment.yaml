@@ -120,11 +120,13 @@ spec:
             path: /index.php/Main_Page
             port: http
           initialDelaySeconds: 120
+          timeoutSeconds: 2
         readinessProbe:
           httpGet:
             path: /index.php/Main_Page
             port: http
           initialDelaySeconds: 30
+          timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
