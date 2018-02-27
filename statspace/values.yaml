@@ -64,6 +64,7 @@ dspace:
     domainValid:
     loginGroup:
     digestAlgorithm:
+  #googleAnalyticsKey: UA-XXXXXX-X
 
 # database setup, https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 

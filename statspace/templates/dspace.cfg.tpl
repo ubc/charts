@@ -1950,8 +1950,9 @@ webui.suggest.enable = false
 # inside that snipet is your Google Analytics key usually found in this line:
 # _uacct = "UA-XXXXXXX-X"
 # Take this key (just the UA-XXXXXX-X part) and place it here in this parameter.
-# jspui.google.analytics.key=UA-XXXXXX-X
-
+{{- if .Values.dspace.googleAnalyticsKey }}
+jspui.google.analytics.key={{ .Values.dspace.googleAnalyticsKey }}
+{{ end }}
 #---------------------------------------------------------------#
 #--------------XMLUI SPECIFIC CONFIGURATIONS--------------------#
 #---------------------------------------------------------------#
