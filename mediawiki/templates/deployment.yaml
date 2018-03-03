@@ -50,6 +50,10 @@ spec:
           value: {{ .Values.mediawikiName | quote }}
         - name: MEDIAWIKI_SITE_LANG
           value: {{ .Values.mediawikiLang | quote }}
+        {{- if .Values.mediawikiUploadPath  }}
+        - name: MEDIAWIKI_UPLOAD_PATH
+          value: {{ .Values.mediawikiUploadPath | quote }}
+        {{- end }}
         - name: MEDIAWIKI_EXTENSIONS
           value: {{ .Values.mediawikiExts | quote }}
         - name: SMTP_HOST_ID
