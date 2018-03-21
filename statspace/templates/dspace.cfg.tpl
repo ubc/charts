@@ -230,8 +230,8 @@ log.init.config = ${dspace.dir}/config/log4j.properties
 # Where to put the logs (used in configuration only)
 log.dir = ${dspace.dir}/persistent/log
 
-# If enabled, the logging and the solr statistics system will look for
-# an X-Forward header. If it finds it, it will use this for the user IP address
+# If enabled, the logging and the Solr statistics system will look for
+# an X-Forwarded-For header. If it finds it, it will use this for the user IP address
 useProxies = true
 
 ##### DOI registration agency credentials ######
@@ -441,7 +441,9 @@ http.proxy.port =
 #Names of the enabled MediaFilter or FormatFilter plugins
 filter.plugins = PDF Text Extractor, HTML Text Extractor, \
                  PowerPoint Text Extractor, \
-                 Word Text Extractor, JPEG Thumbnail
+                 Word Text Extractor, \
+                 ImageMagick Image Thumbnail, ImageMagick PDF Thumbnail
+# "JPEG Thumbnail" removed in favour of using ImageMagick
 
 # [To enable Branded Preview]: uncomment and insert the following into the plugin list
 #                Branded Preview JPEG, \
@@ -499,6 +501,20 @@ filter.org.dspace.app.mediafilter.ImageMagickPdfThumbnailFilter.inputFormats = A
 #
 # bitstream descriptions that do not conform to the following regular expression will not be overwritten
 # org.dspace.app.mediafilter.ImageMagickThumbnailFilter.replaceRegex = ^Generated Thumbnail$
+# 
+# While PDFs may contain transparent spaces, JPEG cannot. As DSpace use JPEG
+# for the generated thumbnails, PDF containing transparent spaces may lead
+# to problems. To solve this the exported PDF page is flatten before it is
+# resized and stored as JPEG. You can switch this behavior off by setting the
+# next property false, if necessary for any reasons.
+# org.dspace.app.mediafilter.ImageMagickThumbnailFilter.flatten = true
+
+# Optional: full paths to CMYK and sRGB color profiles. If present, will allow
+# ImageMagick to produce much more color accurate thumbnails for PDFs that are
+# using the CMYK color system. The default_cmyk.icc and default_rgb.icc profiles
+# provided by the system's Ghostscript (version 9.x) package are good choices.
+org.dspace.app.mediafilter.ImageMagickThumbnailFilter.cmyk_profile = /usr/share/ghostscript/9.06/iccprofiles/default_cmyk.icc
+org.dspace.app.mediafilter.ImageMagickThumbnailFilter.srgb_profile = /usr/share/ghostscript/9.06/iccprofiles/default_rgb.icc
 
 #### Crosswalk and Packager Plugin Settings ####
 # Crosswalks are used to translate external metadata formats into DSpace's internal format (DIM)
@@ -773,7 +789,7 @@ event.consumer.doi.filters = Item+Modify_Metadata
 
 # consumer to update the triplestore of dspace-rdf
 event.consumer.rdf.class = org.dspace.rdf.RDFConsumer
-event.consumer.rdf.filters = All+All
+event.consumer.rdf.filters = Community|Collection|Item|Bundle|Bitstream|Site+Add|Create|Modify|Modify_Metadata|Delete|Remove
 
 # test consumer for debugging and monitoring
 #event.consumer.test.class = org.dspace.event.TestConsumer
@@ -836,9 +852,10 @@ org.dspace.app.itemexport.max.size = 200
 org.dspace.app.batchitemimport.work.dir = ${dspace.dir}/persistent/imports
 
 # Enable performance optimization for select-collection-step collection query
-# The only reason you might opt-out is in case the optimized algorithm missed a policy
-# default = true, (enabled)
-#org.dspace.content.Collection.findAuthorizedPerformanceOptimize = false
+# Enable when having 
+# a large number of collections and no Shibboleth or LDAP authentication.
+# default = false, (disabled)
+#org.dspace.content.Collection.findAuthorizedPerformanceOptimize = true
 
 # For backwards compatibility, the subscription emails by default include any modified items
 # uncomment the following entry for only new items to be emailed
@@ -917,12 +934,12 @@ webui.submit.blocktheses = false
 cc.api.rooturl = http://api.creativecommons.org/rest/1.5
 
 # Metadata field to hold CC license URI of selected license
-# NB: XMLUI presentation code expects 'dc.rights.uri' to hold CC data. If you change
-# this to another field, please consult documentation on how to update UI configuration
+# NB: DSpace (both JSPUI and XMLUI) presentation code expects 'dc.rights.uri' to hold CC data. If you change
+# this to another field, please consult documentation on how to update UI configuration 
 cc.license.uri = dc.rights.uri
 
 # Metadata field to hold CC license name of selected license (if defined)
-# NB: XMLUI presentation code expects 'dc.rights' to hold CC data. If you change
+# NB: DSpace (both JSPUI and XMLUI) presentation code expects 'dc.rights' to hold CC data. If you change
 # this to another field, please consult documentation on how to update UI configuration
 cc.license.name = dc.rights
 
@@ -931,6 +948,9 @@ cc.submit.setname = true
 
 # Store license bitstream (RDF license text) during web submission
 cc.submit.addbitstream = true
+
+# ONLY JSPUI, enable Creative Commons admin 
+webui.submit.enable-cc = false
 
 # A list of license classes that should be excluded from selection process
 # class names - comma-separated list -  must exactly match what service returns.
@@ -980,8 +1000,8 @@ webui.item.thumbnail.show = true
 #webui.browse.thumbnail.linkbehaviour = item
 
 # maximum width and height of generated thumbnails
-thumbnail.maxwidth  = 80
-thumbnail.maxheight = 80
+thumbnail.maxwidth  = 300
+thumbnail.maxheight = 300
 
 # Blur before scaling.  A little blur before scaling does wonders for keeping
 # moire in check.
@@ -1388,7 +1408,8 @@ plugin.named.org.dspace.app.webui.json.JSONRequest = \
 	org.dspace.app.webui.discovery.DiscoveryJSONRequest = discovery,\
 	org.dspace.app.webui.json.SubmissionLookupJSONRequest = submissionLookup,\
 	org.dspace.app.webui.json.UploadProgressJSON = uploadProgress,\
-	org.dspace.app.webui.handle.HandleJSONResolver = hdlresolver
+	org.dspace.app.webui.handle.HandleJSONResolver = hdlresolver,\
+	org.dspace.app.webui.json.CreativeCommonsJSONRequest = creativecommons
 
 ### i18n -  Locales / Language ####
 # Default Locale
@@ -2009,6 +2030,11 @@ jspui.google.analytics.key={{ .Values.dspace.googleAnalyticsKey }}
 # files before enabling this property.
 #xmlui.theme.enableMinification = false
 
+# Themes only allow specific file formats (extensions) to be accessible, for security reasons.
+# While the default list should work for most sites, you may wish to customize it.  The default
+# list is commented out below. To customize, just uncomment and add more file extensions.
+#xmlui.theme.whitelist = css, js, json, gif, jpg, jpeg, png, bmp, ico, htm, html, svg, ttf, woff
+
 ### Settings for Item lists in Mirage theme ###
 # What should the emphasis be in the display of item lists?
 # Possible values : 'file', 'metadata'. If your repository is
@@ -2071,7 +2097,7 @@ mirage2.item-view.bitstream.href.label.2 = title
 # from. If your DSpace is in a load balanced enviornment or otherwise behind a
 # context-switch then you will need to set the paramater to the HTTP parameter that
 # records the original IP address.
-#xmlui.controlpanel.activity.ipheader = X-Forward-For
+#xmlui.controlpanel.activity.ipheader = X-Forwarded-For
 
 #---------------------------------------------------------------#
 #----------------REQUEST ITEM CONFIGURATION---------------------#
