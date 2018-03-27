@@ -24,6 +24,10 @@ cas:
   server: https://cas.example.com
   authPrefix: /cas
   useSAML: false
+  attributeFirstName: firstName
+  attributeLastName: lastName
+  attributeStudentNumber: studentNumber
+  attributeEmail: mail
 
 # email notifications settings
 mail:
@@ -60,6 +64,13 @@ xapi:
 expose:
   emailToInstructor: false
   casUsernameToInstructor: false
+
+# profile editing controls
+allowStudentChange:
+  name: 1
+  displayName: 1
+  studentNumber: 1
+  email: 1
 
 app:
   replicaCount: 1

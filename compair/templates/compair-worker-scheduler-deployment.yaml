@@ -62,6 +62,14 @@ spec:
           value: {{ .Values.cas.authPrefix | quote }}
         - name: CAS_USE_SAML
           value: {{ .Values.cas.useSAML | quote }}
+        - name: CAS_ATTRIBUTE_FIRST_NAME
+          value: {{ .Values.cas.attributeFirstName | quote }}
+        - name: CAS_ATTRIBUTE_LAST_NAME
+          value: {{ .Values.cas.attributeLastName | quote }}
+        - name: CAS_ATTRIBUTE_STUDENT_NUMBER
+          value: {{ .Values.cas.attributeStudentNumber | quote }}
+        - name: CAS_ATTRIBUTE_EMAIL
+          value: {{ .Values.cas.attributeEmail | quote }}
         {{- end }}
         - name: XAPI_ENABLED
           value: {{ .Values.xapi.enabled | quote }}
@@ -147,4 +155,12 @@ spec:
           value: {{ .Values.expose.emailToInstructor | quote }}
         - name: EXPOSE_CAS_USERNAME_TO_INSTRUCTOR
           value: {{ .Values.expose.casUsernameToInstructor | quote }}
+        - name: ALLOW_STUDENT_CHANGE_NAME
+          value: {{ .Values.allowStudentChange.name | quote }}
+        - name: ALLOW_STUDENT_CHANGE_DISPLAY_NAME
+          value: {{ .Values.allowStudentChange.displayName | quote }}
+        - name: ALLOW_STUDENT_CHANGE_STUDENT_NUMBER
+          value: {{ .Values.allowStudentChange.studentNumber | quote }}
+        - name: ALLOW_STUDENT_CHANGE_EMAIL
+          value: {{ .Values.allowStudentChange.email | quote }}
 {{- end }}
