@@ -1216,7 +1216,7 @@ webui.itemlist.sort-option.3 = dateaccessioned:dc.date.accessioned:date
 # If you care about the display of the metadata in the browse index - well, you'll have to go and
 # fix the metadata in your items.
 #
-# webui.browse.metadata.case-insensitive = true
+webui.browse.metadata.case-insensitive = true
 
 # Set the options for the size (number of characters) of the fields stored in the database.
 #
