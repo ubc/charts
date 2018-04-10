@@ -1365,7 +1365,7 @@ recent.submissions.count = 0
 #
 # default since DSpace 4.0 is to use the Discovery search provider
 plugin.single.org.dspace.app.webui.search.SearchRequestProcessor = \
-		org.dspace.app.webui.discovery.DiscoverySearchRequestProcessor
+		{{ .Values.dspace.searchRequestProcessor }}
 
 #### XMLUI Discovery (extra Discovery setting that applies only to XMLUI) ####
 # uncomment the following configuration if you want to restore the legacy Lucene
