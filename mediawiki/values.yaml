@@ -42,6 +42,8 @@ apiPath: /w/api.php
 
 # mediawikiUploadPath: //example.com/images
 
+# mediawikiAllowSiteCSSOnRestrictedPages: false
+
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
 ##

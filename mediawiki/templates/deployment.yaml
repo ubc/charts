@@ -56,6 +56,10 @@ spec:
         {{- end }}
         - name: MEDIAWIKI_EXTENSIONS
           value: {{ .Values.mediawikiExts | quote }}
+        {{- if .Values.mediawikiAllowSiteCSSOnRestrictedPages }}
+        - name: MEDIAWIKI_ALLOW_SITE_CSS_ON_RESTRICTED_PAGES
+          value: {{ .Values.mediawikiAllowSiteCSSOnRestrictedPages | quote }}
+        {{- end }}
         - name: SMTP_HOST_ID
           value: {{ default "" .Values.smtpHostID | quote }}
         - name: SMTP_HOST
