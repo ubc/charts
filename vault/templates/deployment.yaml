@@ -68,6 +68,10 @@ spec:
         {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+      {{- if .Values.affinity }}
+      affinity:
+{{ tpl .Values.affinity . | indent 8 }}
+      {{- end }}
       volumes:
         - name: vault-config
           configMap:
