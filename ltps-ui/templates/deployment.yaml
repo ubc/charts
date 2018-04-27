@@ -27,14 +27,22 @@ spec:
             "--logging.level.ca.ubc={{ .Values.logging.level }}",
             "--canvas.url={{ .Values.canvas.url }}",
             "--canvas.token={{ .Values.canvas.token }}",
-            "--canvas.lti.key.consumer={{ .Values.canvas.ltiKeyConsumer }}",
-            "--canvas.lti.key.secret={{ .Values.canvas.ltiKeySecret }}",
+            "--canvas.timeout.connect={{ .Values.canvas.timeout.connect }}",
+            "--canvas.timeout.read={{ .Values.canvas.timeout.read }}",
+            "--saml.sp.key-store={{ .Values.saml.sp.key-store }}",
+            "--saml.sp.key-store-password={{ .Values.saml.sp.key-store-password }}",
+            "--saml.sp.key-name={{ .Values.saml.sp.key-name }}",
+            "--saml.sp.key-password={{ .Values.saml.sp.key-password }}",
+            "--saml.sp.entityId={{ .Values.saml.sp.entityId }}",
+            "--saml.idp.metadata.uri={{ .Values.saml.idp.metadata.uri }}",
+            "--saml.idp.attribute.puid={{ .Values.saml.idp.attribute.puid }}",
             "--ltps.v1.url={{ .Values.ltps.v1.url }}",
             "--ltps.v1.username={{ .Values.ltps.v1.username }}",
             "--ltps.v1.password={{ .Values.ltps.v1.password }}",
             "--ltps.v2.url={{ .Values.ltps.v2.url }}",
             "--ltps.v2.username={{ .Values.ltps.v2.username }}",
-            "--ltps.v2.password={{ .Values.ltps.v2.password }}"
+            "--ltps.v2.password={{ .Values.ltps.v2.password }}",
+            "--devMode.puid={{ .Values.devMode.puid }}"
           ]
           ports:
             - containerPort: {{ .Values.service.internalPort }}
