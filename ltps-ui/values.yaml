@@ -25,6 +25,12 @@ ingress:
     # - secretName: chart-example-tls
     #   hosts:
     #     - chart-example.local
+persistence:
+  enabled: false
+  storageClass: default
+  accessMode: ReadOnlyMany
+  size: 1G
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -42,8 +48,24 @@ logging:
 canvas:
   url: https://beta.instructure.com
   token:
-  ltiKeyConsumer:
-  ltiKeySecret:
+  timeout:
+    connect: 5000 # in ms
+    read: 120000 # in ms
+server:
+  ssl:
+    enabled: false
+saml:
+  sp:
+    keyStore: /data/conf/saml.jks
+    keyStorePassword:
+    keyName:
+    keyPassword:
+    entityId: https://ltps-ui.lms.it.ubc.ca/sp
+  idp:
+    metadataUri: https://shibboleth2.stg.id.ubc.ca/metadata/ubcit-idp-metadata.xml
+    attribute:
+      puid: urn:oid:1.3.6.1.4.1.60.1.7.2 # ubcEduCwlPuid
+
 ltps:
   v1:
     url: http://localhost:8080/ctcwebservices
@@ -53,3 +75,8 @@ ltps:
     url: http://localhost:8080/ctc-ws-v2
     username:
     password:
+
+devmode:
+  enabled: false
+  # PUID of your choice (this replaces the puid normally passed in via SAML authentication.)
+  # puid:
