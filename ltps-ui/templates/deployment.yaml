@@ -35,6 +35,7 @@ spec:
             "--saml.sp.key-name={{ .Values.saml.sp.keyName }}",
             "--saml.sp.key-password={{ .Values.saml.sp.keyPassword }}",
             "--saml.sp.entityId={{ .Values.saml.sp.entityId }}",
+            "--saml.sp.entityBaseUrl={{ .Values.saml.sp.entityBaseUrl }}",
             "--saml.idp.metadata.uri={{ .Values.saml.idp.metadataUri }}",
             "--saml.idp.attribute.puid={{ .Values.saml.idp.attribute.puid }}",
             "--ltps.v1.url={{ .Values.ltps.v1.url }}",

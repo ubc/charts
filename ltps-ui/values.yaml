@@ -60,7 +60,8 @@ saml:
     keyStorePassword:
     keyName:
     keyPassword:
-    entityId: https://ltps-uiverf.lms.it.ubc.ca/sp
+    entityId: 
+    entityBaseUrl:
   idp:
     metadataUri: https://shibboleth2.stg.id.ubc.ca/metadata/ubcit-idp-metadata.xml
     attribute:
