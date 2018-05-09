@@ -238,6 +238,8 @@ spec:
           value: {{ .Values.allowStudentChange.studentNumber | quote }}
         - name: ALLOW_STUDENT_CHANGE_EMAIL
           value: {{ .Values.allowStudentChange.email | quote }}
+        - name: GA_TRACKING_ID
+          value: {{ .Values.gaTrackingId | quote }}
         ports:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:
