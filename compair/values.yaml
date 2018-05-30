@@ -10,7 +10,6 @@ celeryBrokerURL: redis://{{ template "fullname" . }}-redis:6379
 assetLocation: local
 enforceSSL: true
 cForceRoot: true
-attachmentUploadLimit: "262144000" #1024 * 1024 * 250 -> max 250MB
 secretKey: LRS_RANDOM_KEY
 workerSchedulerEnabled: false
 demoInstance: false
@@ -22,6 +21,7 @@ gaTrackingId: null
 # cas settings
 cas:
   enabled: false
+  globalUniqueIdentifierField: uid
   server: https://cas.example.com
   authPrefix: /cas
   useSAML: false
@@ -29,6 +29,24 @@ cas:
   attributeLastName: lastName
   attributeStudentNumber: studentNumber
   attributeEmail: mail
+  attributeUserRole: role
+  instructorRoleValues: "instructor teacher staff"
+
+# saml settings
+saml:
+  enabled: false
+  globalUniqueIdentifierField: uid
+  settings: null
+  settingsFile: null
+  metadataUrl: "https://saml.example.com/metadata/providers.xml"
+  metadataEntityId: "https://saml.example.com/ipd/shibboleth"
+  exposeMetadataEndpoint: true
+  attributeFirstName: firstName
+  attributeLastName: lastName
+  attributeStudentNumber: studentNumber
+  attributeEmail: mail
+  attributeUserRole: role
+  instructorRoleValues: "instructor teacher staff"
 
 # email notifications settings
 mail:
@@ -41,6 +59,12 @@ mail:
   password: PLEASE_CHANGE_ME
   defaultSender: compair@example.com
 
+# attachment
+attachment:
+  uploadLimit: "262144000" #1024 * 1024 * 250 -> max 250MB
+  allowedExtensions: "pdf mp3 mp4 webm jpg jpeg png"
+  previewExtensions: "jpg jpeg png"
+
 # kaltura media attachments settings
 kaltura:
   enabled: false
@@ -49,17 +73,19 @@ kaltura:
   secret: PLEASE_CHANGE_ME
   userId: "1234"
   playerId: "1234"
+  videoExtensions: "mp4 mov webm"
+  audioExtensions: "mp3"
 
 # xapi settings
 xapi:
   enabled: false
   appBaseURL: https://archive.org/services/purl/compair/ctlt/
   lrsStatementEndpoint: https://lrs.example.com/data/xAPI/
-  lrsActorAccountUseCas: false
-  lrsActorAccountCasIdentifier: uid
-  lrsActorAccountCasHomepage: http://www.example.com/
+  lrsActorAccountUseGlobalUniqueIdentifier: false
+  lrsActorAccountGlobalUniqueIdentifierHomepage: http://www.example.com/
   lrsUsername: lrs
   lrsPassword: LRS_PASSWORD
+  lrsUserInputFieldSizeLimit: null
 
 # data privacy settings
 expose:
