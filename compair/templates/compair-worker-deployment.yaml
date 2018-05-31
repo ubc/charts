@@ -58,9 +58,9 @@ spec:
           value: {{ .Values.ltiLoginEnabled | quote }}
         - name: CAS_LOGIN_ENABLED
           value: {{ .Values.cas.enabled | quote }}
-        {{- if .Values.cas.enabled }}
         - name: CAS_GLOBAL_UNIQUE_IDENTIFIER_FIELD
           value: {{ .Values.cas.globalUniqueIdentifierField | quote }}
+        {{- if .Values.cas.enabled }}
         - name: CAS_SERVER
           value: {{ .Values.cas.server | quote }}
         - name: CAS_AUTH_PREFIX
@@ -82,9 +82,11 @@ spec:
         {{- end }}
         - name: SAML_LOGIN_ENABLED
           value: {{ .Values.saml.enabled | quote }}
-        {{- if .Values.saml.enabled }}
         - name: SAML_GLOBAL_UNIQUE_IDENTIFIER_FIELD
           value: {{ .Values.saml.globalUniqueIdentifierField | quote }}
+        {{- if .Values.saml.enabled }}
+        - name: SAML_SETTINGS_FILE
+          value: {{ .Values.saml.settingsFile | quote }}
         {{- if .Values.saml.settings }}
         - name: SAML_SETTINGS
           valueFrom:
@@ -92,8 +94,6 @@ spec:
               name: {{ template "fullname" . }}
               key: saml_settings
         {{- end }}
-        - name: SAML_SETTINGS_FILE
-          value: {{ .Values.saml.settingsFile | quote }}
         - name: SAML_METADATA_URL
           value: {{ .Values.saml.metadataUrl | quote }}
         - name: SAML_METADATA_ENTITY_ID

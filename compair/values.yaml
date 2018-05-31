@@ -85,7 +85,7 @@ xapi:
   lrsActorAccountGlobalUniqueIdentifierHomepage: http://www.example.com/
   lrsUsername: lrs
   lrsPassword: LRS_PASSWORD
-  lrsUserInputFieldSizeLimit: null
+  lrsUserInputFieldSizeLimit: "1048576" #1024 * 1024 -> max 1MB
 
 # data privacy settings
 expose:
