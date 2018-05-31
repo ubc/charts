@@ -24,85 +24,6 @@ spec:
         app: {{ template "fullname" . }}
         stage: {{ .Values.stage }}
         tier: app
-      annotations:
-        pod.beta.kubernetes.io/init-containers: '[
-          {
-            "name": "wait-for-db-service",
-            "image": "busybox",
-            "command": ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"],
-            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}"
-          },
-          {
-            "name": "init-db",
-            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
-            "command": ["sh", "-c", "python manage.py database create {{ if .Values.demoInstance }}--sample_data{{ end }}"],
-            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}",
-            "env": [
-              {
-                "name": "DB_HOST",
-                "value": "{{ template "fullname" . }}-db"
-              },
-              {
-                "name": "DB_PORT",
-                "value": "{{ .Values.dbPort }}"
-              },
-              {
-                "name": "DB_USERNAME",
-                "value": "{{ .Values.dbUsername }}"
-              },
-              {
-                "name": "DB_PASSWORD",
-                "valueFrom":
-                {
-                  "secretKeyRef":
-                    {
-                        "name": "{{ template "fullname" . }}",
-                        "key": "mysql_password"
-                    }
-                }
-              },
-              {
-                "name": "DB_NAME",
-                "value": "{{ .Values.dbName }}"
-              }
-            ]
-          },
-          {
-            "name": "upgrade-db",
-            "image": "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}",
-            "command": ["sh", "-c", "alembic upgrade head"],
-            "imagePullPolicy": "{{ .Values.app.image.pullPolicy }}",
-            "env": [
-              {
-                "name": "DB_HOST",
-                "value": "{{ template "fullname" . }}-db"
-              },
-              {
-                "name": "DB_PORT",
-                "value": "{{ .Values.dbPort }}"
-              },
-              {
-                "name": "DB_USERNAME",
-                "value": "{{ .Values.dbUsername }}"
-              },
-              {
-                "name": "DB_PASSWORD",
-                "valueFrom":
-                {
-                  "secretKeyRef":
-                    {
-                        "name": "{{ template "fullname" . }}",
-                        "key": "mysql_password"
-                    }
-                }
-              },
-              {
-                "name": "DB_NAME",
-                "value": "{{ .Values.dbName }}"
-              }
-            ]
-          }
-        ]'
     spec:
       containers:
       - name: {{ .Chart.Name }}
@@ -306,6 +227,47 @@ spec:
         persistentVolumeClaim:
           claimName: {{ template "fullname" . }}-app-pvc
       {{- end }}
+      initContainers:
+      - name: wait-for-db-service
+        image: busybox
+        command: ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"]
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+      - name: init-db
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        command: ["sh", "-c", "python manage.py database create {{ if .Values.demoInstance }}--sample_data{{ end }}"]
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        - name: DB_HOST
+          value: "{{ template "fullname" . }}-db"
+        - name: DB_PORT
+          value: {{ .Values.dbPort | quote }}
+        - name: DB_USERNAME
+          value: {{ .Values.dbUsername | quote }}
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: mysql_password
+        - name: DB_NAME
+          value: {{ .Values.dbName | quote }}
+      - name: upgrade-db
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        command: ["sh", "-c", "alembic upgrade head"]
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        - name: DB_HOST
+          value: "{{ template "fullname" . }}-db"
+        - name: DB_PORT
+          value: {{ .Values.dbPort | quote }}
+        - name: DB_USERNAME
+          value: {{ .Values.dbUsername | quote }}
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: mysql_password
+        - name: DB_NAME
+          value: {{ .Values.dbName | quote }}
 
 ---
 
