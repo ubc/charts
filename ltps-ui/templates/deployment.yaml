@@ -67,15 +67,22 @@ spec:
             initialDelaySeconds: 10
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-      {{- if .Values.persistence.enabled }}
           volumeMounts:
+          {{- if .Values.persistence.enabled }}
           - name: {{ template "fullname" . }}-persistent-storage
             mountPath: /data
+          {{- end }}
+          - name: {{ template "fullname" . }}-config
+            mountPath: /config
       volumes:
+      {{- if .Values.persistence.enabled }}
       - name: {{ template "fullname" . }}-persistent-storage
         persistentVolumeClaim:
           claimName: {{ template "fullname" . }}
       {{- end }}
+      - name: {{ template "fullname" . }}-config
+        configMap:
+          name: {{ template "fullname" . }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
