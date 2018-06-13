@@ -35,6 +35,7 @@ cas:
 # saml settings
 saml:
   enabled: false
+  uniqueIdentifier: uid
   globalUniqueIdentifierField: uid
   settings: null
   settingsFile: null

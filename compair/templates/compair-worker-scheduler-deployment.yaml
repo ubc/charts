@@ -83,6 +83,8 @@ spec:
         {{- end }}
         - name: SAML_LOGIN_ENABLED
           value: {{ .Values.saml.enabled | quote }}
+        - name: SAML_UNIQUE_IDENTIFIER
+          value: {{ .Values.saml.uniqueIdentifier | quote }}
         - name: SAML_GLOBAL_UNIQUE_IDENTIFIER_FIELD
           value: {{ .Values.saml.globalUniqueIdentifierField | quote }}
         {{- if .Values.saml.enabled }}
