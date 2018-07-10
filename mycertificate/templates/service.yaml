@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mycertificate.fullname" . }}
+  labels:
+    app: {{ template "mycertificate.name" . }}
+    chart: {{ template "mycertificate.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "mycertificate.name" . }}
+    release: {{ .Release.Name }}
