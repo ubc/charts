@@ -33,6 +33,9 @@ mediawikiName: My Wiki
 
 mediawikiLang: en
 
+# Top right corner logo
+# mediawikiLogo:
+
 # Comma separated extension list
 mediawikiExts: ""
 

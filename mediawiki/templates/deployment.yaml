@@ -50,6 +50,10 @@ spec:
           value: {{ .Values.mediawikiName | quote }}
         - name: MEDIAWIKI_SITE_LANG
           value: {{ .Values.mediawikiLang | quote }}
+        {{- if .Values.mediawikiLogo }}
+        - name: MEDIAWIKI_LOGO
+          value: {{ .Values.mediawikiLogo | quote }}
+        {{- end }}
         {{- if .Values.mediawikiUploadPath  }}
         - name: MEDIAWIKI_UPLOAD_PATH
           value: {{ .Values.mediawikiUploadPath | quote }}
