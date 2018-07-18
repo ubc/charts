@@ -64,6 +64,10 @@ spec:
         - name: MEDIAWIKI_ALLOW_SITE_CSS_ON_RESTRICTED_PAGES
           value: {{ .Values.mediawikiAllowSiteCSSOnRestrictedPages | quote }}
         {{- end }}
+        {{- if .Values.mediawikiAllowAnonymousEdit}}
+        - name: MEDIAWIKI_ALLOW_ANONYMOUS_EDIT
+          value: {{ .Values.mediawikiAllowAnonymousEdit | quote }}
+        {{- end }}
         - name: SMTP_HOST_ID
           value: {{ default "" .Values.smtpHostID | quote }}
         - name: SMTP_HOST

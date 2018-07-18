@@ -47,6 +47,9 @@ apiPath: /w/api.php
 
 # mediawikiAllowSiteCSSOnRestrictedPages: false
 
+# allow anonymous user to edit pages
+# mediawikiAllowAnonymousEdit: true
+
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
 ##
