@@ -57,12 +57,12 @@ spec:
             - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:
             httpGet:
-              path: /application/status
+              path: /actuator/health
               port: {{ .Values.service.internalPort }}
             initialDelaySeconds: 10
           readinessProbe:
             httpGet:
-              path: /application/status
+              path: /actuator/health
               port: {{ .Values.service.internalPort }}
             initialDelaySeconds: 10
           resources:
