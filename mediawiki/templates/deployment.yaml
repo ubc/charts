@@ -44,6 +44,14 @@ spec:
               key: mediawiki_password
         - name: MEDIAWIKI_EMAIL
           value: {{ default "" .Values.mediawikiEmail | quote }}
+        {{- if .Values.mediawikiEmergencyContact }}
+        - name: MEDIAWIKI_EMERGENCY_CONTACT
+          value:  {{ .Values.mediawikiEmergencyContact | quote }}
+        {{- end }}
+        {{- if .Values.mediawikiPasswordSender }}
+        - name: MEDIAWIKI_PASSWORD_SENDER
+          value:  {{ .Values.mediawikiPasswordSender | quote }}
+        {{- end }}
         - name: MEDIAWIKI_SITE_SERVER
           value: https://{{ index .Values.ingress.hosts 0 | default .Values.CI_ENVIRONMENT_HOSTNAME | default "http://localhost" }}
         - name: MEDIAWIKI_SITE_NAME

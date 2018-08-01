@@ -27,6 +27,9 @@ adminUser: user
 ##
 mediawikiEmail: user@example.com
 
+# mediawikiEmergencyContact: admin@example.com
+# mediawikiPasswordSender: admin@example.com
+
 ## Name for the wiki
 ##
 mediawikiName: My Wiki
