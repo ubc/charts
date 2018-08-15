@@ -80,6 +80,8 @@ spec:
           value: {{ .Values.cas.attributeStudentNumber | quote }}
         - name: CAS_ATTRIBUTE_EMAIL
           value: {{ .Values.cas.attributeEmail | quote }}
+        - name: CAS_LOGIN_HTML
+          value: {{ .Values.cas.loginHTML | quote }}
         {{- end }}
         - name: SAML_LOGIN_ENABLED
           value: {{ .Values.saml.enabled | quote }}
@@ -115,6 +117,8 @@ spec:
           value: {{ .Values.saml.attributeStudentNumber | quote }}
         - name: SAML_ATTRIBUTE_EMAIL
           value: {{ .Values.saml.attributeEmail | quote }}
+        - name: SAML_LOGIN_HTML
+          value: {{ .Values.saml.loginHTML | quote }}
         {{- end }}
         - name: XAPI_ENABLED
           value: {{ .Values.xapi.enabled | quote }}
@@ -179,6 +183,8 @@ spec:
         {{- end }}
         - name: KALTURA_ENABLED
           value: {{ .Values.kaltura.enabled | quote }}
+        - name: KALTURA_USE_GLOBAL_UNIQUE_IDENTIFIER
+          value: {{ .Values.kaltura.useGlobalUniqueIdentifier | quote }}
         {{- if .Values.kaltura.enabled }}
         - name: KALTURA_SERVICE_URL
           value: {{ .Values.kaltura.serviceURL | quote }}
@@ -214,4 +220,6 @@ spec:
           value: {{ .Values.allowStudentChange.email | quote }}
         - name: GA_TRACKING_ID
           value: {{ .Values.gaTrackingId | quote }}
+        - name: LOGIN_ADDITIONAL_INSTRUCTIONS_HTML
+          value: {{ .Values.loginAdditionalInstructionsHTML | quote }}
 {{- end }}

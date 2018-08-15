@@ -17,6 +17,7 @@ celeryTimezone: America/Vancouver
 appLoginEnabled: true
 ltiLoginEnabled: false
 gaTrackingId: null
+#loginAdditionalInstructionsHTML: null
 
 # cas settings
 cas:
@@ -31,6 +32,7 @@ cas:
   attributeEmail: mail
   attributeUserRole: role
   instructorRoleValues: "instructor teacher staff"
+  #loginHTML: null
 
 # saml settings
 saml:
@@ -48,6 +50,7 @@ saml:
   attributeEmail: mail
   attributeUserRole: role
   instructorRoleValues: "instructor teacher staff"
+  #loginHTML: null
 
 # email notifications settings
 mail:
@@ -69,6 +72,7 @@ attachment:
 # kaltura media attachments settings
 kaltura:
   enabled: false
+  useGlobalUniqueIdentifier: false
   serviceURL: https://kaltura.example.com
   partnerId: "1234"
   secret: PLEASE_CHANGE_ME
