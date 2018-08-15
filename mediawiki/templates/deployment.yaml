@@ -136,9 +136,21 @@ spec:
         - name: MEDIAWIKI_MEMCACHED_SERVERS
           value: '["{{ template "mediawiki.fullname" . }}-memcached:11211"]'
         {{- end }}
-        {{- if .Values.googleAnalyticsUA }}
+        {{- if .Values.googleAnalytics.ua }}
         - name: GOOGLE_ANALYTICS_UA
-          value: {{ .Values.googleAnalyticsUA | quote }}
+          value: {{ .Values.googleAnalytics.ua | quote }}
+        {{- end }}
+        {{- if .Values.googleAnalytics.metricsAllowed }}
+        - name: GOOGLE_ANALYTICS_METRICS_ALLOWED
+          value: {{ .Values.googleAnalytics.metricsAllowed | quote }}
+        {{- end }}
+        {{- if .Values.googleAnalytics.metricsPath }}
+        - name: GOOGLE_ANALYTICS_METRICS_PATH
+          value: {{ .Values.googleAnalytics.metricsPath | quote }}
+        {{- end }}
+        {{- if .Values.googleAnalytics.metricsViewID }}
+        - name: GOOGLE_ANALYTICS_METRICS_VIEWID
+          value: {{ .Values.googleAnalytics.metricsViewID | quote }}
         {{- end }}
         ports:
         - name: http

@@ -54,8 +54,13 @@ mediawikiUploadPath: //example.com/images
 # allow anonymous user to edit pages
 # mediawikiAllowAnonymousEdit: true
 
-# Google Analytics Tracking Token
-# googleAnalyticsUA: UA-XXXXXXXX-XX
+googleAnalytics:
+  # Google Analytics Tracking Token
+  ua: UA-XXXXXXXX-XX
+  # Google Service Account to be used for Analytics Metrics
+  # metricsAllowed: '*'
+  # metricsPath: /path/to/json/file
+  # metricsViewID: XXXXX
 
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
