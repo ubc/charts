@@ -136,6 +136,10 @@ spec:
         - name: MEDIAWIKI_MEMCACHED_SERVERS
           value: '["{{ template "mediawiki.fullname" . }}-memcached:11211"]'
         {{- end }}
+        {{- if .Values.googleAnalyticsUA }}
+        - name: GOOGLE_ANALYTICS_UA
+          value: {{ .Values.googleAnalyticsUA | quote }}
+        {{- end }}
         ports:
         - name: http
           containerPort: 80

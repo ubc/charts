@@ -47,11 +47,15 @@ mainCache: "CACHE_NONE"
 apiPath: /w/api.php
 
 # mediawikiUploadPath: //example.com/images
+mediawikiUploadPath: //example.com/images
 
 # mediawikiAllowSiteCSSOnRestrictedPages: false
 
 # allow anonymous user to edit pages
 # mediawikiAllowAnonymousEdit: true
+
+# Google Analytics Tracking Token
+# googleAnalyticsUA: UA-XXXXXXXX-XX
 
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
@@ -67,6 +71,8 @@ apiPath: /w/api.php
 # ref: https://github.com/kubernetes/charts/tree/master/stable/mariadb
 ##
 db:
+  # when disabled, certain values are still being used by mediawiki container
+  enabled: false
   ## DB admin password
   ##
   #mariaRootPassword
@@ -92,6 +98,7 @@ db:
     size: 8Gi
 
   service:
+    # uncomment name to use external service
     #name:
     port: 3306
 
@@ -166,6 +173,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 20m
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -174,6 +182,19 @@ resources:
   requests:
     memory: 512Mi
     cpu: 300m
+
+# LDAP settings
+#ldap:
+#  enabled: true
+#  domain: YOUR_DOMAIN
+#  server: ldap.example.com
+#  port: 636
+#  baseDn: "ou=users,ou=ORG,dc=example,dc=com"
+#  searchAttrs: uid
+#  proxyAgent: "uid=wiki,ou=Service Accounts,ou=SERVICES,dc=example,dc=com"
+#  proxyPassword: "PASSWORD"
+#  debug: 3
+#  encryption: ssl
 
 mediawikiFiles:
   CustomSettings.php: |-
