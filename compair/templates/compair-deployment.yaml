@@ -78,8 +78,10 @@ spec:
           value: {{ .Values.cas.attributeStudentNumber | quote }}
         - name: CAS_ATTRIBUTE_EMAIL
           value: {{ .Values.cas.attributeEmail | quote }}
+        {{- if .Values.cas.loginHTML }}
         - name: CAS_LOGIN_HTML
           value: {{ .Values.cas.loginHTML | quote }}
+        {{- end }}
         {{- end }}
         - name: SAML_LOGIN_ENABLED
           value: {{ .Values.saml.enabled | quote }}
@@ -115,8 +117,10 @@ spec:
           value: {{ .Values.saml.attributeStudentNumber | quote }}
         - name: SAML_ATTRIBUTE_EMAIL
           value: {{ .Values.saml.attributeEmail | quote }}
+        {{- if .Values.saml.loginHTML }}
         - name: SAML_LOGIN_HTML
           value: {{ .Values.saml.loginHTML | quote }}
+        {{- end }}
         {{- end }}
         - name: XAPI_ENABLED
           value: {{ .Values.xapi.enabled | quote }}
@@ -216,8 +220,10 @@ spec:
           value: {{ .Values.allowStudentChange.email | quote }}
         - name: GA_TRACKING_ID
           value: {{ .Values.gaTrackingId | quote }}
+        {{- if .Values.loginAdditionalInstructionsHTML }}
         - name: LOGIN_ADDITIONAL_INSTRUCTIONS_HTML
           value: {{ .Values.loginAdditionalInstructionsHTML | quote }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:

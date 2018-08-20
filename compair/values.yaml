@@ -17,7 +17,7 @@ celeryTimezone: America/Vancouver
 appLoginEnabled: true
 ltiLoginEnabled: false
 gaTrackingId: null
-#loginAdditionalInstructionsHTML: null
+loginAdditionalInstructionsHTML: null
 
 # cas settings
 cas:
@@ -32,7 +32,7 @@ cas:
   attributeEmail: mail
   attributeUserRole: role
   instructorRoleValues: "instructor teacher staff"
-  #loginHTML: null
+  loginHTML: null
 
 # saml settings
 saml:
@@ -50,7 +50,7 @@ saml:
   attributeEmail: mail
   attributeUserRole: role
   instructorRoleValues: "instructor teacher staff"
-  #loginHTML: null
+  loginHTML: null
 
 # email notifications settings
 mail:
