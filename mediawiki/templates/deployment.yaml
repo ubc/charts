@@ -136,6 +136,18 @@ spec:
         - name: MEDIAWIKI_MEMCACHED_SERVERS
           value: '["{{ template "mediawiki.fullname" . }}-memcached:11211"]'
         {{- end }}
+        {{- if .Values.cacheDirectory }}
+        - name: MEDIAWIKI_CACHE_DIRECTORY
+          value: {{ .Values.cacheDirectory }}
+        {{- end }}
+        {{- if .Values.l10nCacheStore }}
+        - name: MEDIAWIKI_LOCALISATION_CACHE_STORE
+          value: {{ .Values.l10nCacheStore }}
+        {{- end }}
+        {{- if .Values.l10nCacheManualRecache }}
+        - name: MEDIAWIKI_LOCALISATION_CACHE_MANUALRECACHE
+          value: {{ .Values.l10nCacheManualRecache }}
+        {{- end }}
         {{- if .Values.googleAnalytics.ua }}
         - name: GOOGLE_ANALYTICS_UA
           value: {{ .Values.googleAnalytics.ua | quote }}

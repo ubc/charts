@@ -44,6 +44,13 @@ mediawikiExts: ""
 
 mainCache: "CACHE_NONE"
 
+# cacheDirectory: false
+
+# files, db or array
+# l10nCacheStore: detect
+
+#l10nCacheManualRecache: false
+
 apiPath: /w/api.php
 
 # mediawikiUploadPath: //example.com/images
