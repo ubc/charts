@@ -1,0 +1,154 @@
+# Default values for mattermost.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+stage: dev
+
+mattermost:
+  service:
+    #value for siteUrl is from ingress
+    listenPort: '8000'
+    enableUserAccessTokens: false
+  email:
+    server: smtp.server.com
+    port: 25
+    inviteSalt: 'XXXXXXXXXX'
+    passwordResetSalt: 'XXXXXXXXXXXXXXX'
+    enableSignUpWithEmail: true
+    enableSignInWithEmail: true
+    enableSignInWithUsername: true
+    sendEmailNotifications: false
+    useChannelInEmailNotifications: false
+    requireEmailVerification: false
+  ldap:
+    enabled: false
+    enableSync: false
+    ldapServer: ""
+    ldapPort: 389
+    connectionSecurity: ""
+    baseDN: ""
+    bindUsername: ""
+    bindPassword: ""
+    userFilter: ""
+    firstNameAttribute: ""
+    lastNameAttribute: ""
+    emailAttribute: ""
+    usernameAttribute: ""
+    nicknameAttribute: ""
+    idAttribute: ""
+    positionAttribute: ""
+    loginIdAttribute: ""
+    syncIntervalMinutes: 60
+    skipCertificateVerification: false
+    queryTimeout: 60
+    maxPageSize: 0
+    loginFieldName: ""
+    loginButtonColor: ""
+    loginButtonBorderColor: ""
+    loginButtonTextColor: ""
+  file:
+    # local or amazons3
+    driverName: local
+    maxFileSize: 52428800
+    directory: './data/'
+    enablePublicLink: true
+    publicLinkSalt: 'XXXXXXXXXXXXXXXXXXX'
+    enableFileAttachments: true
+    enableMobileUpload: true
+    enableMobileDownload: true
+    s3:
+      accessKeyId: ''
+      secretAccessKey: ''
+      bucket: ''
+      region: ''
+      endpoint: s3.amazonaws.com
+      ssl: true
+      signV2: false
+      # server side encryption
+      sse: false
+      trace: false
+  sql:
+    atRestEncryptKey: 'XXXXXXXXXXXXXX'
+  plugin:
+    enable: true
+    enableUploads: false
+    directory: '/mattermost/plugins/'
+    clientDirectory: './client/plugins'
+  log:
+    enableConsole: true
+    consoleLevel: INFO
+    consoleJson: true
+    enableFile: false
+    fileLevel: INFO
+    fileJson: true
+    fileLocation: ""
+    enableWebhookDebugging: true
+    enableDiagnostics: true
+  team:
+    enableTeamCreation: true
+    maxUsersPerTeam: 50
+    restrictDirectMessage: any
+    # this option is moved to System Scheme in db
+    # all, team_admin and system_admin
+    #restrictTeamInvite: all
+    # username, nickname_full_name and full_name
+    teammateNameDisplay: username
+  privacy:
+    showEmailAddress: true
+    showFullName: true
+
+image:
+  repository: mattermost/mattermost-prod-app
+  tag: 5.2.0
+  pullPolicy: IfNotPresent
+
+db:
+  driver: postgres
+  host: example.db
+  # port: 5432
+  name: mattermost
+  username: mmuser
+  password: mmuser_password
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - mattermost.local
+  tls: []
+  #  - secretName: mattermost-tls
+  #    hosts:
+  #      - mattermost.local
+
+persistence:
+  enabled: false
+  # storageClass:
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

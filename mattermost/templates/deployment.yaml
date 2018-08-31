@@ -1,0 +1,237 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "mattermost.fullname" . }}
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "mattermost.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "mattermost.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          #args: ['--config=/mattermost/data/config.json']
+          #command: ['sleep']
+          #args: ['10000']
+          env:
+            - name: MM_SERVICESETTINGS_LISTENADDRESS
+              value: ":{{ .Values.mattermost.service.listenPort }}"
+            - name: MM_SERVICESETTINGS_SITEURL
+              value: https://{{ index .Values.ingress.hosts 0 }}
+            - name: MM_SERVICESETTINGS_ENABLEUSERACCESSTOKENS
+              value: {{ .Values.mattermost.service.enableUserAccessTokens | quote }}
+            - name: DB_HOST
+              value: {{ .Values.db.host | quote }}
+            {{- if .Values.db.port }}
+            - name: DB_PORT_NUMBER
+              value: {{ .Values.db.port | quote }}
+            {{- end }}
+            - name: MM_USERNAME
+              value: {{ .Values.db.username | quote }}
+            - name: MM_PASSWORD
+              value: {{ .Values.db.password | quote }}
+            - name: MM_DBNAME
+              value: {{ .Values.db.name | quote }}
+              #- name: MM_CONFIG
+              #value: /mattermost/data/config.json
+            - name: MM_SQLSETTINGS_DRIVERNAME
+              value: {{ .Values.db.driver | quote }}
+            - name: MM_SQLSETTINGS_DATASOURCE
+              value: postgres://{{ .Values.db.username }}:{{ .Values.db.password }}@{{ .Values.db.host }}:{{ .Values.db.port }}/{{ .Values.db.name }}?sslmode=disable&connect_timeout=10
+            - name: MM_SQLSETTINGS_ATRESTENCRYPTKEY
+              value: {{ .Values.mattermost.sql.atRestEncryptKey | quote  }}
+            - name: MM_EMAILSETTINGS_SMTPSERVER
+              value: {{ .Values.mattermost.email.server }}
+            - name: MM_EMAILSETTINGS_SMTPPORT
+              value: {{ .Values.mattermost.email.port | quote }}
+            - name: MM_EMAILSETTINGS_INVITESALT
+              value: {{ .Values.mattermost.email.inviteSalt | quote }}
+            - name: MM_EMAILSETTINGS_PASSWORDRESETSALT
+              value: {{ .Values.mattermost.email.passwordResetSalt | quote }}
+            - name: MM_EMAILSETTINGS_ENABLESIGNUPWITHEMAIL
+              value: {{ .Values.mattermost.email.enableSignUpWithEmail | quote }}
+            - name: MM_EMAILSETTINGS_ENABLESIGNINWITHEMAIL
+              value: {{ .Values.mattermost.email.enableSignInWithEmail | quote }}
+            - name: MM_EMAILSETTINGS_ENABLESIGNINWITHUSERNAME
+              value: {{ .Values.mattermost.email.enableSignInWithUsername | quote }}
+            - name: MM_EMAILSETTINGS_SENDEMAILNOTIFICATIONS
+              value: {{ .Values.mattermost.email.sendEmailNotifications | quote }}
+            - name: MM_EMAILSETTINGS_USECHANNELINEMAILNOTIFICATIONS
+              value: {{ .Values.mattermost.email.useChannelInEmailNotifications | quote }}
+            - name: MM_EMAILSETTINGS_REQUIREEMAILVERIFICATION
+              value: {{ .Values.mattermost.email.requireEmailVerification | quote }}
+            {{- if .Values.mattermost.ldap.enabled }}
+            - name: MM_LDAPSETTINGS_ENABLE
+              value: "true"
+            - name: MM_LDAPSETTINGS_ENABLESYNC
+              value: {{ .Values.mattermost.ldap.enableSync | quote }}
+            - name: MM_LDAPSETTINGS_LDAPSERVER
+              value: {{ .Values.mattermost.ldap.server }}
+            - name: MM_LDAPSETTINGS_LDAPPORT
+              value: {{ .Values.mattermost.ldap.port | quote }}
+            - name: MM_LDAPSETTINGS_CONNECTIONSECURITY
+              value: {{ .Values.mattermost.ldap.connectionSecurity }}
+            - name: MM_LDAPSETTINGS_BASEDN
+              value: {{ .Values.mattermost.ldap.baseDN }}
+            - name: MM_LDAPSETTINGS_BINDUSERNAME
+              value: {{ .Values.mattermost.ldap.bindUsername }}
+            - name: MM_LDAPSETTINGS_BINDPASSWORD
+              value: {{ .Values.mattermost.ldap.bindPassword }}
+            - name: MM_LDAPSETTINGS_USERFILTER
+              value: {{ .Values.mattermost.ldap.userFilter | quote }}
+            - name: MM_LDAPSETTINGS_FIRSTNAMEATTRIBUTE
+              value: {{ .Values.mattermost.ldap.firstNameAttribute }}
+            - name: MM_LDAPSETTINGS_LASTNAMEATTRIBUTE
+              value: {{ .Values.mattermost.ldap.lastNameAttribute }}
+            - name: MM_LDAPSETTINGS_EMAILATTRIBUTE
+              value: {{ .Values.mattermost.ldap.emailAttribute }}
+            - name: MM_LDAPSETTINGS_USERNAMEATTRIBUTE
+              value: {{ .Values.mattermost.ldap.usernameAttribute }}
+            - name: MM_LDAPSETTINGS_NICKNAMEATTRIBUTE
+              value: {{ .Values.mattermost.ldap.nicknameAttribute }}
+            - name: MM_LDAPSETTINGS_IDATTRIBUTE
+              value: {{ .Values.mattermost.ldap.idAttribute | quote }}
+            - name: MM_LDAPSETTINGS_POSITIONATTRIBUTE
+              value: {{ .Values.mattermost.ldap.positionAttribute | quote }}
+            - name: MM_LDAPSETTINGS_LOGINIDATTRIBUTE
+              value: {{ .Values.mattermost.ldap.loginIdAttribute | quote }}
+            - name: MM_LDAPSETTINGS_SYNCINTERVALMINUTES
+              value: {{ .Values.mattermost.ldap.syncIntervalMinutes | quote }}
+            - name: MM_LDAPSETTINGS_SKIPCERTIFICATEVERIFICATION
+              value: {{ .Values.mattermost.ldap.skipCertificateVerification | quote }}
+            - name: MM_LDAPSETTINGS_QUERYTIMEOUT
+              value: {{ .Values.mattermost.ldap.queryTimeout | quote }}
+            - name: MM_LDAPSETTINGS_MAXPAGESIZE
+              value: {{ .Values.mattermost.ldap.maxPageSize | quote }}
+            - name: MM_LDAPSETTINGS_LOGINFIELDNAME
+              value: {{ .Values.mattermost.ldap.loginFieldName | quote }}
+            - name: MM_LDAPSETTINGS_LOGINBUTTONCOLOR
+              value: {{ .Values.mattermost.ldap.loginButtonColor | quote }}
+            - name: MM_LDAPSETTINGS_LOGINBUTTONBORDERCOLOR
+              value: {{ .Values.mattermost.ldap.loginButtonBorderColor | quote }}
+            - name: MM_LDAPSETTINGS_LOGINBUTTONTEXTCOLOR
+              value: {{ .Values.mattermost.ldap.loginButtonTextColor | quote  }}
+            {{- end }}
+            - name: MM_FILESETTINGS_ENABLEFILEATTACHMENTS
+              value: {{ .Values.mattermost.file.enableFileAttachments | quote  }}
+            - name: MM_FILESETTINGS_ENABLEMOBILEUPLOAD
+              value: {{ .Values.mattermost.file.enableMobileUpload | quote  }}
+            - name: MM_FILESETTINGS_ENABLEMOBILEDOWNLOAD
+              value: {{ .Values.mattermost.file.enableMobileDownload | quote  }}
+            - name: MM_FILESETTINGS_MAXFILESIZE
+              value: {{ .Values.mattermost.file.maxFileSize | quote  }}
+            - name: MM_FILESETTINGS_DRIVERNAME
+              value: {{ .Values.mattermost.file.driverName | quote  }}
+            - name: MM_FILESETTINGS_DIRECTORY
+              value: {{ .Values.mattermost.file.directory | quote  }}
+            - name: MM_FILESETTINGS_ENABLEPUBLICLINK
+              value: {{ .Values.mattermost.file.enablePublicLink | quote  }}
+            - name: MM_FILESETTINGS_PUBLICLINKSALT
+              value: {{ .Values.mattermost.file.publicLinkSalt | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3ACCESSKEYID
+              value: {{ .Values.mattermost.file.s3.accessKeyId | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3SECRETACCESSKEY
+              value: {{ .Values.mattermost.file.s3.secretAccessKey | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3BUCKET
+              value: {{ .Values.mattermost.file.s3.bucket | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3REGION
+              value: {{ .Values.mattermost.file.s3.region | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3ENDPOINT
+              value: {{ .Values.mattermost.file.s3.endpoint | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3SSL
+              value: {{ .Values.mattermost.file.s3.ssl | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3SIGNV2
+              value: {{ .Values.mattermost.file.s3.signV2 | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3SSE
+              value: {{ .Values.mattermost.file.s3.sse | quote  }}
+            - name: MM_FILESETTINGS_AMAZONS3TRACE
+              value: {{ .Values.mattermost.file.s3.trace | quote  }}
+            - name: MM_PLUGINSETTINGS_ENABLE
+              value: {{ .Values.mattermost.plugin.enable | quote  }}
+            - name: MM_PLUGINSETTINGS_ENABLEUPLOADS
+              value: {{ .Values.mattermost.plugin.enableUploads | quote  }}
+            - name: MM_PLUGINSETTINGS_DIRECTORY
+              value: {{ .Values.mattermost.plugin.directory | quote  }}
+            - name: MM_PLUGINSETTINGS_CLIENTDIRECTORY
+              value: {{ .Values.mattermost.plugin.clientDirectory | quote  }}
+            # log settings
+            - name: MM_LOGSETTINGS_ENABLECONSOLE
+              value: {{ .Values.mattermost.log.enableConsole | quote  }}
+            - name: MM_LOGSETTINGS_CONSOLELEVEL
+              value: {{ .Values.mattermost.log.consoleLevel | quote  }}
+            - name: MM_LOGSETTINGS_CONSOLEJSON
+              value: {{ .Values.mattermost.log.consoleJson | quote  }}
+            - name: MM_LOGSETTINGS_ENABLEFILE
+              value: {{ .Values.mattermost.log.enableFile | quote  }}
+            - name: MM_LOGSETTINGS_FILELEVEL
+              value: {{ .Values.mattermost.log.fileLevel | quote  }}
+            - name: MM_LOGSETTINGS_FILEJSON
+              value: {{ .Values.mattermost.log.fileJson | quote  }}
+            - name: MM_LOGSETTINGS_FILELOCATION
+              value: {{ .Values.mattermost.log.fileLocation | quote  }}
+            - name: MM_LOGSETTINGS_ENABLEWEBHOOKDEBUGGING
+              value: {{ .Values.mattermost.log.enableWebhookDebugging | quote  }}
+            - name: MM_LOGSETTINGS_ENABLEDIAGNOSTICS
+              value: {{ .Values.mattermost.log.enableDiagnostics | quote  }}
+            # team settings
+            - name: MM_TEAMSETTINGS_ENABLETEAMCREATION
+              value: {{ .Values.mattermost.team.enableTeamCreation | quote  }}
+            - name: MM_TEAMSETTINGS_MAXUSERSPERTEAM
+              value: {{ .Values.mattermost.team.maxUsersPerTeam | quote  }}
+            - name: MM_TEAMSETTINGS_RESTRICTDIRECTMESSAGE
+              value: {{ .Values.mattermost.team.restrictDirectMessage | quote  }}
+            - name: MM_TEAMSETTINGS_TEAMMATENAMEDISPLAY
+              value: {{ .Values.mattermost.team.teammateNameDisplay | quote  }}
+            # Privacy settings
+            - name: MM_PRIVACYSETTINGS_SHOWEMAILADDRESS
+              value: {{ .Values.mattermost.privacy.showEmailAddress | quote  }}
+            - name: MM_PRIVACYSETTINGS_SHOWFULLNAME
+              value: {{ .Values.mattermost.privacy.showFullName | quote  }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.mattermost.service.listenPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: mm-persistent-storage
+              mountPath: /mattermost/data
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: mm-persistent-storage
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "mattermost.fullname" . }}-app-pvc
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
