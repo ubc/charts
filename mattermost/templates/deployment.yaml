@@ -205,6 +205,19 @@ spec:
               value: {{ .Values.mattermost.privacy.showEmailAddress | quote  }}
             - name: MM_PRIVACYSETTINGS_SHOWFULLNAME
               value: {{ .Values.mattermost.privacy.showFullName | quote  }}
+            # Support settings
+            - name: MM_SUPPORTSETTINGS_TERMSOFSERVICELINK
+              value: {{ .Values.mattermost.support.termsOfServiceLink | quote  }}
+            - name: MM_SUPPORTSETTINGS_PRIVACYPOLICYLINK
+              value: {{ .Values.mattermost.support.privacyPolicyLink | quote  }}
+            - name: MM_SUPPORTSETTINGS_ABOUTLINK
+              value: {{ .Values.mattermost.support.aboutLink | quote  }}
+            - name: MM_SUPPORTSETTINGS_HELPLINK
+              value: {{ .Values.mattermost.support.helpLink | quote  }}
+            - name: MM_SUPPORTSETTINGS_REPORTAPROBLEMLINK
+              value: {{ .Values.mattermost.support.reportAProblemLink | quote  }}
+            - name: MM_SUPPORTSETTINGS_SUPPORTEMAIL
+              value: {{ .Values.mattermost.support.supportEmail | quote  }}
           ports:
             - name: http
               containerPort: {{ .Values.mattermost.service.listenPort }}

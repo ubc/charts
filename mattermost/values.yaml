@@ -104,6 +104,13 @@ mattermost:
   privacy:
     showEmailAddress: true
     showFullName: true
+  support:
+    termsOfServiceLink: https://about.mattermost.com/default-terms/
+    privacyPolicyLink: https://about.mattermost.com/default-privacy-policy/
+    aboutLink: https://about.mattermost.com/default-about/
+    helpLink: https://about.mattermost.com/default-help/
+    reportAProblemLink: https://about.mattermost.com/default-report-a-problem/
+    supportEmail: feedback@mattermost.com
 
 image:
   repository: mattermost/mattermost-prod-app
