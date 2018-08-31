@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "5.2"
 description: Deploy Mattermost in Kubernetes
 name: mattermost
-version: 0.1.0
+version: 0.1.1

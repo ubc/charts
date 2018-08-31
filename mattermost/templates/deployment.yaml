@@ -71,6 +71,13 @@ spec:
               value: {{ .Values.mattermost.email.useChannelInEmailNotifications | quote }}
             - name: MM_EMAILSETTINGS_REQUIREEMAILVERIFICATION
               value: {{ .Values.mattermost.email.requireEmailVerification | quote }}
+            # Push notification
+            - name: MM_EMAILSETTINGS_SENDPUSHNOTIFICATIONS
+              value: {{ .Values.mattermost.email.sendPushNotifications | quote  }}
+            - name: MM_EMAILSETTINGS_PUSHNOTIFICATIONSERVER
+              value: {{ .Values.mattermost.email.pushNotificationServer | quote  }}
+            - name: MM_EMAILSETTINGS_PUSHNOTIFICATIONCONTENTS
+              value: {{ .Values.mattermost.email.pushNotificationContents | quote  }}
             {{- if .Values.mattermost.ldap.enabled }}
             - name: MM_LDAPSETTINGS_ENABLE
               value: "true"

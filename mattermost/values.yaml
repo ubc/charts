@@ -22,6 +22,12 @@ mattermost:
     sendEmailNotifications: false
     useChannelInEmailNotifications: false
     requireEmailVerification: false
+    sendPushNotifications: false
+    # For Enterprise Edition, enter http://push.mattermost.com
+    # For Team Edition, enter http://push-test.mattermost.com
+    pushNotificationServer: ""
+    # generic_no_channel, generic and full
+    pushNotificationContents: "generic"
   ldap:
     enabled: false
     enableSync: false
