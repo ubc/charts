@@ -22,6 +22,9 @@ mattermost:
     sendEmailNotifications: false
     useChannelInEmailNotifications: false
     requireEmailVerification: false
+    feedbackName: ""
+    feedbackEmail: ""
+    feedbackOrganization: ""
     sendPushNotifications: false
     # For Enterprise Edition, enter http://push.mattermost.com
     # For Team Edition, enter http://push-test.mattermost.com

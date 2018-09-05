@@ -71,6 +71,12 @@ spec:
               value: {{ .Values.mattermost.email.useChannelInEmailNotifications | quote }}
             - name: MM_EMAILSETTINGS_REQUIREEMAILVERIFICATION
               value: {{ .Values.mattermost.email.requireEmailVerification | quote }}
+            - name: MM_EMAILSETTINGS_FEEDBACKNAME
+              value: {{ .Values.mattermost.email.feedbackName | quote }}
+            - name: MM_EMAILSETTINGS_FEEDBACKEMAIL
+              value: {{ .Values.mattermost.email.feedbackEmail | quote }}
+            - name: MM_EMAILSETTINGS_FEEDBACKORGANIZATION
+              value: {{ .Values.mattermost.email.feedbackOrganization | quote }}
             # Push notification
             - name: MM_EMAILSETTINGS_SENDPUSHNOTIFICATIONS
               value: {{ .Values.mattermost.email.sendPushNotifications | quote  }}
