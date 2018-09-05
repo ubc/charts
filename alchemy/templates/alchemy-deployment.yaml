@@ -85,6 +85,12 @@ spec:
         {{- end }}
         - name: GA_TRACKING_ID
           value: {{ .Values.gaTrackingId | quote }}
+        - name: IFRAME_ENABLED
+          value: {{ .Values.iframe.enabled | quote }}
+        {{- if .Values.iframe.enabled }}
+        - name: IFRAME_ORIGIN
+          value: {{ .Values.iframe.origin | quote }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:

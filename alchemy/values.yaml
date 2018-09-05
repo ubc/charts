@@ -14,6 +14,10 @@ casServiceValidateUrl: null
 secret: PLEASE_CHANGE_ME
 gaTrackingId: null
 
+iframe:
+  enabled: false
+  origin: null
+
 # xapi settings
 xapi:
   enabled: false
