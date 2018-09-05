@@ -51,6 +51,8 @@ app:
     enabled: true
     class: nginx
     #host: alchemy.example.com
+    nginx:
+      #configuration: null
 
 worker:
   replicaCount: 1
