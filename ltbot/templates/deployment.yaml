@@ -39,6 +39,10 @@ spec:
               value: {{ .Values.bot.encryptionKey | quote }}
             - name: BOT_PLUGIN_INDEXES
               value: {{ .Values.bot.pluginIndexes | quote }}
+            {{- if .Values.bot.logLevel }}
+            - name: BOT_LOG_LEVEL
+              value: {{ .Values.bot.logLevel | quote }}
+            {{- end}}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
 #          livenessProbe:
