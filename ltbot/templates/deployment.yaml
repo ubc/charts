@@ -35,6 +35,8 @@ spec:
               value: {{ .Values.bot.admins | quote }}
             - name: CHATROOM_FN
               value: {{ .Values.bot.chatroomFN | quote }}
+            - name: ENCRYPTION_KEY
+              value: {{ .Values.bot.encryptionKey | quote }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
 #          livenessProbe:

@@ -47,3 +47,4 @@ bot:
   # token:
   admins: "@admin"
   chatroomFN: err
+  #encryptionKey:
