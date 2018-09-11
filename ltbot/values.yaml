@@ -48,3 +48,4 @@ bot:
   admins: "@admin"
   chatroomFN: err
   #encryptionKey:
+  pluginIndexes: https://repos.errbot.io/repos.json
