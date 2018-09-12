@@ -1,0 +1,1 @@
+Use nginx-ingress build-in redirect instead: https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#permanent-redirect
