@@ -43,6 +43,7 @@ spec:
             "--saml.lb.serverPort={{ .Values.saml.lb.serverPort }}",
             "--saml.lb.contextPath={{ .Values.saml.lb.contextPath }}",
             "--saml.lb.includeServerPortInRequestURL={{ .Values.saml.lb.includeServerPortInRequestURL }}",
+            "--saml.logging.messages={{ .Values.saml.logging.messages }}".
             "--ltps.v1.url={{ .Values.ltps.v1.url }}",
             "--ltps.v1.username={{ .Values.ltps.v1.username }}",
             "--ltps.v1.password={{ .Values.ltps.v1.password }}",

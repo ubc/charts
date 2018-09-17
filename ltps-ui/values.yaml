@@ -72,7 +72,9 @@ saml:
     serverPort:
     contextPath:
     includeServerPortInRequestURL:
-      
+  logging:
+    messages: false
+
 ltps:
   v1:
     url: http://localhost:8080/ctcwebservices
