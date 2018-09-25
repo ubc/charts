@@ -322,6 +322,9 @@ metadata:
   annotations:
     kubernetes.io/tls-acme: "true"
     kubernetes.io/ingress.class: {{ .Values.app.ingress.class }}
+    {{- if (eq .Values.app.ingress.class "nginx") }}
+    nginx.org/client-max-body-size: {{ .Values.attachment.uploadLimit | quote }}
+    {{- end }}
   labels:
     app: {{ template "fullname" . }}
     stage: {{ .Values.stage }}
