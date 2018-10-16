@@ -73,7 +73,7 @@ saml:
     contextPath:
     includeServerPortInRequestURL:
   logging:
-    messages: false
+    messages: true
 
 ltps:
   v1:
