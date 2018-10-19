@@ -2119,4 +2119,14 @@ request.item.helpdesk.override = false
 
 # Handle to the showcase collection (don't show if undefined)
 statspace.showcase.handle =
+
+# Rating and commenting
+commenting.enabled = {{ .Values.dspace.commenting.enabled }}
+commenting.delete.curator.email = {{ .Values.dspace.commenting.deleteCuratorEmail }}
+commenting.comment-per-page = {{ .Values.dspace.commenting.commentPerPage }}
+commenting.title.max-length = {{ .Values.dspace.commenting.titleMaxLength }}
+commenting.detail.max-length = {{ .Values.dspace.commenting.detailMaxLength }}
+commenting.max-comment-per-item = {{ .Values.dspace.commenting.maxCommentPerItem }}
+commenting.policy.url = {{ .Values.dspace.commenting.policyURL }}
+
 {{- end -}}

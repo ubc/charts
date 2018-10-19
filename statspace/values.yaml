@@ -66,6 +66,14 @@ dspace:
     digestAlgorithm:
   searchRequestProcessor: org.dspace.app.webui.discovery.DiscoverySearchRequestProcessor
   #googleAnalyticsKey: UA-XXXXXX-X
+  commenting:
+    enabled: false
+    deleteCuratorEmail: admin@example.com
+    commentPerPage: 5
+    titleMaxLength: 120
+    detailMaxLength: 10000
+    maxCommentPerItem: 10000
+    policyURL: "http://www.hr.ubc.ca/respectful-environment/"
 
 # database setup, https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 
