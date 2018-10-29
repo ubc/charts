@@ -30,9 +30,6 @@ spec:
             "--canvas.timeout.connect={{ .Values.canvas.timeout.connect }}",
             "--canvas.timeout.read={{ .Values.canvas.timeout.read }}",
             "--server.ssl.enabled={{ .Values.server.ssl.enabled }}",
-            {{- if .Values.server.servlet.session.timeout }}
-            "--server.servlet.session.timeout={{ .Values.server.servlet.session.timeout }}",
-            {{- end }}
             "--saml.sp.key-store={{ .Values.saml.sp.keyStore }}",
             "--saml.sp.key-store-password={{ .Values.saml.sp.keyStorePassword }}",
             "--saml.sp.key-name={{ .Values.saml.sp.keyName }}",
