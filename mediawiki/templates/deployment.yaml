@@ -164,6 +164,10 @@ spec:
         - name: GOOGLE_ANALYTICS_METRICS_VIEWID
           value: {{ .Values.googleAnalytics.metricsViewID | quote }}
         {{- end }}
+        {{- if .Values.googleMap.apiKey }}
+        - name: GOOGLE_MAP_API_KEY
+          value: {{ .Values.googleMap.apiKey | quote }}
+        {{- end }}
         ports:
         - name: http
           containerPort: 80

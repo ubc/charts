@@ -69,6 +69,10 @@ googleAnalytics:
   # metricsPath: /path/to/json/file
   # metricsViewID: XXXXX
 
+googleMap:
+  # Google Map API key
+  #apiKey: XXXXX
+
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
 ##
