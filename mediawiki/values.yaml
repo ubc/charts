@@ -71,7 +71,7 @@ googleAnalytics:
 
 googleMap:
   # Google Map API key
-  #apiKey: XXXXX
+  apiKey: XXXXX
 
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
