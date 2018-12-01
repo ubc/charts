@@ -214,6 +214,10 @@ resources:
 
 jobrunner:
   enabled: false
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "150Mi"
 
 mediawikiFiles:
   CustomSettings.php: |-

@@ -146,9 +146,7 @@ spec:
       {{- include "mediawiki.app.spec" . | indent 8 }}
         args: ["php", "/var/www/html/maintenance/runJobs.php", "--wait"]
         resources:
-          requests:
-            memory: "50Mi"
-            cpu: "100m"
+{{ toYaml .Values.jobrunner.resources | indent 10 }}
       volumes:
       {{- include "mediawiki.app.mounts" . | indent 6 }}
 {{- end }}
