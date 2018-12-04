@@ -68,6 +68,10 @@ spec:
     targetPort: 11211
     protocol: TCP
     name: memcached
+  - port: 9150
+    targetPort: 9150
+    protocol: TCP
+    name: metrics
   selector:
     app: {{ template "mediawiki.fullname" . }}-memcached
 {{- end -}}

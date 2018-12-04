@@ -160,6 +160,17 @@ memcached:
     requests:
       memory: 64Mi
       cpu: 50m
+  # memcached exporter for Prometheus
+  exporter:
+    enabled: false
+    image:
+      repository: quay.io/prometheus/memcached-exporter
+      tag: latest
+    # imagePullPolicy:
+    resources:
+      requests:
+        memory: 16Mi
+        cpu: 20m
 
 service:
   name: mediawiki
