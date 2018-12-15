@@ -65,7 +65,7 @@ mail:
 
 # attachment
 attachment:
-  uploadLimit: "262144000" #1024 * 1024 * 250 -> max 250MB
+  uploadLimit: &uploadLimit "262144000" #1024 * 1024 * 250 -> max 250MB
   allowedExtensions: "pdf mp3 mp4 webm jpg jpeg png"
   previewExtensions: "jpg jpeg png"
 
@@ -128,8 +128,12 @@ app:
     internalPort: 3031
   ingress:
     enabled: true
-    class: nginx
-    #host: compair.example.com
+    hosts: []
+    # - compair.example.com
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: *uploadLimit
 
 worker:
   replicaCount: 1
@@ -141,7 +145,7 @@ worker:
 db:
   image:
     repository: mariadb
-    tag: 10.1
+    tag: 10.4
     pullPolicy: IfNotPresent
   persistence:
     enabled: false
@@ -152,7 +156,7 @@ db:
 redis:
   image:
     repository: redis
-    tag: 3.2.4
+    tag: 3.2.11
     pullPolicy: IfNotPresent
   service:
     port: 6379

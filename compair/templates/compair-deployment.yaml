@@ -313,17 +313,17 @@ spec:
     tier: app
 
 {{- if .Values.app.ingress.enabled }}
+{{- $hosts := append .Values.app.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
+{{- $serviceName := include "fullname" . }}
+{{- $servicePort := .Values.app.service.externalPort }}
 ---
-
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}
   annotations:
-    kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: {{ .Values.app.ingress.class }}
-    {{- if (eq .Values.app.ingress.class "nginx") }}
-    nginx.ingress.kubernetes.io/proxy-body-size: {{ .Values.attachment.uploadLimit | quote }}
+    {{- range $key, $value := .Values.app.ingress.annotations }}
+      {{ $key  }}: {{ $value | quote  }}
     {{- end }}
   labels:
     app: {{ template "fullname" . }}
@@ -337,34 +337,22 @@ metadata:
     build_id: "{{ .Values.CI_BUILD_ID }}"
     {{- end }}
 spec:
+  rules:
+  {{- range $host := $hosts }}
+  - host: {{ $host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $serviceName  }}-app
+          servicePort: {{ $servicePort  }}
+  {{- end }}
+  {{- if and (hasKey .Values.app.ingress.annotations "kubernetes.io/tls-acme") (index .Values.app.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
   tls:
   - hosts:
-    {{- if .Values.app.ingress.host }}
-    - {{ .Values.app.ingress.host }}
+    {{- range $host := $hosts }}
+      - {{ $host }}
     {{- end }}
-    {{ $ingress :=  or (.Values.app.ingress.host) "" }}
-    {{ $hostname := or (.Values.CI_ENVIRONMENT_HOSTNAME) "" }}
-    {{- if ne $hostname $ingress }}
-    - {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
-    {{- end }}
-    secretName: {{ .Values.app.ingress.host | default .Values.CI_ENVIRONMENT_HOSTNAME | replace "." "-" }}-tls
-  rules:
-  {{- if .Values.app.ingress.host }}
-  - host: {{ .Values.app.ingress.host }}
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: {{ template "fullname" . }}-app
-          servicePort: {{ .Values.app.service.externalPort }}
-  {{- end }}
-  {{- if ne $hostname $ingress }}
-  - host: {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: {{ template "fullname" . }}-app
-          servicePort: {{ .Values.app.service.externalPort }}
+    secretName: {{ template "fullname" . }}-tls
   {{- end }}
 {{ end }}
