@@ -67,12 +67,14 @@ spec:
         livenessProbe:
           initialDelaySeconds: 240
           periodSeconds: 10
+          timeoutSeconds: 3
           httpGet:
             path: /
             port: {{ .Values.service.internalPort }}
         readinessProbe:
           initialDelaySeconds: 120
           periodSeconds: 10
+          timeoutSeconds: 3
           httpGet:
             path: /
             port: {{ .Values.service.internalPort }}
