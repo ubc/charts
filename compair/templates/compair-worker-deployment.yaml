@@ -161,6 +161,8 @@ spec:
           value: {{ .Values.demoInstance | quote }}
         - name: CELERY_TIMEZONE
           value: {{ .Values.celeryTimezone | quote }}
+        - name: CELERY_ALWAYS_EAGER
+          value: {{ .Values.celeryAlwaysEager | quote }}
         - name: MAIL_NOTIFICATION_ENABLED
           value: {{ .Values.mail.enabled | quote }}
         {{- if .Values.mail.enabled }}
