@@ -84,6 +84,9 @@ ltps:
     url: http://localhost:8080/ctc-ws-v2
     username:
     password:
+    
+config:
+  reconEnabled: true
 
 devmode:
   enabled: false
