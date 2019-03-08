@@ -61,6 +61,9 @@ mediawikiUploadPath: //example.com/images
 # allow anonymous user to edit pages
 # mediawikiAllowAnonymousEdit: true
 
+# Enable bot password
+# mediawikiEnableBotPasswords: true
+
 googleAnalytics:
   # Google Analytics Tracking Token
   ua: UA-XXXXXXXX-XX
