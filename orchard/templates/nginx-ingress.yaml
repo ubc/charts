@@ -1,15 +1,32 @@
+{{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq -}}
+
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "orchard.fullname" . }}-nginx-ingress
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    {{- range $key, $value := .Values.ingress.annotations }}
+      {{ $key  }}: {{ $value | quote  }}
+    {{- end }}
 spec:
   rules:
-  - host: orchard.elearning.ubc.ca
+  {{- $serviceName := printf "%s-nginx-service" (include "orchard.fullname" .) }}
+  {{- $servicePort := .Values.service.port }}
+  {{- range $host := $hosts }}
+  - host: {{ $host }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: {{ template "orchard.fullname" . }}-nginx-service
-          servicePort: 80
+          serviceName: {{ $serviceName }} 
+          servicePort: {{ $servicePort  }}
+  {{- end }}
+  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
+  tls:
+  - hosts:
+    {{- range $host := $hosts }}
+      - {{ $host }}
+    {{- end }}
+    secretName: {{ template "orchard.fullname" . }}-tls
+  {{- end }}
