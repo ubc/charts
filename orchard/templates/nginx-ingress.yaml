@@ -1,6 +1,5 @@
 {{- $hosts := append .Values.ingress.hosts .Values.service.url | compact | uniq -}}
 
----
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -26,7 +25,7 @@ spec:
   tls:
   - hosts:
     {{- range $host := $hosts }}
-  - {{ replace "http://" "" $host }}
+    - {{ replace "http://" "" $host }}
     {{- end }}
     secretName: {{ template "orchard.fullname" . }}-tls
   {{- end }}
