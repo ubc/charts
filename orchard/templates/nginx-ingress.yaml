@@ -1,4 +1,4 @@
-{{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq -}}
+{{- $hosts := append .Values.ingress.hosts .Values.service.url | compact | uniq -}}
 
 ---
 apiVersion: extensions/v1beta1
