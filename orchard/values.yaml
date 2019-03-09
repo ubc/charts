@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: ionparticle/orchard-sandbox
+  repository: lthub/orchard
   tag: latest
   pullPolicy: IfNotPresent
 
