@@ -14,7 +14,7 @@ spec:
   {{- $serviceName := printf "%s-nginx-service" (include "orchard.fullname" .) }}
   {{- $servicePort := .Values.service.port }}
   {{- range $host := $hosts }}
-  - host: {{ $host }}
+  - host: {{ replace "http://" "" $host }}
     http:
       paths:
       - path: /
