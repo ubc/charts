@@ -85,6 +85,12 @@ googleMap:
 # smtpUser:
 # smtpPassword:
 
+# HorizontalPodAutoscaler
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
 ##
 ## MariaDB chart configuration
 # ref: https://github.com/kubernetes/charts/tree/master/stable/mariadb
