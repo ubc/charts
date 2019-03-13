@@ -104,10 +104,8 @@ env:
 - name: MEDIAWIKI_ALLOW_ANONYMOUS_EDIT
   value: {{ .Values.mediawikiAllowAnonymousEdit | quote }}
 {{- end }}
-{{- if .Values.mediawikiEnableBotPasswords}}
 - name: MEDIAWIKI_ENABLE_BOT_PASSWORDS
   value: {{ .Values.mediawikiEnableBotPasswords | quote }}
-{{- end }}
 - name: SMTP_HOST_ID
   value: {{ default "" .Values.smtpHostID | quote }}
 - name: SMTP_HOST
@@ -178,7 +176,7 @@ env:
 {{- end }}
 {{- if .Values.l10nCacheManualRecache }}
 - name: MEDIAWIKI_LOCALISATION_CACHE_MANUALRECACHE
-  value: {{ .Values.l10nCacheManualRecache }}
+  value: {{ .Values.l10nCacheManualRecache | quote }}
 {{- end }}
 {{- if .Values.googleAnalytics.ua }}
 - name: GOOGLE_ANALYTICS_UA

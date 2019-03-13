@@ -62,7 +62,7 @@ mediawikiUploadPath: //example.com/images
 # mediawikiAllowAnonymousEdit: true
 
 # Enable bot password
-# mediawikiEnableBotPasswords: true
+mediawikiEnableBotPasswords: true
 
 googleAnalytics:
   # Google Analytics Tracking Token
