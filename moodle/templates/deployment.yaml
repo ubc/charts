@@ -1,0 +1,202 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "moodle.fullname" . }}
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: app
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "moodle.fullname" . }}
+      release: "{{ .Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app: {{ template "moodle.fullname" . }}
+        chart: {{ template "moodle.chart" . }}
+        release: "{{ .Release.Name }}"
+{{- if or .Values.podAnnotations .Values.metrics.enabled }}
+      annotations:
+  {{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+  {{- end }}
+  {{- if .Values.metrics.podAnnotations }}
+{{ toYaml .Values.metrics.podAnnotations | indent 8 }}
+  {{- end }}
+{{- end }}
+    spec:
+      {{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+      {{- end }}
+{{- include "moodle.imagePullSecrets" . | indent 6 }}
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "status.localhost"
+      initContainers:
+      - name: init-{{ template "moodle.fullname" . }}
+          {{- include "moodle.app.spec" . | indent 8 }}
+        args: ["echo", "Initialized"]
+      containers:
+      - name: {{ template "moodle.fullname" . }}
+      {{- include "moodle.app.spec" . | indent 8 }}
+        ports:
+        - name: http
+          containerPort: 80
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /login/index.php
+            port: http
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /login/index.php
+            port: http
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+{{- if .Values.metrics.enabled }}
+      - name: metrics
+        image: {{ template "moodle.metrics.image" . }}
+        imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
+        command: [ '/bin/apache_exporter', '-scrape_uri', 'http://status.localhost:80/server-status/?auto']
+        ports:
+        - name: metrics
+          containerPort: 9117
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        resources:
+  {{ toYaml .Values.metrics.resources | indent 10 }}
+{{- end }}
+      volumes:
+      {{- include "moodle.app.mounts" . | indent 6 }}
+
+{{- if .Values.memcached.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "moodle.fullname" . }}-memcached
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: cache
+spec:
+  replicas: {{ .Values.memcached.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "moodle.fullname" . }}-memcached
+  template:
+    metadata:
+      labels:
+        app: {{ template "moodle.fullname" . }}-memcached
+    spec:
+      containers:
+      {{- if .Values.memcached.exporter.enabled }}
+      - name: {{ template "moodle.fullname" . }}-memcached-exporter
+        image: '{{ .Values.memcached.exporter.image.repository }}:{{ .Values.memcached.exporter.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.memcached.exporter.imagePullPolicy | quote }}
+        ports:
+          - name: metrics
+            containerPort: 9150
+        livenessProbe:
+          httpGet:
+            port: 9150
+        readinessProbe:
+          httpGet:
+            port: 9150
+        resources:
+  {{ toYaml .Values.memcached.exporter.resources | indent 10 }}
+  {{- end }}
+- name: {{ template "moodle.fullname" . }}-memcached
+  image: '{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag | default "latest" }}'
+  imagePullPolicy: {{ default "" .Values.memcached.imagePullPolicy | quote }}
+  args: ["-m", "{{ .Values.memcached.memory }}"]
+  ports:
+    - name: memcached
+      containerPort: 11211
+  livenessProbe:
+    tcpSocket:
+      port: 11211
+  readinessProbe:
+    tcpSocket:
+      port: 11211
+  resources:
+  {{ toYaml .Values.memcached.resources | indent 10 }}
+{{- end -}}
+
+{{- if .Values.redis.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "moodle.fullname" . }}-redis
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: cache
+spec:
+  replicas: {{ .Values.redis.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "moodle.fullname" . }}-redis
+  template:
+    metadata:
+      labels:
+        app: {{ template "moodle.fullname" . }}-redis
+    spec:
+      containers:
+      {{- if .Values.redis.exporter.enabled }}
+      - name: {{ template "moodle.fullname" . }}-redis-exporter
+        image: '{{ .Values.redis.exporter.image.repository }}:{{ .Values.redis.exporter.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.redis.exporter.imagePullPolicy | quote }}
+        ports:
+        - name: metrics
+          containerPort: 9121
+        livenessProbe:
+          httpGet:
+            port: 9121
+        readinessProbe:
+          httpGet:
+            port: 9121
+        resources:
+{{ toYaml .Values.redis.exporter.resources | indent 10 }}
+      {{- end }}
+      - name: {{ template "moodle.fullname" . }}-redis
+        image: '{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.redis.imagePullPolicy | quote }}
+        ports:
+        - name: redis
+          containerPort: 6379
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+        resources:
+{{ toYaml .Values.redis.resources | indent 10 }}
+{{- end -}}

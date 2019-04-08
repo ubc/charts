@@ -1,0 +1,22 @@
+dependencies:
+- name: mariadb
+  version: 5.x.x
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  condition: db.disableExternal
+  alias: db
+
+#- name: mysql
+#  version: 0.3.7
+#  repository: https://kubernetes-charts.storage.googleapis.com/
+#  condition: db.enabled
+#  alias: db
+#- name: mariadb
+#  version: 0.6.3
+#  repository: https://kubernetes-charts.storage.googleapis.com/
+#  #  condition: db.mariadb
+#  alias: db
+#- name: postgresql
+#  version: 0.7.1
+#  repository: https://kubernetes-charts.storage.googleapis.com/
+#  condition: db.postgresql
+#  alias: db
