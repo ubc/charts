@@ -1,0 +1,25 @@
+{{- if .Values.cronjob.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "moodle.fullname" . }}-cronjob
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: app
+spec:
+  schedule: {{ .Values.cronjob.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: init-{{ template "moodle.fullname" . }}
+              {{- include "moodle.app.spec" . | indent 12 }}
+            args:
+            - /bin/sh
+            - -c
+            - /usr/bin/sudo -E -u www-data /usr/local/bin/php admin/cli/cron.php
+          restartPolicy: OnFailure
+          volumes:
+            {{- include "moodle.app.mounts" . | indent 12 }}
+{{- end }}
