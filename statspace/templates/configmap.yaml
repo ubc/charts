@@ -12,3 +12,6 @@ data:
 
   authentication-password.cfg: |-
 {{ include "authentication-password.cfg" . | indent 4 }}
+
+  solr.xml: |-
+{{ include "solr.xml" . | indent 4 }}
