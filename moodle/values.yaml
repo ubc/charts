@@ -68,6 +68,8 @@ moodleShortName: "Moodle"
 # smtpProtocol:
 # smtpAuth:
 
+uploadMaxFileSize: &uploadMaxFileSize 20m
+
 # HorizontalPodAutoscaler
 hpa:
   enabled: false
@@ -214,7 +216,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: 20m
+    nginx.ingress.kubernetes.io/proxy-body-size: *uploadMaxFileSize
 
   secrets:
   ## If you're providing your own certificates, please use this to add the certificates as secrets

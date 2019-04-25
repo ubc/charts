@@ -72,7 +72,7 @@ Also, we can't use a single if because lazy evaluation is not an option
 {{/* Moodle container spec */}}
 {{- define "moodle.app.spec" }}
 image: '{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}'
-imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
 env:
 - name: MOODLE_DB_TYPE
   value: {{ default "mariadb" .Values.db.db.type | quote }}
@@ -134,6 +134,8 @@ env:
   value: {{ default "" .Values.smtpAuth | quote }}
 - name: MOODLE_NOREPLY_ADDRESS
   value: {{ default "" .Values.moodleNoReplyAddress | quote }}
+- name: UPLOAD_MAX_FILESIZE
+  value: {{ .Values.uploadMaxFileSize | quote }}
 {{- if .Values.redis.enabled }}
 - name: REDIS_HOST
   value: {{ template "moodle.fullname" . }}-redis

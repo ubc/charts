@@ -1,12 +1,11 @@
 name: moodle
-version: 0.0.2
+version: 0.0.3
 description: Moodle is a learning platform designed to provide educators, administrators and learners with a single robust, secure and integrated system to create personalised learning environments
 keywords:
 - moodle
 - learning
 - php
 home: http://www.moodle.org/
-icon: https://bitnami.com/assets/stacks/mediawiki/img/mediawiki-stack-220x234.png
 sources:
 - https://github.com/ubc/moodle-docker
 maintainers:
