@@ -29,7 +29,7 @@ spec:
       - name: {{ .Chart.Name }}-worker
         image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
         imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
-        command: ["bundle", "exec", "sidekiq"]
+        command: ["sidekiq"]
         env:
         - name: DB_HOST
           value: "{{ template "fullname" . }}-db"
