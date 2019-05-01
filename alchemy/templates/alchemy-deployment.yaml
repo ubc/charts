@@ -117,7 +117,7 @@ spec:
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
       - name: init-db-and-migrate
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
-        command: ["sh", "-c", "rake alchemy:ubc['{{ .Values.adminDefaultPassword }}'] RAILS_ENV=production"]
+        command: ["sh", "-c", "rake alchemy:addAdmin['alchemy_admin@ubc.ca','{{ .Values.adminDefaultPassword }}'] RAILS_ENV=production"]
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
         - name: DB_HOST
