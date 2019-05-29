@@ -3,7 +3,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "orchard.fullname" . }}-nginx-ingress
+  name: nginx-ingress
   annotations:
     {{- range $key, $value := .Values.ingress.annotations }}
       {{ $key  }}: {{ $value | quote  }}
