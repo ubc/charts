@@ -134,6 +134,53 @@ env:
   value: {{ default "" .Values.smtpAuth | quote }}
 - name: MOODLE_NOREPLY_ADDRESS
   value: {{ default "" .Values.moodleNoReplyAddress | quote }}
+{{/* Course payment db on same db server as moodle */}}
+- name: MOODLE_UBC_COURSE_PAYMENT_DB_HOST
+  value: {{ template "moodle.db.fullname" . | default .Values.db.service.name }}
+- name: MOODLE_UBC_COURSE_PAYMENT_DB_NAME
+  value: {{ default "" .Values.ubcCoursePayment.db.name | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_DB_USER
+  value: {{ default "moodle" .Values.db.db.user | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+    {{- if .Values.db.disableExternal }}
+      name: {{ template "moodle.db.fullname" . }}
+      key: mariadb-password
+    {{- else }}
+      name: {{ template "moodle.fullname" . }}
+      key: db_password
+    {{- end }}
+- name: MOODLE_UBC_COURSE_PAYMENT_UPLOAD_DIR
+  value: {{ default "" .Values.ubcCoursePayment.uploadDir | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_CBM_DEBUG
+  value: {{ default "false" .Values.ubcCoursePayment.cbm.debug | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_CBM_LOGFILE
+  value: {{ default "" .Values.ubcCoursePayment.cbm.logfile | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_CBM_AUTH_URL
+  value: {{ default "" .Values.ubcCoursePayment.cbm.authUrl | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_CBM_PYMT_URL
+  value: {{ default "" .Values.ubcCoursePayment.cbm.pymtUrl | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_CBM_USER_ID
+  value: {{ default "" .Values.ubcCoursePayment.cbm.userId | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_CBM_CREDENTIAL
+  value: {{ default "" .Values.ubcCoursePayment.cbm.credential | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_CBM_SRCE_TYP_CD
+  value: {{ default "" .Values.ubcCoursePayment.cbm.srceTypCd | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_FROM
+  value: {{ default "" .Values.ubcCoursePayment.email.from | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_RMS_RECIPIENT
+  value: {{ default "" .Values.ubcCoursePayment.email.rmsRecipient | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_IMMUNIZATION
+  value: {{ default "" .Values.ubcCoursePayment.email.immunization | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_IMMUNIZATION_RECIPIENT
+  value: {{ default "" .Values.ubcCoursePayment.email.immunizationRecipient | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_JV_RECIPIENT
+  value: {{ default "" .Values.ubcCoursePayment.email.jvRecipient | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_JCART_JV_RECIPIENT
+  value: {{ default "" .Values.ubcCoursePayment.email.jcartJvRecipient | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_WEBSITE_ADMIN
+  value: {{ default "" .Values.ubcCoursePayment.email.websiteAdmin | quote }}
 - name: UPLOAD_MAX_FILESIZE
   value: {{ .Values.uploadMaxFileSize | quote }}
 {{- if .Values.redis.enabled }}
