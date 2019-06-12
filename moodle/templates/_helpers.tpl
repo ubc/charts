@@ -145,10 +145,50 @@ env:
   value: {{ default 0 .Values.redis.db | quote }}
 - name: REDIS_PREFIX
   value: {{ default "" .Values.redis.prefix | quote }}
+{{- end }}
 {{- if .Values.debug }}
 - name: MOODLE_DEBUG
   value: "true"
 {{- end }}
+{{- if .Values.shibd.enabled }}
+- name: SHIBBOLETH_IDP_DISCOVERY_URL
+  value: {{ .Values.shib.idp.discoveryUrl }}
+- name: SHIBBOLETH_IDP_METADATA_URL
+  value: {{ .Values.shib.idp.metadataUrl }}
+- name: SHIBBOLETH_IDP_ENTITY_ID
+  value: {{ .Values.shib.idp.entityId }}
+- name: SHIBD_ATTRIBUTE_MAP_URL
+  value: {{ .Values.shib.idp.attributeMapUrl }}
+- name: SHIBBOLETH_SP_ENTITY_ID
+  value: {{ .Values.shib.sp.entityId }}
+- name: SHIBD_LISTENER_ACL
+  value: "0.0.0.0/0"
+- name: SHIBD_ODBC_DRIVER
+  value: {{ .Values.shib.odbc.driver }}
+- name: SHIBD_ODBC_LIB
+  value: {{ .Values.shib.odbc.lib }}
+- name: SHIBD_ODBC_SERVER
+  value: {{ template "moodle.db.fullname" . | default .Values.db.service.name }}
+- name: SHIBD_ODBC_PORT
+  value: {{ .Values.db.service.port | quote }}
+- name: SHIBD_ODBC_DATABASE
+  value: {{ .Values.db.db.name | quote }}
+- name: SHIB_ODBC_USER
+  value: {{ default "moodle" .Values.db.db.user | quote }}
+- name: SHIB_ODBC_PASSWORD
+  valueFrom:
+    secretKeyRef:
+    {{- if .Values.db.disableExternal }}
+      name: {{ template "moodle.db.fullname" . }}
+      key: mariadb-password
+    {{- else }}
+      name: {{ template "moodle.fullname" . }}
+      key: db_password
+    {{- end }}
+- name: SHIBD_SERVICE_NAME
+  value: {{ template "moodle.fullname" . }}-shibd
+- name: SHIBD_SERVICE_PORT
+  value: {{ .Values.shib.port }}
 {{- end }}
 volumeMounts:
 - name: moodle-data

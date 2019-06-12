@@ -95,13 +95,13 @@ db:
   ##
   db:
     type: mariadb
-    name: moodle
-    user: moodle
+    name: &dbName moodle
+    user: &dbUser moodle
     #prefix:
 
     ## If the password is not specified, mariadb will generates a random password
     ##
-    # password:
+    # password: &dbPass
 
   ## MariaDB admin password
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
@@ -386,3 +386,26 @@ redis:
   #    requests:
   #      cpu: "50m"
   #      memory: "150Mi"
+
+shib:
+  enabled: false
+  image:
+    repository: lthub/shibd
+    tag: latest
+  port: 1600
+  replicas: 1
+  # imagePullPolicy:
+  idp:
+    discoveryUrl: https://example.com
+    metadataUrl: https://example.com/idp/shibboleth
+    entityId: https://example.com
+    attributeMapUrl: https://example.com/attribute-map.xml
+  sp:
+    entityId: https://sp.example.com
+  odbc:
+    driver: MySql
+    lib: odbc-store.so
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 50m

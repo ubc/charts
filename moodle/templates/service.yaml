@@ -92,3 +92,23 @@ subsets:
   ports:
   - port: {{ .Values.service.port }}
 {{- end -}}
+
+{{- if .Values.shib.enabled }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "moodle.fullname" . }}-shibd
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.shib.port }}
+    targetPort: 1600
+    protocol: TCP
+    name: shibd
+  selector:
+    app: {{ template "moodle.fullname" . }}-shibd
+{{- end -}}
