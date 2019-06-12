@@ -151,6 +151,8 @@ env:
       name: {{ template "moodle.fullname" . }}
       key: db_password
     {{- end }}
+- name: MOODLE_UBC_COURSE_PAYMENT_DB_PORT
+  value: {{ .Values.db.service.port | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_UPLOAD_DIR
   value: {{ default "" .Values.ubcCoursePayment.uploadDir | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_CBM_DEBUG
