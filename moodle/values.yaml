@@ -160,6 +160,36 @@ db:
 #      memory: 768Mi
 #      cpu: 750m
 
+ubcCoursePayment:
+  db:
+    # the db is on the same server as moodle. only define db name here
+    name: Moodle_Payments
+  uploadDir: /var/www/html/ubc_course_payments/locked/course_payments/supervisor_payment_info/uploaded_files/
+  cbm:
+    debug: true
+    logfile: /tmp/cbm_error.log
+    # url to the authen service
+    authUrl: https://cbm.server/authServer/authenticate
+    # url to web service
+    pymtUrl: https://cbm.server/creditcardservice/CreditCardPaymentForm
+    userId: abcdefg
+    credential: abcdef
+    srceTypCd: ABCD
+  email:
+    # email addr for sending out notifications
+    from: sender@example.com
+    # email addr for receiving copies of notification
+    rmsRecipient: rmsRecipient@example.com
+    # email addr for sending out flu clinic notifications
+    immunization: immunization@example.com
+    # email addr for receiving copies of flu clinic notification
+    immunizationRecipient: immunizationRecipient@example.com
+    # email addr included in notifications in which JV should be sent to
+    jvRecipient: jvRecipient@example.com
+    # email addr displayed on JCart pages in which JV should be sent to
+    jcartJvRecipient: jcartJvRecipient@example.com
+    # email addr of the web site admin
+    websiteAdmin: websiteAdmin@example.com
 
 ## Kubernetes configuration
 ## For minikube, set this to NodePort, for ingress ClusterIP, elsewhere use LoadBalancer
