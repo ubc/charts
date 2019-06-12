@@ -150,7 +150,7 @@ env:
 - name: MOODLE_DEBUG
   value: "true"
 {{- end }}
-{{- if .Values.shibd.enabled }}
+{{- if .Values.shib.enabled }}
 - name: SHIBBOLETH_IDP_DISCOVERY_URL
   value: {{ .Values.shib.idp.discoveryUrl }}
 - name: SHIBBOLETH_IDP_METADATA_URL
@@ -188,7 +188,7 @@ env:
 - name: SHIBD_SERVICE_NAME
   value: {{ template "moodle.fullname" . }}-shibd
 - name: SHIBD_SERVICE_PORT
-  value: {{ .Values.shib.port }}
+  value: {{ .Values.shib.port | quote }}
 {{- end }}
 volumeMounts:
 - name: moodle-data

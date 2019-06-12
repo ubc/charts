@@ -402,6 +402,8 @@ shib:
     attributeMapUrl: https://example.com/attribute-map.xml
   sp:
     entityId: https://sp.example.com
+    # key:
+    # cert:
   odbc:
     driver: MySql
     lib: odbc-store.so
@@ -409,3 +411,4 @@ shib:
     requests:
       memory: 64Mi
       cpu: 50m
+
