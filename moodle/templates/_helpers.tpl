@@ -134,6 +134,7 @@ env:
   value: {{ default "" .Values.smtpAuth | quote }}
 - name: MOODLE_NOREPLY_ADDRESS
   value: {{ default "" .Values.moodleNoReplyAddress | quote }}
+{{- if .Values.ubcCoursePayment.enabled }}
 {{/* Course payment db on same db server as moodle */}}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_HOST
   value: {{ template "moodle.db.fullname" . | default .Values.db.service.name }}
@@ -183,6 +184,7 @@ env:
   value: {{ default "" .Values.ubcCoursePayment.email.jcartJvRecipient | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_WEBSITE_ADMIN
   value: {{ default "" .Values.ubcCoursePayment.email.websiteAdmin | quote }}
+{{- end }}
 - name: UPLOAD_MAX_FILESIZE
   value: {{ .Values.uploadMaxFileSize | quote }}
 {{- if .Values.redis.enabled }}

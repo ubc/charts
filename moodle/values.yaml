@@ -161,6 +161,7 @@ db:
 #      cpu: 750m
 
 ubcCoursePayment:
+  enabled: false
   db:
     # the db is on the same server as moodle. only define db name here
     name: Moodle_Payments
