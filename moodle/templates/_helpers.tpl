@@ -74,6 +74,8 @@ Also, we can't use a single if because lazy evaluation is not an option
 image: '{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}'
 imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
 env:
+- name: SERVER_NAME
+  value: https://{{ index .Values.ingress.hosts 0 | default .Values.CI_ENVIRONMENT_HOSTNAME | default "http://localhost" }}:443
 - name: MOODLE_DB_TYPE
   value: {{ default "mariadb" .Values.db.db.type | quote }}
 - name: MOODLE_DB_HOST
