@@ -186,6 +186,8 @@ env:
   value: {{ default "" .Values.ubcCoursePayment.email.jcartJvRecipient | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_EMAIL_WEBSITE_ADMIN
   value: {{ default "" .Values.ubcCoursePayment.email.websiteAdmin | quote }}
+- name: MOODLE_UBC_COURSE_PAYMENT_FIT_TEST_MOODLE_COURSE_ID
+  value: {{ default "" .Values.ubcCoursePayment.fitTest.moodleCourseId | quote }}
 {{- end }}
 - name: UPLOAD_MAX_FILESIZE
   value: {{ .Values.uploadMaxFileSize | quote }}
