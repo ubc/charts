@@ -264,6 +264,8 @@ spec:
               name: {{ template "moodle.fullname" . }}
               key: db_password
             {{- end }}
+        - name: LOG_LEVEL
+          value: {{ default "INFO" .Values.shib.logLevel | quote }}
         livenessProbe:
           tcpSocket:
             port: 1600

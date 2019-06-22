@@ -420,6 +420,7 @@ redis:
 
 shib:
   enabled: false
+  logLevel: INFO
   image:
     repository: lthub/shibd
     tag: latest
