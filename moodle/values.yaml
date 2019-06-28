@@ -191,6 +191,8 @@ ubcCoursePayment:
     jcartJvRecipient: jcartJvRecipient@example.com
     # email addr of the web site admin
     websiteAdmin: websiteAdmin@example.com
+  fitTest:
+    moodleCourseId: 0
 
 ## Kubernetes configuration
 ## For minikube, set this to NodePort, for ingress ClusterIP, elsewhere use LoadBalancer
