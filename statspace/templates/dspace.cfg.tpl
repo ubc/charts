@@ -1741,8 +1741,8 @@ plugin.sequence.org.dspace.plugin.ItemHomeProcessor = \
 upload.temp.dir = ${dspace.dir}/upload
 
 # Maximum size of uploaded files in bytes, negative setting will result in no limit being set
-# 512Mb
-upload.max = 536870912
+# 1024Mb
+upload.max = 1073741824
 
 
 ###### Statistical Report Configuration Settings ######
