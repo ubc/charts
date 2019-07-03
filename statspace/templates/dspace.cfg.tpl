@@ -1794,9 +1794,9 @@ report.dir = ${dspace.dir}/persistent/reports/
 #                            dc.identifier.govdoc, dc.identifier.uri(link), \
 #                            dc.identifier.isbn, dc.identifier.issn, \
 #                            dc.identifier.ismn, dc.identifier
-{{- if and .Values.dspace.webui .Values.dspace.webui.itemdisplay }}
+{{- if .Values.dspace.webui }}{{- if .Values.dspace.webui.itemdisplay }}
 webui.itemdisplay.default = {{ .Values.dspace.webui.itemdisplay }}
-{{ end }}
+{{ end }}{{ end }}
 #
 # When using "resolver" in webui.itemdisplay to render identifiers as resolvable
 # links, the base URL is taken from <code>webui.resolver.<n>.baseurl</code>
