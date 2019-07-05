@@ -62,7 +62,7 @@ spec:
     app: {{ template "moodle.fullname" . }}-redis
 {{- end -}}
 
-{{- if .Values.db.service.name }}
+{{- if not .Values.db.disableExternal }}
 ---
 apiVersion: v1
 kind: Service
@@ -72,10 +72,10 @@ metadata:
     {{- include "common_labels" . | indent 4 }}
 spec:
   ports:
-  - port: {{ .Values.service.port }}
-    targetPort: {{ .Values.service.port }}
+  - port: {{ .Values.db.service.port }}
+    targetPort: {{ .Values.db.service.port }}
     protocol: TCP
-    name: {{ .Values.service.name }}
+    name: db
 
 ---
 kind: Endpoints
@@ -86,11 +86,13 @@ metadata:
     {{- include "common_labels" . | indent 4 }}
 subsets:
 - addresses:
-  {{- range $endpoint := .Values.db.service.endpoints }}
-  - ip: {{ $endpoint }}
-  {{- end -}}
+  {{- range .Values.db.service.endpoints }}
+  - ip: {{ . }}
+  {{- end }}
   ports:
-  - port: {{ .Values.service.port }}
+  - port: {{ .Values.db.service.port }}
+    name: db
+    protocol: TCP
 {{- end -}}
 
 {{- if .Values.shib.enabled }}
