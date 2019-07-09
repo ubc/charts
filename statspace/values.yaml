@@ -65,6 +65,9 @@ dspace:
     loginGroup:
     digestAlgorithm:
   searchRequestProcessor: org.dspace.app.webui.discovery.DiscoverySearchRequestProcessor
+  recent:
+    submissions:
+      count: 0
   #googleAnalyticsKey: UA-XXXXXX-X
   commenting:
     enabled: false

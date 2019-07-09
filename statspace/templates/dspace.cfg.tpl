@@ -1327,7 +1327,7 @@ recent.submissions.sort-option = dateaccessioned
 
 # how many recent submissions should be displayed at any one time
 # Set to 0 since discovery uses a separate configuration for this
-recent.submissions.count = 0
+recent.submissions.count = {{ .Values.dspace.recent.submissions.count }}
 
 # name of the browse index to display collection's items.
 # You can set a "item" type of browse index only.
