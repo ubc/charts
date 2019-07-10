@@ -65,9 +65,28 @@ dspace:
     loginGroup:
     digestAlgorithm:
   searchRequestProcessor: org.dspace.app.webui.discovery.DiscoverySearchRequestProcessor
+  handle:
+    prefix: "123456789"
   recent:
     submissions:
       count: 0
+  webui:
+    browseIndexs:
+      - dateissued:item:dateissued
+      - author:metadata:dc.contributor.*,dc.creator:text
+      - title:item:title
+      - subject:metadata:dc.subject.*:text
+    sortOptions:
+      - title:dc.title:title
+      - dateissued:dc.date.issued:date
+      - dateaccessioned:dc.date.accessioned:date
+    itemlistColumns: >
+      dc.date.issued(date),
+      dc.title,
+      dc.contributor.*
+    collectionhome:
+      useDateaccessioned: "true"
+      browseName: title
   #googleAnalyticsKey: UA-XXXXXX-X
   commenting:
     enabled: false

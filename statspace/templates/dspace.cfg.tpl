@@ -345,7 +345,7 @@ search.index.12 = language:dc.language.iso
 handle.canonical.prefix = https://{{ index $hosts 0 }}/handle/
 
 # CNRI Handle prefix
-handle.prefix = 123456789
+handle.prefix = {{ .Values.dspace.handle.prefix }}
 
 # Directory for installing Handle server files
 handle.dir = ${dspace.dir}/handle-server
@@ -1158,11 +1158,14 @@ webui.strengths.show = false
 #
 # For compatibility with previous versions:
 #
-webui.browse.index.1 = dateissued:item:dateissued
-webui.browse.index.2 = author:metadata:dc.contributor.*,dc.creator:text
-webui.browse.index.3 = title:item:title
-webui.browse.index.4 = subject:metadata:dc.subject.*:text
+#webui.browse.index.1 = dateissued:item:dateissued
+#webui.browse.index.2 = author:metadata:dc.contributor.*,dc.creator:text
+#webui.browse.index.3 = title:item:title
+#webui.browse.index.4 = subject:metadata:dc.subject.*:text
 #webui.browse.index.5 = dateaccessioned:item:dateaccessioned
+{{- range $index, $browseIndex := .Values.dspace.webui.browseIndexs }}
+webui.browse.index.{{ add $index 1 }} = {{ $browseIndex }}
+{{- end }}
 
 ## example of authority-controlled browse category - see authority control config
 #webui.browse.index.5 = lcAuthor:metadataAuthority:dc.contributor.author:authority
@@ -1196,9 +1199,12 @@ webui.browse.index.4 = subject:metadata:dc.subject.*:text
 # you need to define a specific date sort for use by the recent items lists,
 # but otherwise don't want users to choose that option.
 #
-webui.itemlist.sort-option.1 = title:dc.title:title
-webui.itemlist.sort-option.2 = dateissued:dc.date.issued:date
-webui.itemlist.sort-option.3 = dateaccessioned:dc.date.accessioned:date
+#webui.itemlist.sort-option.1 = title:dc.title:title
+#webui.itemlist.sort-option.2 = dateissued:dc.date.issued:date
+#webui.itemlist.sort-option.3 = dateaccessioned:dc.date.accessioned:date
+{{- range $index, $sortOption := .Values.dspace.webui.sortOptions }}
+webui.itemlist.sort-option.{{ add $index 1 }} = {{ $sortOption }}
+{{- end }}
 
 # By default, the display of metadata in the browse indexes is case sensitive
 # So, you will get separate entries for the terms
@@ -1333,6 +1339,7 @@ recent.submissions.count = {{ .Values.dspace.recent.submissions.count }}
 # You can set a "item" type of browse index only.
 #   default = title
 #webui.collectionhome.browse-name = title
+webui.collectionhome.browse-name = {{ .Values.dspace.webui.collectionhome.browseName }}
 
 # how mamy items should be displayed per page in collection home page
 #   default = 20
@@ -1343,6 +1350,7 @@ recent.submissions.count = {{ .Values.dspace.recent.submissions.count }}
 #   Otherwise use the sort option pertaining the specified browse index.
 #   default = true
 #webui.collectionhome.use.dateaccessioned = true
+webui.collectionhome.use.dateaccessioned = {{ .Values.dspace.webui.collectionhome.useDateaccessioned }}
 
 # tell the community and collection pages that we are using the Recent
 # Submissions code
@@ -1861,6 +1869,7 @@ plugin.single.org.dspace.app.webui.util.StyleSelection = \
 # different purposes. Remember to add the respective beans in file 'config/spring/api/item-marking.xml'.
 #
 # webui.itemlist.columns = thumbnail, dc.date.issued(date), dc.title, dc.contributor.*
+webui.itemlist.columns = {{ .Values.dspace.webui.itemlistColumns }}
 #
 # You can customise the width of each column with the following line - you can have numbers (pixels)
 # or percentages. For the 'thumbnail' column, a setting of '*' will use the max width specified
