@@ -70,6 +70,7 @@ dspace:
   recent:
     submissions:
       count: 0
+  findCollectionOptimize: false
   webui:
     browseIndexs:
       - dateissued:item:dateissued

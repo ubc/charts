@@ -855,7 +855,7 @@ org.dspace.app.batchitemimport.work.dir = ${dspace.dir}/persistent/imports
 # Enable when having 
 # a large number of collections and no Shibboleth or LDAP authentication.
 # default = false, (disabled)
-#org.dspace.content.Collection.findAuthorizedPerformanceOptimize = true
+org.dspace.content.Collection.findAuthorizedPerformanceOptimize = {{ .Values.dspace.findCollectionOptimize }}
 
 # For backwards compatibility, the subscription emails by default include any modified items
 # uncomment the following entry for only new items to be emailed
