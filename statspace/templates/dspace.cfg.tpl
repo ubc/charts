@@ -993,7 +993,7 @@ webui.browse.thumbnail.show = false
 # whether to display the thumb against each bitstream (1.2+)
 # (This configuration is not used by XMLUI.  To show thumbnails in the
 #  XMLUI, you just need to create a theme which displays them)
-webui.item.thumbnail.show = true
+webui.item.thumbnail.show = {{ .Values.dspace.webui.itemThumbnail.show }}
 
 # where should clicking on a thumbnail from browse/search take the user
 # Only values currently supported are "item" and "bitstream"

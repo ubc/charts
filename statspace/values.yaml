@@ -88,6 +88,8 @@ dspace:
     collectionhome:
       useDateaccessioned: "true"
       browseName: title
+    itemThumbnail:
+      show: true
   #googleAnalyticsKey: UA-XXXXXX-X
   commenting:
     enabled: false
