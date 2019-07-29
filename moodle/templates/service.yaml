@@ -67,7 +67,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "moodle.fullname" . }}-db
+  name: {{ template "moodle.db.fullname" . }}
   labels:
     {{- include "common_labels" . | indent 4 }}
 spec:
@@ -81,7 +81,7 @@ spec:
 kind: Endpoints
 apiVersion: v1
 metadata:
-  name: {{ template "moodle.fullname" . }}-db
+  name: {{ template "moodle.db.fullname" . }}
   labels:
     {{- include "common_labels" . | indent 4 }}
 subsets:
