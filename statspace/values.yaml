@@ -81,10 +81,6 @@ dspace:
       - title:dc.title:title
       - dateissued:dc.date.issued:date
       - dateaccessioned:dc.date.accessioned:date
-    itemlistColumns: >
-      dc.date.issued(date),
-      dc.title,
-      dc.contributor.*
     collectionhome:
       useDateaccessioned: "true"
       browseName: title

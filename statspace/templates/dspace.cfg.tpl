@@ -1802,9 +1802,16 @@ report.dir = ${dspace.dir}/persistent/reports/
 #                            dc.identifier.govdoc, dc.identifier.uri(link), \
 #                            dc.identifier.isbn, dc.identifier.issn, \
 #                            dc.identifier.ismn, dc.identifier
-{{- if .Values.dspace.webui }}{{- if .Values.dspace.webui.itemdisplay }}
-webui.itemdisplay.default = {{ .Values.dspace.webui.itemdisplay }}
-{{ end }}{{ end }}
+{{- if .Values.dspace.webui }}
+	{{- if .Values.dspace.webui.itemdisplay }}
+		{{- range $index, $item := .Values.dspace.webui.itemdisplay }}
+webui.itemdisplay.{{ $index }} = {{ $item.metadata }}
+			{{ if $item.collections }}
+webui.itemdisplay.{{ $index }}.collections = {{ $item.collections }}
+			{{ end }}
+		{{- end }}
+	{{ end }}
+{{ end }}
 #
 # When using "resolver" in webui.itemdisplay to render identifiers as resolvable
 # links, the base URL is taken from <code>webui.resolver.<n>.baseurl</code>
@@ -1869,7 +1876,13 @@ plugin.single.org.dspace.app.webui.util.StyleSelection = \
 # different purposes. Remember to add the respective beans in file 'config/spring/api/item-marking.xml'.
 #
 # webui.itemlist.columns = thumbnail, dc.date.issued(date), dc.title, dc.contributor.*
-webui.itemlist.columns = {{ .Values.dspace.webui.itemlistColumns }}
+{{- if .Values.dspace.webui }}
+	{{- if .Values.dspace.webui.itemlist }}
+		{{- range $index, $item := .Values.dspace.webui.itemlist }}
+webui.itemlist.{{ $index }} = {{ $item }}
+		{{- end }}
+	{{ end }}
+{{ end }}
 #
 # You can customise the width of each column with the following line - you can have numbers (pixels)
 # or percentages. For the 'thumbnail' column, a setting of '*' will use the max width specified
