@@ -247,6 +247,8 @@ env:
 {{- end }}
 - name: PHP_MEMORY_LIMIT
   value: {{ .Values.phpMemoryLimit | quote }}
+- name: PHP_MAX_EXECUTION_TIME
+  value: {{ .Values.phpMaxExecutionTime | quote }}
 volumeMounts:
 - name: moodle-data
   mountPath: /moodledata
