@@ -70,6 +70,8 @@ moodleShortName: "Moodle"
 
 uploadMaxFileSize: &uploadMaxFileSize 20m
 
+phpMemoryLimit: 128M
+
 # HorizontalPodAutoscaler
 hpa:
   enabled: false

@@ -245,6 +245,8 @@ env:
 - name: SHIBD_SERVICE_PORT
   value: {{ .Values.shib.port | quote }}
 {{- end }}
+- name: PHP_MEMORY_LIMIT
+  value: {{ .Values.phpMemoryLimit | quote }}
 volumeMounts:
 - name: moodle-data
   mountPath: /moodledata
