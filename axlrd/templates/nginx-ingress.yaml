@@ -1,0 +1,31 @@
+{{- $hosts := append .Values.ingress.hosts .Values.service.url | compact | uniq -}}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "app.fullname" . }}-nginx-ingress
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+      {{ $key  }}: {{ $value | quote  }}
+    {{- end }}
+spec:
+  rules:
+  {{- $serviceName := printf "%s-nginx-service" (include "app.fullname" .) }}
+  {{- $servicePort := .Values.service.port }}
+  {{- range $host := $hosts }}
+  - host: {{ replace "http://" "" $host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $serviceName }} 
+          servicePort: {{ $servicePort  }}
+  {{- end }}
+  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
+  tls:
+  - hosts:
+    {{- range $host := $hosts }}
+    - {{ replace "http://" "" $host }}
+    {{- end }}
+    secretName: {{ template "app.fullname" . }}-tls
+  {{- end }}
