@@ -4,10 +4,11 @@
 
 replicaCount: 1
 
+mode: staging
+
 image:
   repository: lthub/orchard
-  tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP
@@ -24,3 +25,9 @@ ingress:
   # if gitlab CI didn't provide a host, will use this host instead
   hosts: []
   #- orchard.elearning.ubc.ca
+
+postgres:
+  host: "postgres-patroni"
+  user: orchard
+  password: orchard
+  database: orchard

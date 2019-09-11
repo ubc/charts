@@ -3,14 +3,14 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "orchard.fullname" . }}-nginx-ingress
+  name: {{ template "orchard.fullname" . }}-ui-ingress
   annotations:
     {{- range $key, $value := .Values.ingress.annotations }}
       {{ $key  }}: {{ $value | quote  }}
     {{- end }}
 spec:
   rules:
-  {{- $serviceName := printf "%s-nginx-service" (include "orchard.fullname" .) }}
+  {{- $serviceName := printf "%s-ui-service" (include "orchard.fullname" .) }}
   {{- $servicePort := .Values.service.port }}
   {{- range $host := $hosts }}
   - host: {{ replace "http://" "" $host }}

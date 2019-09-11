@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "orchard.fullname" . }}-ui
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "orchard.fullname" . }}-ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "orchard.fullname" . }}-ui
+    spec:
+      containers:
+      - name: {{ template "orchard.fullname" . }}-ui
+        image: "{{ .Values.image.repository }}:{{ .Values.mode }}-ui"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 80
