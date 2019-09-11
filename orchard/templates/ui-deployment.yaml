@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "orchard.fullname" . }}-ui
 spec:
+  replicas: {{ .Values.replicas.ui }}
   selector:
     matchLabels:
       app: {{ template "orchard.fullname" . }}-ui

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "orchard.fullname" . }}-api-service
+spec:
+  selector:
+    app: {{ template "orchard.fullname" . }}-api
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80

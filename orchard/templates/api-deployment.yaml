@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "orchard.fullname" . }}-api
+spec:
+  replicas: {{ .Values.replicas.api }}
+  selector:
+    matchLabels:
+      app: {{ template "orchard.fullname" . }}-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "orchard.fullname" . }}-api
+    spec:
+      containers:
+      - name: {{ template "orchard.fullname" . }}-api
+        image: "{{ .Values.image.repository }}:{{ .Values.mode }}-api"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 80
+        env:
+          - name: DB_HOST
+            value: {{ .Values.postgres.host }}
+          - name: DB_USER
+            value: {{ .Values.postgres.user }}
+          - name: DB_PASSWORD
+            value: {{ .Values.postgres.password }}
+          - name: DB_NAME
+            value: {{ .Values.postgres.database }}
+          - name: TOKEN_SECRET
+            value: {{ .Values.token.secret }}
+          - name: TOKEN_EXPIRE_MINUTES
+            value: {{ .Values.token.expire }}
+
