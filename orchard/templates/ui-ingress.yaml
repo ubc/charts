@@ -1,4 +1,4 @@
-{{- $hosts := append .Values.ingress.hosts .Values.service.url | compact | uniq -}}
+{{- $hosts := .Values.ingress.hosts | compact | uniq -}}
 
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -10,16 +10,14 @@ metadata:
     {{- end }}
 spec:
   rules:
-  {{- $serviceName := printf "%s-ui-service" (include "orchard.fullname" .) }}
-  {{- $servicePort := .Values.service.port }}
   {{- range $host := $hosts }}
   - host: {{ replace "http://" "" $host }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: {{ $serviceName }} 
-          servicePort: {{ $servicePort  }}
+          serviceName: {{ template "orchard.fullname" . }}-ui-service
+          servicePort: 80
   {{- end }}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
