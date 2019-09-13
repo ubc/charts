@@ -5,10 +5,10 @@ kind: Ingress
 metadata:
   name: {{ template "orchard.fullname" . }}-api-ingress
   annotations:
-    ingress.kubernetes.io/rewrite-target: /api/$2
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$2
     kubernetes.io/ingress.class: "nginx"
     {{- range $key, $value := .Values.ingress.annotations }}
-      {{ $key  }}: {{ $value | quote  }}
+    {{ $key  }}: {{ $value | quote  }}
     {{- end }}
 spec:
   rules:
