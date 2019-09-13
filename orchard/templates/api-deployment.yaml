@@ -32,5 +32,5 @@ spec:
           - name: TOKEN_SECRET
             value: {{ .Values.token.secret }}
           - name: TOKEN_EXPIRE_MINUTES
-            value: {{ .Values.token.expire }}
+            value: {{ .Values.token.expire | quote }}
 
