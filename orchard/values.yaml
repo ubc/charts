@@ -8,10 +8,6 @@ replicas:
 
 mode: staging
 
-# default values used in _helpers.tpl
-nameOverride: ""
-fullnameOverride: ""
-
 image:
   repository: lthub/orchard
   pullPolicy: Always

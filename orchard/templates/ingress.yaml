@@ -12,18 +12,19 @@ metadata:
     {{- end }}
 spec:
   rules:
+  {{- $servicePrefix := include "orchard.fullname" . -}}
   {{- range $host := $hosts }}
   - host: {{ replace "http://" "" $host }}
     http:
       paths:
       - backend:
-          serviceName: {{ template "orchard.fullname" . }}-api-service
+          serviceName: {{ $servicePrefix }}-ui-service
+          servicePort: 80
+        path: /(.*)
+      - backend:
+          serviceName: {{ $servicePrefix }}-api-service
           servicePort: 80
         path: /api(/|$)(.*)
-      - backend:
-          serviceName: {{ template "orchard.fullname" . }}-ui-service
-          servicePort: 80
-        path: (/|$)(.*)
   {{- end }}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
