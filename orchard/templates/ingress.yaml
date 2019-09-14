@@ -5,7 +5,7 @@ kind: Ingress
 metadata:
   name: {{ template "orchard.fullname" . }}-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     kubernetes.io/ingress.class: "nginx"
     {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key  }}: {{ $value | quote  }}
@@ -24,7 +24,7 @@ spec:
       - backend:
           serviceName: {{ $servicePrefix }}-api-service
           servicePort: 80
-        path: /api(/|$)(.*)
+        path: /api/(.*)
   {{- end }}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
