@@ -115,24 +115,6 @@ spec:
         image: busybox
         command: ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"]
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
-      - name: init-db-and-migrate
-        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
-        command: ["sh", "-c", "rake alchemy:addAdmin['alchemy_admin@ubc.ca','{{ .Values.adminDefaultPassword }}'] RAILS_ENV=production"]
-        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
-        env:
-        - name: DB_HOST
-          value: "{{ template "fullname" . }}-db"
-        - name: DB_PORT
-          value: {{ .Values.dbPort | quote }}
-        - name: DB_USERNAME
-          value: {{ .Values.dbUsername | quote }}
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: mysql_password
-        - name: DB_NAME
-          value: {{ .Values.dbName }}
 
 ---
 
