@@ -8,6 +8,9 @@ metadata:
     tier: app
 spec:
   schedule: {{ .Values.cronjob.schedule | quote }}
+  {{- if .Values.cronjob.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ .Values.cronjob.startingDeadlineSeconds }}
+  {{- end }}
   jobTemplate:
     spec:
       template:
