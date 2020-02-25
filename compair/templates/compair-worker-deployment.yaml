@@ -126,25 +126,25 @@ spec:
         - name: XAPI_ENABLED
           value: {{ .Values.xapi.enabled | quote }}
         {{- if .Values.xapi.enabled }}
-        - name: XAPI_APP_BASE_URL
-          value: {{ .Values.xapi.appBaseURL | quote }}
-        - name: LRS_STATEMENT_ENDPOINT
-          value: {{ .Values.xapi.lrsStatementEndpoint | quote }}
-        - name: LRS_USERNAME
-          value: {{ .Values.xapi.lrsUsername | quote }}
-        {{- if .Values.xapi.lrsPassword }}
-        - name: LRS_PASSWORD
+        - name: LRS_APP_BASE_URL
+          value: {{ .Values.lrs.appBaseURL | quote }}
+        - name: LRS_XAPI_STATEMENT_ENDPOINT
+          value: {{ .Values.lrs.xapiStatementEndpoint | quote }}
+        - name: LRS_XAPI_USERNAME
+          value: {{ .Values.lrs.xapiUsername | quote }}
+        {{- if .Values.lrs.xpiPassword }}
+        - name: LRS_XAPI_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: lrs_password
         {{- end }}
         - name: LRS_ACTOR_ACCOUNT_USE_GLOBAL_UNIQUE_IDENTIFIER
-          value: {{ .Values.xapi.lrsActorAccountUseGlobalUniqueIdentifier | quote }}
+          value: {{ .Values.lrs.actorAccountUseGlobalUniqueIdentifier | quote }}
         - name: LRS_ACTOR_ACCOUNT_GLOBAL_UNIQUE_IDENTIFIER_HOMEPAGE
-          value: {{ .Values.xapi.lrsActorAccountGlobalUniqueIdentifierHomepage | quote }}
+          value: {{ .Values.lrs.actorAccountGlobalUniqueIdentifierHomepage | quote }}
         - name: LRS_USER_INPUT_FIELD_SIZE_LIMIT
-          value: {{ .Values.xapi.lrsUserInputFieldSizeLimit | quote }}
+          value: {{ .Values.lrs.userInputFieldSizeLimit | quote }}
         {{- end }}
         - name: ASSET_LOCATION
           value: {{ .Values.assetLocation | quote }}
