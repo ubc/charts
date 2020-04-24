@@ -155,8 +155,22 @@ env:
       name: {{ template "mediawiki.fullname" . }}
       key: ldap_proxy_password
 {{- end }}
-- name: LDAP_DEBUG
-  value: {{ .Values.ldap.debug | quote }}
+{{- if .Values.ldap.userBaseDn }}
+- name: LDAP_USER_BASE_DN
+  value: {{ .Values.ldap.userBaseDn }}
+{{- end }}
+{{- if .Values.ldap.usernameAttr }}
+- name: LDAP_USERNAME_ATTR
+  value: {{ .Values.ldap.usernameAttr }}
+{{- end }}
+{{- if .Values.ldap.realnameAttr }}
+- name: LDAP_REALNAME_ATTR
+  value: {{ .Values.ldap.realnameAttr }}
+{{- end }}
+{{- if .Values.ldap.emailAttr }}
+- name: LDAP_EMAIL_ATTR
+  value: {{ .Values.ldap.emailAttr }}
+{{- end }}
 - name: LDAP_ENCRYPTION_TYPE
   value: {{ .Values.ldap.encryption }}
 {{- end }}

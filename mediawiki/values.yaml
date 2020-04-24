@@ -147,12 +147,15 @@ ldap:
   server: ldap
   port: 389
   baseDn: dc=example,dc=com
+  userBaseDn: dc=example,dc=com
   #searchStrings: cn=USER-NAME,dc=example,dc=com
   #searchAttrs: cn
   #proxyAgent: admin
   #proxyPassword: admin
-  debug: 0
   encryption: clear
+  usernameAttr: cn
+  realnameAttr: displayname
+  emailAttr: mail
 
 memcached:
   # enable internal memcached deployment and services, set to false to 
