@@ -20,8 +20,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "moodle.db.fullname" -}}
-{{- $name := printf "%s-%s" .Release.Name "db" -}}
-{{- default $name .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
+{{- default (include "mariadb.fullname" .) .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "common_labels" }}
