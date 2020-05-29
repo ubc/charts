@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "app.fullname" . }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key  }}: {{ $value | quote  }}
+    {{- end }}
+spec:
+  rules:
+  - host: {{ replace "http://" "" .Values.ingress.host }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ template "app.fullname" . }}
+          servicePort: 80
+        path: /
+  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
+  tls:
+  - hosts:
+    - {{ replace "http://" "" .Values.ingress.host }}
+    secretName: {{ template "app.fullname" . }}-tls
+  {{- end }}

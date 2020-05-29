@@ -1,0 +1,36 @@
+# Default values for orchard.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+mode: staging
+
+image:
+  repository: lthub/lti-shim
+  tag: latest
+  pullPolicy: Always
+
+ingress:
+  annotations:
+    # To enable https, uncomment the following line
+    kubernetes.io/tls-acme: "true"
+    # This is for disabling https, comment these to enable https
+    #nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    #kubernetes.io/tls-acme: "false"
+  # if gitlab CI didn't provide a host, will use this host instead
+  host: lti-shim.ubc.ca
+
+app:
+  key: "base64:DYF0KhMD6pA9kWeovg1SL8gapmoHF6hZmV1UK3GYhUY="
+
+postgres:
+  port: 5432
+  database: postgres
+  username: postgres
+  password: postgres
+
+admin:
+  name: admin
+  email: "admin@example.com"
+  password: password
+
+

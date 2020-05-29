@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "app.fullname" . }}-config
+  labels:
+    app: {{ template "app.fullname" . }}
+data:
+  laravelEnv: |-
+{{ include "laravelEnv" . | indent 4 }}

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "app.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "app.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "app.fullname" . }}
+    spec:
+      containers:
+      - name: {{ template "app.fullname" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 80
+        env:
+          - name: DB_HOST
+            value: {{ template "app.fullname" . }}-postgres
+          - name: DB_PORT
+            value: {{ .Values.postgres.port | quote }}
+          - name: ADMIN_NAME
+            value: {{ .Values.admin.name | quote }}
+          - name: ADMIN_EMAIL
+            value: {{ .Values.admin.email | quote }}
+          - name: ADMIN_PASSWORD
+            value: {{ .Values.admin.password | quote }}
+        volumeMounts:
+          - name: config
+            mountPath: /var/www/.env
+            subPath: laravelEnv
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "app.fullname" . }}-config
+            items:
+              - key: laravelEnv
+                path: laravelEnv
