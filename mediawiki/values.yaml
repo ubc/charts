@@ -156,6 +156,8 @@ ldap:
   usernameAttr: cn
   realnameAttr: displayname
   emailAttr: mail
+  ubcAuthEnabled: "false"
+  autoCreatedUserRedirect: Main_Page
 
 memcached:
   # enable internal memcached deployment and services, set to false to 

@@ -173,6 +173,14 @@ env:
 {{- end }}
 - name: LDAP_ENCRYPTION_TYPE
   value: {{ .Values.ldap.encryption }}
+{{- if .Values.ldap.ubcAuthEnabled }}
+- name: UBC_AUTH_ENABLED
+  value: {{ .Values.ldap.ubcAuthEnabled }}
+{{- end }}
+{{- if .Values.ldap.autoCreatedUserRedirect }}
+- name: AUTO_CREATED_USER_REDIRECT
+  value: {{ .Values.ldap.autoCreatedUserRedirect }}
+{{- end }}
 {{- end }}
 - name: MEDIAWIKI_MAIN_CACHE
   value: {{ .Values.mainCache }}
