@@ -175,7 +175,7 @@ env:
   value: {{ .Values.ldap.encryption }}
 {{- if .Values.ldap.ubcAuthEnabled }}
 - name: UBC_AUTH_ENABLED
-  value: {{ .Values.ldap.ubcAuthEnabled }}
+  value: {{ .Values.ldap.ubcAuthEnabled | quote }}
 {{- end }}
 {{- if .Values.ldap.autoCreatedUserRedirect }}
 - name: AUTO_CREATED_USER_REDIRECT
