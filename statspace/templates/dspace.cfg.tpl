@@ -2154,4 +2154,7 @@ commenting.detail.max-length = {{ .Values.dspace.commenting.detailMaxLength }}
 commenting.max-comment-per-item = {{ .Values.dspace.commenting.maxCommentPerItem }}
 commenting.policy.url = {{ .Values.dspace.commenting.policyURL }}
 
+# whether curators can delete and add attachment files during review
+workflow.reviewer.file-edit = {{ .Values.dspace.workflow.reviewer.fileEdit }}
+
 {{- end -}}

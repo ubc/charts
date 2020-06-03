@@ -95,6 +95,9 @@ dspace:
     detailMaxLength: 10000
     maxCommentPerItem: 10000
     policyURL: "http://www.hr.ubc.ca/respectful-environment/"
+  workflow:
+    reviewer:
+      fileEdit: true
 
 # database setup, https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 
