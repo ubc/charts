@@ -6,6 +6,7 @@ APP_KEY={{ .Values.app.key }}
 APP_DEBUG=false
 {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
 APP_URL=https://{{ .Values.ingress.host }}
+FORCE_HTTPS=true
 {{- else }}
 APP_URL=http://{{ .Values.ingress.host }}
 {{- end }}

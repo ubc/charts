@@ -893,6 +893,31 @@ entries:
     urls:
     - https://ubc.github.io/charts/ltbot-0.1.0.tgz
     version: 0.1.0
+  lti-shim:
+  - apiVersion: v2
+    created: "2020-06-03T09:47:57.755166952-07:00"
+    description: LTI proxy that anonymizes personal information
+    digest: 488f94208fee1bba40e6cb64c8a6b622cba7a7fcd86127d949f2bcc70b82fd7e
+    name: lti-shim
+    urls:
+    - https://ubc.github.io/charts/lti-shim-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    created: "2020-06-03T09:47:57.754745947-07:00"
+    description: LTI proxy that anonymizes personal information
+    digest: b6d08d40325b7e68141a906a1f8f99ffda845975b2a2c1ac2172d6eec7562300
+    name: lti-shim
+    urls:
+    - https://ubc.github.io/charts/lti-shim-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    created: "2020-06-03T09:47:57.754326825-07:00"
+    description: LTI proxy that anonymizes personal information
+    digest: 26bb32a70bb61f648dadf1d453fd3b61d4461feca2e14681f0fb21a9a2931ea8
+    name: lti-shim
+    urls:
+    - https://ubc.github.io/charts/lti-shim-0.1.0.tgz
+    version: 0.1.0
   ltps-ui:
   - apiVersion: v1
     created: "2020-05-29T23:34:15.809729-07:00"
