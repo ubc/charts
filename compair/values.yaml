@@ -4,6 +4,7 @@
 stage: dev
 dbPort: "3306"
 dbName: compair
+dbConnOptions: '{"charset":"utf8mb4"}'
 dbUsername: compair
 dbPassword: PLEASE_CHANGE_ME
 celeryBrokerURL: redis://{{ template "fullname" . }}-redis:6379

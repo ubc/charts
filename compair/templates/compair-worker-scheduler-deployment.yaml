@@ -45,6 +45,8 @@ spec:
               key: mysql_password
         - name: DB_NAME
           value: {{ .Values.dbName | quote }}
+        - name: DB_CONN_OPTIONS
+          value: {{ .Values.dbConnOptions | squote }}
         - name: CELERY_BROKER_URL
           value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
         - name: ATTACHMENT_UPLOAD_LIMIT
