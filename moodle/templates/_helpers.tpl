@@ -6,6 +6,17 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "call-nested" }}
+{{- $dot := index . 0 }}
+{{- $subchart := index . 1 | splitList "." }}
+{{- $template := index . 2 }}
+{{- $values := $dot.Values }}
+{{- range $subchart }}
+{{- $values = index $values . }}
+{{- end }}
+{{- include $template (dict "Chart" (dict "Name" (last $subchart)) "Values" $values "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
+{{- end }}
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -20,7 +31,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "moodle.db.fullname" -}}
-{{- default (include "mariadb.fullname" .) .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
+{{- include "call-nested" (list . "db" "mariadb.fullname") -}}
 {{- end -}}
 
 {{- define "common_labels" }}
@@ -78,7 +89,7 @@ env:
 - name: MOODLE_DB_TYPE
   value: {{ default "mariadb" .Values.db.db.type | quote }}
 - name: MOODLE_DB_HOST
-  value: {{ template "moodle.db.fullname" . | default .Values.db.service.name }}
+  value: {{ template "moodle.db.fullname" . }}
 - name: MOODLE_DB_PORT
   value: {{ .Values.db.service.port | quote }}
 - name: MOODLE_DB_USER
@@ -138,7 +149,7 @@ env:
 {{- if .Values.ubcCoursePayment.enabled }}
 {{/* Course payment db on same db server as moodle */}}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_HOST
-  value: {{ template "moodle.db.fullname" . | default .Values.db.service.name }}
+  value: {{ template "moodle.db.fullname" . }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_NAME
   value: {{ default "" .Values.ubcCoursePayment.db.name | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_USER
