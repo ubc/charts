@@ -1,0 +1,218 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ipeer.fullname" . }}
+  labels:
+    {{- include "ipeer.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "ipeer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "ipeer.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ipeer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        # Create the shared files volume to be used in both pods
+        - name: shared-files
+          emptyDir: {}
+
+        # Add the ConfigMap we declared above as a volume for the pod
+        - name: nginx-config-volume
+          configMap:
+            name: {{ include "ipeer.fullname" . }}-nginx-config
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          env:
+          - name: IPEER_DB_HOST
+            value: {{ template "ipeer.db.fullname" . }}
+          - name: IPEER_DB_PORT
+            value: {{ .Values.db.service.port | quote }}
+          - name: IPEER_DB_USER
+            value: {{ .Values.db.db.user | quote }}
+          - name: IPEER_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+              {{- if .Values.db.disableExternal }}
+                name: {{ template "ipeer.db.fullname" . }}
+                key: mariadb-password
+              {{- else }}
+                name: {{ template "ipeer.fullname" . }}
+                key: db_password
+              {{- end }}
+          - name: IPEER_SESSION_SAVE
+            value: {{ .Values.ipeer.session_save | quote }}
+          {{- if .Values.ipeer.caliper.enabled }}
+          - name: CALIPER_HOST
+            value: {{ .Values.ipeer.caliper.host }}
+          - name: CALIPER_API_KEY
+            value: {{ .Values.ipeer.caliper.apikey }}
+          - name:  CALIPER_BASE_URL
+            value: {{ .Values.ipeer.caliper.baseURL }}
+          - name: CALIPER_ACTOR_BASE_URL
+            value: {{ .Values.ipeer.caliper.actorBaseURL }}
+          - name: CALIPER_ACTOR_UNIQUE_IDENTIFIER_PARAM
+            value: {{ .Values.ipeer.caliper.actorUniqueIdParam }}
+          {{- end }}
+          - name: IPEER_AUTH
+            value: {{ .Values.ipeer.auth.method }}
+          {{- if eq .Values.ipeer.auth.method "Ldap" }}
+          - name: IPEER_AUTH_LDAP_host
+            value: {{ .Values.ipeer.auth.ldap.host | quote }}
+          - name: IPEER_AUTH_LDAP_port
+            value: {{ .Values.ipeer.auth.ldap.port | quote }}
+          - name: IPEER_AUTH_LDAP_serviceUsername
+            value: {{ .Values.ipeer.auth.ldap.serviceUsername }}
+          - name: IPEER_AUTH_LDAP_servicePassword
+            value: {{ .Values.ipeer.auth.ldap.servicePassword }}
+          - name: IPEER_AUTH_LDAP_baseDn
+            value: {{ .Values.ipeer.auth.ldap.baseDn }}
+          - name: IPEER_AUTH_LDAP_usernameField
+            value: {{ .Values.ipeer.auth.ldap.usernameField }}
+          - name: IPEER_AUTH_LDAP_attributeSearchFilters
+            value: {{ .Values.ipeer.auth.ldap.attributeSearchFilters | quote }}
+          - name: IPEER_AUTH_LDAP_attributeMap
+            value: {{ .Values.ipeer.auth.ldap.attributeMap | quote }}
+          - name: IPEER_AUTH_LDAP_fallbackInternal
+            value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
+          {{- end }}
+          ports:
+            - name: fastcgi
+              containerPort: 9000
+              protocol: TCP
+          volumeMounts:
+            - name: shared-files
+              mountPath: /shared
+          # After the container has started, copy the PHP files from this
+          # container's local filesystem to the shared volume, which is
+          # mounted at /shared.
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "cp -r /var/www/html/app/webroot/. /shared"]
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: {{ .Chart.Name }}-web
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: shared-files
+              mountPath: /var/www/html
+            - name: nginx-config-volume
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+{{- if .Values.worker.enabled }}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ipeer.fullname" . }}-worker
+  labels:
+    compoment: worker
+    {{- include "ipeer.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      compoment: worker
+      {{- include "ipeer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        compoment: worker
+        {{- include "ipeer.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ipeer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-worker
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          command: ["cake/console/cake"]
+          args: ["worker", "run"]
+          env:
+          - name: IPEER_DB_HOST
+            value: {{ template "ipeer.db.fullname" . }}
+          - name: IPEER_DB_PORT
+            value: {{ .Values.db.service.port | quote }}
+          - name: IPEER_DB_USER
+            value: {{ .Values.db.db.user | quote }}
+          - name: IPEER_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+              {{- if .Values.db.disableExternal }}
+                name: {{ template "ipeer.db.fullname" . }}
+                key: mariadb-password
+              {{- else }}
+                name: {{ template "ipeer.fullname" . }}
+                key: db_password
+              {{- end }}
+          - name: IPEER_SESSION_SAVE
+            value: {{ .Values.ipeer.session_save | quote }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
