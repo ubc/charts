@@ -2,10 +2,9 @@ dependencies:
 - name: mariadb
   version: 7.x.x
   repository: https://charts.bitnami.com/bitnami
-  condition: db.disableExternal
   alias: db
   tags:
-    - wordpress-database
+    - moodle-database
 #- name: mysql
 #  version: 0.3.7
 #  repository: https://kubernetes-charts.storage.googleapis.com/
