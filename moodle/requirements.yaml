@@ -2,6 +2,7 @@ dependencies:
 - name: mariadb
   version: 7.x.x
   repository: https://charts.bitnami.com/bitnami
+  condition: db.disableExternal
   alias: db
   tags:
     - moodle-database
