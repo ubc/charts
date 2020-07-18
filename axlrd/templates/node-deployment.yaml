@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "app.fullname" . }}-node
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "app.fullname" . }}-node
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "app.fullname" . }}-node
+    spec:
+      containers:
+      - name: {{ template "app.fullname" . }}-node
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}-node"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: 3000

@@ -3,23 +3,28 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "app.fullname" . }}-nginx-ingress
+  name: {{ template "app.fullname" . }}-ingress
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: "nginx"
     {{- range $key, $value := .Values.ingress.annotations }}
-      {{ $key  }}: {{ $value | quote  }}
+    {{ $key  }}: {{ $value | quote  }}
     {{- end }}
 spec:
   rules:
-  {{- $serviceName := printf "%s-nginx-service" (include "app.fullname" .) }}
-  {{- $servicePort := .Values.service.port }}
+  {{- $servicePrefix := include "app.fullname" . -}}
   {{- range $host := $hosts }}
   - host: {{ replace "http://" "" $host }}
     http:
       paths:
-      - path: /
-        backend:
-          serviceName: {{ $serviceName }} 
-          servicePort: {{ $servicePort  }}
+      - backend:
+          serviceName: {{ $servicePrefix }}-nginx-service
+          servicePort: 80
+        path: /(.*)
+      - backend:
+          serviceName: {{ $servicePrefix }}-node-service
+          servicePort: 80
+        path: /api/(.*)
   {{- end }}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
