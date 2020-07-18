@@ -18,3 +18,10 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
           - containerPort: 3000
+        volumeMounts:
+          - name: node-pv
+            mountPath: /home/node/app/test-server/storage
+      volumes:
+        - name: node-pv
+          persistentVolumeClaim:
+            claimName: {{ template "app.fullname" . }}-node-pvc
