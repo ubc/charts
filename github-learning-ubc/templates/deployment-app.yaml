@@ -1,0 +1,83 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "github-learning-ubc.fullname" . }}-app
+  labels:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "github-learning-ubc.fullname" . }}
+        stage: {{ .Values.stage }}
+        tier: app
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-app
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        {{- include "glu.environment" . | indent 8 }}
+        ports:
+        - containerPort: {{ .Values.app.service.internalPort }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.app.service.internalPort }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          failureThreshold: 10
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.app.service.internalPort }}
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      {{- if .Values.app.persistence.enabled }}
+        volumeMounts:
+        - name: {{ template "github-learning-ubc.fullname" . }}-persistent-storage
+          mountPath: /persistent
+      volumes:
+      - name: {{ template "github-learning-ubc.fullname" . }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ template "github-learning-ubc.fullname" . }}-app-pvc
+      {{- end }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "github-learning-ubc.fullname" . }}-app
+  labels:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.externalPort }}
+      targetPort: {{ .Values.app.service.internalPort }}
+  selector:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+

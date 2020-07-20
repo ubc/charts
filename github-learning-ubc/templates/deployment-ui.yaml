@@ -1,0 +1,116 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "github-learning-ubc.fullname" . }}-ui
+  labels:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  replicas: {{ .Values.ui.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "github-learning-ubc.fullname" . }}
+        stage: {{ .Values.stage }}
+        tier: ui
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-ui
+        image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag }}"
+        imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.ui.service.internalPort }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.ui.service.internalPort }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          failureThreshold: 10
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.ui.service.internalPort }}
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "github-learning-ubc.fullname" . }}-ui
+  labels:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: ui
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  type: {{ .Values.ui.service.type }}
+  ports:
+    - port: {{ .Values.ui.service.externalPort }}
+      targetPort: {{ .Values.ui.service.internalPort }}
+  selector:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: ui
+
+{{- if .Values.ui.ingress.enabled }}
+{{- $hosts := append .Values.ui.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
+{{- $serviceName := include "github-learning-ubc.fullname" . }}
+{{- $servicePort := .Values.ui.service.externalPort }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "github-learning-ubc.fullname" . }}
+  annotations:
+    {{- range $key, $value := .Values.ui.ingress.annotations }}
+      {{ $key  }}: {{ $value | quote  }}
+    {{- end }}
+  labels:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: ui
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  rules:
+  {{- range $host := $hosts }}
+  - host: {{ $host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $serviceName }}-ui
+          servicePort: {{ $servicePort }}
+  {{- end }}
+  {{- if and (hasKey .Values.ui.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ui.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
+  tls:
+  - hosts:
+    {{- range $host := $hosts }}
+      - {{ $host }}
+    {{- end }}
+    secretName: {{ template "github-learning-ubc.fullname" . }}-tls
+  {{- end }}
+{{ end }}

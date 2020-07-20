@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "github-learning-ubc.fullname" . }}-redis
+  labels:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "github-learning-ubc.fullname" . }}
+        stage: {{ .Values.stage }}
+        tier: redis
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-redis
+        image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+        command: ["redis-server", "--appendonly", "yes"]
+        ports:
+        - containerPort: 6379
+      {{- if .Values.redis.persistence.enabled }}
+        volumeMounts:
+        - name: redis-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: redis-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ template "github-learning-ubc.fullname" . }}-redis-pvc
+      {{- end }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "github-learning-ubc.fullname" . }}-redis
+  labels:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: redis
+spec:
+  ports:
+    - port: {{ .Values.redis.service.port }}
+  selector:
+    app: {{ template "github-learning-ubc.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: redis

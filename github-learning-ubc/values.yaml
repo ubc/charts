@@ -1,0 +1,100 @@
+# Default values for github-learning-ubc.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+stage: dev
+secretKey: PLEASE_GENERATE_A_RANDOM_KEY
+workerSchedulerEnabled: false
+cForceRoot: true
+workerSchedulerEnabled: false
+
+# app settings
+glu:
+  batchEnabled: 'true'
+  batchGroupSyncSchedule: '{"hour": "*/2", "minute": "20"}'
+
+# background / batch jobs settings
+celery:
+  brokerUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
+  alwaysEager: 'false'
+
+# saml settings
+saml:
+  attributeUsername: uid
+  attributeFirstName: firstName
+  attributeLastName: lastName
+  attributeEmail: mail
+  settingsFile: null
+  settings: null
+  metadataUrl: 'https://samltest.id/saml/idp'
+  metadataEntityId: 'http://glu/api/saml/metadata'
+  exposeMetadataEndpoint: 'true'
+
+# ldap settings
+ldap:
+  useTls: 'false'
+  validateCert: 'false'
+  connTimeout: 30
+  usePool: 'true'
+  poolMaxLifetime: 60
+  idmConsumerUrl: 'ldaps://ldap'
+  idmConsumerServiceBindDn: 'cn=admin,dc=example,dc=org'
+  idmConsumerServicePassword: 'admin'
+  idmConsumerUserBaseDn: 'dc=example,dc=org'
+  idmConsumerUserUniqueIdentifier: 'uid'
+  intProviderUrl: 'ldaps://ldap'
+  intProviderServiceBindDn: 'cn=admin,dc=example,dc=org'
+  intProviderServicePassword: 'admin'
+  intConsumerUrl: 'ldaps://ldap'
+  intConsumerServiceBindDn: 'cn=admin,dc=example,dc=org'
+  intConsumerServicePassword: 'admin'
+  intUserUniqueIdentifier: 'uid'
+  intUserBaseDn: 'ou=people,dc=learning,dc=github,dc=example,dc=org'
+  intGroupsSrcBaseDn: 'ou=Groups_src,dc=learning,dc=github,dc=example,dc=org'
+  intGroupsBaseDn: 'ou=Groups,dc=learning,dc=github,dc=example,dc=org'
+
+ui:
+  replicaCount: 1
+  image:
+    repository: gcr.io/ctlt-apps/glu-ui
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 80
+  ingress:
+    enabled: true
+    hosts: []
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+
+app:
+  replicaCount: 1
+  image:
+    repository: gcr.io/ctlt-apps/glu-app
+    tag: latest
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: false
+  service:
+    type: ClusterIP
+    externalPort: 3031
+    internalPort: 3031
+
+worker:
+  replicaCount: 1
+  image:
+    repository: gcr.io/ctlt-apps/glu-app
+    tag: latest
+    pullPolicy: IfNotPresent
+
+redis:
+  image:
+    repository: redis
+    tag: 5.0
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: false
