@@ -22,8 +22,6 @@ Runtime environment variables
   value: {{ .Values.saml.attributeFirstName | quote }}
 - name: SAML_ATTRIBUTE_LAST_NAME
   value: {{ .Values.saml.attributeLastName | quote }}
-- name: SAML_ATTRIBUTE_EMAIL
-  value: {{ .Values.saml.attributeEmail | quote }}
 - name: SAML_SETTINGS_FILE
   value: {{ .Values.saml.settingsFile | quote }}
 - name: SAML_SETTINGS

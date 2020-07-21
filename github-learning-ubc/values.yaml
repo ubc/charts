@@ -22,7 +22,6 @@ saml:
   attributeUsername: uid
   attributeFirstName: firstName
   attributeLastName: lastName
-  attributeEmail: mail
   settingsFile: null
   settings: null
   metadataUrl: 'https://samltest.id/saml/idp'
