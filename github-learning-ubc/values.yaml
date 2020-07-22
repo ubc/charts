@@ -75,6 +75,7 @@ app:
     repository: gcr.io/ctlt-apps/glu-app
     tag: latest
     pullPolicy: IfNotPresent
+    pullSecret: null
   persistence:
     enabled: false
   service:
@@ -88,6 +89,7 @@ worker:
     repository: gcr.io/ctlt-apps/glu-app
     tag: latest
     pullPolicy: IfNotPresent
+    pullSecret: null
 
 redis:
   image:

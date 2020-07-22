@@ -25,9 +25,9 @@ spec:
         stage: {{ .Values.stage }}
         tier: worker
     spec:
-      {{- if .Values.image.pullSecret }}
+      {{- if .Values.worker.image.pullSecret }}
       imagePullSecrets:
-        - name: {{ .Values.image.pullSecret }}
+        - name: {{ .Values.worker.image.pullSecret }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}-worker
