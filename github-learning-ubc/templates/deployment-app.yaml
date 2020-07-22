@@ -25,6 +25,10 @@ spec:
         stage: {{ .Values.stage }}
         tier: app
     spec:
+      {{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}-app
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"

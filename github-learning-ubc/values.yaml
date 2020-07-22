@@ -57,6 +57,7 @@ ui:
     repository: gcr.io/ctlt-apps/glu-ui
     tag: latest
     pullPolicy: IfNotPresent
+    pullSecret: null
   service:
     type: ClusterIP
     externalPort: 80
