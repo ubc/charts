@@ -3,7 +3,7 @@ Runtime environment variables
 */}}
 {{- define "glu.environment" }}
 - name: SECRET_KEY
-  value: {{ .Values.glu.secretKey | quote }}
+  value: {{ .Values.secretKey | quote }}
   # valueFrom:
   #   secretKeyRef:
   #     name: {{ template "github-learning-ubc.fullname" . }}
