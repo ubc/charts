@@ -11,7 +11,7 @@ Runtime environment variables
 - name: GLU_BATCH_ENABLED
   value: {{ .Values.glu.batchEnabled | quote }}
 - name: GLU_BATCH_GROUP_SYNC_SCHEDULE
-  value: {{ .Values.batchGroupSyncSchedule | quote }}
+  value: {{ .Values.glu.batchGroupSyncSchedule | quote }}
 - name: CELERY_BROKER_URL
   value: "redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}"
 - name: CELERY_ALWAYS_EAGER
@@ -36,6 +36,8 @@ Runtime environment variables
   value: {{ .Values.saml.metadataEntityId | quote }}
 - name: SAML_EXPOSE_METADATA_ENDPOINT
   value: {{ .Values.saml.exposeMetadataEndpoint | quote }}
+- name: SAML_FORCE_RESP_HTTPS
+  value: {{ .Values.saml.forceRespHttps | quote }}
 - name: LDAP_USE_TLS
   value: {{ .Values.ldap.useTls | quote }}
 - name: LDAP_VALIDATE_CERT

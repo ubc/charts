@@ -27,6 +27,7 @@ saml:
   metadataUrl: 'https://samltest.id/saml/idp'
   metadataEntityId: 'http://glu/api/saml/metadata'
   exposeMetadataEndpoint: 'true'
+  forceRespHttps: 'false'
 
 # ldap settings
 ldap:
