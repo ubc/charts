@@ -12,6 +12,10 @@ Runtime environment variables
   value: {{ .Values.glu.batchEnabled | quote }}
 - name: GLU_BATCH_GROUP_SYNC_SCHEDULE
   value: {{ .Values.glu.batchGroupSyncSchedule | quote }}
+- name: GLU_BATCH_GROUP_SYNC_MUTEX_URL
+  value: {{ .Values.glu.batchGroupSyncMutexUrl | quote }}
+- name: GLU_BATCH_GROUP_SYNC_MUTEX_TTL
+  value: {{ .Values.glu.batchGroupSyncMutexTtl | quote }}
 - name: CELERY_BROKER_URL
   value: "redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}"
 - name: CELERY_ALWAYS_EAGER
@@ -48,6 +52,22 @@ Runtime environment variables
   value: {{ .Values.ldap.usePool | quote }}
 - name: LDAP_POOL_MAX_LIFETIME
   value: {{ .Values.ldap.poolMaxLifetime | quote }}
+- name: LDAP_POOL_SIZE
+  value: {{ .Values.ldap.poolSize | quote }}
+- name: LDAP_IDM_ACTIVE_URL
+  value: {{ .Values.ldap.idmActiveUrl | quote }}
+- name: LDAP_IDM_ACTIVE_SERVICE_BIND_DN
+  value: {{ .Values.ldap.idmActiveServiceBindDn | quote }}
+- name: LDAP_IDM_ACTIVE_SERVICE_PASSWORD
+  value: {{ .Values.ldap.idmActiveServicePassword | quote }}
+  # valueFrom:
+  #   secretKeyRef:
+  #     name: {{ template "github-learning-ubc.fullname" . }}
+  #     key: ldap_idm_active_service_password
+- name: LDAP_IDM_ACTIVE_USER_BASE_DN
+  value: {{ .Values.ldap.idmActiveUserBaseDn | quote }}
+- name: LDAP_IDM_ACTIVE_USER_UNIQUE_IDENTIFIER
+  value: {{ .Values.ldap.idmActiveUserUniqueIdentifier | quote }}
 - name: LDAP_IDM_CONSUMER_URL
   value: {{ .Values.ldap.idmConsumerUrl | quote }}
 - name: LDAP_IDM_CONSUMER_SERVICE_BIND_DN

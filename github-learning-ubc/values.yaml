@@ -11,6 +11,8 @@ workerSchedulerEnabled: false
 glu:
   batchEnabled: 'true'
   batchGroupSyncSchedule: '{"hour": "*/2", "minute": "20"}'
+  batchGroupSyncMutexUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
+  batchGroupSyncMutexTtl: 1800
 
 # background / batch jobs settings
 celery:
@@ -36,6 +38,12 @@ ldap:
   connTimeout: 30
   usePool: 'true'
   poolMaxLifetime: 60
+  poolSize: 10
+  idmActiveUrl: 'ldaps://ldap'
+  idmActiveServiceBindDn: 'cn=admin,dc=example,dc=org'
+  idmActiveServicePassword: 'admin'
+  idmActiveUserBaseDn: 'dc=example,dc=org'
+  idmActiveUserUniqueIdentifier: 'uid'
   idmConsumerUrl: 'ldaps://ldap'
   idmConsumerServiceBindDn: 'cn=admin,dc=example,dc=org'
   idmConsumerServicePassword: 'admin'
