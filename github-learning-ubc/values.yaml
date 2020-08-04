@@ -13,6 +13,7 @@ glu:
   batchGroupSyncSchedule: '{"hour": "*/2", "minute": "20"}'
   batchGroupSyncMutexUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
   batchGroupSyncMutexTtl: 1800
+  scrambleEmail: 'false'
 
 # background / batch jobs settings
 celery:
