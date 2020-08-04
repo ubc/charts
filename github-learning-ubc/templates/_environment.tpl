@@ -15,7 +15,7 @@ Runtime environment variables
 - name: GLU_BATCH_GROUP_SYNC_MUTEX_URL
   value: {{ .Values.glu.batchGroupSyncMutexUrl | quote }}
 - name: GLU_BATCH_GROUP_SYNC_MUTEX_TTL
-  value: {{ .Values.glu.batchGroupSyncMutexTtl | quote }}
+  value: "redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}"
 - name: GLU_SCRAMBLE_EMAIL
   value: {{ .Values.glu.scrambleEmail | quote }}
 - name: CELERY_BROKER_URL

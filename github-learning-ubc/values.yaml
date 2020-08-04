@@ -11,13 +11,15 @@ workerSchedulerEnabled: false
 glu:
   batchEnabled: 'true'
   batchGroupSyncSchedule: '{"hour": "*/2", "minute": "20"}'
-  batchGroupSyncMutexUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
+  # defined in template. no support for values teampltes in helm, yet
+  # batchGroupSyncMutexUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
   batchGroupSyncMutexTtl: 1800
   scrambleEmail: 'false'
 
 # background / batch jobs settings
 celery:
-  brokerUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
+  # defined in template. no support for values teampltes in helm, yet
+  # brokerUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
   alwaysEager: 'false'
 
 # saml settings
