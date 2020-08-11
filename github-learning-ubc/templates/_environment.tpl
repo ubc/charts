@@ -112,4 +112,8 @@ Runtime environment variables
   value: {{ .Values.ldap.intGroupsSrcBaseDn | quote }}
 - name: LDAP_INT_GROUPS_BASE_DN
   value: {{ .Values.ldap.intGroupsBaseDn | quote }}
+- name: GITHUB_API_URL
+  value: {{ .Values.github.apiUrl | quote }}
+- name: GITHUB_API_TOKEN
+  value: {{ .Values.github.apiToken | quote }}
 {{- end }}
