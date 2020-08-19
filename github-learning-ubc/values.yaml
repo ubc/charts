@@ -15,6 +15,7 @@ glu:
   # batchGroupSyncMutexUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
   batchGroupSyncMutexTtl: 1800
   scrambleEmail: 'false'
+  renameApiNetworkMask: '10.0.0.0/8'
 
 # background / batch jobs settings
 celery:

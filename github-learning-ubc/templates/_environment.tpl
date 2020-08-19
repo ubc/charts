@@ -18,6 +18,8 @@ Runtime environment variables
   value: {{ .Values.glu.batchGroupSyncMutexTtl | quote }}
 - name: GLU_SCRAMBLE_EMAIL
   value: {{ .Values.glu.scrambleEmail | quote }}
+- name: GLU_RENAME_API_NETWORK_MASK
+  value: {{ .Values.glu.renameApiNetworkMask | quote }}
 - name: CELERY_BROKER_URL
   value: "redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}"
 - name: CELERY_ALWAYS_EAGER
