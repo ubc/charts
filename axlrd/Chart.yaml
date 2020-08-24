@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "1.0"
 description: Application for teaching gaming theory where students build bots to compete in various games
 name: axlrd
-version: 0.0.8
+version: 0.0.9
