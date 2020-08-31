@@ -44,9 +44,7 @@ subsets:
   - port: {{ .Values.db.service.port }}
     name: db
     protocol: TCP
-{{- end -}}
 
-{{- if .Values.shib.enabled }}
 ---
 
 apiVersion: v1
