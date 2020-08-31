@@ -1,0 +1,14 @@
+apiVersion: v2
+name: zoom-captions
+type: application
+version: 0.1.0
+appVersion: 1.0.0
+maintainers:
+- name: Andrew Gardener
+  email: andrew.gardener@ubc.ca
+engine: gotpl
+dependencies:
+- name: mariadb
+  version: 7.x.x
+  repository: https://charts.bitnami.com/bitnami
+  alias: db

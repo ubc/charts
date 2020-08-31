@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "zoom-captions.fullname" . }}-test-connection"
+  labels:
+    {{- include "common_labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "zoom-captions.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

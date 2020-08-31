@@ -1,0 +1,168 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "zoom-captions.fullname" . }}
+  labels:
+    {{- include "common_labels" . | nindent 4 }}
+    tier: app
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "zoom-captions.fullname" . }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        app: {{ template "zoom-captions.fullname" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "zoom-captions.serviceAccountName" . }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: SHIBBOLETH_IDP_DISCOVERY_URL
+          value: {{ .Values.shib.idp.discoveryUrl | quote }}
+        - name: SHIBBOLETH_IDP_METADATA_URL
+          value: {{ .Values.shib.idp.metadataUrl | quote }}
+        - name: SHIBBOLETH_IDP_ENTITY_ID
+          value: {{ .Values.shib.idp.entityId | quote }}
+        - name: SHIBD_ATTRIBUTE_MAP_URL
+          value: {{ .Values.shib.idp.attributeMapUrl | quote }}
+        - name: SHIBBOLETH_SP_ENTITY_ID
+          value: {{ .Values.shib.sp.entityId | quote }}
+        - name: SHIBD_LISTENER_ACL
+          value: "0.0.0.0/0"
+        - name: SHIBD_LISTENER_ADDRESS
+          value: "0.0.0.0"
+        - name: SHIBD_ODBC_DRIVER
+          value: {{ .Values.shib.odbc.driver | quote }}
+        - name: SHIBD_ODBC_LIB
+          value: {{ .Values.shib.odbc.lib | quote }}
+        - name: SHIBD_ODBC_SERVER
+          value: {{ template "zoom-captions.db.fullname" . }}
+        - name: SHIBD_ODBC_PORT
+          value: {{ .Values.db.service.port | quote }}
+        - name: SHIBD_ODBC_DATABASE
+          value: {{ .Values.db.db.name | quote }}
+        - name: SHIB_ODBC_USER
+          value: {{ .Values.db.db.user | quote }}
+        - name: SHIB_ODBC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "zoom-captions.db.fullname" . }}
+              key: db_password
+        - name: SHIB_SP_CERT
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "zoom-captions.fullname" . }}-shibd
+              key: shib_sp_cert
+        - name: SHIB_SP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "zoom-captions.fullname" . }}-shibd
+              key: shib_sp_key
+        - name: SHIBD_SERVICE_NAME
+          value: {{ template "zoom-captions.fullname" . }}-shibd
+      ports:
+      - name: http
+        containerPort: 80
+        protocol: TCP
+      livenessProbe:
+        httpGet:
+          path: /
+          port: http
+      readinessProbe:
+        httpGet:
+          path: /
+          port: http
+      resources:
+{{ toYaml .Values.resources | indent 10 }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "zoom-captions.fullname" . }}-shibd
+  labels:
+    {{- include "common_labels" . | nindent 4 }}
+    tier: auth
+spec:
+  replicas: {{ .Values.shib.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "zoom-captions.fullname" . }}-shibd
+  template:
+    metadata:
+      labels:
+        app: {{ template "zoom-captions.fullname" . }}-shibd
+    spec:
+      containers:
+      - name: {{ template "zoom-captions.fullname" . }}-shibd
+        image: '{{ .Values.shib.image.repository }}:{{ .Values.shib.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.shib.imagePullPolicy | quote }}
+        env:
+        - name: SHIBBOLETH_IDP_DISCOVERY_URL
+          value: {{ .Values.shib.idp.discoveryUrl | quote }}
+        - name: SHIBBOLETH_IDP_METADATA_URL
+          value: {{ .Values.shib.idp.metadataUrl | quote }}
+        - name: SHIBBOLETH_IDP_ENTITY_ID
+          value: {{ .Values.shib.idp.entityId | quote }}
+        - name: SHIBD_ATTRIBUTE_MAP_URL
+          value: {{ .Values.shib.idp.attributeMapUrl | quote }}
+        - name: SHIBBOLETH_SP_ENTITY_ID
+          value: {{ .Values.shib.sp.entityId | quote }}
+        - name: SHIBD_LISTENER_ACL
+          value: "0.0.0.0/0"
+        - name: SHIBD_LISTENER_ADDRESS
+          value: "0.0.0.0"
+        - name: SHIBD_ODBC_DRIVER
+          value: {{ .Values.shib.odbc.driver | quote }}
+        - name: SHIBD_ODBC_LIB
+          value: {{ .Values.shib.odbc.lib | quote }}
+        - name: SHIBD_ODBC_SERVER
+          value: {{ template "zoom-captions.db.fullname" . }}
+        - name: SHIBD_ODBC_PORT
+          value: {{ .Values.db.service.port | quote }}
+        - name: SHIBD_ODBC_DATABASE
+          value: {{ .Values.db.db.name | quote }}
+        - name: SHIB_ODBC_USER
+          value: {{ .Values.db.db.user | quote }}
+        - name: SHIB_ODBC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "zoom-captions.db.fullname" . }}
+              key: db_password
+        - name: SHIB_SP_CERT
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "zoom-captions.fullname" . }}-shibd
+              key: shib_sp_cert
+        - name: SHIB_SP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "zoom-captions.fullname" . }}-shibd
+              key: shib_sp_key
+        - name: LOG_LEVEL
+          value: {{ default "INFO" .Values.shib.logLevel | quote }}
+        ports:
+        - name: shibd
+          containerPort: 1600
+        livenessProbe:
+          tcpSocket:
+            port: 1600
+        readinessProbe:
+          tcpSocket:
+            port: 1600
+        resources:
+{{ toYaml .Values.shib.resources | indent 10 }}
