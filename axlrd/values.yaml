@@ -19,6 +19,7 @@ ingress:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 300m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "90"
     # This is for disabling https, comment these to enable https
     #nginx.ingress.kubernetes.io/ssl-redirect: "false"
     #kubernetes.io/tls-acme: "false"
