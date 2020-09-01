@@ -24,19 +24,12 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "zoom-captions.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Common labels
 */}}
-{{- define "common_labels" -}}
+{{- define "common_labels" }}
 app: {{ template "zoom-captions.fullname" . }}
 stage: {{ .Values.stage }}
-helm.sh/chart: {{ include "zoom-captions.chart" . }}
+chart: {{ print .Chart.Name "-" .Chart.Version | replace "+" "_" | quote }}
 release: {{ .Release.Name | quote }}
 heritage: {{ .Release.Service | quote }}
 {{- if .Values.CI_PIPELINE_ID }}
@@ -57,6 +50,17 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
+{{- end }}
+
+{{- define "call-nested" }}
+{{- $dot := index . 0 }}
+{{- $subchart := index . 1 | splitList "." }}
+{{- $template := index . 2 }}
+{{- $values := $dot.Values }}
+{{- range $subchart }}
+{{- $values = index $values . }}
+{{- end }}
+{{- include $template (dict "Chart" (dict "Name" (last $subchart)) "Values" $values "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
 {{- end }}
 
 {{/*

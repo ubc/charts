@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "zoom-captions.fullname" . }}
   labels:
-    {{- include "common_labels" . | nindent 4 }}
+    {{- include "common_labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -13,37 +13,6 @@ spec:
       name: http
   selector:
     app: {{ template "zoom-captions.fullname" . }}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ template "zoom-captions.db.fullname" . }}
-  labels:
-    {{- include "common_labels" . | indent 4 }}
-spec:
-  ports:
-  - port: {{ .Values.db.service.port }}
-    targetPort: {{ .Values.db.service.port }}
-    protocol: TCP
-    name: db
-
----
-kind: Endpoints
-apiVersion: v1
-metadata:
-  name: {{ template "zoom-captions.db.fullname" . }}
-  labels:
-    {{- include "common_labels" . | indent 4 }}
-subsets:
-- addresses:
-  {{- range .Values.db.service.endpoints }}
-  - ip: {{ . }}
-  {{- end }}
-  ports:
-  - port: {{ .Values.db.service.port }}
-    name: db
-    protocol: TCP
 
 ---
 

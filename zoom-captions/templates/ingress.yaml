@@ -9,13 +9,13 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: app
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  labels:
-    {{- include "common_labels" . | indent 4 }}
-    tier: app
 spec:
   {{- if .Values.ingress.tls }}
   tls:

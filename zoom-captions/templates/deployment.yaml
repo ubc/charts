@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "zoom-captions.fullname" . }}
   labels:
-    {{- include "common_labels" . | nindent 4 }}
+    {{- include "common_labels" . | indent 4 }}
     tier: app
 spec:
 {{- if not .Values.autoscaling.enabled }}
@@ -74,19 +74,19 @@ spec:
               key: shib_sp_key
         - name: SHIBD_SERVICE_NAME
           value: {{ template "zoom-captions.fullname" . }}-shibd
-      ports:
-      - name: http
-        containerPort: 80
-        protocol: TCP
-      livenessProbe:
-        httpGet:
-          path: /
-          port: http
-      readinessProbe:
-        httpGet:
-          path: /
-          port: http
-      resources:
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
 {{ toYaml .Values.resources | indent 10 }}
 
 ---
@@ -95,7 +95,7 @@ kind: Deployment
 metadata:
   name: {{ include "zoom-captions.fullname" . }}-shibd
   labels:
-    {{- include "common_labels" . | nindent 4 }}
+    {{- include "common_labels" . | indent 4 }}
     tier: auth
 spec:
   replicas: {{ .Values.shib.replicas }}
