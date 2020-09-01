@@ -107,6 +107,11 @@ spec:
       labels:
         app: {{ template "zoom-captions.fullname" . }}-shibd
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "zoom-captions.serviceAccountName" . }}
       containers:
       - name: {{ template "zoom-captions.fullname" . }}-shibd
         image: '{{ .Values.shib.image.repository }}:{{ .Values.shib.image.tag | default "latest" }}'

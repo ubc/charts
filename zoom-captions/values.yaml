@@ -71,7 +71,7 @@ affinity: {}
 shib:
   logLevel: INFO
   image:
-    repository: lthub/shibd
+    repository: gcr.io/ctlt-apps/zoom-captions-shibd
     tag: latest
   replicas: 1
   # imagePullPolicy:
