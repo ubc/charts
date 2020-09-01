@@ -29,7 +29,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ default "" .Values.image.imagePullPolicy | quote }}
         env:
         - name: SHIBBOLETH_IDP_DISCOVERY_URL
           value: {{ .Values.shib.idp.discoveryUrl | quote }}
@@ -46,9 +46,9 @@ spec:
         - name: SHIBD_LISTENER_ADDRESS
           value: "0.0.0.0"
         - name: SHIBD_ODBC_DRIVER
-          value: {{ .Values.shib.odbc.driver | quote }}
+          value: MariaDB
         - name: SHIBD_ODBC_LIB
-          value: {{ .Values.shib.odbc.lib | quote }}
+          value: odbc-store.so
         - name: SHIBD_ODBC_SERVER
           value: {{ template "zoom-captions.db.fullname" . }}
         - name: SHIBD_ODBC_PORT
@@ -127,9 +127,9 @@ spec:
         - name: SHIBD_LISTENER_ADDRESS
           value: "0.0.0.0"
         - name: SHIBD_ODBC_DRIVER
-          value: {{ .Values.shib.odbc.driver | quote }}
+          value: MySql
         - name: SHIBD_ODBC_LIB
-          value: {{ .Values.shib.odbc.lib | quote }}
+          value: odbc-store.so
         - name: SHIBD_ODBC_SERVER
           value: {{ template "zoom-captions.db.fullname" . }}
         - name: SHIBD_ODBC_PORT

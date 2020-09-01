@@ -17,7 +17,7 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
@@ -84,9 +84,6 @@ shib:
     entityId: https://sp.example.com
     # key:
     # cert:
-  odbc:
-    driver: MySql
-    lib: odbc-store.so
   resources:
     requests:
       memory: 64Mi
