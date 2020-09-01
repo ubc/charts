@@ -1,4 +1,4 @@
-# Default values for orchard.
+# Default values for lti-shim
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -21,6 +21,24 @@ ingress:
 
 app:
   key: "base64:DYF0KhMD6pA9kWeovg1SL8gapmoHF6hZmV1UK3GYhUY="
+
+ltijs:
+  image: lthub/ltijs-demo:2020-07-29
+  host: ltijs.lti-shim.ubc.ca
+  port: 80
+  db:
+    image: mongo:4
+    port: 27017
+    name: lti-shim-ltijs-db
+    user: lti-shim-ltijs-db-user
+    pass: lti-shim-ltijs-db-pass
+  platform:
+    url: https://lti-shim.ubc.ca
+    name: LTI Shim
+    clientId: "1"
+    authEndpoint: https://lti-shim.ubc.ca/lti/launch/platform/auth
+    accessTokenEndpoint: https://lti-shim.ubc.ca/lti/security/platform/token
+    jwksEndpoint: https://lti-shim.ubc.ca/lti/platform/jwks
 
 postgres:
   port: 5432

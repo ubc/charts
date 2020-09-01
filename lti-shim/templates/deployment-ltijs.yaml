@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "app.fullname" . }}-ltijs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "app.fullname" . }}-ltijs
+  template:
+    metadata:
+      labels:
+        app: {{ template "app.fullname" . }}-ltijs
+    spec:
+      containers:
+      - name: {{ template "app.fullname" . }}-ltijs
+        image: {{ .Values.ltijs.image }}
+        ports:
+          - containerPort: {{ .Values.ltijs.port }}
+        env:
+          - name: PORT
+            value: {{ .Values.ltijs.port }}
+          - name: DB_HOST
+            value: {{ template "app.fullname" . }}-ltijs-mongo
+          - name: DB_NAME
+            value: {{ .Values.ltijs.db.name }}
+          - name: DB_USER
+            value: {{ .Values.ltijs.db.user }}
+          - name: DB_PASS
+            value: {{ .Values.ltijs.db.pass }}
+          - name: PLATFORM_URL
+            value: {{ .Values.ltijs.platform.url }}
+          - name: PLATFORM_NAME
+            value: {{ .Values.ltijs.platform.name }}
+          - name: PLATFORM_CLIENT_ID
+            value: {{ .Values.ltijs.platform.clientId }}
+          - name: PLATFORM_AUTH_ENDPOINT
+            value: {{ .Values.ltijs.platform.authEndpoint }}
+          - name: PLATFORM_ACCESS_TOKEN_ENDPOINT
+            value: {{ .Values.ltijs.platform.accessTokenEndpoint }}
+          - name: PLATFORM_JWKS_ENDPOINT
+            value: {{ .Values.ltijs.platform.jwksEndpoint }}

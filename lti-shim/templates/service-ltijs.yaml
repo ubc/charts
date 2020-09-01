@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "app.fullname" . }}-ltijs
+spec:
+  selector:
+    app: {{ template "app.fullname" . }}-ltijs
+  ports:
+    - port: {{ .Values.ltijs.port }}

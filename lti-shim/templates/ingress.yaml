@@ -16,9 +16,17 @@ spec:
           serviceName: {{ template "app.fullname" . }}
           servicePort: 80
         path: /
+  - host: {{ replace "http://" "" .Values.ltijs.host }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ template "app.fullname" . }}-ltijs
+          servicePort: {{ .Values.ltijs.port }}
+        path: /
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
-  - hosts:
-    - {{ replace "http://" "" .Values.ingress.host }}
-    secretName: {{ template "app.fullname" . }}-tls
+    - hosts:
+      - {{ replace "http://" "" .Values.ingress.host }}
+      - {{ replace "http://" "" .Values.ltijs.host }}
+      secretName: {{ template "app.fullname" . }}-tls
   {{- end }}

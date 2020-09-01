@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "app.fullname" . }}-ltijs-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "app.fullname" . }}-ltijs-mongo
+  template:
+    metadata:
+      labels:
+        app: {{ template "app.fullname" . }}-ltijs-mongo
+    spec:
+      containers:
+      - name: {{ template "app.fullname" . }}-ltijs-mongo
+        image: {{ .Values.ltijs.db.image }}
+        ports:
+          - containerPort: {{ .Values.ltijs.db.port }}
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: {{ .Values.ltijs.db.user }}
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: {{ .Values.ltijs.db.pass }}
