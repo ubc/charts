@@ -19,7 +19,9 @@ spec:
           - containerPort: {{ .Values.ltijs.port }}
         env:
           - name: PORT
-            value: {{ .Values.ltijs.port }}
+            value: {{ .Values.ltijs.port | quote }}
+          - name: LTI_KEY
+            value: {{ .Values.ltijs.ltiKey }}
           - name: DB_HOST
             value: {{ template "app.fullname" . }}-ltijs-mongo
           - name: DB_NAME
@@ -33,7 +35,7 @@ spec:
           - name: PLATFORM_NAME
             value: {{ .Values.ltijs.platform.name }}
           - name: PLATFORM_CLIENT_ID
-            value: {{ .Values.ltijs.platform.clientId }}
+            value: {{ .Values.ltijs.platform.clientId | quote}}
           - name: PLATFORM_AUTH_ENDPOINT
             value: {{ .Values.ltijs.platform.authEndpoint }}
           - name: PLATFORM_ACCESS_TOKEN_ENDPOINT

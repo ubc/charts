@@ -26,6 +26,7 @@ ltijs:
   image: lthub/ltijs-demo:2020-07-29
   host: ltijs.lti-shim.ubc.ca
   port: 80
+  ltiKey: NotSureWhatThisIsForButItNeedsSomethingHere
   db:
     image: mongo:4
     port: 27017
