@@ -61,7 +61,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ template "zoom-captions.db.fullname" . }}
-              key: db_password
+              key: mariadb-password
         - name: SHIB_SP_CERT
           valueFrom:
             secretKeyRef:
@@ -142,7 +142,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ template "zoom-captions.db.fullname" . }}
-              key: db_password
+              key: mariadb-password
         - name: SHIB_SP_CERT
           valueFrom:
             secretKeyRef:
