@@ -39,6 +39,8 @@ spec:
           value: {{ .Values.shib.idp.entityId | quote }}
         - name: SHIBD_ATTRIBUTE_MAP_URL
           value: {{ .Values.shib.idp.attributeMapUrl | quote }}
+        - name: SHIBD_REMOTE_USER
+          value: {{ .Values.shib.idp.remoteUser | quote }}
         - name: SHIBBOLETH_SP_ENTITY_ID
           value: {{ .Values.shib.sp.entityId | quote }}
         - name: SHIBD_LISTENER_ACL
@@ -107,11 +109,6 @@ spec:
       labels:
         app: {{ template "zoom-captions.fullname" . }}-shibd
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "zoom-captions.serviceAccountName" . }}
       containers:
       - name: {{ template "zoom-captions.fullname" . }}-shibd
         image: '{{ .Values.shib.image.repository }}:{{ .Values.shib.image.tag | default "latest" }}'
@@ -125,6 +122,8 @@ spec:
           value: {{ .Values.shib.idp.entityId | quote }}
         - name: SHIBD_ATTRIBUTE_MAP_URL
           value: {{ .Values.shib.idp.attributeMapUrl | quote }}
+        - name: SHIBD_REMOTE_USER
+          value: {{ .Values.shib.idp.remoteUser | quote }}
         - name: SHIBBOLETH_SP_ENTITY_ID
           value: {{ .Values.shib.sp.entityId | quote }}
         - name: SHIBD_LISTENER_ACL

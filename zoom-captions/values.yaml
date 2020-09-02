@@ -71,15 +71,15 @@ affinity: {}
 shib:
   logLevel: INFO
   image:
-    repository: gcr.io/ctlt-apps/zoom-captions-shibd
+    repository: lthub/shibd
     tag: latest
   replicas: 1
-  # imagePullPolicy:
   idp:
     discoveryUrl: https://example.com
     metadataUrl: https://example.com/idp/shibboleth
     entityId: https://example.com
     attributeMapUrl: https://example.com/attribute-map.xml
+    remoteUser: somerandomname
   sp:
     entityId: https://sp.example.com
     # key:
