@@ -35,6 +35,8 @@ app:
     repository: ubcctlt/alchemy
     tag: latest
     pullPolicy: IfNotPresent
+    # Alchemy images live on GCR, so needs a pull secret
+    pullSecret: OVERRIDE_ME
   persistence:
     enabled: false
     # auto provision
