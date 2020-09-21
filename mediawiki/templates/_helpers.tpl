@@ -188,6 +188,19 @@ env:
 - name: MEDIAWIKI_MEMCACHED_SERVERS
   value: '["{{ template "mediawiki.fullname" . }}-memcached:11211"]'
 {{- end }}
+{{- if .Values.redis.enabled }}
+- name: MEDIAWIKI_REDIS_HOST
+  value: {{ .Values.redis.host | quote }}
+- name: MEDIAWIKI_REDIS_PORT
+  value: {{ .Values.redis.port | quote }}
+  {{- if .Values.redis.password }}
+- name: MEDIAWIKI_REDIS_PASSWORD
+  value: {{ .Values.redis.password | quote }}
+  {{ -end  }}
+- name: MEDIAWIKI_REDIS_PERSISTENT
+  value: {{ .Values.redis.persistent | quote }}
+{{- end }}
+
 {{- if .Values.cacheDirectory }}
 - name: MEDIAWIKI_CACHE_DIRECTORY
   value: {{ .Values.cacheDirectory }}

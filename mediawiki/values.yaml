@@ -186,6 +186,13 @@ memcached:
         memory: 16Mi
         cpu: 20m
 
+redis:
+  enabled: false
+  #host:
+  port: 6379
+  #password:
+  persistent: true
+
 service:
   name: mediawiki
   type: ClusterIP
