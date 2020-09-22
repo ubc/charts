@@ -128,19 +128,19 @@ spec:
         - name: XAPI_ENABLED
           value: {{ .Values.xapi.enabled | quote }}
         {{- if .Values.xapi.enabled }}
-        - name: LRS_APP_BASE_URL
-          value: {{ .Values.lrs.appBaseURL | quote }}
         - name: LRS_XAPI_STATEMENT_ENDPOINT
           value: {{ .Values.lrs.xapiStatementEndpoint | quote }}
         - name: LRS_XAPI_USERNAME
           value: {{ .Values.lrs.xapiUsername | quote }}
-        {{- if .Values.lrs.xpiPassword }}
+        {{- if .Values.lrs.xapiPassword }}
         - name: LRS_XAPI_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: lrs_password
         {{- end }}
+        - name: LRS_APP_BASE_URL
+          value: {{ .Values.lrs.appBaseURL | quote }}
         - name: LRS_ACTOR_ACCOUNT_USE_GLOBAL_UNIQUE_IDENTIFIER
           value: {{ .Values.lrs.actorAccountUseGlobalUniqueIdentifier | quote }}
         - name: LRS_ACTOR_ACCOUNT_GLOBAL_UNIQUE_IDENTIFIER_HOMEPAGE
