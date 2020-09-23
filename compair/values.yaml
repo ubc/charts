@@ -86,13 +86,17 @@ kaltura:
 # xapi settings
 xapi:
   enabled: false
+
+lrs:
+  xapi:
+    enabled: false
+    statementEndpoint: https://lrs.example.com/data/xAPI/
+    username: lrs
+    password: LRS_PASSWORD
   appBaseURL: https://archive.org/services/purl/compair/ctlt/
-  lrsStatementEndpoint: https://lrs.example.com/data/xAPI/
-  lrsActorAccountUseGlobalUniqueIdentifier: false
-  lrsActorAccountGlobalUniqueIdentifierHomepage: http://www.example.com/
-  lrsUsername: lrs
-  lrsPassword: LRS_PASSWORD
-  lrsUserInputFieldSizeLimit: "1048576" #1024 * 1024 -> max 1MB
+  actorAccountUseGlobalUniqueIdentifier: false
+  actorAccountGlobalUniqueIdentifierHomepage: http://www.example.com/
+  userInputFieldSizeLimit: "1048576" #1024 * 1024 -> max 1MB
 
 # data privacy settings
 expose:

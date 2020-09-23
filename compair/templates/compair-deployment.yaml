@@ -125,13 +125,13 @@ spec:
         {{- end }}
         {{- end }}
         - name: XAPI_ENABLED
-          value: {{ .Values.xapi.enabled | quote }}
-        {{- if .Values.xapi.enabled }}
+          value: {{ .Values.lrs.xapi.enabled | quote }}
+        {{- if .Values.lrs.xapi.enabled }}
         - name: LRS_XAPI_STATEMENT_ENDPOINT
-          value: {{ .Values.lrs.xapiStatementEndpoint | quote }}
+          value: {{ .Values.lrs.xapi.statementEndpoint | quote }}
         - name: LRS_XAPI_USERNAME
-          value: {{ .Values.lrs.xapiUsername | quote }}
-        {{- if .Values.lrs.xapiPassword }}
+          value: {{ .Values.lrs.xapi.username | quote }}
+        {{- if .Values.lrs.xapi.password }}
         - name: LRS_XAPI_PASSWORD
           valueFrom:
             secretKeyRef:
