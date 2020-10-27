@@ -23,6 +23,11 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.config.cacerts }}
+          env:
+            - name: JAVA_OPTS
+              value: "-Djavax.net.ssl.trustStore={{ .Values.config.cacerts }}"
+          {{- end }}
           args: [
             "--logging.level.ca.ubc={{ .Values.logging.level }}",
             "--canvas.url={{ .Values.canvas.url }}",
