@@ -66,6 +66,8 @@ spec:
         env:
         - name: MEDIAWIKI_API_URL
           value: http://{{ template "mediawiki.fullname" . }}{{ .Values.apiPath }}
+        - name: MEDIAWIKI_REST_URL
+          value: http://{{ template "mediawiki.fullname" . }}{{ .Values.restPath }}
         ports:
         - name: parsoid
           containerPort: 8142

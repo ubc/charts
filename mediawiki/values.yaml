@@ -52,6 +52,7 @@ mainCache: "CACHE_NONE"
 #l10nCacheManualRecache: false
 
 apiPath: /w/api.php
+restPath: /w/rest.php
 
 # mediawikiUploadPath: //example.com/images
 mediawikiUploadPath: //example.com/images
