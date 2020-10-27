@@ -33,8 +33,10 @@ spec:
             {{- if .Values.server.useForwardHeaders }}
             "--server.use-forward-headers={{ .Values.server.useForwardHeaders }}",
             {{- end }}
-            {{- if and .Values.server.tomcat .Values.server.tomcat.remoteIpHeader }}
+            {{- if .Values.server.tomcat }}
+            {{- if .Values.server.tomcat.remoteIpHeader }}
             "--server.tomcat.remote-ip-header={{ .Values.server.tomcat.remoteIpHeader }}",
+            {{- end }}
             {{- end }}
             "--saml.sp.key-store={{ .Values.saml.sp.keyStore }}",
             "--saml.sp.key-store-password={{ .Values.saml.sp.keyStorePassword }}",
