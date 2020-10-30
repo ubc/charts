@@ -6,8 +6,8 @@ keywords:
   - peer learning
   - education
 name: compair
-version: 0.5.8
-appVersion: 1.2.6
+version: 0.5.9
+appVersion: 1.2.7
 home: http://ubc.github.io/compair/
 sources:
   - http://github.com/ubc/compair
