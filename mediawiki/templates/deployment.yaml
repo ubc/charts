@@ -76,12 +76,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: parsoid
+            port: restbase
           initialDelaySeconds: 30
         readinessProbe:
           httpGet:
             path: /
-            port: parsoid
+            port: restbase
           initialDelaySeconds: 15
         resources:
 {{ toYaml .Values.node_services.resources | indent 10 }}
