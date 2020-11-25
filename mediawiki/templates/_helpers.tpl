@@ -196,7 +196,7 @@ env:
   {{- if .Values.redis.password }}
 - name: MEDIAWIKI_REDIS_PASSWORD
   value: {{ .Values.redis.password | quote }}
-  {{ -end  }}
+  {{- end  }}
 - name: MEDIAWIKI_REDIS_PERSISTENT
   value: {{ .Values.redis.persistent | quote }}
 {{- end }}
