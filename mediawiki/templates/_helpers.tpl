@@ -177,6 +177,10 @@ env:
 - name: UBC_AUTH_ENABLED
   value: {{ .Values.ldap.ubcAuthEnabled | quote }}
 {{- end }}
+{{- if .Values.parsoid.skipDomainCheck }}
+- name: PARSOID_SKIP_DOAMIN_CHECK
+  value: {{ .Values.parsoid.skipDomainCheck | quote }}
+{{- end }}
 {{- if .Values.ldap.autoCreatedUserRedirect }}
 - name: AUTO_CREATED_USER_REDIRECT
   value: {{ .Values.ldap.autoCreatedUserRedirect }}
