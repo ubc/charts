@@ -14,7 +14,7 @@ APP_URL=http://{{ .Values.ingress.host }}
 LOG_CHANNEL=stack
 
 DB_CONNECTION=pgsql
-DB_HOST={{ template "app.fullname" . }}-postgres
+DB_HOST={{ .Values.postgres.host }}
 DB_PORT={{ .Values.postgres.port }}
 DB_DATABASE={{ .Values.postgres.database }}
 DB_USERNAME={{ .Values.postgres.username }}

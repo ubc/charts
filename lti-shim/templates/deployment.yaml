@@ -21,7 +21,7 @@ spec:
             containerPort: 80
         env:
           - name: DB_HOST
-            value: {{ template "app.fullname" . }}-postgres
+            value: {{ .Values.postgres.host | quote }}
           - name: DB_PORT
             value: {{ .Values.postgres.port | quote }}
           - name: ADMIN_NAME
