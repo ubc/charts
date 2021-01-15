@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
@@ -75,11 +75,13 @@ spec:
               path: /actuator/health
               port: {{ .Values.service.internalPort }}
             initialDelaySeconds: 10
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /actuator/health
               port: {{ .Values.service.internalPort }}
             initialDelaySeconds: 10
+            timeoutSeconds: 5
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
