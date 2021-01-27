@@ -2,8 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-mode: staging
-
 image:
   repository: lthub/lti-shim
   tag: latest
@@ -20,7 +18,12 @@ ingress:
   host: lti-shim.ubc.ca
 
 app:
+  name: LTI Shim
+  mode: production
   key: "base64:DYF0KhMD6pA9kWeovg1SL8gapmoHF6hZmV1UK3GYhUY="
+  debug: false
+  session:
+    driver: cookie
 
 ltijs:
   image: lthub/ltijs-demo:2020-07-29

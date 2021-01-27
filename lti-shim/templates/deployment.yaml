@@ -20,24 +20,42 @@ spec:
           - name: http
             containerPort: 80
         env:
+          - name: APP_NAME
+            value: {{ .Values.app.name | quote }}
+          - name: APP_ENV
+            value: {{ .Values.app.mode | quote }}
+          - name: APP_KEY
+            value: {{ .Values.app.key | quote }}
+          - name: APP_DEBUG
+            value: {{ .Values.app.debug | quote }}
+{{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
+          - name: APP_URL
+            value: https://{{ .Values.ingress.host }}
+          - name: FORCE_HTTPS
+            value: true
+{{- else }}
+          - name: APP_URL
+            value: http://{{ .Values.ingress.host }}
+{{- end }}
+          - name: DB_CONNECTION
+            value: pgsql
           - name: DB_HOST
             value: {{ .Values.postgres.host | quote }}
           - name: DB_PORT
             value: {{ .Values.postgres.port | quote }}
+          - name: DB_DATABASE
+            value: {{ .Values.postgres.database | quote }}
+          - name: DB_USERNAME
+            value: {{ .Values.postgres.username | quote }}
+          - name: DB_PASSWORD
+            value: {{ .Values.postgres.password | quote }}
+          - name: SESSION_DRIVER
+            value: {{ .Values.app.session.driver | quote }}
+          - name: SANCTUM_STATEFUL_DOMAINS
+            value: {{ .Values.ingress.host }}
           - name: ADMIN_NAME
             value: {{ .Values.admin.name | quote }}
           - name: ADMIN_EMAIL
             value: {{ .Values.admin.email | quote }}
           - name: ADMIN_PASSWORD
             value: {{ .Values.admin.password | quote }}
-        volumeMounts:
-          - name: config
-            mountPath: /var/www/.env
-            subPath: laravelEnv
-      volumes:
-        - name: config
-          configMap:
-            name: {{ template "app.fullname" . }}-config
-            items:
-              - key: laravelEnv
-                path: laravelEnv
