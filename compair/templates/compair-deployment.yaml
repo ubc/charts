@@ -321,7 +321,7 @@ spec:
 {{- $serviceName := include "fullname" . }}
 {{- $servicePort := .Values.app.service.externalPort }}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}
