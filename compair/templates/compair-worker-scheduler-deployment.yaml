@@ -19,6 +19,11 @@ spec:
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: worker-scheduler
   template:
     metadata:
       labels:

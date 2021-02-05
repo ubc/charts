@@ -17,6 +17,11 @@ metadata:
 spec:
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: mysql
   template:
     metadata:
       labels:

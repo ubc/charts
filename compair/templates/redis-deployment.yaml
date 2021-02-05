@@ -18,6 +18,11 @@ spec:
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: redis
   template:
     metadata:
       labels:

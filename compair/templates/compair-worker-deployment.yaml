@@ -18,6 +18,11 @@ spec:
   replicas: {{ .Values.worker.replicaCount }}
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: worker
   template:
     metadata:
       labels:

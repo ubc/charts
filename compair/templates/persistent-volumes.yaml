@@ -1,8 +1,8 @@
 {{- if .Values.app.persistence.enabled }}
   {{- if not .Values.app.persistence.storageClass }}
 
-kind: PersistentVolume
 apiVersion: v1
+kind: PersistentVolume
 metadata:
   name: {{ template "fullname" . }}-app-pv
   labels:
@@ -23,8 +23,8 @@ spec:
 ---
   {{- end }}
 
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: {{ template "fullname" . }}-app-pvc
   labels:
