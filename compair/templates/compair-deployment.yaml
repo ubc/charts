@@ -141,7 +141,19 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
-              key: lrs_password
+              key: xapi_password
+        {{- end }}
+        - name: CALIPER_ENABLED
+          value: {{ .Values.lrs.caliper.enabled | quote }}
+        {{- if .Values.lrs.caliper.enabled }}
+        - name: LRS_CALIPER_HOST
+          value: {{ .Values.lrs.caliper.host | quote }}
+        {{- if .Values.lrs.caliper.api_key }}
+        - name: LRS_CALIPER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: caliper_api_key
         {{- end }}
         - name: LRS_APP_BASE_URL
           value: {{ .Values.lrs.appBaseURL | quote }}

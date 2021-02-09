@@ -11,7 +11,7 @@ celeryBrokerURL: redis://{{ template "fullname" . }}-redis:6379
 assetLocation: local
 enforceSSL: true
 cForceRoot: true
-secretKey: LRS_RANDOM_KEY
+secretKey: PLEASE_CHANGE_ME
 workerSchedulerEnabled: false
 demoInstance: false
 celeryTimezone: America/Vancouver
@@ -83,16 +83,17 @@ kaltura:
   videoExtensions: "mp4 mov webm"
   audioExtensions: "mp3"
 
-# xapi settings
-xapi:
-  enabled: false
-
+# LRS settings
 lrs:
   xapi:
     enabled: false
     statementEndpoint: https://lrs.example.com/data/xAPI/
     username: lrs
-    password: LRS_PASSWORD
+    password: PLEASE_CHANGE_ME
+  caliper:
+    enabled: false
+    host: https://lrs.example.com/data/caliper/
+    api_key: PLEASE_CHANGE_ME
   appBaseURL: https://archive.org/services/purl/compair/ctlt/
   actorAccountUseGlobalUniqueIdentifier: false
   actorAccountGlobalUniqueIdentifierHomepage: http://www.example.com/
