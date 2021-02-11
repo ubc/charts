@@ -143,6 +143,7 @@ spec:
               name: {{ template "fullname" . }}
               key: xapi_password
         {{- end }}
+        {{- end }}
         - name: CALIPER_ENABLED
           value: {{ .Values.lrs.caliper.enabled | quote }}
         {{- if .Values.lrs.caliper.enabled }}
@@ -155,6 +156,7 @@ spec:
               name: {{ template "fullname" . }}
               key: caliper_api_key
         {{- end }}
+        {{- end }}
         - name: LRS_APP_BASE_URL
           value: {{ .Values.lrs.appBaseURL | quote }}
         - name: LRS_ACTOR_ACCOUNT_USE_GLOBAL_UNIQUE_IDENTIFIER
@@ -163,7 +165,6 @@ spec:
           value: {{ .Values.lrs.actorAccountGlobalUniqueIdentifierHomepage | quote }}
         - name: LRS_USER_INPUT_FIELD_SIZE_LIMIT
           value: {{ .Values.lrs.userInputFieldSizeLimit | quote }}
-        {{- end }}
         - name: ASSET_LOCATION
           value: {{ .Values.assetLocation | quote }}
         - name: SECRET_KEY
