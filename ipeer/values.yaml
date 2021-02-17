@@ -94,6 +94,7 @@ affinity: {}
 
 ipeer:
   session_save: database
+  debug: false
   auth:
     method: default
     ldap:

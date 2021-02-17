@@ -95,6 +95,10 @@ spec:
           - name: IPEER_AUTH_LDAP_fallbackInternal
             value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
           {{- end }}
+          {{- if .Values.ipeer.debug }}
+          - name: IPEER_DEBUG
+            value: 2
+          {{- end }}
           ports:
             - name: fastcgi
               containerPort: 9000
@@ -234,6 +238,10 @@ spec:
             value: {{ .Values.ipeer.auth.ldap.attributeMap | quote }}
           - name: IPEER_AUTH_LDAP_fallbackInternal
             value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
+          {{- end }}
+          {{- if .Values.ipeer.debug }}
+          - name: IPEER_DEBUG
+            value: 2
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
