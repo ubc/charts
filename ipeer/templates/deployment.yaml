@@ -97,7 +97,7 @@ spec:
           {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
-            value: 2
+            value: "2"
           {{- end }}
           ports:
             - name: fastcgi
@@ -241,7 +241,7 @@ spec:
           {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
-            value: 2
+            value: "2"
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
