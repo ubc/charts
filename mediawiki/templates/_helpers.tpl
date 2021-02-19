@@ -205,18 +205,18 @@ env:
   value: {{ .Values.redis.persistent | quote }}
 {{- end }}
 {{- if .Values.caliper.enabled }}
-- name: CaliperHost
+- name: CALIPER_HOST
   value: {{ .Values.caliper.host | quote }}
 {{- if .Values.caliper.api_key }}
-- name: CaliperAPIKey
+- name: CALIPER_API_KEY
   valueFrom:
     secretKeyRef:
       name: {{ template "mediawiki.fullname" . }}
       key: caliper_api_key
 {{- end  }}
-- name: CaliperAppBaseUrl
+- name: CALIPER_BASE_URL
   value: {{ .Values.caliper.app_base_url | quote }}
-- name: CaliperLDAPActorHomepage
+- name: CALIPER_LDAP_ACTOR_HOMEPAGE
   value: {{ .Values.caliper.ldap_actor_homepage | quote }}
 {{- end }}
 
