@@ -204,6 +204,21 @@ env:
 - name: MEDIAWIKI_REDIS_PERSISTENT
   value: {{ .Values.redis.persistent | quote }}
 {{- end }}
+{{- if .Values.caliper.enabled }}
+- name: CaliperHost
+  value: {{ .Values.caliper.host | quote }}
+{{- if .Values.caliper.api_key }}
+- name: CaliperAPIKey
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "mediawiki.fullname" . }}
+      key: caliper_api_key
+{{- end  }}
+- name: CaliperAppBaseUrl
+  value: {{ .Values.caliper.app_base_url | quote }}
+- name: CaliperLDAPActorHomepage
+  value: {{ .Values.caliper.ldap_actor_homepage | quote }}
+{{- end }}
 
 {{- if .Values.cacheDirectory }}
 - name: MEDIAWIKI_CACHE_DIRECTORY

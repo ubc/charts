@@ -3,7 +3,7 @@
 ##
 image:
   repository: ubcctlt/mediawiki
-  # tag: 
+  # tag:
 
 stage: dev
 replicas: 1
@@ -77,6 +77,13 @@ googleMap:
   # Google Map API key
   apiKey: XXXXX
 
+caliper:
+  enabled: false
+  host: https://caliper.imsglobal.org/caliper/PUT_TEST_BEARER_TOKEN_HERE/message
+  api_key: PUT_TEST_BEARER_TOKEN_HERE
+  app_base_url: http://localhost.test.com/
+  ldap_actor_homepage: http://media_wiki_ldap_homepage
+
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-mediawiki#smtp-configuration
 ##
@@ -132,7 +139,7 @@ node_services:
   enabled: true
   image:
     repository: ubcctlt/mediawiki-node-services
-    # tag: 
+    # tag:
   # imagePullPolicy:
   replicas: 1
   persistence:
