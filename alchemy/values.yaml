@@ -64,8 +64,7 @@ worker:
   replicaCount: 1
   image:
     repository: ubcctlt/alchemy
-    # should be passed through API variables
-    #tag: latest
+    tag: latest
     pullPolicy: Always
 
 db:
