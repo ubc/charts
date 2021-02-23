@@ -14,6 +14,8 @@ casServiceValidateUrl: null
 secret: PLEASE_CHANGE_ME
 gaTrackingId: null
 
+imagePullSecrets: []
+
 iframe:
   enabled: false
   origin: null
@@ -35,8 +37,6 @@ app:
     repository: ubcctlt/alchemy
     tag: latest
     pullPolicy: IfNotPresent
-    # Alchemy images live on GCR, so needs a pull secret
-    pullSecret: OVERRIDE_ME
   persistence:
     enabled: false
     # auto provision

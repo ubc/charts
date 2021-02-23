@@ -25,9 +25,9 @@ spec:
         stage: {{ .Values.stage }}
         tier: app
     spec:
-      {{- if .Values.app.image.pullSecret }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.app.image.pullSecret }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
