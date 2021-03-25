@@ -1,0 +1,12 @@
+{{- if .Values.shib.attributeMap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "moodle.fullname" . }}-cm
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: configmap
+data:
+  attribute-map.xml: |
+{{ .Values.shib.attributeMap | indent 4 }}
+{{- end -}}

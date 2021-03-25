@@ -274,9 +274,19 @@ spec:
         volumeMounts:
         - name: shibd-cert
           mountPath: /etc/shibboleth/cert
+        {{- if .Values.shib.attributeMap }}
+        - name: attribute-map
+          mountPath: /etc/shibboleth/attribute-map.xml
+          subPath: "attribute-map.xml"
+        {{- end }}
       volumes:
       - name: shibd-cert
         secret:
           secretName: {{ template "moodle.fullname" . }}-shibd
+      {{- if .Values.shib.attributeMap }}
+      - name: attribute-map
+        configMap:
+          name: {{ template "moodle.fullname" . }}-cm
+      {{- end }}
     {{- end }}
 {{- end -}}
