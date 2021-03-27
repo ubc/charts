@@ -127,6 +127,9 @@ db:
   name: mattermost
   username: mmuser
   password: mmuser_password
+  # use existing secret instead username/password field
+  # existingSecret: secret_name
+
 
 service:
   type: ClusterIP

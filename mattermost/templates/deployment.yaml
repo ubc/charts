@@ -37,18 +37,31 @@ spec:
             - name: DB_PORT_NUMBER
               value: {{ .Values.db.port | quote }}
             {{- end }}
+            {{- if .Values.db.existingSecret }}
+            - name: MM_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.existingSecret }}
+                  key: username
+            - name: MM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.existingSecret }}
+                  key: password
+            {{- else }}
             - name: MM_USERNAME
               value: {{ .Values.db.username | quote }}
             - name: MM_PASSWORD
               value: {{ .Values.db.password | quote }}
+            {{- end}}
             - name: MM_DBNAME
               value: {{ .Values.db.name | quote }}
               #- name: MM_CONFIG
               #value: /mattermost/data/config.json
             - name: MM_SQLSETTINGS_DRIVERNAME
               value: {{ .Values.db.driver | quote }}
-            - name: MM_SQLSETTINGS_DATASOURCE
-              value: postgres://{{ .Values.db.username }}:{{ .Values.db.password }}@{{ .Values.db.host }}:{{ .Values.db.port }}/{{ .Values.db.name }}?sslmode=disable&connect_timeout=10
+            #- name: MM_SQLSETTINGS_DATASOURCE
+            #  value: postgres://{{ .Values.db.username }}:{{ .Values.db.password }}@{{ .Values.db.host }}:{{ .Values.db.port }}/{{ .Values.db.name }}?sslmode=disable&connect_timeout=10
             - name: MM_SQLSETTINGS_ATRESTENCRYPTKEY
               value: {{ .Values.mattermost.sql.atRestEncryptKey | quote  }}
             - name: MM_EMAILSETTINGS_SMTPSERVER
