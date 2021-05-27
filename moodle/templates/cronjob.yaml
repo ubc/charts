@@ -11,14 +11,15 @@ spec:
   {{- if .Values.cronjob.startingDeadlineSeconds }}
   startingDeadlineSeconds: {{ .Values.cronjob.startingDeadlineSeconds }}
   {{- end }}
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: init-{{ template "moodle.fullname" . }}
+          - name: {{ template "moodle.fullname" . }}
               {{- include "moodle.app.spec" . | indent 12 }}
-            args:
+            command:
             - /bin/sh
             - -c
             - /usr/bin/sudo -E -u www-data /usr/local/bin/php admin/cli/cron.php
@@ -26,3 +27,64 @@ spec:
           volumes:
             {{- include "moodle.app.mounts" . | indent 12 }}
 {{- end }}
+
+{{- if .Values.backupCronjob.enabled }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "moodle.fullname" . }}-db-backup-cronjob
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: db
+spec:
+  schedule: {{ .Values.backupCronjob.schedule | quote }}
+  {{- if .Values.backupCronjob.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ .Values.backupCronjob.startingDeadlineSeconds }}
+  {{- end }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ template "moodle.fullname" . }}
+            image: bitnami/mariadb:10.5
+            env:
+              - name: MOODLE_DB_HOST
+                value: {{ template "moodle.db.fullname" . }}
+              - name: MOODLE_DB_PORT
+                value: {{ .Values.db.service.port | quote }}
+              - name: MOODLE_DB_USER
+                value: {{ default "moodle" .Values.db.db.user | quote }}
+              - name: MOODLE_DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                  {{- if .Values.db.disableExternal }}
+                    name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
+                    key: mariadb-password
+                  {{- else }}
+                    name: {{ template "moodle.fullname" . }}
+                    key: db_password
+                  {{- end }}
+              - name: MOODLE_DB_NAME
+                value: {{ .Values.db.db.name | quote }}
+            volumeMounts:
+              - name: nfs-volume
+                mountPath: /db_archives
+            command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "[$(date)] - Starts backing up Moodle database!"
+              CURRENT_YEAR=$(date +%Y)
+              MYSQLDMP_FILE=/db_archives/$CURRENT_YEAR/{{ template "moodle.fullname" . }}-db-$(date +%F_%T).sql.gz
+              mkdir -p /db_archives/$CURRENT_YEAR
+              mysqldump -u$MOODLE_DB_USER -p$MOODLE_DB_PASSWORD -h$MOODLE_DB_HOST -P$MOODLE_DB_PORT $MOODLE_DB_NAME --single-transaction --quick | gzip > $MYSQLDMP_FILE
+              zgrep "Dump completed" $MYSQLDMP_FILE
+          restartPolicy: Never
+          volumes:
+            - name: nfs-volume
+              {{- toYaml .Values.backupCronjob.volume | nindent 14 }}
+{{- end}}

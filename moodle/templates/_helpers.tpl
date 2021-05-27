@@ -6,6 +6,10 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+For calling a template with subchart context
+From https://github.com/helm/helm/issues/4535#issuecomment-477778391
+*/}}
 {{- define "call-nested" }}
 {{- $dot := index . 0 }}
 {{- $subchart := index . 1 | splitList "." }}
@@ -32,7 +36,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 */}}
 {{- define "moodle.db.fullname" -}}
 {{- if .Values.db.disableExternal }}
-{{- include "call-nested" (list . "db" "mariadb.fullname") | default .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
+{{- include "call-nested" (list . "db" "mariadb.primary.fullname") | default .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s" .Release.Name "db" -}}
 {{- end -}}
@@ -102,7 +106,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.fullname" . }}
+      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}
@@ -162,7 +166,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.fullname" . }}
+      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}
@@ -248,7 +252,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.fullname" . }}
+      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}

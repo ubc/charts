@@ -372,10 +372,11 @@ resources:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
 livenessProbe:
   enabled: true
-  method:
-    httpGet:
-      path: /login/index.php
-      port: http
+  httpGet:
+    path: /login/index.php
+    port: http
+    scheme: HTTP
+    httpHeaders: []
   initialDelaySeconds: 600
   periodSeconds: 10
   timeoutSeconds: 5
@@ -383,10 +384,11 @@ livenessProbe:
   successThreshold: 1
 readinessProbe:
   enabled: true
-  method:
-    httpGet:
-      path: /login/index.php
-      port: http
+  httpGet:
+    path: /login/index.php
+    port: http
+    scheme: HTTP
+    httpHeaders: []
   initialDelaySeconds: 30
   periodSeconds: 5
   timeoutSeconds: 3
@@ -424,6 +426,14 @@ metrics:
 cronjob:
   enabled: true
   schedule: "*/1 * * * *"
+
+backupCronjob:
+  enabled: false
+  schedule: "00 11 * * *"
+  volume:
+    nfs:
+      server: archivep01.ctlt.ubc.ca
+      path: /ut01/archives/moodle-education-db
 
 memcached:
   # enable internal memcached deployment and services, set to false to
