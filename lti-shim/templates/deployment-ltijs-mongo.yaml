@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: {{ template "app.fullname" . }}-ltijs-mongo
+        date: "{{ now | unixEpoch }}"
     spec:
       containers:
       - name: {{ template "app.fullname" . }}-ltijs-mongo
