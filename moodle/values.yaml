@@ -429,6 +429,10 @@ cronjob:
 
 backupCronjob:
   enabled: false
+  image:
+    repository: bitnami/mariadb
+    tag: 10.5
+  # imagePullPolicy:
   schedule: "00 11 * * *"
   volume:
     nfs:

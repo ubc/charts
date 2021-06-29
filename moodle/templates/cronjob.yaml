@@ -49,7 +49,8 @@ spec:
         spec:
           containers:
           - name: {{ template "moodle.fullname" . }}
-            image: bitnami/mariadb:10.5
+            image: '{{ .Values.backupCronjob.image.repository }}:{{ .Values.backupCronjob.image.tag | default "latest" }}'
+            imagePullPolicy: {{ default "" .Values.backupCronjob.imagePullPolicy | quote }}
             env:
               - name: MOODLE_DB_HOST
                 value: {{ template "moodle.db.fullname" . }}
