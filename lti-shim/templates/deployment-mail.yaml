@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "app.fullname" . }}-mail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "app.fullname" . }}-mail
+  template:
+    metadata:
+      labels:
+        app: {{ template "app.fullname" . }}-mail
+        date: "{{ now | unixEpoch }}"
+    spec:
+      containers:
+      - name: {{ template "app.fullname" . }}-mail
+        image: {{ .Values.mail.image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: {{ .Values.mail.port }}
+        env:
+          - name: POSTFIX_SENDER_NOREPLY
+            value: {{ .Values.mail.noreply | quote }}
+          - name: POSTFIX_MYNETWORKS
+            value: {{ .Values.mail.mynetworks | quote }}
+          - name: POSTFIX_RELAY_DOMAINS
+            value: {{ .Values.mail.relay.domains | quote }}
+          - name: POSTFIX_RELAYHOST
+            value: {{ .Values.mail.relay.host | quote }}
+          - name: POSTFIX_SASL_ENABLE
+            value: {{ .Values.mail.relay.sasl.enable | quote }}
+          {{- if .Values.mail.relay.sasl.passwd }}
+          - name: POSTFIX_SASL_PASSWORD
+            value: {{ .Values.mail.relay.sasl.password | quote }}
+          {{- end }}
+          - name: POSTGRES_HOST
+            value: {{ .Values.postgres.host | quote }}
+          - name: POSTGRES_PORT
+            value: {{ .Values.postgres.port | quote }}
+          - name: POSTGRES_DBNAME
+            value: {{ .Values.postgres.database | quote }}
+          - name: POSTGRES_USERNAME
+            value: {{ .Values.postgres.username | quote }}
+          - name: POSTGRES_PASSWORD
+            value: {{ .Values.postgres.password | quote }}

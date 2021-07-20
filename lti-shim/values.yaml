@@ -44,6 +44,18 @@ ltijs:
     accessTokenEndpoint: https://lti-shim.ubc.ca/lti/security/platform/token
     jwksEndpoint: https://lti-shim.ubc.ca/lti/platform/jwks
 
+mail:
+  image: lthub/lti-shim-postfix:0.1
+  port: 25
+  host: mail.lti-shim.ubc.ca
+  noreply: "nobody@ubc.ca"
+  mynetworks: "127.0.0.0/8"
+  relay:
+    domains: "[example.com]"
+    host: "[mail.example.com]"
+    sasl:
+      enable: "no"
+
 postgres:
   host: postgres
   port: 5432

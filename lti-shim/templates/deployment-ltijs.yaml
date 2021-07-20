@@ -16,6 +16,7 @@ spec:
       containers:
       - name: {{ template "app.fullname" . }}-ltijs
         image: {{ .Values.ltijs.image }}
+        imagePullPolicy: IfNotPresent
         ports:
           - containerPort: {{ .Values.ltijs.port }}
         env:

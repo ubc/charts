@@ -23,10 +23,18 @@ spec:
           serviceName: {{ template "app.fullname" . }}-ltijs
           servicePort: {{ .Values.ltijs.port }}
         path: /
+  - host: {{ replace "http://" "" .Values.mail.host }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ template "app.fullname" . }}-mail
+          servicePort: {{ .Values.mail.port }}
+        path: /
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
     - hosts:
       - {{ replace "http://" "" .Values.ingress.host }}
       - {{ replace "http://" "" .Values.ltijs.host }}
+      - {{ replace "http://" "" .Values.mail.host }}
       secretName: {{ template "app.fullname" . }}-tls
   {{- end }}
