@@ -3,7 +3,7 @@ entries:
   alchemy:
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.442923867-07:00"
+    created: "2021-07-20T06:39:28.577556853-07:00"
     description: Analytical Chemisty Learning Platform
     digest: ff8ed350b4b22fc3ce1a9720c298d05c8fe4e93f4528cf491e3d8d5efcdd95cc
     keywords:
@@ -18,7 +18,7 @@ entries:
     version: 0.2.12
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.441816128-07:00"
+    created: "2021-07-20T06:39:28.576934195-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 932c310e59fad2791820d3ca130fb6bf04102310bbfced59de7b2f21aa8c04b4
     keywords:
@@ -33,7 +33,7 @@ entries:
     version: 0.2.11
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.44077836-07:00"
+    created: "2021-07-20T06:39:28.576273926-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 3582e37285bcbac3449a20aef8eb1c75e74b18a6d7a46279b8139b385a2be14c
     keywords:
@@ -48,7 +48,7 @@ entries:
     version: 0.2.10
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.4804829-07:00"
+    created: "2021-07-20T06:39:28.581596941-07:00"
     description: Analytical Chemisty Learning Platform
     digest: e5882733b5c7a8da89ab46356fdc74b0a5090f83d71bcc1d5cd7d7e2b4095dee
     keywords:
@@ -63,7 +63,7 @@ entries:
     version: 0.2.9
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.479063773-07:00"
+    created: "2021-07-20T06:39:28.5812384-07:00"
     description: Analytical Chemisty Learning Platform
     digest: d8b002b8fc963b4abe282d4b77cffb0ecb042376243ee495a2ab300430b0dc86
     keywords:
@@ -78,7 +78,7 @@ entries:
     version: 0.2.8
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.476604487-07:00"
+    created: "2021-07-20T06:39:28.580874501-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 4dcdae5845359e6afa1dac996e4138418e517e9e189d7a731a1026181fa87b9e
     keywords:
@@ -93,7 +93,7 @@ entries:
     version: 0.2.7
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.471151561-07:00"
+    created: "2021-07-20T06:39:28.58049775-07:00"
     description: Analytical Chemisty Learning Platform
     digest: b1fd731cee056db48856e17b6290afa62b8483d67ea573f58164a258ece41633
     keywords:
@@ -108,7 +108,7 @@ entries:
     version: 0.2.6
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.465723806-07:00"
+    created: "2021-07-20T06:39:28.580038415-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 32e5da7f63c081cd81bac9e937f0c926b3e723634e917a2f64cac65990fcc3ce
     keywords:
@@ -123,7 +123,7 @@ entries:
     version: 0.2.5
   - apiVersion: v1
     appVersion: "1.1"
-    created: "2021-07-20T06:08:17.464438642-07:00"
+    created: "2021-07-20T06:39:28.579660375-07:00"
     description: Analytical Chemisty Learning Platform
     digest: f4a33481d6539e2c11c48223bf0e18780b0c6cad360ee7d23bc715f76f877d7f
     keywords:
@@ -138,7 +138,7 @@ entries:
     version: 0.2.4
   - apiVersion: v1
     appVersion: 1.0.18
-    created: "2021-07-20T06:08:17.462947832-07:00"
+    created: "2021-07-20T06:39:28.579248823-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 6424df41a976c2a136077847785ec73e7680553c86aaed5239f42bc350cd346b
     keywords:
@@ -153,7 +153,7 @@ entries:
     version: 0.2.3
   - apiVersion: v1
     appVersion: 1.0.18
-    created: "2021-07-20T06:08:17.457315052-07:00"
+    created: "2021-07-20T06:39:28.578428429-07:00"
     description: Analytical Chemisty Learning Platform
     digest: dbe0db5cf2f59053939f1e40b73b591b3377b64b65d882b32b112e87d4d8be37
     keywords:
@@ -167,7 +167,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.43967241-07:00"
+    created: "2021-07-20T06:39:28.575853024-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 70f7609aea2c6c5776ff8f1debff10610a12ac2cfe3ad139cb27de8d00cc01bb
     keywords:
@@ -178,7 +178,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.438570601-07:00"
+    created: "2021-07-20T06:39:28.575469713-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 7662ad5a25b4923e2ddc1c099e27a59dd5619082ce8e220d853bc38902c340b2
     keywords:
@@ -189,7 +189,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.437623605-07:00"
+    created: "2021-07-20T06:39:28.575087272-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 15be5f746be6aea1256237fa6cee739ec62598ae2bf0a05d7ed046f3c42264cf
     keywords:
@@ -200,7 +200,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.6.tgz
     version: 0.1.6
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.436771653-07:00"
+    created: "2021-07-20T06:39:28.574778863-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 2c14e7103deb3b77710ab77a0ba01ee58b782d9868ec6a3c8db416b3bfbfe19b
     keywords:
@@ -211,7 +211,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.5.tgz
     version: 0.1.5
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.435755246-07:00"
+    created: "2021-07-20T06:39:28.573750754-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 0a0b5e6a824422647a3fecf6419949eadc270048b92d6f8ea4c830b503150f1d
     keywords:
@@ -222,7 +222,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.4.tgz
     version: 0.1.4
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.434497692-07:00"
+    created: "2021-07-20T06:39:28.573466955-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 97c4db7d00243d0416b88579dc442820ca6485317cbdd1dcb02f937e57146d4f
     keywords:
@@ -233,7 +233,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.433647579-07:00"
+    created: "2021-07-20T06:39:28.573201258-07:00"
     description: Analytical Chemisty Learning Platform
     digest: 9333b8fb741112b9a5c5952f4eb44998b550de5e375ac388356b0abb8f8578e4
     keywords:
@@ -244,7 +244,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.431830541-07:00"
+    created: "2021-07-20T06:39:28.572829896-07:00"
     description: Analytical Chemisty Learning Platform
     digest: fdccfd7519d579f82e7e03ed908d8516c94fc7b70a41dc4710bc102dc001679a
     keywords:
@@ -255,7 +255,7 @@ entries:
     - https://ubc.github.io/charts/alchemy-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.419375729-07:00"
+    created: "2021-07-20T06:39:28.571763926-07:00"
     description: Analytical Chemisty Learning Platform
     digest: c1485dee37da71d259e54536e68fdb357740c27d69e3e44f4002db1df4e784d7
     keywords:
@@ -268,7 +268,7 @@ entries:
   axlrd:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:17.483190123-07:00"
+    created: "2021-07-20T06:39:28.582184408-07:00"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
     digest: 48fcc08d3ec7ad85be957d1d3be70ea269132c92c72df63f2530891a056c1cd8
@@ -278,7 +278,7 @@ entries:
     version: 0.0.11
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:17.482278298-07:00"
+    created: "2021-07-20T06:39:28.581989503-07:00"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
     digest: 25ecc43fda72f3ade9ad6a16ca1584db78f3aee9a1394e11ecc7d1a7aafa5ff2
@@ -288,7 +288,7 @@ entries:
     version: 0.0.10
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:17.510277176-07:00"
+    created: "2021-07-20T06:39:28.583812425-07:00"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
     digest: 1aabad3f06708990076275ad409b7fca7910856fa46021f849acea20187622ad
@@ -298,7 +298,7 @@ entries:
     version: 0.0.9
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:17.49696459-07:00"
+    created: "2021-07-20T06:39:28.583613529-07:00"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
     digest: 78f4780b60ddf5fe8b559de7c0e9e7e1e9c495686a41d9700e373fa5ac9fd526
@@ -308,7 +308,7 @@ entries:
     version: 0.0.8
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:17.48495641-07:00"
+    created: "2021-07-20T06:39:28.583367852-07:00"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
     digest: ac0c0c02d72edfdc4600b4092fd997641711b3e3bbbb3a104284db015a7e920b
@@ -318,7 +318,7 @@ entries:
     version: 0.0.7
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:17.48422394-07:00"
+    created: "2021-07-20T06:39:28.583118445-07:00"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
     digest: 24840839ff82fb9a57e7512c014fdbc2be20a61ca3d1e74c248648725815157a
@@ -328,7 +328,7 @@ entries:
     version: 0.0.6
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:17.481377954-07:00"
+    created: "2021-07-20T06:39:28.581774986-07:00"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
     digest: 359424c78a0653b6cb54aa6acb7d283da672a3d2334612868b5b39e712f36339
@@ -339,7 +339,7 @@ entries:
   compair:
   - apiVersion: v1
     appVersion: 1.2.7
-    created: "2021-07-20T06:08:17.621859997-07:00"
+    created: "2021-07-20T06:39:28.612828556-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 5c79042cbbdb97bded024fe496922544365fc248d9756792f3b60c0c0f383f1b
     home: http://ubc.github.io/compair/
@@ -361,7 +361,7 @@ entries:
     version: 0.6.3
   - apiVersion: v1
     appVersion: 1.2.7
-    created: "2021-07-20T06:08:17.620287665-07:00"
+    created: "2021-07-20T06:39:28.612008502-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: afe928533d73d1bcfb77e34857d1e0f07426e85c946b6f2d8a214f260b6df3f5
     home: http://ubc.github.io/compair/
@@ -383,7 +383,7 @@ entries:
     version: 0.6.2
   - apiVersion: v1
     appVersion: 1.2.7
-    created: "2021-07-20T06:08:17.618467206-07:00"
+    created: "2021-07-20T06:39:28.611047095-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 756ec55575ae73560d49423a4373ed1d0ca90ade48dbe6cd5b24aecbc09c9b58
     home: http://ubc.github.io/compair/
@@ -405,7 +405,7 @@ entries:
     version: 0.6.1
   - apiVersion: v1
     appVersion: 1.2.7
-    created: "2021-07-20T06:08:17.616529165-07:00"
+    created: "2021-07-20T06:39:28.609591192-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 77e9273b7dc9ac5648da63d6703b5b8c9570c7d7b0c414d4fb7066a62ae03a80
     home: http://ubc.github.io/compair/
@@ -427,7 +427,7 @@ entries:
     version: 0.6.0
   - apiVersion: v1
     appVersion: 1.2.7
-    created: "2021-07-20T06:08:17.614808079-07:00"
+    created: "2021-07-20T06:39:28.6088124-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: f1476dbdcbc0c6a53e61b90f027de8625355194b089c5d4e0c6d976308fca3c6
     home: http://ubc.github.io/compair/
@@ -449,7 +449,7 @@ entries:
     version: 0.5.9
   - apiVersion: v1
     appVersion: 1.2.6
-    created: "2021-07-20T06:08:17.613019891-07:00"
+    created: "2021-07-20T06:39:28.608028877-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 14b01c2fc9572c014fc61381b88bbcd707303782ca83c271a461751959610e6c
     home: http://ubc.github.io/compair/
@@ -471,7 +471,7 @@ entries:
     version: 0.5.8
   - apiVersion: v1
     appVersion: 1.2.6
-    created: "2021-07-20T06:08:17.611278764-07:00"
+    created: "2021-07-20T06:39:28.607070909-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 093b43a716f73597479a8a05222272d8dc873d2c523642b3c12bec046eba99ea
     home: http://ubc.github.io/compair/
@@ -493,7 +493,7 @@ entries:
     version: 0.5.7
   - apiVersion: v1
     appVersion: 1.2.6
-    created: "2021-07-20T06:08:17.609434566-07:00"
+    created: "2021-07-20T06:39:28.606320927-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: fa14d81d5ff7a0192e6da386e51cb3bef0f490f69dac82117a648a4f61c8945f
     home: http://ubc.github.io/compair/
@@ -515,7 +515,7 @@ entries:
     version: 0.5.6
   - apiVersion: v1
     appVersion: 1.2.5
-    created: "2021-07-20T06:08:17.607658308-07:00"
+    created: "2021-07-20T06:39:28.605568966-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: f3bbcf2ea2de87d7feb8a692414353d2cf8cf39bbb0f42b7b7b2e5ad0b0f2750
     home: http://ubc.github.io/compair/
@@ -537,7 +537,7 @@ entries:
     version: 0.5.5
   - apiVersion: v1
     appVersion: 1.2.3
-    created: "2021-07-20T06:08:17.606012764-07:00"
+    created: "2021-07-20T06:39:28.604798524-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: f11247b3af6c2ef721b9540d5599639aa3495d095ee09abdd023482c09a0c34c
     home: http://ubc.github.io/compair/
@@ -559,7 +559,7 @@ entries:
     version: 0.5.4
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-07-20T06:08:17.604478753-07:00"
+    created: "2021-07-20T06:39:28.603925309-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 69d02c22c1245d0bb818ecf795b36c57adc0d3a0d5b088cd72a08e08ba1b076d
     home: http://ubc.github.io/compair/
@@ -581,7 +581,7 @@ entries:
     version: 0.5.3
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-07-20T06:08:17.60175201-07:00"
+    created: "2021-07-20T06:39:28.603132135-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 846da061fffabdcb5cdbfe8f7541782f618e255f936e90060cfa787caddc13b1
     home: http://ubc.github.io/compair/
@@ -603,7 +603,7 @@ entries:
     version: 0.5.2
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-07-20T06:08:17.599965382-07:00"
+    created: "2021-07-20T06:39:28.601706664-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 39c002ad55b2360164c76f2fa68b1c013001fefaeef291b74e1b25dc6dbabf6a
     home: http://ubc.github.io/compair/
@@ -625,7 +625,7 @@ entries:
     version: 0.5.1
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2021-07-20T06:08:17.598432921-07:00"
+    created: "2021-07-20T06:39:28.601038805-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 02a301a7b98033e0d31f7ace22856378ed8f340124a67a93c89689f815d3c62c
     home: http://ubc.github.io/compair/
@@ -647,7 +647,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: 1.2.0-beta
-    created: "2021-07-20T06:08:17.593373326-07:00"
+    created: "2021-07-20T06:39:28.600353335-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 8a4d29df65cb67aebfe8f9d9d513388158f08daddf51264967ffbd7758ed33c7
     home: http://ubc.github.io/compair/
@@ -669,7 +669,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 1.2.0-beta
-    created: "2021-07-20T06:08:17.591565748-07:00"
+    created: "2021-07-20T06:39:28.599595932-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 9ee84c94e46e9a320e8ceedabe15144e351bf303f4b62b249703bfba7b8a29c5
     home: http://ubc.github.io/compair/
@@ -691,7 +691,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 1.2.0-beta
-    created: "2021-07-20T06:08:17.577221555-07:00"
+    created: "2021-07-20T06:39:28.598842191-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: d313495559bfedbcad8a34bc287e07169da9c8d3978972a94ccaab2377e32ace
     home: http://ubc.github.io/compair/
@@ -713,7 +713,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 1.2.0-beta
-    created: "2021-07-20T06:08:17.576002902-07:00"
+    created: "2021-07-20T06:39:28.598254884-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: ba3f846ac6ad037705c0101a65d2f3adb215e7caa01e92ce0a9bb23d2a7d77d3
     home: http://ubc.github.io/compair/
@@ -735,7 +735,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 1.1.5
-    created: "2021-07-20T06:08:17.574737928-07:00"
+    created: "2021-07-20T06:39:28.597652237-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: c40839006e7bae1a2a376a1ad0cba220a2353c3f28077da2e7486db17f951b28
     home: http://ubc.github.io/compair/
@@ -757,7 +757,7 @@ entries:
     version: 0.3.8
   - apiVersion: v1
     appVersion: 1.1.4
-    created: "2021-07-20T06:08:17.572747725-07:00"
+    created: "2021-07-20T06:39:28.597125691-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 5470f645f8d9c47dcca7fda0aceb8f1d4c8bda8281e2a7d53f98400a6e59c1f7
     home: http://ubc.github.io/compair/
@@ -778,7 +778,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.7.tgz
     version: 0.3.7
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.558767322-07:00"
+    created: "2021-07-20T06:39:28.596117071-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 8e185126b96e7e5710ab9a85bf9289ffbc4e8a95b5987499bfb3c344ea28c400
     home: http://ubc.github.io/compair/
@@ -799,7 +799,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.6.tgz
     version: 0.3.6
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.55681194-07:00"
+    created: "2021-07-20T06:39:28.595559755-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 8d50c94ffb8723e00978f41b182f7fd191b8024e3173d24e70c88b518b81acad
     home: http://ubc.github.io/compair/
@@ -820,7 +820,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.5.tgz
     version: 0.3.5
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.555572016-07:00"
+    created: "2021-07-20T06:39:28.594527836-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 0d4a8048c4b7ee9d393052e61d5733a0bdaedcaa8f3cd4bb3f0553be13ae2110
     home: http://ubc.github.io/compair/
@@ -841,7 +841,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.4.tgz
     version: 0.3.4
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.554427486-07:00"
+    created: "2021-07-20T06:39:28.593439114-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 1dae421f6cc7cedb93ac83f667f851c39fc144ee94ff716b4708ba9b4192ae85
     home: http://ubc.github.io/compair/
@@ -862,7 +862,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.3.tgz
     version: 0.3.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.553169662-07:00"
+    created: "2021-07-20T06:39:28.592799956-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 1f040bad3ea52c2bd967e954daf3da262ec3135d5fb72459db51ca56bcb6d0c4
     home: http://ubc.github.io/compair/
@@ -883,7 +883,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.2.tgz
     version: 0.3.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.551874557-07:00"
+    created: "2021-07-20T06:39:28.592198349-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 1e126a6a3ba52a560239ca9df0806cff7a734aefd03d4082c97567a134635417
     home: http://ubc.github.io/compair/
@@ -904,7 +904,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.550585243-07:00"
+    created: "2021-07-20T06:39:28.591325833-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 3aef8cd004dff8c8e1cc0b6c7ed6b7112cf703a105bdc52a928df38ff78d0030
     home: http://ubc.github.io/compair/
@@ -925,7 +925,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.545752704-07:00"
+    created: "2021-07-20T06:39:28.590574871-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: d8683c1eaae2eed405febf81cabd4bc2a7898f63a9248a132ca707a46f6233f5
     home: http://ubc.github.io/compair/
@@ -944,7 +944,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.9.tgz
     version: 0.2.9
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.544532061-07:00"
+    created: "2021-07-20T06:39:28.589403568-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 31ed69424f6f45cb0a278a8e372ac05e23ebed78537e1311cb61222bc52e9a91
     home: http://ubc.github.io/compair/
@@ -963,7 +963,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.8.tgz
     version: 0.2.8
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.542850107-07:00"
+    created: "2021-07-20T06:39:28.588858552-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: e9ac70af0e7abcb6117dff51d610e7f3059841460c522de54d00765d5d40edd9
     home: http://ubc.github.io/compair/
@@ -982,7 +982,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.7.tgz
     version: 0.2.7
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.529021017-07:00"
+    created: "2021-07-20T06:39:28.588181461-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: c632a190ac357b998aacad4d1e3b344af1a6af26a759f37160332b37a523ad38
     home: http://ubc.github.io/compair/
@@ -1001,7 +1001,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.6.tgz
     version: 0.2.6
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.52427401-07:00"
+    created: "2021-07-20T06:39:28.587637146-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 65411f2abbc7668904d5a5db0da473613aea214d8d643dbd472c40d1e28cc234
     home: http://ubc.github.io/compair/
@@ -1020,7 +1020,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.5.tgz
     version: 0.2.5
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.522081671-07:00"
+    created: "2021-07-20T06:39:28.58708969-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: f6d17cdd889005e58da18a41ef51247e6cb87090ee4c0696c49c523993ee2f37
     home: http://ubc.github.io/compair/
@@ -1039,7 +1039,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.521080685-07:00"
+    created: "2021-07-20T06:39:28.586560475-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: dead70ba34189cf94e12590282a0765e67db4cb55ee34b643f1d902bc65c7411
     home: http://ubc.github.io/compair/
@@ -1058,7 +1058,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.516549394-07:00"
+    created: "2021-07-20T06:39:28.5860397-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 128615e509b0e92f67eb531924a967151db5c06193ea23bb0651603296bdd5a1
     home: http://ubc.github.io/compair/
@@ -1077,7 +1077,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.515404863-07:00"
+    created: "2021-07-20T06:39:28.585090192-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: bfade5fbe379037fd8da1f5c9f5adac9838f7f97e8425b4f293ef050aa1eb4e9
     home: http://ubc.github.io/compair/
@@ -1096,7 +1096,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.51379693-07:00"
+    created: "2021-07-20T06:39:28.584725881-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 6fcb10749953a92bdc583999ba694879b96c8403de6a2c1d42c3e17300b4a33c
     home: http://ubc.github.io/compair/
@@ -1115,7 +1115,7 @@ entries:
     - https://ubc.github.io/charts/compair-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.512469535-07:00"
+    created: "2021-07-20T06:39:28.58434899-07:00"
     description: Pairing peer answers for deeper learning through comparison
     digest: 8991aea35e0a402adf4fd5d081315452d879428b743003c18c7f1fd774a9eb75
     home: http://ubc.github.io/compair/
@@ -1136,7 +1136,7 @@ entries:
   github-learning-ubc:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:17.624934819-07:00"
+    created: "2021-07-20T06:39:28.614894486-07:00"
     description: GitHub Service for Learning at UBC
     digest: 861960700ad56aaaaf04a32092ae1fd48188966313655711593505011e3cff50
     name: github-learning-ubc
@@ -1146,7 +1146,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:17.623413439-07:00"
+    created: "2021-07-20T06:39:28.613520496-07:00"
     description: GitHub Service for Learning at UBC
     digest: 745acb42b386ce629d05411204bcb2fb3f230b1d666c543e56d5415e30e607f5
     name: github-learning-ubc
@@ -1157,7 +1157,7 @@ entries:
   ipeer:
   - apiVersion: v2
     appVersion: 3.4.5
-    created: "2021-07-20T06:08:17.638901983-07:00"
+    created: "2021-07-20T06:39:28.623447844-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -1173,7 +1173,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 3.4.5
-    created: "2021-07-20T06:08:17.636098808-07:00"
+    created: "2021-07-20T06:39:28.62088598-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -1189,7 +1189,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 3.4.5
-    created: "2021-07-20T06:08:17.632881932-07:00"
+    created: "2021-07-20T06:39:28.618420378-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -1205,7 +1205,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 3.4.5
-    created: "2021-07-20T06:08:17.628616938-07:00"
+    created: "2021-07-20T06:39:28.616680978-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -1221,7 +1221,7 @@ entries:
     version: 0.1.0
   ltbot:
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.643337591-07:00"
+    created: "2021-07-20T06:39:28.624559996-07:00"
     description: A Helm chart for deploying LTBot
     digest: 7251f7ba8ae4c6b9523068f6605dca4d41b03d8bafa79780ad6bc6bd4dfe6e3d
     name: ltbot
@@ -1229,7 +1229,7 @@ entries:
     - https://ubc.github.io/charts/ltbot-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.642485838-07:00"
+    created: "2021-07-20T06:39:28.62434533-07:00"
     description: A Helm chart for deploying LTBot
     digest: 0ce52ae511a072077c1d853962885fab31d0833db3059830c5f21d8289c74750
     name: ltbot
@@ -1237,7 +1237,7 @@ entries:
     - https://ubc.github.io/charts/ltbot-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.641536572-07:00"
+    created: "2021-07-20T06:39:28.624125354-07:00"
     description: A Helm chart for deploying LTBot
     digest: 4a2903546a0031742c09d9a192e7bbed7857d275eee73255b44f71b32d2e7e4d
     name: ltbot
@@ -1245,7 +1245,7 @@ entries:
     - https://ubc.github.io/charts/ltbot-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.640550156-07:00"
+    created: "2021-07-20T06:39:28.623906497-07:00"
     description: A Helm chart for deploying LTBot
     digest: 298df47fc67aa6c65ed0b6817e8b9be257ddb0bd343bee5e4eb8fec800b244b2
     name: ltbot
@@ -1253,7 +1253,7 @@ entries:
     - https://ubc.github.io/charts/ltbot-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.639742235-07:00"
+    created: "2021-07-20T06:39:28.623680651-07:00"
     description: A Helm chart for deploying LTBot
     digest: a320e0fa51003701fc35cb90192610374a9b53593cda2a293cb4c02eb753c6a6
     name: ltbot
@@ -1262,7 +1262,15 @@ entries:
     version: 0.1.0
   lti-shim:
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.655034953-07:00"
+    created: "2021-07-20T06:39:28.630297483-07:00"
+    description: LTI proxy that anonymizes personal information
+    digest: a578af6a757c8daf673b623d62aa68f71dfd80518d505d3149c7daed9b9a25ee
+    name: lti-shim
+    urls:
+    - https://ubc.github.io/charts/lti-shim-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
+    created: "2021-07-20T06:39:28.629884751-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 8a1a141b2b45969780302e3534cf8b7188279c7d43cda7ec959a050c73b09738
     name: lti-shim
@@ -1270,7 +1278,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.654728515-07:00"
+    created: "2021-07-20T06:39:28.629464289-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 28dd2eda38c5d8a94b4379eb4a2364d051dd900bbb265c6313cb5dee0055bfa4
     name: lti-shim
@@ -1278,7 +1286,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.3.8.tgz
     version: 0.3.8
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.653833402-07:00"
+    created: "2021-07-20T06:39:28.629120608-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 06d45eb45829cba9e53af2da2f514f1dfccd3b0f9069fc7627ad2ba41bce7f8b
     name: lti-shim
@@ -1286,7 +1294,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.3.7.tgz
     version: 0.3.7
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.652855455-07:00"
+    created: "2021-07-20T06:39:28.627931824-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 9f83e3a8ff14d4e6c3c4abcbf80c16a4f745a227fab28e96e7a77908592671d3
     name: lti-shim
@@ -1294,7 +1302,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.651888149-07:00"
+    created: "2021-07-20T06:39:28.627547113-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 0954501864b600c360cd33118910679ca600496e8fede7ed7083573eaf53bf01
     name: lti-shim
@@ -1302,7 +1310,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.651034146-07:00"
+    created: "2021-07-20T06:39:28.627127511-07:00"
     description: LTI proxy that anonymizes personal information
     digest: d9a03d5823f906cbf75cbbb04fee845aadeb05c617fdb9a68a80a190d51747ec
     name: lti-shim
@@ -1310,7 +1318,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.648811078-07:00"
+    created: "2021-07-20T06:39:28.62574951-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 8dd2def551787edd2ce43b98df4c34ffad23aaadc8e639beed1511f7a67b10e6
     name: lti-shim
@@ -1318,7 +1326,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.1.4.tgz
     version: 0.1.4
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.647945614-07:00"
+    created: "2021-07-20T06:39:28.625465562-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 56e9140a20a14cd484df0ced76163be3179a779d1633cd1a4e5f917180619394
     name: lti-shim
@@ -1326,7 +1334,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.646039533-07:00"
+    created: "2021-07-20T06:39:28.625184494-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 488f94208fee1bba40e6cb64c8a6b622cba7a7fcd86127d949f2bcc70b82fd7e
     name: lti-shim
@@ -1334,7 +1342,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.645165329-07:00"
+    created: "2021-07-20T06:39:28.624988279-07:00"
     description: LTI proxy that anonymizes personal information
     digest: b6d08d40325b7e68141a906a1f8f99ffda845975b2a2c1ac2172d6eec7562300
     name: lti-shim
@@ -1342,7 +1350,7 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
-    created: "2021-07-20T06:08:17.644141342-07:00"
+    created: "2021-07-20T06:39:28.624781632-07:00"
     description: LTI proxy that anonymizes personal information
     digest: 26bb32a70bb61f648dadf1d453fd3b61d4461feca2e14681f0fb21a9a2931ea8
     name: lti-shim
@@ -1351,7 +1359,7 @@ entries:
     version: 0.1.0
   ltps-ui:
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.766577893-07:00"
+    created: "2021-07-20T06:39:28.640274692-07:00"
     description: A Helm chart for LTPS-UI
     digest: cddc62412d960189c93f7cd38e0d931d6aae5d9c3c319bc350e47fadf8c85758
     name: ltps-ui
@@ -1359,7 +1367,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.765393581-07:00"
+    created: "2021-07-20T06:39:28.639934322-07:00"
     description: A Helm chart for LTPS-UI
     digest: fb2532177240e258fa1388d61325ec95e625f611355e3c5d4f11732dc2ab8a1a
     name: ltps-ui
@@ -1367,7 +1375,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.668508743-07:00"
+    created: "2021-07-20T06:39:28.635982198-07:00"
     description: A Helm chart for LTPS-UI
     digest: 715d5ec4babdcaa2aee97d4091df6688f3cefc1fcca9b5c76b4d07a7af5d4df1
     name: ltps-ui
@@ -1375,7 +1383,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.19.tgz
     version: 0.2.19
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.667481876-07:00"
+    created: "2021-07-20T06:39:28.634841894-07:00"
     description: A Helm chart for LTPS-UI
     digest: b6ba73a94fb6588288053f10c225e398086bb6d8a0c89e851fd84d141477f897
     name: ltps-ui
@@ -1383,7 +1391,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.18.tgz
     version: 0.2.18
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.665955705-07:00"
+    created: "2021-07-20T06:39:28.634319299-07:00"
     description: A Helm chart for LTPS-UI
     digest: 8d5b6b3355862e91f74f8295d863a994af42f8309267f002f4e8adcc9089cdf5
     name: ltps-ui
@@ -1391,7 +1399,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.16.tgz
     version: 0.2.16
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.661126727-07:00"
+    created: "2021-07-20T06:39:28.633838486-07:00"
     description: A Helm chart for LTPS-UI
     digest: f21124bdac20bfc55cc16f710d906aadf7ecdd6d5f86d862236ae5e878669f8c
     name: ltps-ui
@@ -1399,7 +1407,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.15.tgz
     version: 0.2.15
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.660142901-07:00"
+    created: "2021-07-20T06:39:28.633394043-07:00"
     description: A Helm chart for LTPS-UI
     digest: a489f0e96fb8f0fca8c5aab3e5a6767ea5aced8a37752a35bcfb98001b1e4269
     name: ltps-ui
@@ -1407,7 +1415,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.13.tgz
     version: 0.2.13
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.659313908-07:00"
+    created: "2021-07-20T06:39:28.63298236-07:00"
     description: A Helm chart for LTPS-UI
     digest: 54c6b3c91387ad668ae3612ad125851f43c87be71bb90cd0d8ada3d39fdabeef
     name: ltps-ui
@@ -1415,7 +1423,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.10.tgz
     version: 0.2.10
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.764481937-07:00"
+    created: "2021-07-20T06:39:28.639582562-07:00"
     description: A Helm chart for LTPS-UI
     digest: 94206d69a704c3dcfbccc54227904f898c08d75ffb81a903080885b23da8a407
     name: ltps-ui
@@ -1423,7 +1431,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.9.tgz
     version: 0.2.9
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.763302265-07:00"
+    created: "2021-07-20T06:39:28.639235972-07:00"
     description: A Helm chart for LTPS-UI
     digest: f3ea6168530f3c79b0c4d4c1055c3eeaa48afc9417bb1532b72d162ade833fc6
     name: ltps-ui
@@ -1431,7 +1439,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.8.tgz
     version: 0.2.8
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.762313389-07:00"
+    created: "2021-07-20T06:39:28.638713047-07:00"
     description: A Helm chart for LTPS-UI
     digest: 154a2d1eb354be3f13e45cabb919065ea8e2ae54e76937d56f29406830af6824
     name: ltps-ui
@@ -1439,7 +1447,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.7.tgz
     version: 0.2.7
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.755699022-07:00"
+    created: "2021-07-20T06:39:28.638266814-07:00"
     description: A Helm chart for LTPS-UI
     digest: 45574184a09bbf32bf28ab024714b32e3d309bd07583055af48e1af39e0039b4
     name: ltps-ui
@@ -1447,7 +1455,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.6.tgz
     version: 0.2.6
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.72265961-07:00"
+    created: "2021-07-20T06:39:28.637408319-07:00"
     description: A Helm chart for LTPS-UI
     digest: ebd1cca070bf7e4a0c4128cd125231f03ba9b328273d7b288baf29c6bfa8fd69
     name: ltps-ui
@@ -1455,7 +1463,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.5.tgz
     version: 0.2.5
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.702308456-07:00"
+    created: "2021-07-20T06:39:28.636927425-07:00"
     description: A Helm chart for LTPS-UI
     digest: 2ef5eca25aaaf0dc582d31d4815cb08358ccc0df97b4630e7e54afe5a78a600d
     name: ltps-ui
@@ -1463,7 +1471,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.687442949-07:00"
+    created: "2021-07-20T06:39:28.636608256-07:00"
     description: A Helm chart for LTPS-UI
     digest: 33a1dd5493cf222313697a56a6a6fdc9079dc034e60fa27cde4c88690fef7664
     name: ltps-ui
@@ -1471,7 +1479,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.681000377-07:00"
+    created: "2021-07-20T06:39:28.636298136-07:00"
     description: A Helm chart for LTPS-UI
     digest: 8c40dda8dc3a535574da7ed88ce4e2b8592441eca5aae312791468da64ed9108
     name: ltps-ui
@@ -1479,7 +1487,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.658484986-07:00"
+    created: "2021-07-20T06:39:28.631808746-07:00"
     description: A Helm chart for LTPS-UI
     digest: 04ac37797450446fc1b5e14c9a03f47c14aabc576d2397325414b6cc6f5e8d87
     name: ltps-ui
@@ -1487,7 +1495,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.65751439-07:00"
+    created: "2021-07-20T06:39:28.631338493-07:00"
     description: A Helm chart for LTPS-UI
     digest: 2e86e71fb45e68a5e06fc46283d4519e0ad67f7e94c64030efa0054b4cb4fcde
     name: ltps-ui
@@ -1495,7 +1503,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.656574125-07:00"
+    created: "2021-07-20T06:39:28.630875479-07:00"
     description: A Helm chart for LTPS-UI
     digest: 362c86580551cf062882c2d3652cd7d393298ab9a1228eac25f430dd2f78866e
     name: ltps-ui
@@ -1503,7 +1511,7 @@ entries:
     - https://ubc.github.io/charts/ltps-ui-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:17.655828885-07:00"
+    created: "2021-07-20T06:39:28.630573101-07:00"
     description: A Helm chart for LTPS-UI
     digest: 6aa9d98e1d38c386b798578486f802d8777e29411a2c72bf1ed77b480dfef3f8
     name: ltps-ui
@@ -1513,7 +1521,7 @@ entries:
   mattermost:
   - apiVersion: v1
     appVersion: "5.25"
-    created: "2021-07-20T06:08:17.828267401-07:00"
+    created: "2021-07-20T06:39:28.64361608-07:00"
     description: Deploy Mattermost in Kubernetes
     digest: 744ab40e498c7eeb565130a0253df3af3d3d80fbd8cf4fe98041f45945481800
     name: mattermost
@@ -1522,7 +1530,7 @@ entries:
     version: 0.2.1
   - apiVersion: v1
     appVersion: "5.25"
-    created: "2021-07-20T06:08:17.827004478-07:00"
+    created: "2021-07-20T06:39:28.643065633-07:00"
     description: Deploy Mattermost in Kubernetes
     digest: 2d1288a7a8e9d75b0f2110eea45b11e0c06d5c65f48b7c5c1b49a9d30d824901
     name: mattermost
@@ -1531,7 +1539,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "5.2"
-    created: "2021-07-20T06:08:17.82562551-07:00"
+    created: "2021-07-20T06:39:28.642425234-07:00"
     description: Deploy Mattermost in Kubernetes
     digest: 60bf32ca0441fd827a037e2909ba8bbfa54af245de9f91037d499c88dd80aa4d
     name: mattermost
@@ -1540,7 +1548,7 @@ entries:
     version: 0.1.3
   - apiVersion: v1
     appVersion: "5.2"
-    created: "2021-07-20T06:08:17.818239433-07:00"
+    created: "2021-07-20T06:39:28.641870818-07:00"
     description: Deploy Mattermost in Kubernetes
     digest: 69d10a4148259893cc5eb00740c30561f0051745403038c8fe62a4249d7c2d0c
     name: mattermost
@@ -1549,7 +1557,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: "5.2"
-    created: "2021-07-20T06:08:17.802795551-07:00"
+    created: "2021-07-20T06:39:28.641274891-07:00"
     description: Deploy Mattermost in Kubernetes
     digest: 01f80a80b00cb5a6f0b6fc41e7054be04c9ffd3da9f885f1b87a801431ee4026
     name: mattermost
@@ -1558,7 +1566,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "5.2"
-    created: "2021-07-20T06:08:17.796366369-07:00"
+    created: "2021-07-20T06:39:28.640752566-07:00"
     description: Deploy Mattermost in Kubernetes
     digest: 8055cd0e6401e76e99f8a2450a8bbfb6640aa85a739062c2d7462b14f4c97649
     name: mattermost
@@ -1568,7 +1576,7 @@ entries:
   mediawiki:
   - apiVersion: v1
     appVersion: 1.35.0
-    created: "2021-07-20T06:08:17.96711159-07:00"
+    created: "2021-07-20T06:39:28.68023053-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1596,7 +1604,7 @@ entries:
     version: 0.5.26
   - apiVersion: v1
     appVersion: 1.35.0
-    created: "2021-07-20T06:08:17.965051265-07:00"
+    created: "2021-07-20T06:39:28.679155999-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1624,7 +1632,7 @@ entries:
     version: 0.5.25
   - apiVersion: v1
     appVersion: 1.35.0
-    created: "2021-07-20T06:08:17.963236257-07:00"
+    created: "2021-07-20T06:39:28.676880693-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1652,7 +1660,7 @@ entries:
     version: 0.5.24
   - apiVersion: v1
     appVersion: 1.35.0
-    created: "2021-07-20T06:08:17.961449719-07:00"
+    created: "2021-07-20T06:39:28.67470821-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1680,7 +1688,7 @@ entries:
     version: 0.5.23
   - apiVersion: v1
     appVersion: 1.31.0
-    created: "2021-07-20T06:08:17.959734764-07:00"
+    created: "2021-07-20T06:39:28.67335019-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1708,7 +1716,7 @@ entries:
     version: 0.5.22
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.958070888-07:00"
+    created: "2021-07-20T06:39:28.672165496-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1736,7 +1744,7 @@ entries:
     version: 0.5.21
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.955180661-07:00"
+    created: "2021-07-20T06:39:28.6705704-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1764,7 +1772,7 @@ entries:
     version: 0.5.20
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.951938975-07:00"
+    created: "2021-07-20T06:39:28.668086898-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1792,7 +1800,7 @@ entries:
     version: 0.5.19
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.949972273-07:00"
+    created: "2021-07-20T06:39:28.6667508-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1820,7 +1828,7 @@ entries:
     version: 0.5.18
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.947904977-07:00"
+    created: "2021-07-20T06:39:28.665305887-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1848,7 +1856,7 @@ entries:
     version: 0.5.17
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.946081679-07:00"
+    created: "2021-07-20T06:39:28.664417822-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1876,7 +1884,7 @@ entries:
     version: 0.5.16
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.94389443-07:00"
+    created: "2021-07-20T06:39:28.663511856-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1904,7 +1912,7 @@ entries:
     version: 0.5.15
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.937952822-07:00"
+    created: "2021-07-20T06:39:28.66262251-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1932,7 +1940,7 @@ entries:
     version: 0.5.14
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.899780351-07:00"
+    created: "2021-07-20T06:39:28.661758264-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1960,7 +1968,7 @@ entries:
     version: 0.5.13
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.884238676-07:00"
+    created: "2021-07-20T06:39:28.660845618-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -1988,7 +1996,7 @@ entries:
     version: 0.5.12
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.88174494-07:00"
+    created: "2021-07-20T06:39:28.659977253-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2016,7 +2024,7 @@ entries:
     version: 0.5.11
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:17.865756403-07:00"
+    created: "2021-07-20T06:39:28.659071827-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2044,7 +2052,7 @@ entries:
     version: 0.5.10
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:18.013971712-07:00"
+    created: "2021-07-20T06:39:28.68916185-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2072,7 +2080,7 @@ entries:
     version: 0.5.9
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:18.012273297-07:00"
+    created: "2021-07-20T06:39:28.687582973-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2100,7 +2108,7 @@ entries:
     version: 0.5.8
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:18.010726165-07:00"
+    created: "2021-07-20T06:39:28.686266635-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2128,7 +2136,7 @@ entries:
     version: 0.5.7
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:18.009118582-07:00"
+    created: "2021-07-20T06:39:28.684941966-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2156,7 +2164,7 @@ entries:
     version: 0.5.6
   - apiVersion: v1
     appVersion: 1.30.0
-    created: "2021-07-20T06:08:18.007484159-07:00"
+    created: "2021-07-20T06:39:28.68369397-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2184,7 +2192,7 @@ entries:
     version: 0.5.5
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:18.005536237-07:00"
+    created: "2021-07-20T06:39:28.682497946-07:00"
     dependencies:
     - alias: db
       condition: db.enabled
@@ -2212,7 +2220,7 @@ entries:
     version: 0.5.4
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.998490639-07:00"
+    created: "2021-07-20T06:39:28.6812682-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2239,7 +2247,7 @@ entries:
     version: 0.5.3
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.953555738-07:00"
+    created: "2021-07-20T06:39:28.669111667-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2266,7 +2274,7 @@ entries:
     version: 0.5.2
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.863984375-07:00"
+    created: "2021-07-20T06:39:28.657163001-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2293,7 +2301,7 @@ entries:
     version: 0.5.1
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.862122915-07:00"
+    created: "2021-07-20T06:39:28.656145202-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2320,7 +2328,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.860318728-07:00"
+    created: "2021-07-20T06:39:28.655185043-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2346,7 +2354,7 @@ entries:
     version: 0.2.6
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.858297243-07:00"
+    created: "2021-07-20T06:39:28.654165304-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2372,7 +2380,7 @@ entries:
     version: 0.2.5
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.856199127-07:00"
+    created: "2021-07-20T06:39:28.653185746-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2398,7 +2406,7 @@ entries:
     version: 0.2.4
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.853492515-07:00"
+    created: "2021-07-20T06:39:28.65193346-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2424,7 +2432,7 @@ entries:
     version: 0.2.3
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.837339623-07:00"
+    created: "2021-07-20T06:39:28.650265721-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2450,7 +2458,7 @@ entries:
     version: 0.2.2
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.834810246-07:00"
+    created: "2021-07-20T06:39:28.648774099-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2476,7 +2484,7 @@ entries:
     version: 0.2.1
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.832500334-07:00"
+    created: "2021-07-20T06:39:28.646579035-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2502,7 +2510,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: 1.28.2
-    created: "2021-07-20T06:08:17.830264765-07:00"
+    created: "2021-07-20T06:39:28.645187835-07:00"
     dependencies:
     - alias: db
       name: mysql
@@ -2528,7 +2536,7 @@ entries:
     version: 0.1.0
   moodle:
   - apiVersion: v2
-    created: "2021-07-20T06:08:18.461395584-07:00"
+    created: "2021-07-20T06:39:28.757311364-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2556,7 +2564,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.455336872-07:00"
+    created: "2021-07-20T06:39:28.753231426-07:00"
     description: Moodle is a learning platform designed to provide educators, administrators
       and learners with a single robust, secure and integrated system to create personalised
       learning environments
@@ -2576,7 +2584,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.447438081-07:00"
+    created: "2021-07-20T06:39:28.75027504-07:00"
     description: Moodle is a learning platform designed to provide educators, administrators
       and learners with a single robust, secure and integrated system to create personalised
       learning environments
@@ -2596,7 +2604,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.1.0.tgz
     version: 0.1.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.239226519-07:00"
+    created: "2021-07-20T06:39:28.729862879-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2624,7 +2632,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.20.tgz
     version: 0.0.20
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.19622905-07:00"
+    created: "2021-07-20T06:39:28.724119612-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2652,7 +2660,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.19.tgz
     version: 0.0.19
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.178908878-07:00"
+    created: "2021-07-20T06:39:28.720834887-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -2679,7 +2687,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.18.tgz
     version: 0.0.18
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.175343353-07:00"
+    created: "2021-07-20T06:39:28.716490641-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2707,7 +2715,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.17.tgz
     version: 0.0.17
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.170212325-07:00"
+    created: "2021-07-20T06:39:28.71300194-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2733,7 +2741,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.16.tgz
     version: 0.0.16
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.166348782-07:00"
+    created: "2021-07-20T06:39:28.709066156-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2759,7 +2767,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.15.tgz
     version: 0.0.15
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.148932738-07:00"
+    created: "2021-07-20T06:39:28.70577377-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2785,7 +2793,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.14.tgz
     version: 0.0.14
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.139708051-07:00"
+    created: "2021-07-20T06:39:28.703404941-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2811,7 +2819,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.13.tgz
     version: 0.0.13
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.122012128-07:00"
+    created: "2021-07-20T06:39:28.700617231-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2837,7 +2845,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.12.tgz
     version: 0.0.12
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.093758644-07:00"
+    created: "2021-07-20T06:39:28.697736337-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2863,7 +2871,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.11.tgz
     version: 0.0.11
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.021424471-07:00"
+    created: "2021-07-20T06:39:28.694676929-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2889,7 +2897,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.10.tgz
     version: 0.0.10
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.440472975-07:00"
+    created: "2021-07-20T06:39:28.747446118-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2915,7 +2923,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.9.tgz
     version: 0.0.9
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.395808162-07:00"
+    created: "2021-07-20T06:39:28.744662288-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2941,7 +2949,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.8.tgz
     version: 0.0.8
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.342975191-07:00"
+    created: "2021-07-20T06:39:28.742573977-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2967,7 +2975,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.7.tgz
     version: 0.0.7
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.338216444-07:00"
+    created: "2021-07-20T06:39:28.740295591-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -2993,7 +3001,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.6.tgz
     version: 0.0.6
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.321045305-07:00"
+    created: "2021-07-20T06:39:28.738020016-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -3019,7 +3027,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.5.tgz
     version: 0.0.5
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.317176921-07:00"
+    created: "2021-07-20T06:39:28.735315067-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -3045,7 +3053,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.4.tgz
     version: 0.0.4
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.275038566-07:00"
+    created: "2021-07-20T06:39:28.732516226-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -3071,7 +3079,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.3.tgz
     version: 0.0.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.233740783-07:00"
+    created: "2021-07-20T06:39:28.726678947-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -3098,7 +3106,7 @@ entries:
     - https://ubc.github.io/charts/moodle-0.0.2.tgz
     version: 0.0.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.017015213-07:00"
+    created: "2021-07-20T06:39:28.691919589-07:00"
     dependencies:
     - alias: db
       condition: db.disableExternal
@@ -3127,7 +3135,7 @@ entries:
   mycertificate:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.464686162-07:00"
+    created: "2021-07-20T06:39:28.758270723-07:00"
     description: A Helm chart for Kubernetes
     digest: 2db528b624a63d9ce4ba67c3f8bfcd2e907c85e1015d093cdd608f4c89b6eff8
     name: mycertificate
@@ -3136,7 +3144,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.463649145-07:00"
+    created: "2021-07-20T06:39:28.758024235-07:00"
     description: A Helm chart for Kubernetes
     digest: 441bce0f022ba16038d5f1ce4cc47bc5cb75caf3ba9b06c1f007522b1e3c347e
     name: mycertificate
@@ -3145,7 +3153,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.462396611-07:00"
+    created: "2021-07-20T06:39:28.757667325-07:00"
     description: A Helm chart for Kubernetes
     digest: 340672fefe79dbcf7007a9c97ec51790f29a471edc5ddf35bfc5354137f2ba96
     name: mycertificate
@@ -3155,7 +3163,7 @@ entries:
   orchard:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.555154038-07:00"
+    created: "2021-07-20T06:39:28.767214272-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 0fa4f801923d936531758bcf23da2a4f21ac697b6d5177d589c2a53b20d60a57
     name: orchard
@@ -3164,7 +3172,7 @@ entries:
     version: 0.2.9
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.517130673-07:00"
+    created: "2021-07-20T06:39:28.766760049-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 4e1b817d071f7a101dee6c83fde1be190ff03efc02270bd07d27e3db4e8a32c7
     name: orchard
@@ -3173,7 +3181,7 @@ entries:
     version: 0.2.8
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.484567613-07:00"
+    created: "2021-07-20T06:39:28.766285604-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: a082df52509bd54bf64e344b7d7b5ffeb09e925084f6f7a16dc2be0a0a2ae101
     name: orchard
@@ -3182,7 +3190,7 @@ entries:
     version: 0.2.7
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.483400582-07:00"
+    created: "2021-07-20T06:39:28.765004587-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: e78f8cc0fd37eb995043178bb5e57d4d261a0a204601d8ed83448edccda5722c
     name: orchard
@@ -3191,7 +3199,7 @@ entries:
     version: 0.2.6
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.482129307-07:00"
+    created: "2021-07-20T06:39:28.763824123-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 201648ca263a4c26cc25f586cd06dbc7534fb4d4e256c336a384bead8f0b771a
     name: orchard
@@ -3200,7 +3208,7 @@ entries:
     version: 0.2.5
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.480444663-07:00"
+    created: "2021-07-20T06:39:28.763122833-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: bfd41ffe5e232a31d6b40b52f19498e2aaf53fe0dd13e13220f8feefc855cc11
     name: orchard
@@ -3209,7 +3217,7 @@ entries:
     version: 0.2.4
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.478992564-07:00"
+    created: "2021-07-20T06:39:28.762552336-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: c7f92ebed38fe97e196ceacf87ada85c0fc5612ea19e592208f2d1d3e53b128c
     name: orchard
@@ -3218,7 +3226,7 @@ entries:
     version: 0.2.3
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.477787762-07:00"
+    created: "2021-07-20T06:39:28.762280899-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 3d0a16961bc065e456509eea19d8af96a0b88fa5b90cb0c4d95bd0142d4e260c
     name: orchard
@@ -3227,7 +3235,7 @@ entries:
     version: 0.2.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.475112831-07:00"
+    created: "2021-07-20T06:39:28.761123305-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: a08b9788abc0b2abbaf94be45d0f81b4e7c6163065ab2b632721dc29f1d4ee7d
     name: orchard
@@ -3236,7 +3244,7 @@ entries:
     version: 0.2.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.474271898-07:00"
+    created: "2021-07-20T06:39:28.760787665-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: d8172788671297d19ed598fcbfcfb8979eb39e278967e76581f9fdebc47ea695
     name: orchard
@@ -3245,7 +3253,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.473277081-07:00"
+    created: "2021-07-20T06:39:28.760481396-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: c364b98ede9f6f52cec1032e98ad7175e70ec96f75cb256c612f58a7d03cd297
     name: orchard
@@ -3254,7 +3262,7 @@ entries:
     version: 0.1.9
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.472333747-07:00"
+    created: "2021-07-20T06:39:28.760187248-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: c49dc577ed439ae23331eadd308d0d7148f154b5e7649b91eae36f8bd0b8401e
     name: orchard
@@ -3263,7 +3271,7 @@ entries:
     version: 0.1.8
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.471564666-07:00"
+    created: "2021-07-20T06:39:28.759932701-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 14da01a4921b067c00364b737274cf1ce2bad746266b951ca84abe98b8630528
     name: orchard
@@ -3272,7 +3280,7 @@ entries:
     version: 0.1.7
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.47062108-07:00"
+    created: "2021-07-20T06:39:28.759688644-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 29f143cfd6ddc7ef2ac49978a1c12ad9312eaf92fa1cfaba10e2d441e08ac867
     name: orchard
@@ -3281,7 +3289,7 @@ entries:
     version: 0.1.6
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.469756197-07:00"
+    created: "2021-07-20T06:39:28.759432306-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 3017cb92a6329eae2296a26b76a4554481f807e9518fa61d29a6b5f4a943b197
     name: orchard
@@ -3290,7 +3298,7 @@ entries:
     version: 0.1.5
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.468613877-07:00"
+    created: "2021-07-20T06:39:28.759127928-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 596b897afa72a61b96fb93537d326e7edeaf0ea770fb4765b4844c918b10b545
     name: orchard
@@ -3299,7 +3307,7 @@ entries:
     version: 0.1.4
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.46758301-07:00"
+    created: "2021-07-20T06:39:28.758857869-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 7c6fb0cba2daffa2b4ff4af2d40321ffc3dba8001664e29e84ed15eaabe3f681
     name: orchard
@@ -3308,7 +3316,7 @@ entries:
     version: 0.1.3
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.466637674-07:00"
+    created: "2021-07-20T06:39:28.758664203-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 6577eb62096e1e92f200ce3715d3aff2fb0831ccc25a906320f69b4dba806544
     name: orchard
@@ -3317,7 +3325,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-07-20T06:08:18.465548515-07:00"
+    created: "2021-07-20T06:39:28.758469898-07:00"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: f8340c37fbf703c199553ce9326348ddda566b15a3777d8e90e2c8c902078ca4
     name: orchard
@@ -3327,7 +3335,7 @@ entries:
   patroni:
   - apiVersion: v1
     appVersion: 1.0-p5
-    created: "2021-07-20T06:08:18.563479041-07:00"
+    created: "2021-07-20T06:39:28.768057466-07:00"
     description: 'Highly available elephant herd: HA PostgreSQL cluster.'
     digest: 75d4ff29adcad3ec3e5341414cc1df5c785c53eb4e6e43ac495399acd98b98be
     home: https://github.com/zalando/patroni
@@ -3345,7 +3353,7 @@ entries:
     version: 0.2.3
   - apiVersion: v1
     appVersion: 1.0-p5
-    created: "2021-07-20T06:08:18.562451583-07:00"
+    created: "2021-07-20T06:39:28.767771368-07:00"
     description: 'Highly available elephant herd: HA PostgreSQL cluster.'
     digest: ee7bec02c36c6f00840e3b6fc21fc8ddf3cb349cb4f4564bcaf1b58104b617e0
     home: https://github.com/zalando/patroni
@@ -3362,7 +3370,7 @@ entries:
     - https://ubc.github.io/charts/patroni-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.561524699-07:00"
+    created: "2021-07-20T06:39:28.76748837-07:00"
     description: 'Highly available elephant herd: HA PostgreSQL cluster.'
     digest: 76d3d84269002ec39e72b31106f5160d431f1d94eb7ed1d23d8ca8108a03c858
     home: https://github.com/zalando/patroni
@@ -3380,7 +3388,7 @@ entries:
     version: 0.2.0
   redirector:
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.565247328-07:00"
+    created: "2021-07-20T06:39:28.768306103-07:00"
     description: A Helm chart for Redirect Services
     digest: 842e991055365a5a47c9df309ea6a6ce2078f99d023683b74aab12347bd2e09e
     name: redirector
@@ -3389,7 +3397,7 @@ entries:
     version: 0.1.0
   satis:
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.56756141-07:00"
+    created: "2021-07-20T06:39:28.768809608-07:00"
     description: Chart for Satis server
     digest: ee22f8e106fd64d02ba834a663c2ab0e738ebd4dea3e2ed7083f856dc472ff01
     name: satis
@@ -3397,7 +3405,7 @@ entries:
     - https://ubc.github.io/charts/satis-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.566591755-07:00"
+    created: "2021-07-20T06:39:28.768565861-07:00"
     description: Chart for Satis server
     digest: aab8db57833da084f92a26995330aae73d8f9bd727e22087d94b3444861e9af0
     name: satis
@@ -3406,7 +3414,7 @@ entries:
     version: 0.1.0
   statspace:
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.941194522-07:00"
+    created: "2021-07-20T06:39:28.81888712-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3419,7 +3427,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.80187845-07:00"
+    created: "2021-07-20T06:39:28.804487092-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3432,7 +3440,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.15.tgz
     version: 0.3.15
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.794336298-07:00"
+    created: "2021-07-20T06:39:28.802307219-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3445,7 +3453,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.14.tgz
     version: 0.3.14
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.776735918-07:00"
+    created: "2021-07-20T06:39:28.800350932-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3458,7 +3466,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.13.tgz
     version: 0.3.13
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.770205163-07:00"
+    created: "2021-07-20T06:39:28.796962504-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3471,7 +3479,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.12.tgz
     version: 0.3.12
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.761907551-07:00"
+    created: "2021-07-20T06:39:28.794494222-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3484,7 +3492,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.11.tgz
     version: 0.3.11
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.730334169-07:00"
+    created: "2021-07-20T06:39:28.792265217-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3497,7 +3505,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.10.tgz
     version: 0.3.10
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.937440981-07:00"
+    created: "2021-07-20T06:39:28.81683836-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3510,7 +3518,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.9.tgz
     version: 0.3.9
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.934543044-07:00"
+    created: "2021-07-20T06:39:28.815469061-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3523,7 +3531,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.8.tgz
     version: 0.3.8
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.930098765-07:00"
+    created: "2021-07-20T06:39:28.81409063-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3536,7 +3544,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.7.tgz
     version: 0.3.7
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.92690796-07:00"
+    created: "2021-07-20T06:39:28.81268065-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3549,7 +3557,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.6.tgz
     version: 0.3.6
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.894241377-07:00"
+    created: "2021-07-20T06:39:28.81030584-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3562,7 +3570,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.4.tgz
     version: 0.3.4
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.874358756-07:00"
+    created: "2021-07-20T06:39:28.808383325-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3575,7 +3583,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.3.tgz
     version: 0.3.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.839893795-07:00"
+    created: "2021-07-20T06:39:28.806258534-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3588,7 +3596,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.2.tgz
     version: 0.3.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.727548764-07:00"
+    created: "2021-07-20T06:39:28.789979071-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3601,7 +3609,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.724120642-07:00"
+    created: "2021-07-20T06:39:28.787922363-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3614,7 +3622,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.721026929-07:00"
+    created: "2021-07-20T06:39:28.785939795-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3627,7 +3635,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.9.tgz
     version: 0.2.9
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.70681986-07:00"
+    created: "2021-07-20T06:39:28.783772782-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3640,7 +3648,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.8.tgz
     version: 0.2.8
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.70380492-07:00"
+    created: "2021-07-20T06:39:28.782354071-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3653,7 +3661,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.7.tgz
     version: 0.2.7
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.696899895-07:00"
+    created: "2021-07-20T06:39:28.78095343-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3666,7 +3674,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.6.tgz
     version: 0.2.6
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.680757924-07:00"
+    created: "2021-07-20T06:39:28.779390425-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3679,7 +3687,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.5.tgz
     version: 0.2.5
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.670684075-07:00"
+    created: "2021-07-20T06:39:28.777382917-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3692,7 +3700,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.666723398-07:00"
+    created: "2021-07-20T06:39:28.775879253-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3705,7 +3713,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.64840064-07:00"
+    created: "2021-07-20T06:39:28.774194824-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3718,7 +3726,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.612659265-07:00"
+    created: "2021-07-20T06:39:28.77233364-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3731,7 +3739,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.605159625-07:00"
+    created: "2021-07-20T06:39:28.771034353-07:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -3744,7 +3752,7 @@ entries:
     - https://ubc.github.io/charts/statspace-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: "2021-07-20T06:08:18.569800259-07:00"
+    created: "2021-07-20T06:39:28.769742525-07:00"
     description: A Dspace chart to deploy Statspace
     digest: 218affffe1267bdb6d67e34287abbc52248cee80b5e523c7c07818aef4cc7d4e
     name: statspace
@@ -3754,7 +3762,7 @@ entries:
   vault:
   - apiVersion: v1
     appVersion: 0.9.0
-    created: "2021-07-20T06:08:18.946482022-07:00"
+    created: "2021-07-20T06:39:28.821096213-07:00"
     description: A Helm chart for Vault, a tool for managing secrets
     digest: c63302faa0d7900349551642f59be4eee3f472c04d3ab8e80dc9a36419def72b
     home: https://www.vaultproject.io/
@@ -3771,7 +3779,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: 0.9.0
-    created: "2021-07-20T06:08:18.945437125-07:00"
+    created: "2021-07-20T06:39:28.820121205-07:00"
     description: A Helm chart for Vault, a tool for managing secrets
     digest: 298371d70d5c1862ed45c093171327dbba2276109bbe18f0a3b48c5c628976d0
     home: https://www.vaultproject.io/
@@ -3788,7 +3796,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 0.9.0
-    created: "2021-07-20T06:08:18.944357826-07:00"
+    created: "2021-07-20T06:39:28.819798666-07:00"
     description: A Helm chart for Vault, a tool for managing secrets
     digest: f73b50556124411eca39eb11e7c21414db81676f173ffae5ec50df705930699e
     home: https://www.vaultproject.io/
@@ -3805,7 +3813,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: 0.8.2
-    created: "2021-07-20T06:08:18.943350969-07:00"
+    created: "2021-07-20T06:39:28.819484327-07:00"
     description: A Helm chart for Vault, a tool for managing secrets
     digest: 444c429bd062795c21f1878f9fffc735d671a5daefed76591cad0a1ce6686b9e
     home: https://www.vaultproject.io/
@@ -3822,7 +3830,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: 0.8.2
-    created: "2021-07-20T06:08:18.942337202-07:00"
+    created: "2021-07-20T06:39:28.819174928-07:00"
     description: A Helm chart for Vault, a tool for managing secrets
     digest: bee6e072526bff38594eeddc053dbe42a2f39181573fc9d299e5da6050822323
     home: https://www.vaultproject.io/
@@ -3840,7 +3848,7 @@ entries:
   voyager:
   - apiVersion: v1
     appVersion: 4.0.0-rc.1
-    created: "2021-07-20T06:08:18.948782074-07:00"
+    created: "2021-07-20T06:39:28.821859275-07:00"
     description: Voyager by AppsCode - Secure Ingress Controller for Kubernetes
     digest: 15e5cd29fba2feaf2793c1d3bf3aeeb7f80926ade347d12565f1e768adc00978
     icon: https://cdn.appscode.com/images/icon/voyager.png
@@ -3855,7 +3863,7 @@ entries:
     version: 1.1.1
   - apiVersion: v1
     appVersion: 4.0.0-rc.1
-    created: "2021-07-20T06:08:18.947692595-07:00"
+    created: "2021-07-20T06:39:28.821531457-07:00"
     description: Voyager by AppsCode - Secure Ingress Controller for Kubernetes
     digest: 4fa0cc0789be4ce142fb9016025e2298ca8e886c119bef19cdcaf62a118f1458
     icon: https://cdn.appscode.com/images/icon/voyager.png
@@ -3871,7 +3879,7 @@ entries:
   zoom-captions:
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2021-07-20T06:08:19.015736733-07:00"
+    created: "2021-07-20T06:39:28.827038096-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -3888,7 +3896,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:19.041526482-07:00"
+    created: "2021-07-20T06:39:28.840586579-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -3905,7 +3913,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:19.037505534-07:00"
+    created: "2021-07-20T06:39:28.837353135-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -3922,7 +3930,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:19.034248387-07:00"
+    created: "2021-07-20T06:39:28.834720158-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -3939,7 +3947,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:19.030433605-07:00"
+    created: "2021-07-20T06:39:28.832196266-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -3956,7 +3964,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:19.019423071-07:00"
+    created: "2021-07-20T06:39:28.830012852-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -3973,7 +3981,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:18.994435874-07:00"
+    created: "2021-07-20T06:39:28.825326016-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -3990,7 +3998,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-20T06:08:18.959988764-07:00"
+    created: "2021-07-20T06:39:28.823622527-07:00"
     dependencies:
     - alias: db
       name: mariadb
@@ -4005,4 +4013,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2021-07-20T06:08:17.402118477-07:00"
+generated: "2021-07-20T06:39:28.571381585-07:00"

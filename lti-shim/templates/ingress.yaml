@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "app.fullname" . }}-ingress
@@ -13,23 +13,32 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: {{ template "app.fullname" . }}
-          servicePort: 80
+          service:
+            name: {{ template "app.fullname" . }}
+            port:
+              number: 80
         path: /
+        pathType: Prefix
   - host: {{ replace "http://" "" .Values.ltijs.host }}
     http:
       paths:
       - backend:
-          serviceName: {{ template "app.fullname" . }}-ltijs
-          servicePort: {{ .Values.ltijs.port }}
+          service:
+            name: {{ template "app.fullname" . }}-ltijs
+            port:
+              number: {{ .Values.ltijs.port }}
         path: /
+        pathType: Prefix
   - host: {{ replace "http://" "" .Values.mail.host }}
     http:
       paths:
       - backend:
-          serviceName: {{ template "app.fullname" . }}-mail
-          servicePort: {{ .Values.mail.port }}
+          service:
+            name: {{ template "app.fullname" . }}-mail
+            port:
+              number: {{ .Values.mail.port }}
         path: /
+        pathType: Prefix
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
     - hosts:

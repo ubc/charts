@@ -45,7 +45,7 @@ ltijs:
     jwksEndpoint: https://lti-shim.ubc.ca/lti/platform/jwks
 
 mail:
-  image: lthub/lti-shim-postfix:0.1
+  image: lthub/lti-shim-postfix:release-0.1
   port: 25
   host: mail.lti-shim.ubc.ca
   noreply: "nobody@ubc.ca"
@@ -54,6 +54,7 @@ mail:
     domains: "[example.com]"
     host: "[mail.example.com]"
     sasl:
+      # please use string "yes" or "no"
       enable: "no"
 
 postgres:

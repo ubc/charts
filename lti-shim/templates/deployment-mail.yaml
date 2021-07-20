@@ -30,7 +30,7 @@ spec:
             value: {{ .Values.mail.relay.host | quote }}
           - name: POSTFIX_SASL_ENABLE
             value: {{ .Values.mail.relay.sasl.enable | quote }}
-          {{- if .Values.mail.relay.sasl.passwd }}
+          {{- if .Values.mail.relay.sasl.password }}
           - name: POSTFIX_SASL_PASSWORD
             value: {{ .Values.mail.relay.sasl.password | quote }}
           {{- end }}
