@@ -219,6 +219,10 @@ env:
 - name: CALIPER_LDAP_ACTOR_HOMEPAGE
   value: {{ .Values.caliper.ldap_actor_homepage | quote }}
 {{- end }}
+{{- if .Values.debug }}
+- name: DEBUG
+  value: {{ .Values.debug | quote }}
+{{- end }}
 
 {{- if .Values.cacheDirectory }}
 - name: MEDIAWIKI_CACHE_DIRECTORY

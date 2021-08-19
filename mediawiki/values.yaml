@@ -13,6 +13,8 @@ replicas: 1
 ##
 # imagePullPolicy:
 
+debug: false
+
 ## User of the application
 ##
 adminUser: user
