@@ -50,6 +50,8 @@ spec:
             value: {{ .Values.postgres.username | quote }}
           - name: DB_PASSWORD
             value: {{ .Values.postgres.password | quote }}
+          - name: FAKE_EMAIL_DOMAIN
+            value: {{ .Values.app.fakeEmailDomain | quote }}
           - name: SESSION_DRIVER
             value: {{ .Values.app.session.driver | quote }}
           - name: SANCTUM_STATEFUL_DOMAINS

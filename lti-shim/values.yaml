@@ -22,6 +22,7 @@ app:
   mode: production
   key: "base64:DYF0KhMD6pA9kWeovg1SL8gapmoHF6hZmV1UK3GYhUY="
   debug: false
+  fakeEmailDomain: 'example.edu'
   session:
     driver: cookie
 
