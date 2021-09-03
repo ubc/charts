@@ -11,13 +11,18 @@ metadata:
     autodeployed: "true"
     pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
     {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- if .Values.CI_JOB_ID }}
+    build_id: "{{ .Values.CI_JOB_ID }}"
     {{- end }}
 spec:
   replicas: {{ .Values.app.replicaCount }}
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: app
   template:
     metadata:
       labels:
@@ -134,8 +139,8 @@ metadata:
     autodeployed: "true"
     pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
     {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- if .Values.CI_JOB_ID }}
+    build_id: "{{ .Values.CI_JOB_ID }}"
     {{- end }}
 spec:
   type: {{ .Values.app.service.type }}
@@ -168,8 +173,8 @@ metadata:
     autodeployed: "true"
     pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
     {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- if .Values.CI_JOB_ID }}
+    build_id: "{{ .Values.CI_JOB_ID }}"
     {{- end }}
 spec:
   tls:
@@ -178,11 +183,11 @@ spec:
     - {{ .Values.app.ingress.host }}
     {{- end }}
     {{ $ingress :=  or (.Values.app.ingress.host) "" }}
-    {{ $hostname := or (.Values.CI_ENVIRONMENT_HOSTNAME) "" }}
+    {{ $hostname := or (include "hostname" .) "" }}
     {{- if ne $hostname $ingress }}
-    - {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
+    - {{ $hostname }}
     {{- end }}
-    secretName: {{ .Values.app.ingress.host | default .Values.CI_ENVIRONMENT_HOSTNAME | replace "." "-" }}-tls
+    secretName: {{ .Values.app.ingress.host | default $hostname | replace "." "-" }}-tls
   rules:
   {{- if .Values.app.ingress.host }}
   - host: {{ .Values.app.ingress.host }}

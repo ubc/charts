@@ -14,3 +14,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- $name := default .Release.Name .Values.nameOverride -}}
 {{- printf "%s" $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Parse hostname from URL
+*/}}
+{{- define "hostname" -}}
+{{- $temp := split "/" .Values.CI_ENVIRONMENT_URL -}}
+{{- printf "%s" $temp._2 -}}
+{{- end -}}
+

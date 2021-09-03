@@ -11,12 +11,17 @@ metadata:
     autodeployed: "true"
     pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
     {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- if .Values.CI_JOB_ID }}
+    build_id: "{{ .Values.CI_JOB_ID }}"
     {{- end }}
 spec:
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: mysql
   template:
     metadata:
       labels:

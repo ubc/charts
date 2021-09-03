@@ -11,13 +11,18 @@ metadata:
     autodeployed: "true"
     pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
     {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- if .Values.CI_JOB_ID }}
+    build_id: "{{ .Values.CI_JOB_ID }}"
     {{- end }}
 spec:
   replicas: {{ .Values.worker.replicaCount }}
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: worker
   template:
     metadata:
       labels:
