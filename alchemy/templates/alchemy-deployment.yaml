@@ -199,7 +199,7 @@ spec:
           servicePort: {{ .Values.app.service.externalPort }}
   {{- end }}
   {{- if ne $hostname $ingress }}
-  - host: {{ .Values.CI_ENVIRONMENT_HOSTNAME }}
+  - host: {{ $hostname }}
     http:
       paths:
       - path: /

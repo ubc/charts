@@ -16,10 +16,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Parse hostname from URL
+Parse hostname from service URL passed from gitlab CI_ENVIRONMENT_URL
 */}}
 {{- define "hostname" -}}
-{{- $temp := split "/" .Values.CI_ENVIRONMENT_URL -}}
+{{- $temp := split "/" .Values.service.url -}}
 {{- printf "%s" $temp._2 -}}
 {{- end -}}
 
