@@ -6,6 +6,10 @@ metadata:
     chart: {{ print .Chart.Name "-" .Chart.Version | replace "+" "_" | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      stage: {{ .Values.stage | quote }}
   template:
     metadata:
       labels:
