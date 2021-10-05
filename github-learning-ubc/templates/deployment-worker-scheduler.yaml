@@ -19,12 +19,17 @@ spec:
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "github-learning-ubc.fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: worker-scheduler
   template:
     metadata:
       labels:
         app: {{ template "github-learning-ubc.fullname" . }}
         stage: {{ .Values.stage }}
-        tier: worker
+        tier: worker-scheduler
     spec:
       {{- if .Values.worker.image.pullSecret }}
       imagePullSecrets:

@@ -18,6 +18,11 @@ spec:
   replicas: {{ .Values.ui.replicaCount }}
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "github-learning-ubc.fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: ui
   template:
     metadata:
       labels:
