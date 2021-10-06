@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 description: Pairing peer answers for deeper learning through comparison
 keywords:
   - compair
@@ -6,7 +6,7 @@ keywords:
   - peer learning
   - education
 name: compair
-version: 0.6.3
+version: 0.6.4
 appVersion: 1.2.7
 home: http://ubc.github.io/compair/
 sources:
@@ -16,4 +16,3 @@ maintainers:
     email: pan.luo@ubc.ca
   - name: Andrew Gardener
     email: andrew.gardener@ubc.ca
-engine: gotpl
