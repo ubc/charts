@@ -33,7 +33,7 @@ jobs:
       - name: Run chart-releaser
         # use version >= 1.2.2
         uses: helm/chart-releaser-action@main
-        #env:
-          #CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           charts_dir: '.'
