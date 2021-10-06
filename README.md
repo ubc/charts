@@ -13,13 +13,9 @@ helm install ctlt/CHART
 
 ## Update a Chart
 * Update chart source and version
-* Run the following command to release a new version
+* Git commit & push
 
-```bash
-cd docs
-helm package ../CHART_NAME
-helm repo index . --url https://ubc.github.io/charts
-```
+The github action will automatically package and update index.yaml in gh-pages branch.
 
 For more information:
 
