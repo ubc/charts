@@ -34,7 +34,7 @@ spec:
           {{- end }}
           args: [
             "--logging.level.ca.ubc={{ .Values.logging.level }}",
-            "--logging.level.edu.ksu.canvas.impl.RestCanvasMessenger={{ .Values.logging.rest}}",
+            "--logging.level.edu.ksu.canvas.net={{ .Values.logging.rest}}",
             "--canvas.url={{ .Values.canvas.url }}",
             "--canvas.token={{ .Values.canvas.token }}",
             "--canvas.timeout.connect={{ .Values.canvas.timeout.connect }}",
