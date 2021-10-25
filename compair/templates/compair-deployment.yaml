@@ -365,9 +365,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: {{ $serviceName  }}-app
-          servicePort: {{ $servicePort  }}
+          service:
+            name: {{ $serviceName  }}-app
+            port:
+              number: {{ $servicePort  }}
   {{- end }}
   {{- if and (hasKey .Values.app.ingress.annotations "kubernetes.io/tls-acme") (index .Values.app.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
   tls:
