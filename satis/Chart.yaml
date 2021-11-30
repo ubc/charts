@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 description: Chart for Satis server
 name: satis
-version: 0.2.0
+version: 0.3.0
