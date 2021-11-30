@@ -3542,6 +3542,14 @@ entries:
     - https://ubc.github.io/charts/redirector-0.1.0.tgz
     version: 0.1.0
   satis:
+  - apiVersion: v2
+    created: "2021-11-30T06:18:32.147213667Z"
+    description: Chart for Satis server
+    digest: 24de8ddc8492558a4d1a074ef234089ec1dcb6841bde656a3d83c2579e815dd3
+    name: satis
+    urls:
+    - https://github.com/ubc/charts/releases/download/satis-0.3.0/satis-0.3.0.tgz
+    version: 0.3.0
   - apiVersion: v1
     created: "2021-10-05T14:54:03.65158-07:00"
     description: Chart for Satis server
@@ -4190,4 +4198,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2021-10-25T22:37:32.945922238Z"
+generated: "2021-11-30T06:18:32.150456991Z"
