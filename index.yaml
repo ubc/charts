@@ -4061,6 +4061,25 @@ entries:
     urls:
     - https://ubc.github.io/charts/voyager-1.1.0.tgz
     version: 1.1.0
+  webwork:
+  - apiVersion: v2
+    appVersion: "2.16"
+    created: "2021-12-25T00:56:18.406882712Z"
+    dependencies:
+    - alias: db
+      condition: db.disableExternal
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - webwork-database
+      version: 10.x.x
+    description: A Helm chart to deploy WeBWorK
+    digest: 519689bcd6db16d5a048ee059f0e0d5ed3b9b8b3acb2de2306b329a980a85993
+    name: webwork
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/webwork-0.1.0/webwork-0.1.0.tgz
+    version: 0.1.0
   zoom-captions:
   - apiVersion: v2
     appVersion: 1.1.0
@@ -4198,4 +4217,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-30T06:18:32.150456991Z"
+generated: "2021-12-25T00:56:18.408050634Z"
