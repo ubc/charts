@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "webwork.fullname" . }}
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "webwork.selectorLabels" . | nindent 4 }}
+
+{{- if .Values.shibd.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "webwork.fullname" . }}-shibd
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.shibd.service.port }}
+    targetPort: 1600
+    protocol: TCP
+    name: shibd
+  selector:
+    app: {{ template "webwork.fullname" . }}-shibd
+{{- end -}}
+
+{{- if .Values.r.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "webwork.fullname" . }}-r
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.r.service.port }}
+    targetPort: 6311
+    protocol: TCP
+    name: rserve
+  selector:
+    app: {{ template "webwork.fullname" . }}-r
+{{- end -}}

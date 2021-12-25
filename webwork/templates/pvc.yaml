@@ -1,0 +1,111 @@
+{{- if .Values.coursePersistence.enabled -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "webwork.fullname" . }}-course-pvc
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: filestore
+  {{- with .Values.coursePersistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.coursePersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.coursePersistence.size | quote }}
+  storageClassName: {{ .Values.coursePersistence.storageClass | quote }}
+{{- end }}
+
+
+{{ if .Values.libraryPersistence.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "webwork.fullname" . }}-library-pvc
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: filestore
+  {{- with .Values.libraryPersistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.libraryPersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.libraryPersistence.size | quote }}
+  storageClassName: {{ .Values.libraryPersistence.storageClass | quote }}
+{{- end }}
+
+
+{{- if .Values.htdocsTmpPersistence.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "webwork.fullname" . }}-htdocs-tmp-pvc
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: filestore
+  {{- with .Values.htdocsTmpPersistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.htdocsTmpPersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.htdocsTmpPersistence.size | quote }}
+  storageClassName: {{ .Values.htdocsTmpPersistence.storageClass | quote }}
+{{- end }}
+
+{{- if .Values.htdocsDataPersistence.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "webwork.fullname" . }}-htdocs-data-pvc
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: filestore
+  {{- with .Values.htdocsDataPersistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.htdocsDataPersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.htdocsDataPersistence.size | quote }}
+  storageClassName: {{ .Values.htdocsDataPersistence.storageClass | quote }}
+{{- end }}
+
+{{- if .Values.logsPersistence.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "webwork.fullname" . }}-logs-pvc
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: filestore
+  {{- with .Values.logsPersistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.logsPersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.logsPersistence.size | quote }}
+  storageClassName: {{ .Values.logsPersistence.storageClass | quote }}
+{{- end -}}
+

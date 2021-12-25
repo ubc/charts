@@ -1,0 +1,55 @@
+{{- if .Values.cronjob.lti_update_classlist.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "webwork.fullname" . }}-classlist-cronjob
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: cronjob
+spec:
+  schedule: {{ .Values.cronjob.lti_update_classlist.schedule | quote }}
+  {{- if .Values.cronjob.lti_update_classlist.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ .Values.cronjob.lti_update_classlist.startingDeadlineSeconds }}
+  {{- end }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: {{ .Values.cronjob.lti_update_classlist.restartPolicy }}
+          containers:
+          - name: {{ .Chart.Name }}-classlist-cronjob
+            {{- include "webwork.app.spec" . | indent 12 }}
+            args: ['./webwork2/lib/LTIAdvantage/Cron/lti_update_classlist.pl']
+          volumes:
+            {{- include "webwork.app.mounts" . | indent 10 }}
+{{- end }}
+
+{{- if .Values.cronjob.lti_update_grades.enabled }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "webwork.fullname" . }}-grades-cronjob
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: cronjob
+spec:
+  schedule: {{ .Values.cronjob.lti_update_grades.schedule | quote }}
+  {{- if .Values.cronjob.lti_update_grades.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ .Values.cronjob.lti_update_grades.startingDeadlineSeconds }}
+  {{- end }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: {{ .Values.cronjob.lti_update_grades.restartPolicy }}
+          containers:
+          - name: {{ .Chart.Name }}-grades-cronjob
+            {{- include "webwork.app.spec" . | indent 12 }}
+            args: ['./webwork2/lib/LTIAdvantage/Cron/lti_update_grades.pl']
+          volumes:
+            {{- include "webwork.app.mounts" . | indent 10 }}
+{{- end }}
+

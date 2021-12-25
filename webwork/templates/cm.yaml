@@ -1,0 +1,23 @@
+{{- if .Values.webworkFiles }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "webwork.fullname" . }}
+  labels:
+  {{- include "webwork.labels" . | nindent 4 }}
+data:
+  {{ toYaml .Values.webworkFiles | indent 2 }}
+{{- end}}
+
+{{- if .Values.shibd.idp.attribute_map }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "webwork.fullname" . }}-cm
+  labels:
+  {{- include "webwork.labels" . | nindent 4 }}
+data:
+  attribute-map.xml: |
+    {{ toYaml .Values.shibd.idp.attribute_map | nindent 4 }}
+{{- end}}

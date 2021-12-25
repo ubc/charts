@@ -1,0 +1,248 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webwork.fullname" . }}
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: app
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "webwork.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "webwork.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "webwork.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- include "webwork.app.spec" . | indent 10 }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /webwork2
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /webwork2
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- include "webwork.app.mounts" . | indent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+{{if .Values.worker.enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webwork.fullname" . }}-worker
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: worker
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "webwork.selectorLabels" . | nindent 6 }}
+      tier: worker
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "webwork.selectorLabels" . | nindent 8 }}
+        tier: worker
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "webwork.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-worker
+          {{- include "webwork.app.spec" . | indent 10 }}
+          args: ['./webwork2/lib/DelayedJob/Run/run_all_jobs.pl']
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+      volumes:
+        {{- include "webwork.app.mounts" . | indent 8 }}
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+
+{{if .Values.shibd.enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "webwork.fullname" . }}-shibd
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: auth
+spec:
+  replicas: {{ .Values.shibd.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "webwork.fullname" . }}-shibd
+  template:
+    metadata:
+      labels:
+        app: {{ template "webwork.fullname" . }}-shibd
+    spec:
+      containers:
+      - name: {{ template "webwork.fullname" . }}-shibd
+        image: '{{ .Values.shibd.image.repository }}:{{ .Values.shibd.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.shibd.imagePullPolicy | quote }}
+        ports:
+        - name: shibd
+          containerPort: 1600
+        env:
+        - name: SHIBBOLETH_IDP_DISCOVERY_URL
+          value: {{ .Values.shibd.idp.discovery_url | quote }}
+        - name: SHIBBOLETH_IDP_ENTITY_ID
+          value: {{ .Values.shibd.idp.entity_id | quote }}
+        - name: SHIBBOLETH_IDP_METADATA_URL
+          value: {{ .Values.shibd.idp.metadata_url | quote }}
+        - name: SHIBBOLETH_SP_ENTITY_ID
+          value: {{ .Values.shibd.sp.entity_id | quote }}
+        - name: SHIBD_ATTRIBUTE_MAP_URL
+          value: {{ .Values.shibd.idp.attribute_map_url | quote }}
+        - name: SHIBD_LISTENER_ACL
+          value: {{ .Values.shibd.listener_acl | quote }}
+        - name: SHIBD_LISTENER_ADDRESS
+          value: {{ .Values.shibd.listener_address | quote }}
+        - name: SHIBD_ODBC_DRIVER
+          value: {{ .Values.shibd.odbc.driver }}
+        - name: SHIBD_ODBC_LIB
+          value: {{ .Values.shibd.odbc.lib }}
+        - name: SHIBD_ODBC_DATABASE
+          value: {{ .Values.db.auth.database | quote }}
+        - name: SHIBD_ODBC_PORT
+          value: {{ .Values.db.service.port | quote }}
+        - name: SHIBD_ODBC_SERVER
+          value: {{ template "app.db.fullname" . }}
+        - name: SHIB_ODBC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+            {{- if .Values.db.disableExternal }}
+              name: {{ template "app.db.fullname" . }}
+              key: mariadb-password
+            {{- else }}
+              name: {{ template "webwork.fullname" . }}
+              key: db_password
+            {{- end }}
+        - name: SHIB_ODBC_USER
+          value: {{ .Values.db.auth.username | quote }}
+        - name: LOG_LEVEL
+          value: {{ default "INFO" .Values.shibd.log_level | quote }}
+        livenessProbe:
+          tcpSocket:
+            port: 1600
+        readinessProbe:
+          tcpSocket:
+            port: 1600
+        resources:
+        {{ toYaml .Values.shibd.resources | nindent 10 }}
+        volumeMounts:
+        {{ if .Values.shibd.sp.key }}
+        - name: shibd-cert
+          mountPath: /etc/shibboleth/cert
+        {{- end }}
+        {{- if .Values.shibd.idp.attribute_map }}
+        - name: attribute-map
+          mountPath: /etc/shibboleth/attribute-map.xml
+          subPath: "attribute-map.xml"
+        {{- end }}
+      volumes:
+      {{ if .Values.shibd.sp.key }}
+      - name: shibd-cert
+        secret:
+          secretName: {{ template "webwork.fullname" . }}-shibd
+      {{- end }}
+      {{- if .Values.shibd.idp.attribute_map }}
+      - name: attribute-map
+        configMap:
+          name: {{ template "webwork.fullname" . }}-cm
+      {{- end }}
+{{- end }}
+
+
+{{if .Values.r.enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "webwork.fullname" . }}-r
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: r
+spec:
+  replicas: {{ .Values.r.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "webwork.fullname" . }}-r
+  template:
+    metadata:
+      labels:
+        app: {{ template "webwork.fullname" . }}-r
+    spec:
+      containers:
+      - name: {{ template "webwork.fullname" . }}-r
+        image: '{{ .Values.r.image.repository }}:{{ .Values.r.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.r.imagePullPolicy | quote }}
+        ports:
+        - name: rserve
+          containerPort: 6311
+        livenessProbe:
+          tcpSocket:
+            port: 6311
+        readinessProbe:
+          tcpSocket:
+            port: 6311
+        resources:
+        {{ toYaml .Values.r.resources | nindent 10 }}
+{{- end }}
