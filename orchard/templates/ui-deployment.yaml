@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "orchard.fullname" . }}-ui
+  name: {{ template "orchard.fullname" . }}
 spec:
   replicas: {{ .Values.replicas.ui }}
   selector:
     matchLabels:
-      app: {{ template "orchard.fullname" . }}-ui
+      app: {{ template "orchard.fullname" . }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ template "orchard.fullname" . }}-ui
+        app: {{ template "orchard.fullname" . }}
     spec:
       containers:
-        - name: {{ template "orchard.fullname" . }}-ui
+        - name: {{ template "orchard.fullname" . }}
           image: {{ .Values.image.ui | quote }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
