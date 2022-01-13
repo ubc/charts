@@ -3337,6 +3337,15 @@ entries:
   orchard:
   - apiVersion: v1
     appVersion: "1.0"
+    created: "2022-01-13T05:21:54.717425144Z"
+    description: Machine learning powered tutor-like app for first year calculus courses.
+    digest: 56df5d985d559cf1b686fbb9d643d43f1ddb12f9b24f4291437aba2e37383287
+    name: orchard
+    urls:
+    - https://github.com/ubc/charts/releases/download/orchard-0.2.12/orchard-0.2.12.tgz
+    version: 0.2.12
+  - apiVersion: v1
+    appVersion: "1.0"
     created: "2022-01-13T03:59:44.855642332Z"
     description: Machine learning powered tutor-like app for first year calculus courses.
     digest: 4951eed661725fba9a16b6997b730423e326dbc4f237fff2bf1d79b656e940a1
@@ -4263,4 +4272,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-13T03:59:44.860069634Z"
+generated: "2022-01-13T05:21:54.718648967Z"
