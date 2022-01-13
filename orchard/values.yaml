@@ -9,8 +9,9 @@ replicas:
 mode: staging
 
 image:
-  repository: lthub/orchard
   pullPolicy: Always
+  ui: lthub/orchard:ui-latest
+  api: lthub/orchard:api-latest
 
 ingress:
   annotations:

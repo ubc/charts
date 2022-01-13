@@ -14,9 +14,9 @@ spec:
         app: {{ template "orchard.fullname" . }}-ui
     spec:
       containers:
-      - name: {{ template "orchard.fullname" . }}-ui
-        image: "{{ .Values.image.repository }}:{{ .Values.mode }}-ui"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-          - name: http
-            containerPort: 80
+        - name: {{ template "orchard.fullname" . }}-ui
+          image: {{ .Values.image.ui | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
