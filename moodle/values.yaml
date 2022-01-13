@@ -337,6 +337,9 @@ persistence:
   size: 8Gi
   # existingClaim: ""
   # resources:
+  # PVC annotations, could be used for NFS subdir external provisioner
+  #annotations:
+  #  nfs.io/storage-path: "moodle"
 
 ## Define affinity for the moodle pod
 ## Sometimes required when persistent volumes are defined externally
