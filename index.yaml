@@ -3624,6 +3624,20 @@ entries:
   statspace:
   - apiVersion: v2
     appVersion: "5"
+    created: "2022-01-14T20:56:56.472365595Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.9.3
+    description: A Dspace chart to deploy Statspace
+    digest: cc91122a320e19c013d6585511f29c8f6006be242ddd5c75cff55891604d0e6e
+    name: statspace
+    urls:
+    - https://github.com/ubc/charts/releases/download/statspace-0.5.1/statspace-0.5.1.tgz
+    version: 0.5.1
+  - apiVersion: v2
+    appVersion: "5"
     created: "2021-10-05T14:54:03.784796-07:00"
     dependencies:
     - condition: postgresql.enabled
@@ -4289,4 +4303,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-14T05:40:20.155386234Z"
+generated: "2022-01-14T20:56:56.473395152Z"
