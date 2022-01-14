@@ -9,6 +9,13 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  strategy:
+    {{- if eq "RollingUpdate" .Values.strategy.type }}
+    rollingUpdate:
+       maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
+       maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+    {{- end }}
+    type: {{ .Values.strategy.type }}
   selector:
     matchLabels:
       {{- include "webwork.selectorLabels" . | nindent 6 }}
@@ -35,6 +42,9 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+              {{- if .Values.service.hostPort }}
+              hostPort: {{ .Values.service.hostPort }}
+              {{- end }}
           livenessProbe:
             httpGet:
               path: /webwork2
@@ -208,6 +218,18 @@ spec:
         configMap:
           name: {{ template "webwork.fullname" . }}-cm
       {{- end }}
+      {{- with .Values.shibd.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.shibd.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.shibd.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
 
 
@@ -245,4 +267,16 @@ spec:
             port: 6311
         resources:
         {{ toYaml .Values.r.resources | nindent 10 }}
+      {{- with .Values.r.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.r.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.r.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
