@@ -42,16 +42,22 @@ spec:
         ports:
         - containerPort: {{ .Values.service.port }}
         livenessProbe:
-          tcpSocket:
-            port: {{ .Values.service.port }}
-        readinessProbe:
           httpGet:
             path: /v1/sys/health?standbyok=true
             port: {{ .Values.service.port }}
-          initialDelaySeconds: 3
-          periodSeconds: 3
-          #tcpSocket:
-          #  port: {{ .Values.service.port }}
+          failureThreshold: 2
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          exec:
+            command: ["/bin/sh", "-ec", "vault status -tls-skip-verify"]
+          failureThreshold: 2
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
         securityContext:
           readOnlyRootFilesystem: true
           capabilities:

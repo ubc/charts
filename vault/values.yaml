@@ -5,7 +5,7 @@ replicaCount: 1
 logLevel: info
 image:
   repository: vault
-  tag: 0.10.0
+  tag: 1.9.2
   pullPolicy: IfNotPresent
 service:
   name: vault
