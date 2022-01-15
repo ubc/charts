@@ -3,6 +3,21 @@ entries:
   alchemy:
   - apiVersion: v1
     appVersion: "1.1"
+    created: "2022-01-15T06:26:30.690921567Z"
+    description: Analytical Chemisty Learning Platform
+    digest: eb1223575f62074ef08a9f5946bb1087ec120c0f8243428939474d3f493ba730
+    keywords:
+    - alchemy
+    - education
+    maintainers:
+    - email: andrew.gardener@ubc.ca
+      name: Andrew Gardener
+    name: alchemy
+    urls:
+    - https://github.com/ubc/charts/releases/download/alchemy-0.3.3/alchemy-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v1
+    appVersion: "1.1"
     created: "2021-10-05T14:54:03.325651-07:00"
     description: Analytical Chemisty Learning Platform
     digest: f19bd8f6acb6273f91c96b352a003bbe15df0a582aa6ff07ba03bb8a9594789d
@@ -4347,4 +4362,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-15T06:19:34.244542046Z"
+generated: "2022-01-15T06:26:30.69222338Z"
