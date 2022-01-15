@@ -41,6 +41,8 @@ spec:
         volumeMounts:
         - name: redis-persistent-storage
           mountPath: /data
+        resources:
+{{ toYaml .Values.redis.resources | indent 10 }}
       volumes:
       - name: redis-persistent-storage
         persistentVolumeClaim:

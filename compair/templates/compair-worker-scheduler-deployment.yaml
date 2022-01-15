@@ -250,4 +250,6 @@ spec:
         - name: LOGIN_ADDITIONAL_INSTRUCTIONS_HTML
           value: {{ .Values.loginAdditionalInstructionsHTML | quote }}
         {{- end }}
+        resources:
+{{ toYaml .Values.scheduler.resources | indent 10 }}
 {{- end }}

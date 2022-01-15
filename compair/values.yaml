@@ -141,6 +141,13 @@ app:
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: *uploadLimit
+  resources:
+    limits:
+    #  cpu: 100m
+      memory: 512Mi
+    requests:
+    #  cpu: 100m
+      memory: 256Mi
 
 worker:
   replicaCount: 1
@@ -148,6 +155,22 @@ worker:
     repository: ubcctlt/compair-app
     tag: latest
     pullPolicy: IfNotPresent
+  resources:
+    limits:
+    #  cpu: 100m
+      memory: 800Mi
+    requests:
+    #  cpu: 100m
+      memory: 512Mi
+
+scheduler:
+  resources:
+    limits:
+    #  cpu: 100m
+      memory: 100Mi
+    requests:
+    #  cpu: 100m
+      memory: 64Mi
 
 db:
   image:
@@ -159,6 +182,13 @@ db:
     #storageClass: fast
     #accessMode: ReadWriteOnce
     #size: 8Gi
+  resources:
+    limits:
+    #  cpu: 100m
+      memory: 512Mi
+    requests:
+    #  cpu: 100m
+      memory: 256Mi
 
 redis:
   image:
@@ -172,3 +202,10 @@ redis:
     #storageClass: fast
     #accessMode: ReadWriteOnce
     #size: 1Gi
+  resources:
+    limits:
+    #  cpu: 100m
+      memory: 100Mi
+    requests:
+    #  cpu: 100m
+      memory: 64Mi

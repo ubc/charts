@@ -50,6 +50,8 @@ spec:
               key: mysql_password
         ports:
         - containerPort: 3306
+        resources:
+{{ toYaml .Values.db.resources | indent 10 }}
       {{- if .Values.db.persistence.enabled }}
         volumeMounts:
         - name: mysql-persistent-storage
