@@ -37,12 +37,12 @@ spec:
         command: ["redis-server", "--appendonly","yes"]
         ports:
         - containerPort: 6379
+        resources:
+{{ toYaml .Values.redis.resources | indent 10 }}
       {{- if .Values.redis.persistence.enabled }}
         volumeMounts:
         - name: redis-persistent-storage
           mountPath: /data
-        resources:
-{{ toYaml .Values.redis.resources | indent 10 }}
       volumes:
       - name: redis-persistent-storage
         persistentVolumeClaim:
