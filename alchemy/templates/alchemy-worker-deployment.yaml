@@ -95,6 +95,8 @@ spec:
         {{- end }}
         - name: GA_TRACKING_ID
           value: {{ .Values.gaTrackingId | quote }}
+        resources:
+{{ toYaml .Values.worker.resources | indent 10 }}
       {{- if .Values.app.persistence.enabled }}
         volumeMounts:
         - name: {{ template "fullname" . }}-persistent-storage

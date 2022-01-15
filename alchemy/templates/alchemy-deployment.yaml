@@ -110,6 +110,8 @@ spec:
           httpGet:
             path: /
             port: {{ .Values.app.service.internalPort }}
+        resources:
+{{ toYaml .Values.app.resources | indent 10 }}
       {{- if .Values.app.persistence.enabled }}
         volumeMounts:
         - name: {{ template "fullname" . }}-persistent-storage
