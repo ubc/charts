@@ -29,16 +29,6 @@ spec:
               number: {{ .Values.ltijs.port }}
         path: /
         pathType: Prefix
-  - host: {{ replace "http://" "" .Values.mail.host }}
-    http:
-      paths:
-      - backend:
-          service:
-            name: {{ template "app.fullname" . }}-mail
-            port:
-              number: {{ .Values.mail.port }}
-        path: /
-        pathType: Prefix
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
     - hosts:
