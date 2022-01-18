@@ -1415,6 +1415,14 @@ entries:
     version: 0.1.0
   lti-shim:
   - apiVersion: v2
+    created: "2022-01-18T11:56:56.640036135Z"
+    description: LTI proxy that anonymizes personal information
+    digest: 47967eea2e39c7c5f50bad86e1e7aa718bb666d43eb9f845b442b5105b7be3b0
+    name: lti-shim
+    urls:
+    - https://github.com/ubc/charts/releases/download/lti-shim-0.5.4/lti-shim-0.5.4.tgz
+    version: 0.5.4
+  - apiVersion: v2
     created: "2022-01-18T09:56:07.057214576Z"
     description: LTI proxy that anonymizes personal information
     digest: 6cec2e455568b687e5411bfa943929e044414183b4a42c2cdb6319244ad87fae
@@ -4370,4 +4378,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-18T09:56:07.05869677Z"
+generated: "2022-01-18T11:56:56.641711744Z"
