@@ -25,6 +25,8 @@ spec:
       tier: app
   template:
     metadata:
+      annotations:
+        timestamp: {{ now | quote }}
       labels:
         app: {{ template "fullname" . }}
         stage: {{ .Values.stage }}
