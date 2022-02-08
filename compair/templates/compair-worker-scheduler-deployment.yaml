@@ -35,7 +35,7 @@ spec:
       - name: {{ .Chart.Name }}-worker-scheduler
         image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
         imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
-        command: ["celery", "beat", "--app=celery_worker.celery", "--loglevel=INFO"]
+        command: ["celery", "--app=celery_worker.celery", "beat", "--loglevel=INFO"]
         env:
         - name: DB_HOST
           value: "{{ template "fullname" . }}-db"
