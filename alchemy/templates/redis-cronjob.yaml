@@ -1,0 +1,22 @@
+# this redis cron job runs the background rewrite of the redis persistence file
+# this keeps the persistence file from growing in size too much
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "fullname" . }}-redis-cronjob
+spec:
+  schedule: "@monthly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Chart.Name }}-redis-cronjob
+            image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+            imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+            command:
+            - redis-cli
+            - -h
+            - {{ .Chart.Name }}-redis
+            - BGREWRITEAOF
+          restartPolicy: OnFailure
