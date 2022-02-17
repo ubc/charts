@@ -17,6 +17,6 @@ spec:
             command:
             - redis-cli
             - -h
-            - {{ .Chart.Name }}-redis
+            - {{ template "fullname" . }}-redis
             - BGREWRITEAOF
           restartPolicy: OnFailure
