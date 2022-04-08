@@ -12,11 +12,11 @@ spec:
   startingDeadlineSeconds: {{ .Values.cronjob.startingDeadlineSeconds }}
   {{- end }}
   concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
-  {{- if .Values.cronjob.activeDeadlineSeconds }}
-  activeDeadlineSeconds: {{ .Values.cronjob.activeDeadlineSeconds }}
-  {{- end }}
   jobTemplate:
     spec:
+      {{- if .Values.cronjob.activeDeadlineSeconds }}
+      activeDeadlineSeconds: {{ .Values.cronjob.activeDeadlineSeconds }}
+      {{- end }}
       template:
         spec:
           containers:
