@@ -428,6 +428,8 @@ metrics:
 cronjob:
   enabled: true
   schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  #activeDeadlineSeconds: 0
 
 backupCronjob:
   enabled: false
