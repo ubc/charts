@@ -13,7 +13,7 @@ spec:
   {{- end }}
   concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
   {{- if .Values.cronjob.activeDeadlineSeconds }}
-	activeDeadlineSeconds: {{ .Values.cronjob.activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ .Values.cronjob.activeDeadlineSeconds }}
   {{- end }}
   jobTemplate:
     spec:
