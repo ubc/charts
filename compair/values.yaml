@@ -14,12 +14,17 @@ cForceRoot: true
 secretKey: PLEASE_CHANGE_ME
 workerSchedulerEnabled: false
 demoInstance: false
-celeryTimezone: America/Vancouver
-celeryAlwaysEager: false
 appLoginEnabled: true
 ltiLoginEnabled: false
 gaTrackingId: null
 loginAdditionalInstructionsHTML: null
+
+# celery settings
+celery:  
+  timezone: America/Vancouver
+  taskAlwaysEager: false
+  workerMaxMemoryPerChild: ""  
+  workerMaxTasksPerChild: ""
 
 # cas settings
 cas:

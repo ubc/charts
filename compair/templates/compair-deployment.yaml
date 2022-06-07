@@ -177,9 +177,13 @@ spec:
         - name: DEMO_INSTALLATION
           value: {{ .Values.demoInstance | quote }}
         - name: CELERY_TIMEZONE
-          value: {{ .Values.celeryTimezone | quote }}
-        - name: CELERY_ALWAYS_EAGER
-          value: {{ .Values.celeryAlwaysEager | quote }}
+          value: {{ .Values.celery.timezone | quote }}
+        - name: CELERY_WORKER_MAX_MEMORY_PER_CHILD
+          value: {{ .Values.celery.workerMaxMemoryPerChild | quote }}
+        - name: CELERY_WORKER_MAX_TASKS_PER_CHILD
+          value: {{ .Values.celery.workerMaxTasksPerChild | quote }}
+        - name: CELERY_TASK_ALWAYS_EAGER
+          value: {{ .Values.celery.taskAlwaysEager | quote }}
         - name: MAIL_NOTIFICATION_ENABLED
           value: {{ .Values.mail.enabled | quote }}
         {{- if .Values.mail.enabled }}
