@@ -22,7 +22,7 @@ spec:
         paths:
           - path: /
             backend:
-							service:
+              service:
                 name: {{ $serviceName }}
                 port: {{ $servicePort }}
     {{- end -}}
