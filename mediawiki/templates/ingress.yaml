@@ -24,7 +24,8 @@ spec:
             backend:
               service:
                 name: {{ $serviceName }}
-                port: {{ $servicePort }}
+                port:
+                  number: {{ $servicePort }}
     {{- end -}}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
   tls:
