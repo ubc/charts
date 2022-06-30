@@ -1866,6 +1866,34 @@ entries:
   mediawiki:
   - apiVersion: v2
     appVersion: 1.35.7
+    created: "2022-06-30T23:52:40.041459196Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.x.x
+    description: Extremely powerful, scalable software and a feature-rich wiki implementation
+      that uses PHP to process and display data stored in a database.
+    digest: 9cbab49fc40a01120d963751d992ee905f0120bf9d7d684a88fec4f6aa636c16
+    home: http://www.mediawiki.org/
+    icon: https://bitnami.com/assets/stacks/mediawiki/img/mediawiki-stack-220x234.png
+    keywords:
+    - mediawiki
+    - wiki
+    - http
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: mediawiki
+    sources:
+    - https://github.com/ubc/mediawiki-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/mediawiki-0.6.3/mediawiki-0.6.3.tgz
+    version: 0.6.3
+  - apiVersion: v2
+    appVersion: 1.35.7
     created: "2022-06-30T21:45:01.818397779Z"
     dependencies:
     - alias: db
@@ -4684,4 +4712,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-30T21:45:01.819996974Z"
+generated: "2022-06-30T23:52:40.043133316Z"
