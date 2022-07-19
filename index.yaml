@@ -1358,6 +1358,16 @@ entries:
   github-learning-ubc:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2022-07-19T19:18:19.235243157Z"
+    description: GitHub Service for Learning at UBC
+    digest: 21dfe1b2aa6a5d1235d6e05ec440cce0550cab434f95840db8449e13844465ca
+    name: github-learning-ubc
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/github-learning-ubc-0.2.4/github-learning-ubc-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2022-07-14T15:27:09.995782882Z"
     description: GitHub Service for Learning at UBC
     digest: 2be2067a9142af11128a462624068303c9a4cc0f09bacb5eb0fcfbbe2702dac0
@@ -4750,4 +4760,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-14T15:27:09.99716077Z"
+generated: "2022-07-19T19:18:19.240042423Z"
