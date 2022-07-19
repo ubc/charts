@@ -63,6 +63,10 @@ ldap:
   intUserBaseDn: 'ou=people,dc=learning,dc=github,dc=example,dc=org'
   intGroupsSrcBaseDn: 'ou=Groups_src,dc=learning,dc=github,dc=example,dc=org'
   intGroupsBaseDn: 'ou=Groups,dc=learning,dc=github,dc=example,dc=org'
+  eadConsumerServicePassword: 'CHANGE_ME'
+  eadConsumerUserUniqueIdentifier: 'uid'
+  eadConsumerUrl: 'ldaps://ldap'
+  eadConsumerServiceBindDn: 'ou=STUDENTS,dc=github,dc=example,dc=org'
 
 github:
   apiUrl: 'https://github.example.org/api/v3'
