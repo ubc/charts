@@ -5,9 +5,9 @@ Runtime environment variables
 - name: SECRET_KEY
   value: {{ .Values.secretKey | quote }}
   # valueFrom:
-  #   secretKeyRef:
+  #   secretKeyRef: 
   #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: secret_key
+  #     key: secret_key 
 - name: GLU_BATCH_ENABLED
   value: {{ .Values.glu.batchEnabled | quote }}
 - name: GLU_BATCH_GROUP_SYNC_SCHEDULE
@@ -118,4 +118,12 @@ Runtime environment variables
   value: {{ .Values.github.apiUrl | quote }}
 - name: GITHUB_API_TOKEN
   value: {{ .Values.github.apiToken | quote }}
+- name: LDAP_EAD_CONSUMER_URL
+  value: {{ .Values.ldap.eadConsumerUrl | quote }}
+- name: LDAP_EAD_CONSUMER_BIND_DN
+  value: {{ .Values.ldap.eadConsumerServiceBindDn | quote }}
+- name: LDAP_EAD_CONSUMER_USER_UNIQUE_IDENTIFIER
+  value: {{ .Values.ldap.eadConsumerUserUniqueIdentifier | quote }}
+- name: LDAP_EAD_CONSUMER_PASSWORD
+  value: {{ .Values.ldap.eadConsumerServicePassword | quote }}
 {{- end }}

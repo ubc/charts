@@ -63,6 +63,10 @@ ldap:
   intUserBaseDn: 'ou=people,dc=learning,dc=github,dc=example,dc=org'
   intGroupsSrcBaseDn: 'ou=Groups_src,dc=learning,dc=github,dc=example,dc=org'
   intGroupsBaseDn: 'ou=Groups,dc=learning,dc=github,dc=example,dc=org'
+  eadConsumerServicePassword: 'NLnh88G@sAwrM!7gL'
+  eadConsumerUserUniqueIdentifier: 'EAD\admin'
+  eadConsumerUrl: 'ldaps://ead.ubc.ca:636'
+  eadConsumerServiceBindDn: 'ou=STUDENTS,dc=ead,dc=ubc,dc=ca'
 
 github:
   apiUrl: 'https://github.example.org/api/v3'
