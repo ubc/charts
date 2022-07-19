@@ -5,9 +5,9 @@ Runtime environment variables
 - name: SECRET_KEY
   value: {{ .Values.secretKey | quote }}
   # valueFrom:
-  #   secretKeyRef: 
+  #   secretKeyRef:
   #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: secret_key 
+  #     key: secret_key
 - name: GLU_BATCH_ENABLED
   value: {{ .Values.glu.batchEnabled | quote }}
 - name: GLU_BATCH_GROUP_SYNC_SCHEDULE
