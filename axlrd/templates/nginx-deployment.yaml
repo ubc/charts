@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "app.fullname" . }}-nginx
+  name: {{ template "app.fullname" . }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "app.fullname" . }}-nginx
+      app: {{ template "app.fullname" . }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ template "app.fullname" . }}-nginx
+        app: {{ template "app.fullname" . }}
     spec:
       containers:
-      - name: {{ template "app.fullname" . }}-nginx
+      - name: {{ template "app.fullname" . }}
         image: "{{ .Values.nginx.image.repo }}"
         imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
         ports:
