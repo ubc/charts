@@ -4,7 +4,7 @@ metadata:
   name: {{ template "app.fullname" . }}-nginx-service
 spec:
   selector:
-    app: {{ template "app.fullname" . }}-nginx
+    app: {{ template "app.fullname" . }}
   ports:
   - name: http
     port: 80
