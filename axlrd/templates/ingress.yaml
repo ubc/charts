@@ -1,6 +1,6 @@
 {{- $hosts := append .Values.ingress.hosts .Values.service.url | compact | uniq -}}
 
-apiVersion: extensions/v1beta1
+apiVersion:  networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "app.fullname" . }}-ingress
@@ -18,13 +18,19 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: {{ $servicePrefix }}-nginx-service
-          servicePort: 80
+          service:
+            name: {{ $servicePrefix }}-nginx-service
+            port:
+              number: 80
         path: /(.*)
+        pathType: Prefix
       - backend:
-          serviceName: {{ $servicePrefix }}-node-service
-          servicePort: 80
+          service:
+            name: {{ $servicePrefix }}-node-service
+            port:
+              number: 80
         path: /api/(.*)
+        pathType: Prefix
   {{- end }}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
