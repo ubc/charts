@@ -358,6 +358,16 @@ entries:
   axlrd:
   - apiVersion: v1
     appVersion: "1.1"
+    created: "2022-08-02T21:57:30.137169629Z"
+    description: Application for teaching gaming theory where students build bots
+      to compete in various games
+    digest: a255deeeca118a3c3489d4ac5581ff8e52babb8e5919d739609ee0229b9bfbf3
+    name: axlrd
+    urls:
+    - https://github.com/ubc/charts/releases/download/axlrd-0.1.5/axlrd-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v1
+    appVersion: "1.1"
     created: "2022-08-02T21:50:11.871175739Z"
     description: Application for teaching gaming theory where students build bots
       to compete in various games
@@ -4826,4 +4836,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-02T21:50:11.872376735Z"
+generated: "2022-08-02T21:57:30.138443436Z"
