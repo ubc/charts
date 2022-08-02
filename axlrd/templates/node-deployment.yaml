@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: {{ template "app.fullname" . }}-node
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}-node"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "{{ .Values.node.image.repo }}"
+        imagePullPolicy: {{ .Values.node.image.pullPolicy }}
         resources:
           requests:
             memory: "3Gi"

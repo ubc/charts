@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: {{ template "app.fullname" . }}-nginx
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}-nginx"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "{{ .Values.nginx.image.repo }}"
+        imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
         ports:
         - name: http
           containerPort: 80

@@ -4,10 +4,15 @@
 
 replicaCount: 1
 
-image:
-  repository: lthub/axlrd
-  tag: latest
-  pullPolicy: IfNotPresent
+nginx:
+  image:
+    repo: "lthub/axlrd:nginx-latest"
+    pullPolicy: IfNotPresent
+
+node:
+  image:
+    repo: "lthub/axlrd:node-latest"
+    pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
