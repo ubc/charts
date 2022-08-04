@@ -236,9 +236,9 @@ env:
 - name: MEDIAWIKI_LOCALISATION_CACHE_MANUALRECACHE
   value: {{ .Values.l10nCacheManualRecache | quote }}
 {{- end }}
-{{- if .Values.googleAnalytics.ua }}
-- name: GOOGLE_ANALYTICS_UA
-  value: {{ .Values.googleAnalytics.ua | quote }}
+{{- if .Values.googleAnalytics.id }}
+- name: GOOGLE_ANALYTICS_ID
+  value: {{ .Values.googleAnalytics.id | quote }}
 {{- end }}
 {{- if .Values.googleAnalytics.metricsAllowed }}
 - name: GOOGLE_ANALYTICS_METRICS_ALLOWED

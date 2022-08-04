@@ -69,7 +69,7 @@ mediawikiEnableBotPasswords: true
 
 googleAnalytics:
   # Google Analytics Tracking Token
-  ua: UA-XXXXXXXX-XX
+  id: G-XXXXXXXX-XX
   # Google Service Account to be used for Analytics Metrics
   # metricsAllowed: '*'
   # metricsPath: /path/to/json/file
