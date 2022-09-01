@@ -1907,6 +1907,15 @@ entries:
   mattermost:
   - apiVersion: v1
     appVersion: 7.1.3
+    created: "2022-09-01T03:43:06.746767083Z"
+    description: Deploy Mattermost in Kubernetes
+    digest: bed0707d254621624bd7d774266dbfe47dab892bac08b471036c873bf5c9f9b5
+    name: mattermost
+    urls:
+    - https://github.com/ubc/charts/releases/download/mattermost-0.3.2/mattermost-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v1
+    appVersion: 7.1.3
     created: "2022-09-01T03:39:17.220772979Z"
     description: Deploy Mattermost in Kubernetes
     digest: b7c76788c2a44ab50f9fe35b5552c5ee3ee178cc28412d3ffdd83f8fc1f88601
@@ -4882,4 +4891,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-01T03:39:17.221905272Z"
+generated: "2022-09-01T03:43:06.749167101Z"
