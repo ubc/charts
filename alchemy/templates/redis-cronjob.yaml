@@ -1,6 +1,6 @@
 # this redis cron job runs the background rewrite of the redis persistence file
 # this keeps the persistence file from growing in size too much
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ template "fullname" . }}-redis-cronjob
