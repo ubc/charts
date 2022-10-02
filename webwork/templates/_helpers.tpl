@@ -99,7 +99,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- if .Values.db.disableExternal }}
 {{- include "call-nested" (list . "db" "mariadb.primary.fullname") | default .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
+{{- if .Values.db.service.name}}
+{{- printf "%s" .Values.db.service.name -}}
+{{- else -}}
 {{- printf "%s-%s" .Release.Name "db" -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
