@@ -1599,6 +1599,14 @@ entries:
     version: 0.1.0
   ltbot:
   - apiVersion: v1
+    created: "2022-10-07T02:53:18.348909835Z"
+    description: A Helm chart for deploying LTBot
+    digest: 789ebed615067f9fcaed01e98a6231524305f71fa0ae56a84935ea8bde014bbd
+    name: ltbot
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltbot-0.3.2/ltbot-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v1
     created: "2022-10-07T02:23:49.609558939Z"
     description: A Helm chart for deploying LTBot
     digest: f406437e4658d332db075e0d53cbbd06e5ba7b03ee28d0277a1859412f4969cd
@@ -4965,4 +4973,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-07T02:23:49.610251039Z"
+generated: "2022-10-07T02:53:18.349430037Z"
