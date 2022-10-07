@@ -35,6 +35,10 @@ spec:
                   name: {{ template "fullname" . }}
                   key: bot-token
             {{- end }}
+            {{- if .Values.bot.botExtraBackendDir }}
+            - name: BOT_EXTRA_BACKEND_DIR
+              value: {{ .Values.bot.botExtraBackendDir }}
+            {{- end }}
             - name: BOT_ADMINS
               value: {{ .Values.bot.admins | quote }}
             - name: CHATROOM_FN

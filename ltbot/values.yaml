@@ -49,3 +49,4 @@ bot:
   chatroomFN: err
   #encryptionKey:
   pluginIndexes: https://repos.errbot.io/repos.json
+  #botExtraBackendDir

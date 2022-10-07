@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for deploying LTBot
 name: ltbot
-version: 0.3.1
+version: 0.3.2
