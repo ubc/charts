@@ -39,6 +39,12 @@ spec:
             httpGet:
               path: /webwork2
               port: http
+          startupProbe:
+            httpGet:
+              path: /webwork2
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /webwork2

@@ -189,6 +189,8 @@ env:
     {{- end }}
 - name: SHIB_ODBC_USER
   value: {{ .Values.db.auth.username | quote }}
+- name: SKIP_UPLOAD_OPL_statistics
+  value: "true"
 volumeMounts:
 - name: webwork-course-data
   mountPath: /opt/webwork/courses
