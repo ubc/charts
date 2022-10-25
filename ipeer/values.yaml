@@ -116,32 +116,29 @@ ipeer:
     actorBaseURL: http://www.ubc.ca/%s
     actorUniqueIdParam: username
 
+##
+## MariaDB chart configuration
+##
+## https://github.com/helm/charts/blob/master/stable/mariadb/values.yaml
+##
 db:
   ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
   disableExternal: true
-  ## Disable MariaDB replication
-  replication:
-    enabled: false
+  ## standalone or replication
+  architecture: standalone
   # use default image from upstream
   #image:
   #  tag: 10.2
-  ## Create a database and a database user
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
-  ##
-  db:
-    name: &dbName ipeer
-    user: &dbUser password
-    #prefix:
+  auth:
+    #rootPassword:
+    database: &dbName ipeer
+    username: &dbUser ipeer
 
     ## If the password is not specified, mariadb will generates a random password
     ##
     # password: &dbPass
-
-  ## MariaDB admin password
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
-  ##
-  # rootUser:
-  #   password:
+    # replicationUser: replicator
+    # replicationPassword:
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

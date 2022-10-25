@@ -48,7 +48,7 @@ spec:
           - name: IPEER_DB_PORT
             value: {{ .Values.db.service.port | quote }}
           - name: IPEER_DB_USER
-            value: {{ .Values.db.db.user | quote }}
+            value: {{ .Values.db.auth.username | quote }}
           - name: IPEER_DB_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -192,7 +192,7 @@ spec:
           - name: IPEER_DB_PORT
             value: {{ .Values.db.service.port | quote }}
           - name: IPEER_DB_USER
-            value: {{ .Values.db.db.user | quote }}
+            value: {{ .Values.db.auth.username | quote }}
           - name: IPEER_DB_PASSWORD
             valueFrom:
               secretKeyRef:

@@ -1,5 +1,9 @@
 {{/* vim: set filetype=mustache: */}}
 
+{{/*
+For calling a template with subchart context
+From https://github.com/helm/helm/issues/4535#issuecomment-477778391
+*/}}
 {{- define "call-nested" }}
 {{- $dot := index . 0 }}
 {{- $subchart := index . 1 | splitList "." }}
@@ -42,7 +46,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 */}}
 
 {{- define "ipeer.db.fullname" -}}
-{{- include "call-nested" (list . "db" "mariadb.fullname") | default .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.db.disableExternal }}
+{{- include "call-nested" (list . "db" "mariadb.primary.fullname") | default .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name "db" -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
