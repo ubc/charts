@@ -3241,6 +3241,34 @@ entries:
     version: 0.1.0
   moodle:
   - apiVersion: v2
+    created: "2022-11-01T23:51:33.98608133Z"
+    dependencies:
+    - alias: db
+      condition: db.disableExternal
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - moodle-database
+      version: 10.x.x
+    description: Moodle is a learning platform designed to provide educators, administrators
+      and learners with a single robust, secure and integrated system to create personalised
+      learning environments
+    digest: 85b0004c983ec815b05cb8e4e6e5362c05af35ed05bf5a2869965093459329a2
+    home: http://www.moodle.org/
+    keywords:
+    - moodle
+    - learning
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: moodle
+    sources:
+    - https://github.com/ubc/moodle-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/moodle-0.1.7/moodle-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
     created: "2022-04-08T21:22:28.782118736Z"
     dependencies:
     - alias: db
@@ -4833,6 +4861,24 @@ entries:
     version: 1.1.0
   webwork:
   - apiVersion: v2
+    appVersion: 2.17.4
+    created: "2022-11-01T23:51:34.134852886Z"
+    dependencies:
+    - alias: db
+      condition: db.disableExternal
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - webwork-database
+      version: 10.x.x
+    description: A Helm chart to deploy WeBWorK
+    digest: 4b9764e5f53e3b490fa9d778210a179d94bee000c5d3f711d3f9accd9fe8368d
+    name: webwork
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/webwork-0.1.5/webwork-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
     appVersion: 2.17.2
     created: "2022-10-17T22:03:10.976014741Z"
     dependencies:
@@ -5059,4 +5105,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-25T23:21:41.712932252Z"
+generated: "2022-11-01T23:51:34.135573792Z"
