@@ -91,24 +91,18 @@ db:
   # use default image from upstream
   #image:
   #  tag: 10.2
-  ## Create a database and a database user
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
-  ##
   db:
     type: mariadb
-    name: &dbName moodle
-    user: &dbUser moodle
-    #prefix:
+  auth:
+    #rootPassword:
+    database: &dbName moodle
+    username: &dbUser moodle
 
     ## If the password is not specified, mariadb will generates a random password
     ##
     # password: &dbPass
-
-  ## MariaDB admin password
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
-  ##
-  # rootUser:
-  #   password:
+    # replicationUser: replicator
+    # replicationPassword:
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
