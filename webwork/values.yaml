@@ -117,6 +117,10 @@ service:
   type: ClusterIP
   port: 80
   externalPort: 80
+  # uncomment to enable hostPort on deployment
+  # hostPort: 80
+  # uncomment to specify a nodePort
+  # nodePort: 30000
 
 ingress:
   enabled: false

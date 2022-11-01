@@ -35,6 +35,9 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+              {{- if .Values.service.hostPort }}
+              hostPort:  {{ .Values.service.hostPort }}
+              {{- end }}
           livenessProbe:
             httpGet:
               path: /webwork2
