@@ -20,6 +20,12 @@ spec:
         ports:
           - name: http
             containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          failureThreshold: 2
+          periodSeconds: 60
         env:
           - name: APP_NAME
             value: {{ .Values.app.name | quote }}

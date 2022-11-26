@@ -19,6 +19,12 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: {{ .Values.ltijs.port }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.ltijs.port }}
+          failureThreshold: 2
+          periodSeconds: 60
         env:
           - name: PORT
             value: {{ .Values.ltijs.port | quote }}

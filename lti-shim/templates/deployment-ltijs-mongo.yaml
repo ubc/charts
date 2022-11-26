@@ -18,6 +18,15 @@ spec:
         image: {{ .Values.ltijs.db.image }}
         ports:
           - containerPort: {{ .Values.ltijs.db.port }}
+        readinessProbe:
+          failureThreshold: 2
+          periodSeconds: 60 
+          exec:
+            command:
+            - bash
+            - "-c"
+            - |
+              mongo -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --eval db.adminCommand\(\"ping\"\)
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
             value: {{ .Values.ltijs.db.user }}

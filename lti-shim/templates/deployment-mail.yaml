@@ -19,6 +19,11 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: {{ .Values.mail.port }}
+        readinessProbe:
+          failureThreshold: 2
+          periodSeconds: 60
+          tcpSocket:
+            port: {{ .Values.mail.port }}
         env:
           - name: POSTFIX_SENDER_NOREPLY
             value: {{ .Values.mail.noreply | quote }}
