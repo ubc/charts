@@ -8,6 +8,7 @@ spec:
   # whitelist only internal IPs
   # mail relay servers are 10.19.216.31 to 10.19.216.41
   # also allow from within kube cluster?
+  type: LoadBalancer
   loadBalancerSourceRanges:
     - 10.0.0.0/8
   ports:
