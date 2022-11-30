@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A Dspace chart to deploy Statspace
 name: statspace
-version: 0.6.0
+version: 0.6.1
 appVersion: 5.6.0
 
 dependencies:

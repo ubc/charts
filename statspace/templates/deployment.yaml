@@ -92,13 +92,7 @@ spec:
                 - >
                   ln -fs /statspace-config/dspace.cfg /dspace/config/dspace.cfg;
                   ln -fs /statspace-config/authentication-password.cfg /dspace/config/modules/authentication-password.cfg;
-                  ln -fs /statspace-config/solr.xml /dspace/solr/solr.xml;
-                  until nc -z localhost {{ .Values.service.internalPort }};
-                  do
-                    sleep 1;
-                  done;
-                  sleep 5;
-                  dspace index-discovery
+                  ln -fs /statspace-config/solr.xml /dspace/solr/solr.xml
       volumes:
       {{- if .Values.persistence.enabled }}
       - name: {{ template "fullname" . }}-persistent-storage
