@@ -273,9 +273,23 @@ spec:
       {{- end }}
       initContainers:
       - name: wait-for-db-service
-        image: busybox
-        command: ["sh", "-c", "until nslookup {{ template "fullname" . }}-db; do echo waiting for {{ template "fullname" . }}-db; sleep 2; done;"]
+        image: atkrad/wait4x
+        command: ["sh", "-c", "wait4x", "mysql", "${DB_USERNAME}:${DB_PASSWORD}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}"]
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        - name: DB_HOST
+          value: "{{ template "fullname" . }}-db"
+        - name: DB_PORT
+          value: {{ .Values.dbPort | quote }}
+        - name: DB_USERNAME
+          value: {{ .Values.dbUsername | quote }}
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: mysql_password
+        - name: DB_NAME
+          value: {{ .Values.dbName | quote }}
       - name: init-db
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
         command: ["sh", "-c", "python manage.py database create {{ if .Values.demoInstance }}--sample_data{{ end }}"]
