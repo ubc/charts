@@ -4,8 +4,8 @@ keywords:
   - alchemy
   - education
 name: alchemy
-version: 0.3.8
-appVersion: 1.1
+version: 0.3.9
+appVersion: 1.1.0
 maintainers:
   - name: Andrew Gardener
     email: andrew.gardener@ubc.ca
