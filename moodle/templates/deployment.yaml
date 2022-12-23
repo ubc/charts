@@ -235,9 +235,9 @@ spec:
         - name: SHIBD_ODBC_PORT
           value: {{ .Values.db.service.port | quote }}
         - name: SHIBD_ODBC_DATABASE
-          value: {{ .Values.db.db.name | quote }}
+          value: {{ .Values.db.auth.database | quote }}
         - name: SHIB_ODBC_USER
-          value: {{ default "moodle" .Values.db.db.user | quote }}
+          value: {{ default "moodle" .Values.db.auth.username | quote }}
         - name: SHIB_ODBC_PASSWORD
           valueFrom:
             secretKeyRef:

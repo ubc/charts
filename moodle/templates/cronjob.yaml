@@ -60,7 +60,7 @@ spec:
               - name: MOODLE_DB_PORT
                 value: {{ .Values.db.service.port | quote }}
               - name: MOODLE_DB_USER
-                value: {{ default "moodle" .Values.db.db.user | quote }}
+                value: {{ default "moodle" .Values.db.auth.username | quote }}
               - name: MOODLE_DB_PASSWORD
                 valueFrom:
                   secretKeyRef:
@@ -72,7 +72,7 @@ spec:
                     key: db_password
                   {{- end }}
               - name: MOODLE_DB_NAME
-                value: {{ .Values.db.db.name | quote }}
+                value: {{ .Values.db.auth.database | quote }}
             volumeMounts:
               - name: nfs-volume
                 mountPath: /db_archives

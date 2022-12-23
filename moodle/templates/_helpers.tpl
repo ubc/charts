@@ -101,7 +101,7 @@ env:
 - name: MOODLE_DB_PORT
   value: {{ .Values.db.service.port | quote }}
 - name: MOODLE_DB_USER
-  value: {{ default "moodle" .Values.db.db.user | quote }}
+  value: {{ default "moodle" .Values.db.auth.username | quote }}
 - name: MOODLE_DB_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -113,8 +113,8 @@ env:
       key: db_password
     {{- end }}
 - name: MOODLE_DB_NAME
-  value: {{ .Values.db.db.name | quote }}
-{{- if .Values.db.prefix }}
+  value: {{ .Values.db.auth.database | quote }}
+{{- if .Values.db.db.prefix }}
 - name: MOODLE_DB_PREFIX
   value: {{ .Values.db.db.prefix | quote }}
 {{- end }}
@@ -161,7 +161,7 @@ env:
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_NAME
   value: {{ default "" .Values.ubcCoursePayment.db.name | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_USER
-  value: {{ default "moodle" .Values.db.db.user | quote }}
+  value: {{ default "moodle" .Values.db.auth.username | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -245,9 +245,9 @@ env:
 - name: SHIBD_ODBC_PORT
   value: {{ .Values.db.service.port | quote }}
 - name: SHIBD_ODBC_DATABASE
-  value: {{ .Values.db.db.name | quote }}
+  value: {{ .Values.db.auth.database| quote }}
 - name: SHIB_ODBC_USER
-  value: {{ default "moodle" .Values.db.db.user | quote }}
+  value: {{ default "moodle" .Values.db.auth.username | quote }}
 - name: SHIB_ODBC_PASSWORD
   valueFrom:
     secretKeyRef:
