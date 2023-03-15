@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   ltps-ui:
   - apiVersion: v1
-    created: 2018-10-26T17:03:52.9793097-07:00
+    created: "2023-03-03T15:25:41.4209631-08:00"
     description: A Helm chart for LTPS-UI
-    digest: f3ea6168530f3c79b0c4d4c1055c3eeaa48afc9417bb1532b72d162ade833fc6
+    digest: 105fc6e7656f46e61973f6958b2ab1cace2161ea44fcb97422662e13604c7bd3
     name: ltps-ui
     urls:
-    - https://ubc.github.io/charts/ltps-ui-0.2.8.tgz
-    version: 0.2.8
-generated: 2018-10-26T17:03:52.9721238-07:00
+    - https://ubc.github.io/charts/ltps-ui-0.3.7.tgz
+    version: 0.3.7
+generated: "2023-03-03T15:25:41.4198478-08:00"
