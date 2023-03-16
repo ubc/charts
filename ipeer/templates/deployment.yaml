@@ -53,7 +53,7 @@ spec:
             valueFrom:
               secretKeyRef:
               {{- if .Values.db.disableExternal }}
-                name: {{ template "ipeer.db.fullname" . }}
+                name: {{ template "ipeer.db.secretName" . }}
                 key: mariadb-password
               {{- else }}
                 name: {{ template "ipeer.fullname" . }}
@@ -197,7 +197,7 @@ spec:
             valueFrom:
               secretKeyRef:
               {{- if .Values.db.disableExternal }}
-                name: {{ template "ipeer.db.fullname" . }}
+                name: {{ template "ipeer.db.secretName" . }}
                 key: mariadb-password
               {{- else }}
                 name: {{ template "ipeer.fullname" . }}

@@ -53,6 +53,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
+
+{{/*
+Return the MariaDB Secret Name
+*/}}
+{{- define "ipeer.db.secretName" -}}
+{{- printf "%s-%s" .Release.Name "db" -}}
+{{- end -}}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
