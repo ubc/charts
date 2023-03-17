@@ -1,0 +1,78 @@
+{{- if .Values.cronjob.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "ipeer.fullname" . }}-email-cronjob
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ include "ipeer.fullname" . }}-email-cronjob
+            image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+            args:
+            - /bin/sh
+            - -c
+            - |
+              cake/console/cake send_emails
+            env:
+            - name: IPEER_DB_HOST
+              value: {{ template "ipeer.db.fullname" . }}
+            - name: IPEER_DB_PORT
+              value: {{ .Values.db.service.port | quote }}
+            - name: IPEER_DB_USER
+              value: {{ .Values.db.auth.username | quote }}
+            - name: IPEER_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                {{- if .Values.db.disableExternal }}
+                  name: {{ template "ipeer.db.secretName" . }}
+                  key: mariadb-password
+                {{- else }}
+                  name: {{ template "ipeer.fullname" . }}
+                  key: db_password
+                {{- end }}
+            - name: IPEER_SESSION_SAVE
+              value: {{ .Values.ipeer.session_save | quote }}
+            {{- if .Values.ipeer.caliper.enabled }}
+            - name: CALIPER_HOST
+              value: {{ .Values.ipeer.caliper.host }}
+            - name: CALIPER_API_KEY
+              value: {{ .Values.ipeer.caliper.apikey }}
+            - name:  CALIPER_BASE_URL
+              value: {{ .Values.ipeer.caliper.baseURL }}
+            - name: CALIPER_ACTOR_BASE_URL
+              value: {{ .Values.ipeer.caliper.actorBaseURL }}
+            - name: CALIPER_ACTOR_UNIQUE_IDENTIFIER_PARAM
+              value: {{ .Values.ipeer.caliper.actorUniqueIdParam }}
+            {{- end }}
+            - name: IPEER_AUTH
+              value: {{ .Values.ipeer.auth.method }}
+            {{- if eq .Values.ipeer.auth.method "Ldap" }}
+            - name: IPEER_AUTH_LDAP_host
+              value: {{ .Values.ipeer.auth.ldap.host | quote }}
+            - name: IPEER_AUTH_LDAP_port
+              value: {{ .Values.ipeer.auth.ldap.port | quote }}
+            - name: IPEER_AUTH_LDAP_serviceUsername
+              value: {{ .Values.ipeer.auth.ldap.serviceUsername }}
+            - name: IPEER_AUTH_LDAP_servicePassword
+              value: {{ .Values.ipeer.auth.ldap.servicePassword }}
+            - name: IPEER_AUTH_LDAP_baseDn
+              value: {{ .Values.ipeer.auth.ldap.baseDn }}
+            - name: IPEER_AUTH_LDAP_usernameField
+              value: {{ .Values.ipeer.auth.ldap.usernameField }}
+            - name: IPEER_AUTH_LDAP_attributeSearchFilters
+              value: {{ .Values.ipeer.auth.ldap.attributeSearchFilters | quote }}
+            - name: IPEER_AUTH_LDAP_attributeMap
+              value: {{ .Values.ipeer.auth.ldap.attributeMap | quote }}
+            - name: IPEER_AUTH_LDAP_fallbackInternal
+              value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
+            {{- end }}
+            {{- if .Values.ipeer.debug }}
+            - name: IPEER_DEBUG
+              value: "2"
+            {{- end }}
+          restartPolicy: Never
+{{- end }}
