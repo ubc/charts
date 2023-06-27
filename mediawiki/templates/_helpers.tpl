@@ -7,6 +7,21 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+For calling a template with subchart context
+From https://github.com/helm/helm/issues/4535#issuecomment-477778391
+*/}}
+{{- define "call-nested" }}
+{{- $dot := index . 0 }}
+{{- $subchart := index . 1 | splitList "." }}
+{{- $template := index . 2 }}
+{{- $values := $dot.Values }}
+{{- range $subchart }}
+{{- $values = index $values . }}
+{{- end }}
+{{- include $template (dict "Chart" (dict "Name" (last $subchart)) "Values" $values "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
+{{- end }}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
@@ -50,19 +65,21 @@ env:
 - name: MEDIAWIKI_DB_PORT
   value: {{ .Values.db.service.port | quote }}
 - name: MEDIAWIKI_DB_USER
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "mediawiki.fullname" . }}
-      key: db_user
+  value: {{ default "wiki" .Values.db.auth.username | quote }}
 - name: MEDIAWIKI_DB_PASSWORD
   valueFrom:
     secretKeyRef:
+    {{- if .Values.db.disableExternal }}
+      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
+      key: mariadb-password
+    {{- else }}
       name: {{ template "mediawiki.fullname" . }}
       key: db_password
+    {{- end }}
 - name: MEDIAWIKI_DB_NAME
-  value: {{ .Values.db.mysqlDatabase | quote }}
+  value: {{ .Values.db.auth.database | quote }}
 - name: MEDIAWIKI_DB_SCHEMA
-  value: {{ .Values.db.dbSchema | quote }}
+  value: {{ .Values.db.auth.schema | quote }}
 - name: MEDIAWIKI_ADMIN_USER
   value: {{ default "" .Values.adminUser | quote }}
 - name: MEDIAWIKI_ADMIN_PASS

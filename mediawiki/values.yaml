@@ -106,35 +106,102 @@ hpa:
 # ref: https://github.com/kubernetes/charts/tree/master/stable/mariadb
 ##
 db:
-  # when disabled, certain values are still being used by mediawiki container
-  enabled: false
-  ## DB admin password
-  ##
-  #mariaRootPassword
-  #mariadbUser: wiki
-  #mariadbPassword:
-  #mariaDatabase: mediawiki
-  #
-  #mysqlRootPassword:
-  mysqlUser: wiki
-  mysqlPassword: mediawiki
-  mysqlDatabase: mediawiki
+  ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
+  disableExternal: true
+  ## standalone or replication
+  architecture: standalone
+  # use default image from upstream
+  #image:
+  #  tag: 10.2
+  auth:
+    #rootPassword:
+    database: &dbName mediawiki
+    username: &dbUser wiki
+    schema:
+
+    ## If the password is not specified, mariadb will generates a random password
+    ##
+    # password: &dbPass
+    # replicationUser: replicator
+    # replicationPassword:
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
-  persistence:
-    enabled: false
-    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
-    ## Default: volume.alpha.kubernetes.io/storage-class: default
-    ##
-    # storageClass:
-    accessMode: ReadWriteOnce
-    size: 8Gi
+  master:
+    persistence:
+      enabled: true
+      ## mariadb data Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 8Gi
+    config: |-
+      [mysqld]
+      skip-name-resolve
+      explicit_defaults_for_timestamp
+      basedir=/opt/bitnami/mariadb
+      plugin_dir=/opt/bitnami/mariadb/plugin
+      port=3306
+      socket=/opt/bitnami/mariadb/tmp/mysql.sock
+      tmpdir=/opt/bitnami/mariadb/tmp
+      max_allowed_packet=16M
+      bind-address=0.0.0.0
+      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+      log-error=/opt/bitnami/mariadb/logs/mysqld.log
+      character-set-server=UTF8
+      collation-server=utf8_general_ci
+      expire-logs-days=90
+
+      [client]
+      port=3306
+      socket=/opt/bitnami/mariadb/tmp/mysql.sock
+      default-character-set=UTF8
+      plugin_dir=/opt/bitnami/mariadb/plugin
+
+      [manager]
+      port=3306
+      socket=/opt/bitnami/mariadb/tmp/mysql.sock
+      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+
+  slave:
+    config: |-
+      [mysqld]
+      skip-name-resolve
+      explicit_defaults_for_timestamp
+      basedir=/opt/bitnami/mariadb
+      port=3306
+      socket=/opt/bitnami/mariadb/tmp/mysql.sock
+      tmpdir=/opt/bitnami/mariadb/tmp
+      max_allowed_packet=16M
+      bind-address=0.0.0.0
+      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+      log-error=/opt/bitnami/mariadb/logs/mysqld.log
+      character-set-server=UTF8
+      collation-server=utf8_general_ci
+      expire-logs-days=90
+
+      [client]
+      port=3306
+      socket=/opt/bitnami/mariadb/tmp/mysql.sock
+      default-character-set=UTF8
+
+      [manager]
+      port=3306
+      socket=/opt/bitnami/mariadb/tmp/mysql.sock
+      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
 
   service:
     # uncomment name to use external service
     #name:
+    #endpoints:
+    #  - 10.0.0.1
+    #  - 10.0.0.2
     port: 3306
 
 node_services:
