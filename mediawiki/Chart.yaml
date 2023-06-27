@@ -19,7 +19,7 @@ maintainers:
 
 dependencies:
 - name: mariadb
-  version: 10.x.x
+  version: 11.x.x
   repository: https://charts.bitnami.com/bitnami
   condition: db.enabled
   alias: db
