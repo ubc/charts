@@ -1,6 +1,6 @@
 apiVersion: v2
 name: mediawiki
-version: 0.6.6
+version: 0.6.7
 appVersion: 1.35.7
 description: Extremely powerful, scalable software and a feature-rich wiki implementation
   that uses PHP to process and display data stored in a database.
@@ -21,5 +21,5 @@ dependencies:
 - name: mariadb
   version: 11.x.x
   repository: https://charts.bitnami.com/bitnami
-  condition: db.enabled
+  condition: db.disableExternal
   alias: db
