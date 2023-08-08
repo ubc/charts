@@ -1553,6 +1553,39 @@ entries:
     urls:
     - https://ubc.github.io/charts/github-learning-ubc-0.1.0.tgz
     version: 0.1.0
+  hotcrp:
+  - apiVersion: v2
+    appVersion: 3.0.0
+    created: "2023-08-08T23:31:23.115972056Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.x.x
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Hotcrp
+    digest: 361b5f59b9e02255a03be446f872521e31d20174d9a1e500e4f6e96f16975782
+    keywords:
+    - application
+    - http
+    - php
+    - web
+    - hotcrp
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: hotcrp
+    sources:
+    - https://github.com/ubc/charts/tree/master/hotcrp
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/hotcrp-0.1.0/hotcrp-0.1.0.tgz
+    version: 0.1.0
   ipeer:
   - apiVersion: v2
     appVersion: 3.4.10
@@ -5296,4 +5329,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-15T01:41:39.350476955Z"
+generated: "2023-08-08T23:31:23.116535471Z"
