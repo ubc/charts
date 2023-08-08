@@ -1,0 +1,28 @@
+{{- if .Values.hotcrp.persistence.enabled -}}
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "common.names.fullname" . }}-app-log
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.hotcrp.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.hotcrp.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.hotcrp.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.hotcrp.persistence.log.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.hotcrp.persistence.log.size | quote }}
+  storageClassName: {{ .Values.hotcrp.persistence.log.storageClass | quote }}
+{{- end -}}

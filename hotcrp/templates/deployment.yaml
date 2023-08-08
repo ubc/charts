@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hotcrp.fullname" . }}
+  labels:
+    {{- include "hotcrp.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hotcrp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "hotcrp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.hotcrp.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "hotcrp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.hotcrp.image.repository }}:{{ .Values.hotcrp.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.hotcrp.image.pullPolicy }}
+          env:
+            - name: HOTCRP_CONTACT_NAME
+              value: {{ .Values.hotcrp.contactName}}
+            - name: HOTCRP_EMAIL_CONTACT
+              value: {{ .Values.hotcrp.contactEmail}}
+            - name: HOTCRP_EMAIL_FROM
+              value: {{ .Values.hotcrp.emailFrom}}
+            - name: HOTCRP_PAPER_SITE
+              value: {{ .Values.hotcrp.paperSite}}
+            - name: MYSQL_HOST
+              value: {{ include "hotcrp.databaseHost" .}}
+            - name: MYSQL_DATABASE
+              value: {{ include "hotcrp.databaseName" .}}
+            - name: MYSQL_USER
+              value: {{ include "hotcrp.databaseUser" .}}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hotcrp.databaseSecretName" . }}
+                  key: mariadb-password
+          ports:
+            - containerPort: 9000
+              hostPort: 9000
+              protocol: TCP
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/msmtprc
+              name: msmtprc
+              subPath: msmtprc
+            - mountPath: /var/log
+              name: hotcrp-log
+            - name: shared-files
+              mountPath: /shared
+        - name: {{ .Chart.Name }}-web
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: shared-files
+              mountPath: /usr/share/nginx/html
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      restartPolicy: Always
+      volumes:
+        - name: msmtprc
+          configMap:
+            name: {{ include "hotcrp.fullname" . }}-msmtp
+        - name: hotcrp-log
+          persistentVolumeClaim:
+            claimName: {{ template "hotcrp.fullname" . }}-app-log
+        # Create the shared files volume to be used in both pods
+        - name: shared-files
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
