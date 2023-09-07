@@ -39,7 +39,14 @@ mediawikiName: My Wiki
 mediawikiLang: en
 
 # Top right corner logo
-# mediawikiLogo:
+#mediawikiLogo:
+#  # used by new themes (e.g. 2022's Vector theme), should be a square, ideally
+#  # 50x50 pixels for SVGs, 100x100 pixels for regular images. Required.
+#  icon: '/path/to/img.svg'
+#  # for old themes(e.g. pre-2022's Vector legacy theme). Required if still
+#  # using old themes, but might be deprecated in the future.
+#  legacy1x: '/path/to/img2.svg'
+#  legacy2x: '/images/d/d5/Ubcwiki_logo_2x.png'
 
 # Comma separated extension list
 mediawikiExts: ""

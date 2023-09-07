@@ -104,8 +104,16 @@ env:
 - name: MEDIAWIKI_SITE_LANG
   value: {{ .Values.mediawikiLang | quote }}
 {{- if .Values.mediawikiLogo }}
-- name: MEDIAWIKI_LOGO
-  value: {{ .Values.mediawikiLogo | quote }}
+- name: MEDIAWIKI_LOGO_ICON
+  value: {{ .Values.mediawikiLogo.icon | quote }}
+{{- if .Values.mediawikiLogo.legacy1x }}
+- name: MEDIAWIKI_LOGO_LEGACY1X
+  value: {{ .Values.mediawikiLogo.legacy1x | quote }}
+{{- end }}
+{{- if .Values.mediawikiLogo.legacy2x }}
+- name: MEDIAWIKI_LOGO_LEGACY2X
+  value: {{ .Values.mediawikiLogo.legacy2x | quote }}
+{{- end }}
 {{- end }}
 {{- if .Values.mediawikiUploadPath  }}
 - name: MEDIAWIKI_UPLOAD_PATH
