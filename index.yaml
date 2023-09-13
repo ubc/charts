@@ -4963,6 +4963,23 @@ entries:
   vault:
   - apiVersion: v1
     appVersion: 1.14.2
+    created: "2023-09-13T06:57:00.797288091Z"
+    description: A Helm chart for Vault, a tool for managing secrets
+    digest: 134f5e341be2d0cf32a8e03d7d40b3d80b42a5c8fb9e19b828d0445679bf4074
+    home: https://www.vaultproject.io/
+    icon: https://www.vaultproject.io/assets/images/mega-nav/logo-vault-0f83e3d2.svg
+    maintainers:
+    - email: jpds@protonmail.com
+      name: jpds
+    name: vault
+    sources:
+    - https://github.com/hashicorp/vault
+    - https://github.com/hashicorp/docker-vault
+    urls:
+    - vault-0.6.3.tgz
+    version: 0.6.3
+  - apiVersion: v1
+    appVersion: 1.14.2
     created: "2023-09-13T06:44:29.510080227Z"
     description: A Helm chart for Vault, a tool for managing secrets
     digest: 4f71fbe950f7534f1c26aad60e5cd578e3d27d733030e10d8f17985f7a88ed8f
@@ -5374,4 +5391,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2023-09-13T06:44:29.510646735Z"
+generated: "2023-09-13T06:57:00.797959291Z"
