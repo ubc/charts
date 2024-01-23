@@ -16,6 +16,11 @@ hotcrp:
   contactEmail: siteadmin@example.com
   emailFrom: siteadmin@example.com
   paperSite: ""
+  # the email address for the first admin created automatically
+  adminEmail: siteadmin@example.com
+  #loginType: oauth
+  #oauthProvider: |
+  # '{}'
 
   persistence:
     enabled: false

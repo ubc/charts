@@ -40,6 +40,8 @@ spec:
               value: {{ .Values.hotcrp.contactEmail}}
             - name: HOTCRP_EMAIL_FROM
               value: {{ .Values.hotcrp.emailFrom}}
+            - name: HOTCRP_ADMIN_EMAIL
+              value: {{ .Values.hotcrp.adminEmail }}
             - name: HOTCRP_PAPER_SITE
               value: {{ .Values.hotcrp.paperSite}}
             - name: MYSQL_HOST
@@ -53,6 +55,14 @@ spec:
                 secretKeyRef:
                   name: {{ include "hotcrp.databaseSecretName" . }}
                   key: mariadb-password
+            {{- if .Values.hotcrp.loginType }}
+            - name: HOTCRP_LOGIN_TYPE
+              value: {{ .Values.hotcrp.loginType }}
+            {{- end }}
+            {{- if .Values.hotcrp.oauthProvider }}
+            - name: HOTCRP_OAUTH_PROVIDER
+              value: {{ .Values.hotcrp.oauthProvider }}
+            {{- end }}
           ports:
             - containerPort: 9000
               hostPort: 9000
