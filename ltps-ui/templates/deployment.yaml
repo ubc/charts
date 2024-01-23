@@ -70,6 +70,7 @@ spec:
             "--ltps.v2.password={{ .Values.ltps.v2.password }}",
             "--config.reconEnabled={{ .Values.config.reconEnabled }}",
             "--config.wdstuEnabled={{ .Values.config.wdstuEnabled }}",
+            "--config.llisEnabled={{ .Values.config.llisEnabled }}",
             {{- if and .Values.devmode.enabled .Values.devmode.puid }}
             "--devMode.puid={{ .Values.devmode.puid }}"
             {{- end }}
