@@ -89,7 +89,8 @@ ltps:
 config:
   reconEnabled: true
   wdstuEnabled: true
-
+  llisEnabled: true
+  
 devmode:
   enabled: false
   # PUID of your choice (this replaces the puid normally passed in via SAML authentication.)
