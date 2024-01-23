@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for LTPS-UI
 name: ltps-ui
-version: 0.3.9
+version: 0.4.0

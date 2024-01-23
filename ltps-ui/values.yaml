@@ -90,6 +90,12 @@ config:
   reconEnabled: true
   wdstuEnabled: true
   llisEnabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
   
 devmode:
   enabled: false

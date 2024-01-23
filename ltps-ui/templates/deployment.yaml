@@ -71,6 +71,7 @@ spec:
             "--config.reconEnabled={{ .Values.config.reconEnabled }}",
             "--config.wdstuEnabled={{ .Values.config.wdstuEnabled }}",
             "--config.llisEnabled={{ .Values.config.llisEnabled }}",
+            "--management.endpoints.web.exposure.include={{ .Values.management.endpoints.web.exposure.include }}",
             {{- if and .Values.devmode.enabled .Values.devmode.puid }}
             "--devMode.puid={{ .Values.devmode.puid }}"
             {{- end }}
