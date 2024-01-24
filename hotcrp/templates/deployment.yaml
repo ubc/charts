@@ -65,7 +65,6 @@ spec:
             {{- end }}
           ports:
             - containerPort: 9000
-              hostPort: 9000
               protocol: TCP
 #          livenessProbe:
 #            httpGet:
