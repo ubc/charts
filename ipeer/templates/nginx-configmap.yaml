@@ -34,6 +34,7 @@ data:
         location ~ \.php$ {
           include fastcgi_params;
           fastcgi_index index.php;
+          fastcgi_read_timeout {{ .Values.web.timeout }};
           fastcgi_param REQUEST_METHOD $request_method;
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           fastcgi_pass 127.0.0.1:9000;
