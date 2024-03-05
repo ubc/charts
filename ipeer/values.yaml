@@ -25,7 +25,14 @@ worker:
   enabled: false
 
 cronjob:
-  enabled: true
+  email:
+    enabled: true
+  backup:
+    enabled: false
+    schedule: "00 09 * * *"
+    nfs:
+      path: 'REPLACEME'
+      server: 'REPLACEME'
 
 imagePullSecrets: []
 nameOverride: ""
