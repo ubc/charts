@@ -191,6 +191,8 @@ env:
   value: {{ .Values.db.auth.username | quote }}
 - name: SKIP_UPLOAD_OPL_statistics
   value: "true"
+- name: MOJO_PUBSUB_EXPERIMENTAL
+  value: "1"
 volumeMounts:
 - name: webwork-course-data
   mountPath: /opt/webwork/courses

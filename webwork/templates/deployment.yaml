@@ -33,7 +33,7 @@ spec:
           {{- include "webwork.app.spec" . | indent 10 }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
               {{- if .Values.service.hostPort }}
               hostPort:  {{ .Values.service.hostPort }}
@@ -69,17 +69,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
-{{if .Values.worker.enabled -}}
+{{if .Values.worker.lti1p3.enabled -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "webwork.fullname" . }}-worker
+  name: {{ include "webwork.fullname" . }}-worker-lti1p3
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
     tier: worker
 spec:
-  replicas: {{ .Values.worker.replicaCount }}
+  replicas: {{ .Values.worker.lti1p3.replicaCount }}
   selector:
     matchLabels:
       {{- include "webwork.selectorLabels" . | nindent 6 }}
@@ -102,22 +102,76 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-worker
+        - name: {{ .Chart.Name }}-worker-lti1p3
           {{- include "webwork.app.spec" . | indent 10 }}
-          args: ['./webwork2/lib/DelayedJob/Run/run_all_jobs.pl']
+          args: ['./lib/DelayedJob/Run/run_all_jobs.pl']
           resources:
-            {{- toYaml .Values.worker.resources | nindent 12 }}
+            {{- toYaml .Values.worker.lti1p3.resources | nindent 12 }}
       volumes:
         {{- include "webwork.app.mounts" . | indent 8 }}
-      {{- with .Values.worker.nodeSelector }}
+      {{- with .Values.worker.lti1p3.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.worker.affinity }}
+      {{- with .Values.worker.lti1p3.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.worker.tolerations }}
+      {{- with .Values.worker.lti1p3.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+
+{{if .Values.worker.mojo.enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webwork.fullname" . }}-worker-mojo
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: worker
+spec:
+  replicas: {{ .Values.worker.mojo.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "webwork.selectorLabels" . | nindent 6 }}
+      tier: worker
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "webwork.selectorLabels" . | nindent 8 }}
+        tier: worker
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "webwork.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-worker-mojo
+          {{- include "webwork.app.spec" . | indent 10 }}
+          args: ['sudo', '-E', '-u', 'www-data', 'bin/webwork2', 'minion', 'worker', '-m', 'production']
+          resources:
+            {{- toYaml .Values.worker.mojo.resources | nindent 12 }}
+      volumes:
+        {{- include "webwork.app.mounts" . | indent 8 }}
+      {{- with .Values.worker.mojo.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.mojo.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.mojo.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
