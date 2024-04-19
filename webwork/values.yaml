@@ -16,6 +16,8 @@ fullnameOverride: ""
 rootUrl: http://localhost
 timezone: America/Vancouver
 systemTimezone: America/Vancouver
+# mojolicious secret passphrase for security features
+secret: '4zaMnJwCFCFKXMVr2mrtMiudEksy4t4ncmrW4RAo7zmqgqkntPXFWYAauXkJLP9q'
 rHost: ""
 smtp:
   server: localhost

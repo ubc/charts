@@ -115,6 +115,8 @@ securityContext:
 image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
 imagePullPolicy: {{ .Values.image.pullPolicy }}
 env:
+- name: WEBWORK_SECRET
+  value: {{ .Values.secret | quote }}
 - name: WEBWORK_DB_DRIVER
   value: {{ .Values.db.db.driver | quote }}
 - name: WEBWORK_DB_HOST

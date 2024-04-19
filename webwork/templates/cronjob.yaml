@@ -20,7 +20,7 @@ spec:
           containers:
           - name: {{ .Chart.Name }}-classlist-cronjob
             {{- include "webwork.app.spec" . | indent 12 }}
-            args: ['./webwork2/lib/LTIAdvantage/Cron/lti_update_classlist.pl']
+            args: ['./lib/LTI1p3/Cron/lti_update_classlist.pl']
           volumes:
             {{- include "webwork.app.mounts" . | indent 10 }}
 {{- end }}
@@ -48,7 +48,7 @@ spec:
           containers:
           - name: {{ .Chart.Name }}-grades-cronjob
             {{- include "webwork.app.spec" . | indent 12 }}
-            args: ['./webwork2/lib/LTIAdvantage/Cron/lti_update_grades.pl']
+            args: ['./lib/LTI1p3/Cron/lti_update_grades.pl']
           volumes:
             {{- include "webwork.app.mounts" . | indent 10 }}
 {{- end }}
