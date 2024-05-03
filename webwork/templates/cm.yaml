@@ -6,7 +6,10 @@ metadata:
   labels:
   {{- include "webwork.labels" . | nindent 4 }}
 data:
-  {{ toYaml .Values.webworkFiles | indent 2 }}
+  localOverrides:
+  {{ toYaml (.Values.webworkFiles).localOverrides | indent 2 }}
+  authen_saml2:
+  {{ toYaml (.Values.webworkFiles).authen_saml2 | indent 2 }}
 {{- end}}
 
 {{- if .Values.shibd.idp.attribute_map }}

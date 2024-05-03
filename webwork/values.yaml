@@ -317,7 +317,8 @@ shibd:
   # TODO: Add vars to deployment
 
 # webworkFiles:
-#   localOverride.conf: |
+#   localOverride: |
+#   authen_saml2: |
 
 # caliper TODO: Add to deployment
 caliper:

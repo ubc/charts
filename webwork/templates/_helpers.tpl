@@ -206,10 +206,15 @@ volumeMounts:
   mountPath: /opt/webwork/webwork2/htdocs/DATA
 - name: webwork-logs-data
   mountPath: /opt/webwork/webwork2/logs
-  {{- if .Values.webworkFiles }}
+  {{- if (.Values.webworkFiles).localOverrides }}
 - name: localoverrides-config
   mountPath: /opt/webwork/webwork2/conf/localOverrides.conf
   subPath: localOverrides.conf
+  {{- end }}
+  {{- if (.Values.webworkFiles).authen_saml2 }}
+- name: authen-saml2-config
+  mountPath: /opt/webwork/webwork2/conf/authen_saml2.yml
+  subPath: authen_saml2.yml
   {{- end }}
 {{- end }}
 
@@ -251,10 +256,21 @@ volumeMounts:
 {{- else }}
   emptyDir: {}
 {{- end }}
-{{- if .Values.webworkFiles }}
+{{- if (.Values.webworkFiles).localOverrides }}
 - name: localoverrides-config
   configMap:
     name: {{ template "webwork.fullname" . }}
+    items:
+    - key: localOverrides
+      path: localOverrides.conf
+{{- end }}
+{{- if (.Values.webworkFiles).authen_saml2 }}
+- name: authen-saml2-config
+  configMap:
+    name: {{ template "webwork.fullname" . }}
+    items:
+    - key: authen_saml2
+      path: authen_saml2.yml
 {{- end }}
 
 {{- end }}
