@@ -5276,6 +5276,24 @@ entries:
   webwork:
   - apiVersion: v2
     appVersion: 2.18.0
+    created: "2024-05-03T07:42:20.362903288Z"
+    dependencies:
+    - alias: db
+      condition: db.disableExternal
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - webwork-database
+      version: 12.x.x
+    description: A Helm chart to deploy WeBWorK
+    digest: 51cdfe8358ded8502175908831c9fdd0f74446ef8c29fe6e71957d9f68b61903
+    name: webwork
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/webwork-0.1.10/webwork-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: 2.18.0
     created: "2024-04-19T19:08:32.965078535Z"
     dependencies:
     - alias: db
@@ -5537,4 +5555,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-19T19:08:32.965473723Z"
+generated: "2024-05-03T07:42:20.363299227Z"
