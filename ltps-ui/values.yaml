@@ -46,6 +46,7 @@ resources: {}
 logging:
   level: INFO
   rest: DEBUG
+  web: INFO
 canvas:
   url: https://beta.instructure.com
   token:
