@@ -2031,6 +2031,14 @@ entries:
     version: 0.1.0
   ltps-ui:
   - apiVersion: v1
+    created: "2024-05-14T18:57:03.840754709Z"
+    description: A Helm chart for LTPS-UI
+    digest: dace35ab8a835fc0fb96be854d4881a83bd71730f1cdddf398662eca2b8cb465
+    name: ltps-ui
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltps-ui-0.4.1/ltps-ui-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v1
     created: "2024-01-23T02:00:26.207825749Z"
     description: A Helm chart for LTPS-UI
     digest: 9602aeff5212765c66a21843626b1478c6ad8196709e071ad31996c05e28b940
@@ -5555,4 +5563,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-03T07:42:20.363299227Z"
+generated: "2024-05-14T18:57:03.841272713Z"
