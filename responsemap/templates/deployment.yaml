@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "responsemap.fullname" . }}
+  labels:
+    {{- include "responsemap.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  strategy:
+    # RollingUpdate runs into issues with mounting with pvc
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "responsemap.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "responsemap.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: responsemap-upload-data
+              mountPath: /var/www/html/files
+          env:
+            - name: DB_HOST
+              value: {{ include "responsemap.fullname" . }}-db
+            - name: DB_NAME
+              value: {{ .Values.db.name }}
+            - name: DB_USERNAME
+              value: {{ .Values.db.user }}
+            - name: DB_PASSWORD
+              value: {{ .Values.db.pass }}
+            - name: ADMIN_PASSWORD
+              value: {{ .Values.app.adminPassword }}
+            - name: OAUTH_CONSUMER
+              value: {{ .Values.app.oauthConsumer | quote }}
+            - name: GOOGLE_KEY
+              value: {{ .Values.app.google.apiKey | quote }}
+            - name: GOOGLE_KEY_SERVER
+              value: {{ .Values.app.google.serverKey | quote }}
+      volumes:
+        - name: responsemap-upload-data
+          persistentVolumeClaim:
+            claimName: {{ include "responsemap.fullname" . }}-upload-pvc
+      securityContext:
+        # mount upload pvc as www-data
+        fsGroup: 33
