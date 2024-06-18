@@ -434,8 +434,8 @@ backupCronjob:
   schedule: "00 11 * * *"
   volume:
     nfs:
-      server: archivep01.ctlt.ubc.ca
-      path: /ut01/archives/moodle-education-db
+      server: archivep02.lthub.ubc.ca
+      path: /export/archives/moodle-education-db
 
 memcached:
   # enable internal memcached deployment and services, set to false to
