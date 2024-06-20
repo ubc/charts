@@ -55,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "hotcrp.databaseSecretName" . }}
                   key: mariadb-password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hotcrp.databaseSecretName" . }}
+                  key: mariadb-root-password
             {{- if .Values.hotcrp.loginType }}
             - name: HOTCRP_LOGIN_TYPE
               value: {{ .Values.hotcrp.loginType }}
