@@ -1,4 +1,3 @@
-{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
@@ -54,6 +53,43 @@ build_id: "{{ .Values.CI_BUILD_ID }}"
 {{- end }}
 {{- end }}
 
+{{/* SimpleSAMLphp container spec */}}
+
+{{- define "simplesamlphp.domain" -}}
+{{- index .Values.ingress.hosts 0 | default .Values.CI_ENVIRONMENT_HOSTNAME | default "localhost" -}}
+{{- end -}}
+{{- define "simplesamlphp.baseurl" -}}
+https://{{ template "simplesamlphp.domain" . }}/_saml2/
+{{- end -}}
+
+{{- define "simplesamlphp.app.spec.env" }}
+- name: SIMPLESAMLPHP_SECRET_SALT
+  value: {{ .Values.simplesamlphp.secretSalt | quote }}
+- name: SIMPLESAMLPHP_ADMIN_PASSWORD
+  value: {{ .Values.simplesamlphp.adminPassword | quote }}
+- name: SIMPLESAMLPHP_CRON_SECRET
+  value: {{ .Values.simplesamlphp.cronSecret | quote }}
+- name: SIMPLESAMLPHP_MEMCACHED_SERVER
+  value: {{ template "mediawiki.fullname" . }}-memcached
+- name: SIMPLESAMLPHP_TRUSTED_DOMAIN
+  value: {{ template "simplesamlphp.domain" . }}
+- name: SIMPLESAMLPHP_BASEURL
+  value: {{ template "simplesamlphp.baseurl" . }}
+- name: SIMPLESAMLPHP_SP_ENTITY_ID
+  value: {{  template "simplesamlphp.baseurl" . }}
+- name: SIMPLESAMLPHP_IDP_ENTITY_ID
+  value: {{ .Values.simplesamlphp.idp.entityId | quote }}
+- name: SIMPLESAMLPHP_IDP_METADATA_URL
+  value: {{ .Values.simplesamlphp.idp.metadataUrl | quote }}
+{{- if .Values.simplesamlphp.enabled }}
+- name: SIMPLESAMLPHP_ENABLED
+  value: "1"
+{{- end }}
+{{- if .Values.simplesamlphp.dev }}
+- name: SIMPLESAMLPHP_DEV
+  value: "1"
+{{- end }}
+{{- end }}
 
 {{/* Mediawiki container spec */}}
 {{- define "mediawiki.app.spec" }}
@@ -281,11 +317,19 @@ env:
 - name: GOOGLE_MAP_API_KEY
   value: {{ .Values.googleMap.apiKey | quote }}
 {{- end }}
+{{- if .Values.simplesamlphp.enabled }}
+{{- include "simplesamlphp.app.spec.env" . }}
+{{- end }}
 volumeMounts:
 - name: mediawiki-data
   mountPath: /data
 - name: custom-config
   mountPath: /conf
+{{- if .Values.simplesamlphp.enabled }}
+- name: simplesamlphp-code
+  mountPath: /var/www/simplesamlphp
+  readOnly: true
+{{- end }}
 {{- end }}
 
 
@@ -301,4 +345,9 @@ volumeMounts:
 - name: custom-config
   configMap:
     name: {{ template "mediawiki.fullname" . }}
+{{- if .Values.simplesamlphp.enabled }}
+- name: simplesamlphp-code
+  persistentVolumeClaim:
+    claimName: {{ template "mediawiki.fullname" . }}-simplesamlphp-pvc
+{{- end }}
 {{- end }}

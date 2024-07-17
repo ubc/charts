@@ -1,0 +1,38 @@
+{{- if .Values.simplesamlphp.enabled -}}
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ template "mediawiki.fullname" . }}-simplesamlphp-pv
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: filestore
+spec:
+  accessModes:
+    - {{ .Values.simplesamlphp.persistence.accessMode | quote }}
+  capacity:
+    storage: {{ .Values.simplesamlphp.persistence.size | quote }}
+  storageClassName: {{ .Values.simplesamlphp.persistence.storageClass }}
+{{ toYaml .Values.simplesamlphp.persistence.resources | indent 2 }}
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "mediawiki.fullname" . }}-simplesamlphp-pvc
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: filestore
+spec:
+  accessModes:
+    - {{ .Values.simplesamlphp.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.simplesamlphp.persistence.size | quote }}
+  storageClassName: {{ .Values.simplesamlphp.persistence.storageClass | quote }}
+  selector:
+    matchLabels:
+      app: {{ template "mediawiki.fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: filestore
+{{- end -}}

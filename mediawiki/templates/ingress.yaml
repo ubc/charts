@@ -27,6 +27,13 @@ spec:
                 name: {{ $serviceName }}
                 port:
                   number: {{ $servicePort }}
+          - path: /_saml2
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $serviceName }}-simplesamlphp
+                port:
+                  number: {{ $servicePort }}
     {{- end -}}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
   tls:

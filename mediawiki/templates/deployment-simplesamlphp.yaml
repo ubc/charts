@@ -1,0 +1,75 @@
+{{- if .Values.simplesamlphp.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "mediawiki.fullname" . }}-simplesamlphp
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+    tier: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "mediawiki.fullname" . }}-simplesamlphp
+  template:
+    metadata:
+      labels:
+        app: {{ template "mediawiki.fullname" . }}-simplesamlphp
+    spec:
+      containers:
+      - name: {{ template "mediawiki.fullname" . }}-simplesamlphp
+        image: "{{ .Values.simplesamlphp.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          {{- include "simplesamlphp.app.spec.env" . | indent 10 }}
+        resources:
+{{ toYaml .Values.simplesamlphp.resources | indent 10 }}
+        ports:
+        - containerPort: 8080
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          failureThreshold: 60
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /_saml2/module.php/saml/sp/metadata/wiki-sp
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+          periodSeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /_saml2/module.php/core/welcome
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+          periodSeconds: 60
+        volumeMounts:
+          - name: simplesamlphp-code
+            mountPath: /var/www/simplesamlphp
+          - name: simplesamlphp-crt
+            mountPath: /var/www/simplesamlphp/cert/wiki-sp.crt
+            # subPath cause we're mounting into a pvc, and that didn't work as
+            # a dir but worked as a single file
+            subPath: wiki-sp.crt
+          - name: simplesamlphp-pem
+            mountPath: /var/www/simplesamlphp/cert/wiki-sp.pem
+            subPath: wiki-sp.pem
+      volumes:
+        - name: simplesamlphp-code
+          persistentVolumeClaim:
+            claimName: {{ template "mediawiki.fullname" . }}-simplesamlphp-pvc
+        - name: simplesamlphp-crt
+          configMap:
+            name: {{ template "mediawiki.fullname" . }}-simplesamlphp
+            items:
+            - key: crt
+              path: wiki-sp.crt
+        - name: simplesamlphp-pem
+          configMap:
+            name: {{ template "mediawiki.fullname" . }}-simplesamlphp
+            items:
+            - key: pem
+              path: wiki-sp.pem
+{{- end -}}

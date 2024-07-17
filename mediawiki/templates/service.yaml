@@ -75,3 +75,23 @@ spec:
   selector:
     app: {{ template "mediawiki.fullname" . }}-memcached
 {{- end -}}
+
+{{- if .Values.simplesamlphp.enabled }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mediawiki.fullname" . }}-simplesamlphp
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.externalPort }}
+    targetPort: 8080
+    protocol: TCP
+    name: {{ .Values.service.name }}-simplesamlphp
+  selector:
+    app: {{ template "mediawiki.fullname" . }}-simplesamlphp
+{{- end -}}

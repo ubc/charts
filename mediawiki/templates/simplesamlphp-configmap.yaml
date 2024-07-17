@@ -1,0 +1,16 @@
+{{- if .Values.simplesamlphp.enabled -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mediawiki.fullname" . }}-simplesamlphp
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+data:
+  crt:
+    {{ toYaml .Values.simplesamlphp.sp.certs.crt | indent 2 }}
+  pem:
+    {{ toYaml .Values.simplesamlphp.sp.certs.pem | indent 2 }}
+
+{{- end -}}
+

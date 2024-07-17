@@ -4,6 +4,7 @@
 image:
   repository: ubcctlt/mediawiki
   # tag:
+  pullPolicy: IfNotPresent
 
 stage: dev
 replicas: 1
@@ -285,6 +286,40 @@ service:
   type: ClusterIP
   externalPort: 80
   internalPort: 80
+
+simplesamlphp:
+  enabled: false
+  image:
+    repository: ubcctlt/mediawiki-simplesamlphp
+  dev: false
+  secretSalt: 'secretsalt'
+  adminPassword: 'admin'
+  cronSecret: 'cronsecret'
+  idp:
+    entityId: ''
+    metadataUrl: ''
+  resources:
+    requests:
+      memory: 256Mi
+  persistence:
+    storageClass: ""
+    accessMode: ReadWriteMany
+    size: 2Gi
+    resources:
+      nfs:
+        server: some-nfs-server
+        path: "/wikistg-simplesamlphp"
+    sp:
+      certs:
+        crt: |
+          -----BEGIN CERTIFICATE-----
+          <place your own cert here>
+          -----END CERTIFICATE-----
+        pem: |
+          -----BEGIN PRIVATE KEY-----
+          <place your own key here>
+          -----END PRIVATE KEY-----
+
 
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

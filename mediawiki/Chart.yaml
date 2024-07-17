@@ -1,7 +1,7 @@
 apiVersion: v2
 name: mediawiki
-version: 0.6.8
-appVersion: 1.39.4
+version: 0.7.0
+appVersion: 1.39.8
 description: Extremely powerful, scalable software and a feature-rich wiki implementation
   that uses PHP to process and display data stored in a database.
 keywords:
