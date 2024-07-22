@@ -310,6 +310,7 @@ simplesamlphp:
         server: some-nfs-server
         path: "/wikistg-simplesamlphp"
     sp:
+      entityId: ''
       certs:
         crt: |
           -----BEGIN CERTIFICATE-----

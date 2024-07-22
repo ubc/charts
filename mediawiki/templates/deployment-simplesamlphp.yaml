@@ -48,13 +48,15 @@ spec:
         volumeMounts:
           - name: simplesamlphp-code
             mountPath: /var/www/simplesamlphp
+          # we're mounting the certs as a subpath cause that give us actual
+          # files, mounting as a dir results in the files being symlinks. The
+          # symlinks doesn't work when copied over to the nfs mount shared with
+          # the wiki pod
           - name: simplesamlphp-crt
-            mountPath: /var/www/simplesamlphp/cert/wiki-sp.crt
-            # subPath cause we're mounting into a pvc, and that didn't work as
-            # a dir but worked as a single file
+            mountPath: /var/www/simplesamlphp-base/cert/wiki-sp.crt
             subPath: wiki-sp.crt
           - name: simplesamlphp-pem
-            mountPath: /var/www/simplesamlphp/cert/wiki-sp.pem
+            mountPath: /var/www/simplesamlphp-base/cert/wiki-sp.pem
             subPath: wiki-sp.pem
       volumes:
         - name: simplesamlphp-code

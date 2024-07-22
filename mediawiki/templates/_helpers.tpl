@@ -59,7 +59,10 @@ build_id: "{{ .Values.CI_BUILD_ID }}"
 {{- index .Values.ingress.hosts 0 | default .Values.CI_ENVIRONMENT_HOSTNAME | default "localhost" -}}
 {{- end -}}
 {{- define "simplesamlphp.baseurl" -}}
-https://{{ template "simplesamlphp.domain" . }}/_saml2/
+https://{{ template "simplesamlphp.domain" . }}
+{{- end -}}
+{{- define "simplesamlphp.baseurlpath" -}}
+{{ template "simplesamlphp.baseurl" . }}/_saml2/
 {{- end -}}
 
 {{- define "simplesamlphp.app.spec.env" }}
@@ -75,8 +78,10 @@ https://{{ template "simplesamlphp.domain" . }}/_saml2/
   value: {{ template "simplesamlphp.domain" . }}
 - name: SIMPLESAMLPHP_BASEURL
   value: {{ template "simplesamlphp.baseurl" . }}
+- name: SIMPLESAMLPHP_BASEURLPATH
+  value: {{ template "simplesamlphp.baseurlpath" . }}
 - name: SIMPLESAMLPHP_SP_ENTITY_ID
-  value: {{  template "simplesamlphp.baseurl" . }}
+  value: {{ .Values.simplesamlphp.sp.entityId | quote }}
 - name: SIMPLESAMLPHP_IDP_ENTITY_ID
   value: {{ .Values.simplesamlphp.idp.entityId | quote }}
 - name: SIMPLESAMLPHP_IDP_METADATA_URL
