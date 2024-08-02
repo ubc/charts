@@ -75,6 +75,10 @@ mediawikiUploadPath: //example.com/images
 # Enable bot password
 mediawikiEnableBotPasswords: true
 
+mediawikiUserRedirect:
+  created: Main_Page
+  blocked: Main_Page
+
 googleAnalytics:
   # Google Analytics Tracking Token
   id: G-XXXXXXXX-XX
@@ -242,7 +246,6 @@ ldap:
   realnameAttr: displayname
   emailAttr: mail
   ubcAuthEnabled: false
-  autoCreatedUserRedirect: Main_Page
 
 parsoid:
   skipDomainCheck: true

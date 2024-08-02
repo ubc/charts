@@ -247,9 +247,13 @@ env:
 - name: PARSOID_SKIP_DOAMIN_CHECK
   value: {{ .Values.parsoid.skipDomainCheck | quote }}
 {{- end }}
-{{- if .Values.ldap.autoCreatedUserRedirect }}
+{{- if .Values.mediawikiUserRedirect.created }}
 - name: AUTO_CREATED_USER_REDIRECT
-  value: {{ .Values.ldap.autoCreatedUserRedirect }}
+  value: {{ .Values.mediawikiUserRedirect.created }}
+{{- end }}
+{{- if .Values.mediawikiUserRedirect.blocked }}
+- name: AUTO_BLOCKED_USER_REDIRECT
+  value: {{ .Values.mediawikiUserRedirect.blocked }}
 {{- end }}
 {{- end }}
 - name: MEDIAWIKI_MAIN_CACHE
