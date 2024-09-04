@@ -141,6 +141,8 @@ env:
   value: {{ .Values.rootUrl | quote }}
 - name: WEBWORK_TIMEZONE
   value: {{ .Values.timezone | quote }}
+- name: WEBWORK_SUPPORT_EMAIL
+  value: {{ .Values.supportEmail | quote }}
 - name: R_HOST
   value: {{ template "webwork.fullname" . }}-r
 - name: SYSTEM_TIMEZONE
@@ -193,6 +195,8 @@ env:
   value: {{ .Values.db.auth.username | quote }}
 - name: SKIP_UPLOAD_OPL_statistics
   value: "true"
+- name: MAX_REQUEST_SIZE
+  value: {{ .Values.maxRequestSize | quote }}
 - name: MOJO_PUBSUB_EXPERIMENTAL
   value: "1"
 volumeMounts:

@@ -19,6 +19,9 @@ systemTimezone: America/Vancouver
 # mojolicious secret passphrase for security features
 secret: '4zaMnJwCFCFKXMVr2mrtMiudEksy4t4ncmrW4RAo7zmqgqkntPXFWYAauXkJLP9q'
 rHost: ""
+supportEmail: support@example.edu
+# file upload size limit in bytes
+maxRequestSize: 1342177280 # 1.25 GiB
 smtp:
   server: localhost
   sender: no-reply@example.com
