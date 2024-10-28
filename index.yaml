@@ -1556,6 +1556,38 @@ entries:
   hotcrp:
   - apiVersion: v2
     appVersion: 3.0.0
+    created: "2024-10-28T22:59:47.814882079Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.x.x
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Hotcrp
+    digest: d353fc04d1da437a20cca0b756b3e282671096b4094a5517cc9e43b52cffc28d
+    keywords:
+    - application
+    - http
+    - php
+    - web
+    - hotcrp
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: hotcrp
+    sources:
+    - https://github.com/ubc/charts/tree/master/hotcrp
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/hotcrp-0.2.5/hotcrp-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    appVersion: 3.0.0
     created: "2024-10-28T22:55:31.16007483Z"
     dependencies:
     - alias: db
@@ -5774,4 +5806,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-28T22:55:31.160459115Z"
+generated: "2024-10-28T22:59:47.815536548Z"
