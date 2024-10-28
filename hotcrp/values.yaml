@@ -18,7 +18,17 @@ hotcrp:
   paperSite: ""
   # the email address for the first admin created automatically
   adminEmail: siteadmin@example.com
+
+  # uncomment to use oauth authentication
   #loginType: oauth
+
+  # specifiy oauth client_id and client secret separately or with existing secret
+  # they can also be set directly in oauthProvider parameter
+  #oauthClientId:
+  #oauthClientSecret:
+  # Provide the existing secret name for oauth client_id and client_secret. The
+  # existing secret must contain `client_id` and `client_secret` keys
+  #oauthClientExistingSecret:
   #oauthProvider: |
   # '{}'
 

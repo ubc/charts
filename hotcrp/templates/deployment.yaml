@@ -64,6 +64,26 @@ spec:
             - name: HOTCRP_LOGIN_TYPE
               value: {{ .Values.hotcrp.loginType }}
             {{- end }}
+            {{- if .Values.hotcrp.oauthClientId }}
+            - name: HOTCRP_OAUTH_CLIENTID
+              value: {{ .Values.hotcrp.oauthClientId }}
+            {{- end }}
+            {{- if .Values.hotcrp.oauthClientSecret }}
+            - name: HOTCRP_OAUTH_CLIENTSECRET
+              value: {{ .Values.hotcrp.oauthClientSecret }}
+            {{- end }}
+            {{- if .Values.hotcrp.oauthClientExistingSecret }}
+            - name: HOTCRP_OAUTH_CLIENTID
+              valueFrom:
+               secretKeyRef:
+                 name: {{ .Values.hotcrp.oauthExistingClient }}
+                 key: client_id
+            - name: HOTCRP_OAUTH_CLIENTSECRET
+              valueFrom:
+               secretKeyRef:
+                 name: {{ .Values.hotcrp.oauthExistingClient }}
+                 key: client_secret
+            {{- end }}
             {{- if .Values.hotcrp.oauthProvider }}
             - name: HOTCRP_OAUTH_PROVIDER
               value: {{ .Values.hotcrp.oauthProvider }}
