@@ -76,12 +76,12 @@ spec:
             - name: HOTCRP_OAUTH_CLIENTID
               valueFrom:
                secretKeyRef:
-                 name: {{ .Values.hotcrp.oauthExistingSecret }}
+                 name: {{ .Values.hotcrp.oauthClientExistingSecret }}
                  key: client_id
             - name: HOTCRP_OAUTH_CLIENTSECRET
               valueFrom:
                secretKeyRef:
-                 name: {{ .Values.hotcrp.oauthExistingSecret }}
+                 name: {{ .Values.hotcrp.oauthClientExistingSecret }}
                  key: client_secret
             {{- end }}
             {{- if .Values.hotcrp.oauthProvider }}
