@@ -42,6 +42,22 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
+{{- define "moodle.db.secretname" -}}
+{{- if .Values.db.auth.existingSecret }}
+{{- .Values.db.auth.existingSecret -}}
+{{- else -}}
+{{ include "call-nested" (list . "db" "common.names.fullname") }}
+{{- end -}}
+{{- end -}}
+
+{{- define "moodle.secretname" -}}
+{{- if .Values.moodleExistingSecret }}
+{{- .Values.moodleExistingSecret -}}
+{{- else -}}
+{{ template "moodle.fullname" . }}
+{{- end -}}
+{{- end -}}
+
 {{- define "common_labels" }}
 app: {{ template "moodle.fullname" . }}
 stage: {{ .Values.stage }}
@@ -106,7 +122,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
+      name: {{ template "moodle.db.secretname" }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}
@@ -125,7 +141,7 @@ env:
 - name: MOODLE_ADMIN_PASS
   valueFrom:
     secretKeyRef:
-      name: {{ template "moodle.fullname" . }}
+      name: {{ template "moodle.secretname" . }}
       key: moodle_password
 - name: MOODLE_ADMIN_EMAIL
   value: {{ default "" .Values.moodleEmail | quote }}
@@ -146,7 +162,7 @@ env:
 - name: SMTP_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ template "moodle.fullname" . }}
+      name: {{ template "moodle.secretname" . }}
       key: smtp_password
 - name: SMTP_PROTOCOL
   value: {{ default "" .Values.smtpProtocol | quote }}
@@ -166,7 +182,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
+      name: {{ template "moodle.db.secretname" }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}
@@ -252,7 +268,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
+      name: {{ template "moodle.db.secretname" }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}

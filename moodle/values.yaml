@@ -105,6 +105,7 @@ db:
     # password: &dbPass
     # replicationUser: replicator
     # replicationPassword:
+    # existingSecret:
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

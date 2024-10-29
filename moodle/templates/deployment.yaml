@@ -242,7 +242,7 @@ spec:
           valueFrom:
             secretKeyRef:
             {{- if .Values.db.disableExternal }}
-              name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
+              name: {{ template "moodle.db.secretname" }}
               key: mariadb-password
             {{- else }}
               name: {{ template "moodle.fullname" . }}
