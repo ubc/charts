@@ -122,7 +122,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.secretname" }}
+      name: {{ template "moodle.db.secretname" . }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}
@@ -182,7 +182,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.secretname" }}
+      name: {{ template "moodle.db.secretname" . }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}
@@ -268,7 +268,7 @@ env:
   valueFrom:
     secretKeyRef:
     {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.secretname" }}
+      name: {{ template "moodle.db.secretname" . }}
       key: mariadb-password
     {{- else }}
       name: {{ template "moodle.fullname" . }}
