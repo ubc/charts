@@ -43,6 +43,8 @@ moodleUsername: user
 ## Defaults to a random 10-character alphanumeric string if not set
 ##
 # moodlePassword:
+# or use existing secret for moodle password
+# moodleExistingSecret:
 
 ## Admin email
 ## ref: https://github.com/bitnami/bitnami-docker-moodle#configuration
