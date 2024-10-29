@@ -3771,6 +3771,34 @@ entries:
     version: 0.1.0
   moodle:
   - apiVersion: v2
+    created: "2024-10-29T22:52:42.2328044Z"
+    dependencies:
+    - alias: db
+      condition: db.disableExternal
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - moodle-database
+      version: 11.x.x
+    description: Moodle is a learning platform designed to provide educators, administrators
+      and learners with a single robust, secure and integrated system to create personalised
+      learning environments
+    digest: da7493e541fddc70b8097472b76bbf4faa38e0e7a3875fc5a869ef11420ff246
+    home: http://www.moodle.org/
+    keywords:
+    - moodle
+    - learning
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: moodle
+    sources:
+    - https://github.com/ubc/moodle-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/moodle-0.1.12/moodle-0.1.12.tgz
+    version: 0.1.12
+  - apiVersion: v2
     created: "2024-10-29T22:06:27.000379853Z"
     dependencies:
     - alias: db
@@ -5834,4 +5862,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-29T22:06:27.000970332Z"
+generated: "2024-10-29T22:52:42.233313269Z"
