@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for LTPS-Recon
+name: ltps-recon
+version: 0.1.0
