@@ -2159,6 +2159,14 @@ entries:
     version: 0.1.0
   ltps-recon:
   - apiVersion: v1
+    created: "2024-10-31T20:26:05.099535169Z"
+    description: A Helm chart for LTPS-Recon
+    digest: 55ea6e49463b9b2482f3d383b7639294a9631895c3bc7fef71bd893612ae53fc
+    name: ltps-recon
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltps-recon-0.1.1/ltps-recon-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
     created: "2024-10-31T20:10:59.204771755Z"
     description: A Helm chart for LTPS-Recon
     digest: 042b703002470726ae0551185707a4275d98b10b6db4093338a9b86768b53946
@@ -5899,4 +5907,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-31T20:10:59.205296174Z"
+generated: "2024-10-31T20:26:05.100172313Z"
