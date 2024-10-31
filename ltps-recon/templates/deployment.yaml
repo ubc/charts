@@ -27,11 +27,6 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.config.cacerts }}
-          env:
-            - name: JAVA_OPTS
-              value: "-Djavax.net.ssl.trustStore={{ .Values.config.cacerts }}"
-          {{- end }}
           args: [
             "--logging.level.ca.ubc={{ .Values.logging.level }}",
             "--logging.level.edu.ksu.canvas.net={{ .Values.logging.rest}}",
@@ -48,20 +43,6 @@ spec:
             "--server.tomcat.remote-ip-header={{ .Values.server.tomcat.remoteIpHeader }}",
             {{- end }}
             {{- end }}
-            "--saml.sp.key-store={{ .Values.saml.sp.keyStore }}",
-            "--saml.sp.key-store-password={{ .Values.saml.sp.keyStorePassword }}",
-            "--saml.sp.key-name={{ .Values.saml.sp.keyName }}",
-            "--saml.sp.key-password={{ .Values.saml.sp.keyPassword }}",
-            "--saml.sp.entityId={{ .Values.saml.sp.entityId }}",
-            "--saml.sp.entityBaseUrl={{ .Values.saml.sp.entityBaseUrl }}",
-            "--saml.idp.metadata.uri={{ .Values.saml.idp.metadataUri }}",
-            "--saml.idp.attribute.puid={{ .Values.saml.idp.attribute.puid }}",
-            "--saml.lb.scheme={{ .Values.saml.lb.scheme }}",
-            "--saml.lb.serverName={{ .Values.saml.lb.serverName }}",
-            "--saml.lb.serverPort={{ .Values.saml.lb.serverPort }}",
-            "--saml.lb.contextPath={{ .Values.saml.lb.contextPath }}",
-            "--saml.lb.includeServerPortInRequestURL={{ .Values.saml.lb.includeServerPortInRequestURL }}",
-            "--saml.logging.messages={{ .Values.saml.logging.messages }}",
             "--ltps.v2.url={{ .Values.ltps.v2.url }}",
             "--ltps.v2.username={{ .Values.ltps.v2.username }}",
             "--ltps.v2.password={{ .Values.ltps.v2.password }}",
