@@ -57,30 +57,6 @@ canvas:
   timeout:
     connect: 5000 # in ms
     read: 120000 # in ms
-  timeout:
-    connect: 5000 # in ms
-    read: 120000 # in ms
-    
-saml:
-  sp:
-    keyStore: /data/conf/saml.jks
-    keyStorePassword:
-    keyName:
-    keyPassword:
-    entityId:
-    entityBaseUrl:
-  idp:
-    metadataUri: https://shibboleth2.stg.id.ubc.ca/metadata/ubcit-idp-metadata.xml
-    attribute:
-      puid: urn:oid:1.3.6.1.4.1.60.1.7.2 # ubcEduCwlPuid
-  lb:
-    scheme:
-    serverName:
-    serverPort:
-    contextPath:
-    includeServerPortInRequestURL:
-  logging:
-    messages: false
 
 ltps:
   v2:
