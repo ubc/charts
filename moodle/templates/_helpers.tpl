@@ -44,9 +44,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "moodle.db.secretname" -}}
 {{- if .Values.db.auth.existingSecret }}
-{{- .Values.db.auth.existingSecret -}}
+  {{- .Values.db.auth.existingSecret -}}
 {{- else -}}
-{{ include "call-nested" (list . "db" "common.names.fullname") }}
+  {{- if .Values.db.disableExternal }}
+    {{- include "call-nested" (list . "db" "common.names.fullname") }}
+  {{- else -}}
+    {{- template "moodle.fullname" . }}
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -125,7 +129,7 @@ env:
       name: {{ template "moodle.db.secretname" . }}
       key: mariadb-password
     {{- else }}
-      name: {{ template "moodle.fullname" . }}
+      name: {{ template "moodle.db.secretname" . }}
       key: db_password
     {{- end }}
 - name: MOODLE_DB_NAME
@@ -185,7 +189,7 @@ env:
       name: {{ template "moodle.db.secretname" . }}
       key: mariadb-password
     {{- else }}
-      name: {{ template "moodle.fullname" . }}
+      name: {{ template "moodle.db.secretname" . }}
       key: db_password
     {{- end }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_PORT
@@ -271,7 +275,7 @@ env:
       name: {{ template "moodle.db.secretname" . }}
       key: mariadb-password
     {{- else }}
-      name: {{ template "moodle.fullname" . }}
+      name: {{ template "moodle.db.secretname" . }}
       key: db_password
     {{- end }}
 - name: SHIBD_SERVICE_NAME
