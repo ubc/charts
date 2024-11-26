@@ -245,7 +245,7 @@ spec:
               name: {{ template "moodle.db.secretname" . }}
               key: mariadb-password
             {{- else }}
-              name: {{ template "moodle.fullname" . }}
+              name: {{ template "moodle.db.secretname" . }}
               key: db_password
             {{- end }}
         - name: LOG_LEVEL

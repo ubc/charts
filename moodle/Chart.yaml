@@ -1,6 +1,6 @@
 apiVersion: v2
 name: moodle
-version: 0.1.14
+version: 0.1.15
 description: Moodle is a learning platform designed to provide educators, administrators and learners with a single robust, secure and integrated system to create personalised learning environments
 keywords:
 - moodle
