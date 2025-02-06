@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cardscanner.fullname" . }}
+  labels:
+    {{- include "cardscanner.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: {{ include "cardscanner.fullname" . }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "cardscanner.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        component: {{ include "cardscanner.fullname" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "cardscanner.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: phpfpm
+              containerPort: 9000
+              protocol: TCP
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            exec:
+              command: ['fcgi-probe', '--document-root=/app/public', 'tcp4://localhost:9000/up']
+            initialDelaySeconds: 300
+            periodSeconds: 300
+          readinessProbe:
+            exec:
+              command: ['fcgi-probe', '--document-root=/app/public', 'tcp4://localhost:9000/up']
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 18
+          lifecycle:
+            postStart:
+              exec:
+                command: ['rsync', '-a', '--chown=nginx:nginx', '/app/public/', '/appPublicVol']
+          env:
+            - name: APP_NAME
+              value: {{ .Values.app.name | quote }}
+            - name: APP_ENV
+              value: {{ .Values.app.env | quote }}
+            - name: APP_KEY
+              value: {{ .Values.app.key | quote }}
+            - name: APP_DEBUG
+              value: {{ .Values.app.debug | quote }}
+            - name: APP_TIMEZONE
+              value: {{ .Values.app.timezone | quote }}
+            - name: APP_URL
+              value: {{ .Values.app.url | quote }}
+            - name: APP_PORT
+              value: {{ .Values.app.port | quote }}
+            - name: BCRYPT_ROUNDS
+              value: {{ .Values.app.bcryptRounds | quote }}
+            - name: DB_CONNECTION
+              value: {{ .Values.db.connection | quote }}
+            - name: DB_HOST
+              value: {{ .Values.db.host | quote }}
+            - name: DB_PORT
+              value: {{ .Values.db.port | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.db.name | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.db.name | quote }}
+            - name: DB_PASSWORD
+              value: {{ .Values.db.pass | quote }}
+          volumeMounts:
+            - name: cardscanner-app-storage
+              mountPath: /app/storage/app
+            - name: cardscanner-app-public
+              mountPath: /appPublicVol
+      volumes:
+        - name: cardscanner-app-storage
+          persistentVolumeClaim:
+            claimName: {{ template "cardscanner.fullname" . }}-storage-pvc
+        - name: cardscanner-app-public
+          persistentVolumeClaim:
+            claimName: {{ template "cardscanner.fullname" . }}-public-pvc
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

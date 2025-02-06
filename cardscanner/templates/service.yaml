@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cardscanner.fullname" . }}-web
+  labels:
+    {{- include "cardscanner.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    component: {{ include "cardscanner.fullname" . }}-web
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cardscanner.fullname" . }}
+  labels:
+    {{- include "cardscanner.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 9000
+      targetPort: phpfpm
+      protocol: TCP
+      name: phpfpm
+  selector:
+    component: {{ include "cardscanner.fullname" . }}

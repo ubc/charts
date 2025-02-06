@@ -1,0 +1,39 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "cardscanner.fullname" . }}-storage-pvc
+  labels:
+    {{- include "cardscanner.labels" . | nindent 4 }}
+    tier: filestore
+  {{- with .Values.app.pvc.storage.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.app.pvc.storage.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.app.pvc.storage.size | quote }}
+  storageClassName: {{ .Values.app.pvc.storage.storageClass | quote }}
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "cardscanner.fullname" . }}-public-pvc
+  labels:
+    {{- include "cardscanner.labels" . | nindent 4 }}
+    tier: filestore
+  {{- with .Values.app.pvc.public.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.app.pvc.public.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.app.pvc.public.size | quote }}
+  storageClassName: {{ .Values.app.pvc.public.storageClass | quote }}

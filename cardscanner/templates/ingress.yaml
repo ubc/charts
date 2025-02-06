@@ -1,0 +1,31 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "cardscanner.fullname" . }}
+  labels:
+    {{- include "cardscanner.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ replace "http://" "" .Values.ingress.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ template "cardscanner.fullname" . }}-web
+            port:
+              number: {{ $.Values.service.port }}
+        path: /
+        pathType: Prefix
+  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
+  tls:
+    - hosts:
+      - {{ replace "http://" "" .Values.ingress.host }}
+      secretName: {{ template "cardscanner.fullname" . }}-tls
+  {{- end }}
+{{- end }}

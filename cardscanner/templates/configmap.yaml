@@ -1,0 +1,38 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "cardscanner.fullname" . }}
+  labels:
+    {{- include "cardscanner.labels" . | nindent 4 }}
+data:
+  nginx-conf-template: |
+    server {
+        listen       80;
+        listen  [::]:80;
+        server_name  localhost;
+
+        root   /app/public;
+        #access_log  /var/log/nginx/host.access.log  main;
+
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-Content-Type-Options "nosniff";
+
+        index index.php;
+        charset utf-8;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        error_page 404 /index.php;
+        location ~ ^/index\.php(/|$) {
+            fastcgi_pass ${APP_SERVICE}:9000;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+            fastcgi_hide_header X-Powered-By;
+        }
+
+        location ~ /\.(?!well-known).* {
+            deny all;
+        }
+    }
