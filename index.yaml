@@ -531,6 +531,17 @@ entries:
     urls:
     - https://ubc.github.io/charts/axlrd-0.0.1.tgz
     version: 0.0.1
+  cardscanner:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2025-02-06T22:27:14.323049192Z"
+    description: Scan student cards during exams to check student identity.
+    digest: c22cba724ad271241bc57fe5f20aba8dfb8430ab9db528a2aafb1bd6cb0e46a6
+    name: cardscanner
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/cardscanner-0.0.1/cardscanner-0.0.1.tgz
+    version: 0.0.1
   compair:
   - apiVersion: v2
     appVersion: 1.2.13
@@ -5971,4 +5982,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-26T21:49:43.769911251Z"
+generated: "2025-02-06T22:27:14.32355529Z"
