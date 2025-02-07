@@ -93,6 +93,12 @@ spec:
               value: {{ .Values.db.name | quote }}
             - name: DB_PASSWORD
               value: {{ .Values.db.pass | quote }}
+            - name: CARDAPI_URL
+              value: {{ .Values.app.cardapi.url | quote }}
+            - name: CARDAPI_ID
+              value: {{ .Values.app.cardapi.id | quote }}
+            - name: CARDAPI_SECRET
+              value: {{ .Values.app.cardapi.secret | quote }}
           volumeMounts:
             - name: cardscanner-app-storage
               mountPath: /app/storage/app
