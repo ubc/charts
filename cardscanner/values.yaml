@@ -150,3 +150,28 @@ web:
     # 'IfNotPresent' will result in us not pulling new images
     tag: "1.26"
   resources: {}
+
+# due to how large the keys are, it's better for them to be at the bottom of
+# the file
+lti:
+  platform:
+    name: "Canvas Staging"
+    url: "https://yourinstance.instructure.com"
+    iss: "https://canvas.instructure.com"
+    authUrl: "https://sso.canvaslms.com/api/lti/authorize_redirect"
+    jwksUrl: "https://sso.canvaslms.com/api/lti/security/jwks"
+    accessTokenUrl: "https://sso.canvaslms.com/login/oauth2/token"
+  name: 'Exam Card Scanner'
+  clientId:
+  # for multiple deployment ids, enter as space delimited string
+  deploymentId:
+  # generate your own keys, first command generates the private key, run them
+  # in sequence as the public key uses private key as input:
+  #   ssh-keygen -t rsa -b 4096 -m PEM -f rs256.rsa
+  #   openssl rsa -in rs256.rsa -pubout -outform PEM -out rs256.rsa.pub
+  key:
+    # if key generated using above command, run this to base64 encode
+    #   base64 -w 0 rs256.rsa.pub
+    public: base64EncodedPublicKey
+    #   base64 -w 0 rs256.rsa
+    private: base64EncodedPrivateKey

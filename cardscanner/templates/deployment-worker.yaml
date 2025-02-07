@@ -77,6 +77,28 @@ spec:
               value: {{ .Values.app.cardapi.id | quote }}
             - name: CARDAPI_SECRET
               value: {{ .Values.app.cardapi.secret | quote }}
+            - name: LTI_PLATFORM_NAME
+              value: {{ .Values.lti.platform.name | quote }}
+            - name: LTI_PLATFORM_URL
+              value: {{ .Values.lti.platform.url | quote }}
+            - name: LTI_PLATFORM_ISS
+              value: {{ .Values.lti.platform.iss | quote }}
+            - name: LTI_PLATFORM_AUTH_URL
+              value: {{ .Values.lti.platform.authUrl | quote }}
+            - name: LTI_PLATFORM_JWKS_URL
+              value: {{ .Values.lti.platform.jwksUrl | quote }}
+            - name: LTI_PLATFORM_ACCESS_TOKEN_URL
+              value: {{ .Values.lti.platform.accessTokenUrl | quote }}
+            - name: LTI_NAME
+              value: {{ .Values.lti.name | quote }}
+            - name: LTI_CLIENT_ID
+              value: {{ .Values.lti.clientId | quote }}
+            - name: LTI_DEPLOYMENT_ID
+              value: {{ .Values.lti.deploymentId | quote }}
+            - name: LTI_PUBLIC_KEY
+              value: {{ .Values.lti.key.public | quote }}
+            - name: LTI_PRIVATE_KEY
+              value: {{ .Values.lti.key.private | quote }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
