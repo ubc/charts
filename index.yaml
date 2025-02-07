@@ -534,6 +534,16 @@ entries:
   cardscanner:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2025-02-07T13:53:28.153955129Z"
+    description: Scan student cards during exams to check student identity.
+    digest: ee215b57080a06a28a972f8aa9535a2f03d563c6db61a0f1c67c03e8a1027d25
+    name: cardscanner
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/cardscanner-0.0.4/cardscanner-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2025-02-07T13:33:40.883750434Z"
     description: Scan student cards during exams to check student identity.
     digest: d2e18e0bfb226f4e40a5fe9db543422fc6bdcc4a15ea2e06913f0a1a38127e63
@@ -6002,4 +6012,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2025-02-07T13:33:40.884504394Z"
+generated: "2025-02-07T13:53:28.154508215Z"
