@@ -61,6 +61,8 @@ spec:
               value: {{ .Values.app.port | quote }}
             - name: BCRYPT_ROUNDS
               value: {{ .Values.app.bcryptRounds | quote }}
+            - name: DB_CONNECTION
+              value: {{ .Values.db.connection | quote }}
             - name: DB_HOST
               value: {{ .Values.db.host | quote }}
             - name: DB_PORT
