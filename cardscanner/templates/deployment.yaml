@@ -117,10 +117,6 @@ spec:
               value: {{ .Values.lti.clientId | quote }}
             - name: LTI_DEPLOYMENT_ID
               value: {{ .Values.lti.deploymentId | quote }}
-            - name: LTI_PUBLIC_KEY
-              value: {{ .Values.lti.key.public | quote }}
-            - name: LTI_PRIVATE_KEY
-              value: {{ .Values.lti.key.private | quote }}
           volumeMounts:
             - name: cardscanner-app-storage
               mountPath: /app/storage/app

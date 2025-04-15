@@ -165,13 +165,3 @@ lti:
   clientId:
   # for multiple deployment ids, enter as space delimited string
   deploymentId:
-  # generate your own keys, first command generates the private key, run them
-  # in sequence as the public key uses private key as input:
-  #   ssh-keygen -t rsa -b 4096 -m PEM -f rs256.rsa
-  #   openssl rsa -in rs256.rsa -pubout -outform PEM -out rs256.rsa.pub
-  key:
-    # if key generated using above command, run this to base64 encode
-    #   base64 -w 0 rs256.rsa.pub
-    public: base64EncodedPublicKey
-    #   base64 -w 0 rs256.rsa
-    private: base64EncodedPrivateKey
