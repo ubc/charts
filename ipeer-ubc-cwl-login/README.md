@@ -7,8 +7,7 @@ This method relies on local database authentication, where users log in using a 
 iPeer CakePHP's ACL system using AROs and ACOs was a traditional method of handling access control before modern auth methods like SAML, OAuth2 became common.
 
 
-![alt text](image.png)
-
+![alt text](image-1.png)
 
 ##  Quick Start
 
@@ -34,8 +33,7 @@ helm install/upgrade -n default -f ./ipeer-stg-defaultlogin-values.yaml --atomic
 A Helm-powered upgrade for the iPeer authentication system that integrates UBC CWL and SAML-based UBC Identity Providers (IdP). This solution offers customizable Helm charts, values, and deployment templates, enabling UBC CWL login without modifying the original iPeer CakePHP codebase or altering its core functionality.
 
 
-![alt text](image-1.png)
-
+![alt text](image-2.png)
 
 It also provides the flexibility to switch between the default login behavior and UBC CWL login—and vice versa—simply by adjusting the Helm chart configuration, without requiring changes to the application itself.
 
@@ -57,8 +55,7 @@ This project provides:
 - **⚠️ IMPORTANT:** Zero modifications are made to the original iPeer CakePHP source code or its built-in Access Control List (ACL) system, which uses AROs (Access Request Objects) and ACOs (Access Control Objects) to manage permissions and access control.
 
 
-![alt text](image-1.png)
-
+![alt text](image-2.png)
 
 ##  Quick Start
 
