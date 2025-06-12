@@ -45,14 +45,20 @@ This project provides:
 -  Helm charts to wrap and deploy iPeer CakePHP ver 1.1.3
 -  Seamless OneLogin SAML integration with UBC CWL 
 -  Configurable `values.yaml`, `deployment.yaml` to manage environment-specific parameters
--  **🚀 ADVANCEMENT:** Deployment templates that extend OneLogin SAML with UBC CWL authentication while preserving the iPeer CakePHP app logic.
+-  **🚀 ADVANCEMENT:** Deployment templates that extend OneLogin SAML with UBC CWL authentication while preserving the iPeer CakePHP app logic without the need of rebuild its image. 
 
 ## Features
 
-- Plug-and-play OneLogin SAML support, via Helm
-- Externalized secrets and certs
-- Clean separation of auth layer via Kubernetes
-- **⚠️ IMPORTANT:** Zero modifications are made to the original iPeer CakePHP source code or its built-in Access Control List (ACL) system, which uses AROs (Access Request Objects) and ACOs (Access Control Objects) to manage permissions and access control.
+- Plug-and-play SAML support using OneLogin, enabled through Helm deployment.
+
+- Secrets and certificates managed securely via Vault, integrated with Helm values for clean and centralized secret handling.
+
+- Clean separation of the authentication layer from the core iPeer application, maintained through Helm templates and charts.
+
+- Helm-powered integration of UBC CWL authentication, seamlessly integrating and routing the login flow—without modifying the core iPeer CakePHP codebase.
+
+⚠️ IMPORTANT: This solution makes zero modifications to the original iPeer CakePHP source code or its built-in Access Control List (ACL) system. The ACL continues to use AROs (Access Request Objects) and ACOs (Access Control Objects) to manage permissions and access control in a structured, hierarchical manner.
+
 
 
 ![alt text](image-2.png)
@@ -72,4 +78,8 @@ cd ipeer-ubc-cwl-login
 
 helm install/upgrade -n default -f ./ipeer-stg-oneloginsaml-values.yaml --atomic ipeer-stg ./charts/ipeer-oneloginsaml
 ```
+
+------------------
+
+*Final Note: The iPeer CakePHP application's login method can be switched between the default (local database) login and UBC CWL SAML login using the appropriate Helm chart configuration—without rebuilding the application image and down-time. Each method is fully supported through dedicated Helm deployment templates and charts, allowing flexible authentication setup without altering the core CakePHP framework.*
 
