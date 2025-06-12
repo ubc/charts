@@ -1832,6 +1832,22 @@ entries:
   ipeer:
   - apiVersion: v2
     appVersion: 3.4.10
+    created: "2025-06-12T15:10:13.870181057Z"
+    dependencies:
+    - alias: db
+      condition: db.disableExternal
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.x.x
+    description: iPeer helm chart
+    digest: 05e117923b3efd3cc60e5eca3b2bf8515758d2e82818befd15faf55364ddb2fb
+    name: ipeer
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ipeer-0.1.19/ipeer-0.1.19.tgz
+    version: 0.1.19
+  - apiVersion: v2
+    appVersion: 3.4.10
     created: "2025-06-12T04:39:18.593557228Z"
     dependencies:
     - alias: db
@@ -6134,4 +6150,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-12T04:39:18.594078988Z"
+generated: "2025-06-12T15:10:13.870740782Z"
