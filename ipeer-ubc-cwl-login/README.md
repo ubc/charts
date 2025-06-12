@@ -10,6 +10,25 @@ iPeer CakePHP's ACL system using AROs and ACOs was a traditional method of handl
 ![alt text](image.png)
 
 
+##  Quick Start
+
+``` bash
+git clone https://github.com/ubc/charts.git
+
+```
+
+### Default login:
+
+```bash
+
+cd ipeer
+
+helm install/upgrade -n default -f ./ipeer-stg-defaultlogin-values.yaml --atomic ipeer-stg ./charts/ipeer
+```
+
+-----------
+
+
 ### - The Auth Upgrade 
 
 A Helm-powered upgrade for the iPeer authentication system that integrates UBC CWL and SAML-based UBC Identity Providers (IdP). This solution offers customizable Helm charts, values, and deployment templates, enabling UBC CWL login without modifying the original iPeer CakePHP codebase or altering its core functionality.
@@ -39,4 +58,21 @@ This project provides:
 
 
 ![alt text](image-1.png)
+
+
+##  Quick Start
+
+``` bash
+git clone https://github.com/ubc/charts.git
+
+```
+
+### OneLogin SAML Integration for UBC CWL Authentication Login:
+
+```bash
+
+cd ipeer-ubc-cwl-login
+
+helm install/upgrade -n default -f ./ipeer-stg-oneloginsaml-values.yaml --atomic ipeer-stg ./charts/ipeer-oneloginsaml
+```
 
