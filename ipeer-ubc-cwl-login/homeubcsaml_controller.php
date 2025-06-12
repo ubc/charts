@@ -4,16 +4,6 @@ require_once 'vendor/autoload.php'; // Load OneLogin SAML2
 
 /////// CWL LOGIN //////////
 
-/**
- * HomeController
- *
- * @uses AppController
- * @package   CTLT.iPeer
- * @author    Pan Luo <pan.luo@ubc.ca>
- * @copyright 2012 All rights reserved.
- * @license   MIT {@link http://www.opensource.org/licenses/MIT}
- */
-
 class HomeUBCSamlController extends AppController
 {
     /**
@@ -344,13 +334,13 @@ class HomeUBCSamlController extends AppController
             $decryptedAssertion = $plain;
 
             if (!$decryptedAssertion) {
-                $this->log("Error: Failed to decrypt SAML Assertion..........................", 'debug');
+                //$this->log("Error: Failed to decrypt SAML Assertion..........................", 'debug');
 
                 $this->redirect('https://ipeer-stg.apps.ctlt.ubc.ca/login?defaultlogin=true');
                 exit;
 
             }else{
-                $this->log("Decryption OK.", 'debug');
+                //$this->log("Decryption OK.", 'debug');
 
                 $decryptedXml = new DOMDocument();
                 $decryptedXml->loadXML($decryptedAssertion);
@@ -361,7 +351,7 @@ class HomeUBCSamlController extends AppController
                     $value = $attribute->getElementsByTagName('AttributeValue')->item(0)->nodeValue;
                     $attributes[$name] = $value;
 
-                    $this->log("ATTIBBB:::" . $name . ":" . $value , 'debug');
+                    //$this->log("ATTIBBB:::" . $name . ":" . $value , 'debug');
 
                 }
 
@@ -425,7 +415,7 @@ class HomeUBCSamlController extends AppController
 
         } else {
             $this->log("Error: SAMLResponse is not properly Base64-encoded.", 'debug');
-            $this->log($samlResponse);
+            //$this->log($samlResponse);
 
         }
 

@@ -3,16 +3,6 @@
 
 require_once 'vendor/autoload.php'; // Load OneLogin SAML2
 
-/**
- * HomeController
- *
- * @uses AppController
- * @package   CTLT.iPeer
- * @author    Pan Luo <pan.luo@ubc.ca>
- * @copyright 2012 All rights reserved.
- * @license   MIT {@link http://www.opensource.org/licenses/MIT}
- */
-
 class HomeUBCSamlLogoutController extends AppController
 {
     /**
@@ -44,12 +34,9 @@ class HomeUBCSamlLogoutController extends AppController
     function beforeFilter()
     {
 
-
-        $this->log("LOGOUT!!!!!");
-
         $this->_afterLogout();
 
-        $this->redirect('https://ipeer-stg.apps.ctlt.ubc.ca/public/saml/logout.php');
+        $this->redirect('/public/saml/logout.php');
         
         exit;
 
