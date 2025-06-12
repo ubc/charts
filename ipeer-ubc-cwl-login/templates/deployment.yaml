@@ -13,10 +13,11 @@ spec:
       {{- include "ipeer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
+        rollme: {{ now | quote }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- end }}
       labels:
         {{- include "ipeer.selectorLabels" . | nindent 8 }}
     spec:
@@ -127,6 +128,7 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /shared
+              
             - name: login-cwl-volume     # login_level2
               mountPath: /var/www/html/app/plugins/guard/views/elements/login_default.ctp
               subPath: login_cwl.php
@@ -197,10 +199,11 @@ spec:
       {{- include "ipeer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
+        rollme: {{ now | quote }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- end }}
       labels:
         compoment: worker
         {{- include "ipeer.selectorLabels" . | nindent 8 }}
