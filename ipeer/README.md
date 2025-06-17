@@ -70,13 +70,38 @@ git clone https://github.com/ubc/charts.git
 
 ```
 
+### Modify flag for UBC CWL Login:
+
+This introduces a configurable flag ubccwlsaml in the ipeer-stg-values.yaml file to switch between UBC CWL SAML login and the Default iPeer database login. By setting or removing this flag, admin can easily control the authentication method without modifying the iPeer image. 
+
+![alt text](image-3.png)
+
+```bash
+
+
+vi ./ipeer-stg-values.yaml
+
+# To enable UBC CWL login, set the `ubccwlsaml` flag:
+#   Use: ipeer-stg-defaultlogin-values
+
+# To use the default iPeer database login, either:
+#   - Set the flag empty (`flag: `), or
+#   - Remove the `flag: ubccwlsaml` flag entirely
+
+# Apply the changes:
+helm install/upgrade -n default -f ./ipeer-stg-values.yaml --atomic ipeer-stg ./charts/ipeer
+
+
+```
+
+
 ### OneLogin SAML Integration for UBC CWL Authentication Login:
 
 ```bash
 
-cd ipeer-ubc-cwl-login
+cd ipeer
 
-helm install/upgrade -n default -f ./ipeer-stg-oneloginsaml-values.yaml --atomic ipeer-stg ./charts/ipeer-oneloginsaml
+helm install/upgrade -n default -f ./ipeer-stg-values.yaml --atomic ipeer-stg ./charts/ipeer
 ```
 
 ------------------
