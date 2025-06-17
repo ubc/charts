@@ -21,11 +21,9 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "ipeer.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     nginx.ingress.kubernetes.io/fastcgi-params-configmap: {{ $fullName }}
-    nginx.ingress.kubernetes.io/proxy-send-timeout: {{ .Values.web.timeout | quote }}
-    nginx.ingress.kubernetes.io/proxy-read-timeout: {{ .Values.web.timeout | quote }}
-  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -45,13 +43,27 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          - path: {{ . }}
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
+          - path: /public/saml/auth.php
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ipeer-stg-cwl-oneloginsaml
+                port:
+                  number: 80
+          - path: /public/saml/logout.php
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ipeer-stg-cwl-oneloginsaml
+                port:
+                  number: 80
           {{- end }}
     {{- end }}
   {{- end }}
