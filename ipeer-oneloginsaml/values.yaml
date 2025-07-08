@@ -1,0 +1,45 @@
+# Default values for CWL-ubc.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+stage: dev
+secretKey: PLEASE_GENERATE_A_RANDOM_KEY
+workerSchedulerEnabled: false
+cForceRoot: true
+workerSchedulerEnabled: false
+
+# app settings
+glu:
+  batchEnabled: 'true'
+  batchGroupSyncSchedule: '{"hour": "*/2", "minute": "20"}'
+  batchGroupSyncMutexTtl: 1800
+  scrambleEmail: 'false'
+  renameApiNetworkMask: '10.0.0.0/8'
+
+# saml settings
+saml:
+  jwtSecretKey: 'your_secret_key'
+  jwtSecretKeyParm: 'pass_url_parm'
+  jwtSecretKeyExpiration: 10
+  attributeUsername: uid
+  attributeFirstName: firstName
+  attributeLastName: lastName
+  settingsFile: null
+  settings: null
+  metadataUrl: 'https://samltest.id/saml/idp'
+  metadataEntityId: 'http://glu/api/saml/metadata'
+  exposeMetadataEndpoint: 'true'
+  forceRespHttps: 'false'
+      
+app:
+  replicaCount: 1
+  image:
+    repository: gcr.io/saml-ubc/glu-app
+    tag: latest
+    pullPolicy: IfNotPresent
+    pullSecret: null
+  persistence:
+    enabled: false
+  service:
+    type: ClusterIP
+    externalPort: 3031
+    internalPort: 3031
