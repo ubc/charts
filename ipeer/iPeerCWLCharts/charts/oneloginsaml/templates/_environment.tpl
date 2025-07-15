@@ -34,6 +34,8 @@ Runtime environment variables
   #     key: saml_settings
 - name: SAML_METADATA_URL
   value: {{ .Values.saml.metadataUrl | quote }}
+- name: SAML_LOGOUT_URL
+  value: {{ .Values.saml.logoutUrl | quote }}
 - name: SAML_METADATA_ENTITY_ID
   value: {{ .Values.saml.metadataEntityId | quote }}
 - name: SAML_EXPOSE_METADATA_ENDPOINT

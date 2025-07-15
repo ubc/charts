@@ -1,0 +1,4 @@
+apiVersion: v2
+name: ipeer-combined-chart
+description: Combined chart for managing multiple subcharts
+version: 1.0.0

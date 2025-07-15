@@ -26,6 +26,7 @@ saml:
   settingsFile: null
   settings: null
   metadataUrl: 'https://samltest.id/saml/idp'
+  logoutUrl: 'https://samltest.id/saml/logout'
   metadataEntityId: 'http://glu/api/saml/metadata'
   exposeMetadataEndpoint: 'true'
   forceRespHttps: 'false'

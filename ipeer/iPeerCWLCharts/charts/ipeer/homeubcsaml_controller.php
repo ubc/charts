@@ -162,13 +162,16 @@ class HomeUBCSamlController extends AppController
             return $username;
         } else {
             $this->log( "No user found with username '" . $username . "'<br>", 'debug');
-            if ($this->add_user_with_role_extended($username, $password, $role_id, $strGivenName, $strLastName, $strStudentNo, $strEmail)) {
-                $this->log( "User '" . $username . "' has been added to the database with role ID '" . $role_id . "'.<br>", 'debug' );
-                return $username;
-            } else {
-                $this->log( "Failed to add user '" . $username . "' to the database.<br>" );
-                return null;
-            }
+            
+            //if ($this->add_user_with_role_extended($username, $password, $role_id, $strGivenName, $strLastName, $strStudentNo, $strEmail)) {
+            //    $this->log( "User '" . $username . "' has been added to the database with role ID '" . $role_id . "'.<br>", 'debug' );
+            //    return $username;
+            //} else {
+            //    $this->log( "Failed to add user '" . $username . "' to the database.<br>" );
+            //    return null;
+            //}
+
+            return null;
         }
         return null;
     }
@@ -337,8 +340,6 @@ class HomeUBCSamlController extends AppController
             if (!$decryptedAssertion) {
                 $this->log("Error: Failed to decrypt SAML Assertion..........................", 'debug');
 
-                //$this->redirect('https://ipeer-stg.apps.ctlt.ubc.ca/login?defaultlogin=true');
-
                 $this->redirect('/login?defaultlogin=true');
                 exit;
 
@@ -411,6 +412,14 @@ class HomeUBCSamlController extends AppController
                     }else{
                         $this->log('Valid username '.$userId.' from session transfer.', 'debug');
                     }
+                }else{
+                    $this->log("PROCESS USER:EXISTING-USER::" . $name . ":" . $value , 'debug');
+                    
+                    $this->_afterLogout();
+
+                    $this->redirect('/public/saml/logout.php');
+                   
+                    exit;
                 }
 
             }

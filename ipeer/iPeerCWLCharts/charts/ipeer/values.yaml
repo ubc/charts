@@ -107,7 +107,7 @@ affinity: {}
 ipeer:
   secretKey: 'your_secret_key'
   jwtSecretKeyParm: 'id_parm_url'
-  authShibbolethURL: 'https://ipeer-stg.apps.ctlt.ubc.ca'
+  authShibbolethURL: 'https://shibboleth.url'
   session_save: database
   debug: false
   auth:
