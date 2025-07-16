@@ -25,6 +25,11 @@ spec:
       tier: app
   template:
     metadata:
+      annotations:
+        rollme: {{ now | quote }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       labels:
         app: {{ template "oneloginsaml.fullname" . }}
         stage: {{ .Values.stage }}
