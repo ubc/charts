@@ -79,6 +79,9 @@ mediawikiUserRedirect:
   created: Main_Page
   blocked: Main_Page
 
+# mediawiki's $wgSecretKey, recommended to be a 64 character random string
+mediawikiSecretKey: 'REPLACE_ME'
+
 googleAnalytics:
   # Google Analytics Tracking Token
   id: G-XXXXXXXX-XX

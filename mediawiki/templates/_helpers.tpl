@@ -185,6 +185,10 @@ env:
     secretKeyRef:
       name: {{ template "mediawiki.fullname" . }}
       key: smtp_password
+{{- if .Values.mediawikiSecretKey  }}
+- name: MEDIAWIKI_SECRET_KEY
+  value: {{ .Values.mediawikiSecretKey | quote }}
+{{- end }}
 {{- if .Values.node_services.enabled }}
 - name: PARSOID_URL
   value: http://{{ template "mediawiki.fullname" . }}-parsoid:8142
