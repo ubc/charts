@@ -4,7 +4,7 @@
 
 replicaCount: 1
 
-stage: dev
+stage: prod
 
 app:
   image:

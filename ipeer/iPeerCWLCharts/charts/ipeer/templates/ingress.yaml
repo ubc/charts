@@ -54,7 +54,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: ipeer-stg-cwl-oneloginsaml
+                name: ipeer-prod-cwl-oneloginsaml
                 port:
                   number: 80
           - path: /public/saml/logout.php

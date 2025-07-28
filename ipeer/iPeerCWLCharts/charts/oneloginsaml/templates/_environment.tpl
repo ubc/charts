@@ -35,7 +35,7 @@ Runtime environment variables
 - name: SAML_METADATA_URL
   value: {{ .Values.saml.metadataUrl | quote }}
 - name: SAML_LOGOUT_URL
-  value: {{ .Values.saml.logoutUrl | quote }}
+  value: {{ .Values.saml.logoutUrl | default "https://authentication.ubc.ca/idp/profile/Logout" | quote }}
 - name: SAML_METADATA_ENTITY_ID
   value: {{ .Values.saml.metadataEntityId | quote }}
 - name: SAML_EXPOSE_METADATA_ENDPOINT

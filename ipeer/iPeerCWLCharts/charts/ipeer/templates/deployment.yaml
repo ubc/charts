@@ -6,7 +6,7 @@ metadata:
     {{- include "ipeer.labels" . | nindent 4 }}
 spec:
 {{- if not .Values.autoscaling.enabled }}
-  replicas: {{- if and .Values.flag (eq .Values.flag "ubccwlsaml") }}1{{ else }}{{ .Values.replicaCount }}{{ end }}
+replicas: {{ .Values.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
