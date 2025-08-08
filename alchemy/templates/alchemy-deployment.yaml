@@ -183,6 +183,9 @@ metadata:
     {{- if and (eq .Values.app.ingress.class "nginx") (.Values.app.ingress.nginx.configuration) }}
     nginx.ingress.kubernetes.io/configuration-snippet: {{ .Values.app.ingress.nginx.configuration | quote }}
     {{- end }}
+    {{- range $key, $value := .Values.app.ingress.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
   labels:
     app: {{ template "fullname" . }}
     stage: {{ .Values.stage }}
