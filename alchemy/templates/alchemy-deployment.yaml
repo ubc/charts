@@ -200,6 +200,11 @@ spec:
     {{- if .Values.app.ingress.host }}
     - {{ .Values.app.ingress.host }}
     {{- end }}
+    {{ $ingress :=  or (.Values.app.ingress.host) "" }}
+    {{ $hostname := or (include "hostname" .) "" }}
+    {{- if ne $hostname $ingress }}
+    - {{ $hostname }}
+    {{- end }}
     secretName: {{ .Values.app.ingress.host | default $hostname | replace "." "-" }}-tls
   rules:
   {{- if .Values.app.ingress.host }}
