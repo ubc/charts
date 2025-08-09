@@ -184,7 +184,7 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: {{ .Values.app.ingress.nginx.configuration | quote }}
     {{- end }}
     {{- range $key, $value := .Values.app.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ $value | quote }}
     {{- end }}
   labels:
     app: {{ template "fullname" . }}
