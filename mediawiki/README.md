@@ -49,7 +49,7 @@ The following tables lists the configurable parameters of the MediaWiki chart an
 
 |              Parameter               |               Description                |                         Default                         |
 |--------------------------------------|------------------------------------------|---------------------------------------------------------|
-| `image`                              | MediaWiki image                          | `bitnami/mediawiki:{VERSION}`                           |
+| `image`                              | MediaWiki image                          | `ubcctlt/mediawiki:{VERSION}`                           |
 | `imagePullPolicy`                    | Image pull policy                        | `Always` if `imageTag` is `latest`, else `IfNotPresent` |
 | `mediawikiUser`                      | User of the application                  | `user`                                                  |
 | `mediawikiPassword`                  | Application password                     | _random 10 character long alphanumeric string_          |
@@ -71,7 +71,6 @@ The following tables lists the configurable parameters of the MediaWiki chart an
 | `persistence.mediawiki.size`         | PVC Storage Request for MediaWiki volume | `8Gi`                                                   |
 | `resources`                          | CPU/Memory resource requests/limits      | Memory: `512Mi`, CPU: `300m`                            |
 
-The above parameters map to the env variables defined in [bitnami/mediawiki](http://github.com/bitnami/bitnami-docker-mediawiki). For more information please refer to the [bitnami/mediawiki](http://github.com/bitnami/bitnami-docker-mediawiki) image documentation.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -92,8 +91,6 @@ $ helm install --name my-release -f values.yaml stable/mediawiki
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
 ## Persistence
-
-The [Bitnami MediaWiki](https://github.com/bitnami/bitnami-docker-mediawiki) image stores the MediaWiki data and configurations at the `/bitnami/mediawiki` and `/bitnami/apache` paths of the container.
 
 Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube.
 See the [Configuration](#configuration) section to configure the PVC or to disable persistence.
