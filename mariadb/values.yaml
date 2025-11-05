@@ -1,0 +1,111 @@
+# Default values for mariadb.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+architecture: standalone
+
+image:
+  registry: docker.io
+  repository: bitnami/mariadb
+  tag: "12.0.2-debian-12-r0"
+  pullPolicy: IfNotPresent
+
+auth:
+  existingSecret: mariadb-root-password
+  secretKeys:
+    rootPasswordKey: password
+
+primary:
+  containerPorts:
+    mysql: 3306
+  
+  persistence:
+    enabled: true
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+
+  configuration: |-
+    [mysqld]
+    bind-address=0.0.0.0
+    default_storage_engine=InnoDB
+    binlog_format=row
+    innodb_autoinc_lock_mode=2
+    max_allowed_packet=256M
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+secondary:
+  replicaCount: 2
+
+# The bitnami chart has a different approach for replication.
+# The following is a basic mapping.
+# semiSync is not directly supported in the bitnami chart values.
+replication:
+  enabled: false
+  # Number of replicas
+  replicas: 2
+  # Semi-synchronous replication
+  semiSync:
+    enabled: true
+    # Number of replicas to acknowledge a transaction before the primary commits it
+    ackReplicas: 1
+
+# The bitnami chart uses a separate chart for backups.
+# The backup section is kept here for reference but is not used by the bitnami chart directly.
+backup:
+  enabled: false
+  # Backup schedule (cron format)
+  schedule: "0 0 * * *"
+  # Storage for backups
+  storage:
+    # Storage size
+    size: 10Gi
+    # Access modes
+    accessModes:
+      - ReadWriteOnce
+  # Retention policy
+  retention:
+    # Number of backups to keep
+    keep: 3
+
+# The bitnami chart uses a separate chart for backups.
+# The restore section is kept here for reference but is not used by the bitnami chart directly.
+restore:
+  enabled: false
+  # The name of the backup to restore from
+  backupName: ""
+
+metrics:
+  enabled: false
+  # Exporter image
+  exporter:
+    image:
+      repository: prom/mysqld-exporter
+      tag: v0.14.0
+      pullPolicy: IfNotPresent
+  # ServiceMonitor settings
+  serviceMonitor:
+    # If true, a ServiceMonitor resource will be created
+    enabled: true
+    # Scrape interval
+    interval: 30s
+    # Scrape timeout
+    scrapeTimeout: 10s
+
+# The bitnami chart has a different way of creating databases.
+# You can create one database using auth.database, auth.username, auth.password
+# For multiple databases, you might need to use initialization scripts.
+# The 'databases' section is kept here for reference but is not used by the bitnami chart directly.
+databases: []
+#  - name: my-database
+#    user: my-user
+#    passwordSecret:
+#      name: my-database-password
+#      key: password

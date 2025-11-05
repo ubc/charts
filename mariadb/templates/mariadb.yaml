@@ -1,0 +1,70 @@
+apiVersion: mariadb.mmontes.io/v1alpha1
+kind: MariaDB
+metadata:
+  name: {{ include "mariadb.fullname" . }}
+  labels:
+    {{- include "mariadb.labels" . | nindent 4 }}
+spec:
+  image:
+    registry: {{ .Values.image.registry }}
+    repository: {{ .Values.image.repository }}
+    tag: {{ .Values.image.tag | default .Chart.AppVersion }}
+    pullPolicy: {{ .Values.image.pullPolicy }}
+  rootPasswordSecretKeyRef:
+    name: {{ .Values.auth.existingSecret }}
+    key: {{ .Values.auth.secretKeys.rootPasswordKey }}
+  replicas: {{ .Values.secondary.replicaCount | default 1 }}
+  port: {{ .Values.primary.containerPorts.mysql }}
+  volumeClaimTemplate:
+    resources:
+      requests:
+        storage: {{ .Values.primary.persistence.size }}
+    accessModes:
+      {{- toYaml .Values.primary.persistence.accessModes | nindent 6 }}
+  myCnf: |
+{{ .Values.primary.configuration | indent 4 }}
+  resources:
+    {{- toYaml .Values.primary.resources | nindent 4 }}
+
+  {{- if eq .Values.architecture "replication" }}
+  replication:
+    replicas: {{ .Values.secondary.replicaCount }}
+    {{- if .Values.replication.semiSync.enabled }}
+    semiSync:
+      ackReplicas: {{ .Values.replication.semiSync.ackReplicas }}
+    {{- end }}
+  {{- end }}
+
+  {{- if .Values.backup.enabled }}
+  backup:
+    schedule:
+      cron: "{{ .Values.backup.schedule }}"
+    storage:
+      volumeClaimTemplate:
+        resources:
+          requests:
+            storage: {{ .Values.backup.storage.size }}
+        accessModes:
+          {{- toYaml .Values.backup.storage.accessModes | nindent 10 }}
+    retention:
+      keep: {{ .Values.backup.retention.keep }}
+  {{- end }}
+
+  {{- if .Values.metrics.enabled }}
+  metrics:
+    exporter:
+      image:
+        repository: {{ .Values.metrics.image.repository }}
+        tag: {{ .Values.metrics.image.tag }}
+        pullPolicy: {{ .Values.metrics.image.pullPolicy }}
+    {{- if .Values.metrics.serviceMonitor.enabled }}
+    serviceMonitor:
+      interval: {{ .Values.metrics.serviceMonitor.interval }}
+      scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
+    {{- end }}
+  {{- end }}
+
+  databases:
+  {{- range .Values.databases }}
+  - name: {{ .name }}
+  {{- end }}
