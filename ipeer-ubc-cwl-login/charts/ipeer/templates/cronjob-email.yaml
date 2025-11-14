@@ -34,6 +34,8 @@ spec:
                   name: {{ template "ipeer.fullname" . }}
                   key: db_password
                 {{- end }}
+            - name: IPEER_SUPPORT_EMAIL
+              value: {{ .Values.ipeer.supportEmail | quote }}
             - name: IPEER_SESSION_SAVE
               value: {{ .Values.ipeer.session_save | quote }}
             {{- if .Values.ipeer.caliper.enabled }}

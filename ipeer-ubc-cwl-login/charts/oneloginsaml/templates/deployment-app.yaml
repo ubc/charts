@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "oneloginsaml.fullname" . }}
+  labels:
+    app: {{ template "oneloginsaml.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "oneloginsaml.fullname" . }}
+      stage: {{ .Values.stage }}
+      tier: app
+  template:
+    metadata:
+      annotations:
+        rollme: {{ now | quote }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        app: {{ template "oneloginsaml.fullname" . }}
+        stage: {{ .Values.stage }}
+        tier: app
+    spec:
+      {{- if .Values.app.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.app.image.pullSecret }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        {{- include "glu.environment" . | indent 8 }}
+        ports:
+        - containerPort: {{ .Values.app.service.internalPort }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.app.service.internalPort }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          failureThreshold: 10
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.app.service.internalPort }}
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      {{- if .Values.app.persistence.enabled }}
+        volumeMounts:
+        - name: {{ template "oneloginsaml.fullname" . }}-persistent-storage
+          mountPath: /persistent
+      volumes:
+      - name: {{ template "oneloginsaml.fullname" . }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ template "oneloginsaml.fullname" . }}-pvc
+      {{- end }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "oneloginsaml.fullname" . }}
+  labels:
+    app: {{ template "oneloginsaml.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+    {{- if .Values.CI_PIPELINE_ID }}
+    autodeployed: "true"
+    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+    {{- end }}
+    {{- if .Values.CI_BUILD_ID }}
+    build_id: "{{ .Values.CI_BUILD_ID }}"
+    {{- end }}
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.externalPort }}
+      targetPort: {{ .Values.app.service.internalPort }}
+  selector:
+    app: {{ template "oneloginsaml.fullname" . }}
+    stage: {{ .Values.stage }}
+    tier: app
+

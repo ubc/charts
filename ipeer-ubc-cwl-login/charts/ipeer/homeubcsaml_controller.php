@@ -2,7 +2,8 @@
 
 require_once 'vendor/autoload.php'; // Load OneLogin SAML2
 
-/////// CWL LOGIN //////////
+/////// CWL LOGIN 2 //////////
+
 
 class HomeUBCSamlController extends AppController
 {
@@ -161,13 +162,17 @@ class HomeUBCSamlController extends AppController
             return $username;
         } else {
             $this->log( "No user found with username '" . $username . "'<br>", 'debug');
-            if ($this->add_user_with_role_extended($username, $password, $role_id, $strGivenName, $strLastName, $strStudentNo, $strEmail)) {
-                $this->log( "User '" . $username . "' has been added to the database with role ID '" . $role_id . "'.<br>", 'debug' );
-                return $username;
-            } else {
-                $this->log( "Failed to add user '" . $username . "' to the database.<br>" );
-                return null;
-            }
+            
+            //FOR ONBOARDING STUDENTS MUST BE DONE by iPeer thru Import Groups from Canvas
+            
+            //if ($this->add_user_with_role_extended($username, $password, $role_id, $strGivenName, $strLastName, $strStudentNo, $strEmail)) {
+            //    $this->log( "User '" . $username . "' has been added to the database with role ID '" . $role_id . "'.<br>", 'debug' );
+            //    return $username;
+            //} else {
+            //    $this->log( "Failed to add user '" . $username . "' to the database.<br>" );
+            //    return null;
+            //}
+
         }
         return null;
     }
@@ -334,13 +339,13 @@ class HomeUBCSamlController extends AppController
             $decryptedAssertion = $plain;
 
             if (!$decryptedAssertion) {
-                //$this->log("Error: Failed to decrypt SAML Assertion..........................", 'debug');
+                $this->log("Error: Failed to decrypt SAML Assertion..........................", 'debug');
 
-                $this->redirect('https://ipeer-stg.apps.ctlt.ubc.ca/login?defaultlogin=true');
+                $this->redirect('/login?defaultlogin=true');
                 exit;
 
             }else{
-                //$this->log("Decryption OK.", 'debug');
+                $this->log("Decryption OK.", 'debug');
 
                 $decryptedXml = new DOMDocument();
                 $decryptedXml->loadXML($decryptedAssertion);
@@ -351,7 +356,7 @@ class HomeUBCSamlController extends AppController
                     $value = $attribute->getElementsByTagName('AttributeValue')->item(0)->nodeValue;
                     $attributes[$name] = $value;
 
-                    //$this->log("ATTIBBB:::" . $name . ":" . $value , 'debug');
+                    $this->log("ATTIBBB:::" . $name . ":" . $value , 'debug');
 
                 }
 
@@ -408,6 +413,14 @@ class HomeUBCSamlController extends AppController
                     }else{
                         $this->log('Valid username '.$userId.' from session transfer.', 'debug');
                     }
+                }else{
+                    $this->log("PROCESS USER:EXISTING-USER::" . $name . ":" . $value , 'debug');
+                    
+                    $this->_afterLogout();
+
+                    $this->redirect('/public/saml/logout.php');
+                   
+                    exit;
                 }
 
             }
@@ -415,7 +428,7 @@ class HomeUBCSamlController extends AppController
 
         } else {
             $this->log("Error: SAMLResponse is not properly Base64-encoded.", 'debug');
-            //$this->log($samlResponse);
+            $this->log($samlResponse);
 
         }
 

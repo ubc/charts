@@ -1,5 +1,5 @@
 # Default values for ipeer.
-# This is a YAML-formatted file.
+# This is a YAML-formatted file...
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
@@ -19,7 +19,7 @@ web:
     pullPolicy: IfNotPresent
     tag: "1.24-alpine"
   # set request timeout in seconds, some results need more time to calculate
-  timeout: "300"
+  timeout: "3000"
 
 worker:
   enabled: false
@@ -78,6 +78,7 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+  samlServiceName: ""
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -105,8 +106,13 @@ tolerations: []
 affinity: {}
 
 ipeer:
+  secretKey: 'your_secret_key'
+  jwtSecretKeyParm: 'id_parm_url'
+  authShibbolethURL: 'https://shibboleth.url'
   session_save: database
   debug: false
+  # Default contact email address exposed to the application; override per environment.
+  supportEmail: ''
   auth:
     method: default
     ldap:

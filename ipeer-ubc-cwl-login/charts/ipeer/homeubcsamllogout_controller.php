@@ -3,6 +3,7 @@
 
 require_once 'vendor/autoload.php'; // Load OneLogin SAML2
 
+
 class HomeUBCSamlLogoutController extends AppController
 {
     /**
@@ -37,7 +38,8 @@ class HomeUBCSamlLogoutController extends AppController
         $this->_afterLogout();
 
         $this->redirect('/public/saml/logout.php');
-        
+       
+
         exit;
 
     }

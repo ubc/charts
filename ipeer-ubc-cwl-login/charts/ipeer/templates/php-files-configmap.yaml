@@ -6,6 +6,10 @@ data:
   homeubcsaml_controller.php: |-
 {{ .Files.Get "homeubcsaml_controller.php" | indent 4 }}
   routes.php: |-
-{{ .Files.Get "routes.php" | indent 4 }}   # ✅ New file
+{{ .Files.Get "routes.php" | indent 4 }}   
   homeubcsamllogout_controller.php: |-
 {{ .Files.Get "homeubcsamllogout_controller.php" | indent 4 }}
+  app_controller.php: |-
+{{ .Files.Get "app_controller.php" | indent 4 }}
+  cake_libs_controller_components_auth.php: |-
+{{ .Files.Get "cake_libs_controller_components_auth.php" | indent 4 }}

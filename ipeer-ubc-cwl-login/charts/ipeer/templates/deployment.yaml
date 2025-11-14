@@ -6,7 +6,7 @@ metadata:
     {{- include "ipeer.labels" . | nindent 4 }}
 spec:
 {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+replicas: {{ .Values.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
@@ -33,11 +33,11 @@ spec:
         - name: shared-files
           emptyDir: {}
 
-        # Add the ConfigMap we declared above as a volume for the pod
         - name: nginx-config-volume
           configMap:
             name: {{ include "ipeer.fullname" . }}-nginx-config
 
+        {{- if and .Values.flag (eq .Values.flag "ubccwlsaml") }}
         - name: login-cwl-volume
           configMap:
             name: {{ include "ipeer.fullname" . }}-login-cwl
@@ -45,6 +45,18 @@ spec:
         - name: php-files-volume
           configMap:
             name: {{ include "ipeer.fullname" . }}-php-files
+        {{- end }}
+
+        # Add the ConfigMap we declared above as a volume for the pod
+        #- name: nginx-config-volume
+        #  configMap:
+        #    name: {{ include "ipeer.fullname" . }}-nginx-config
+        #- name: login-cwl-volume
+        #  configMap:
+        #    name: {{ include "ipeer.fullname" . }}-login-cwl
+        #- name: php-files-volume
+        #  configMap:
+        #    name: {{ include "ipeer.fullname" . }}-php-files
 
       containers:
         - name: {{ .Chart.Name }}
@@ -75,6 +87,8 @@ spec:
                 name: {{ template "ipeer.fullname" . }}
                 key: db_password
               {{- end }}
+          - name: IPEER_SUPPORT_EMAIL
+            value: {{ .Values.ipeer.supportEmail | quote }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
           {{- if .Values.ipeer.caliper.enabled }}
@@ -128,7 +142,8 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /shared
-              
+
+            {{- if and .Values.flag (eq .Values.flag "ubccwlsaml") }}
             - name: login-cwl-volume     # login_level2
               mountPath: /var/www/html/app/plugins/guard/views/elements/login_default.ctp
               subPath: login_cwl.php
@@ -141,6 +156,26 @@ spec:
             - name: php-files-volume
               mountPath: /var/www/html/app/controllers/homeubcsamllogout_controller.php      
               subPath: homeubcsamllogout_controller.php
+            - name: php-files-volume
+              mountPath: /var/www/html/app/app_controller.php      
+              subPath: app_controller.php
+            - name: php-files-volume
+              mountPath: /var/www/html/cake/libs/controller/components/auth.php 
+              subPath: cake_libs_controller_components_auth.php 
+            {{- end }}
+
+            #- name: login-cwl-volume     # login_level2
+            #  mountPath: /var/www/html/app/plugins/guard/views/elements/login_default.ctp
+            #  subPath: login_cwl.php
+            #- name: php-files-volume
+            #  mountPath: /var/www/html/app/controllers/homeubcsaml_controller.php  
+            #  subPath: homeubcsaml_controller.php
+            #- name: php-files-volume
+            #  mountPath: /var/www/html/app/config/routes.php      
+            #  subPath: routes.php
+            #- name: php-files-volume
+            #  mountPath: /var/www/html/app/controllers/homeubcsamllogout_controller.php      
+            #  subPath: homeubcsamllogout_controller.php
 
           # After the container has started, copy the PHP files from this
           # container's local filesystem to the shared volume, which is
@@ -246,6 +281,8 @@ spec:
                 name: {{ template "ipeer.fullname" . }}
                 key: db_password
               {{- end }}
+          - name: IPEER_SUPPORT_EMAIL
+            value: {{ .Values.ipeer.supportEmail | quote }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
           {{- if .Values.ipeer.caliper.enabled }}

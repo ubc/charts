@@ -11,9 +11,9 @@ data:
 
 ---
 
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1
-{{- else -}}
+{{- else }}
 apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
@@ -50,18 +50,19 @@ spec:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
+          {{- $samlServiceName := default (printf "%s-cwl-oneloginsaml" $fullName) $.Values.ingress.samlServiceName }}
           - path: /public/saml/auth.php
             pathType: ImplementationSpecific
             backend:
               service:
-                name: ipeer-stg-cwl-oneloginsaml
+                name: {{ $samlServiceName }}
                 port:
                   number: 80
           - path: /public/saml/logout.php
             pathType: ImplementationSpecific
             backend:
               service:
-                name: ipeer-stg-cwl-oneloginsaml
+                name: {{ $samlServiceName }}
                 port:
                   number: 80
           {{- end }}
