@@ -124,6 +124,10 @@ affinity: {}
 ## ref: https://github.com/bitnami/charts/blob/main/bitnami/mariadb/values.yaml
 ##
 db:
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/mariadb
+    tag: 10.11.9-debian-12-r3
   ## @param db.enabled Deploy a MariaDB server to satisfy the applications database requirements
   ## To use an external database set this to false and configure the `externalDatabase.*` parameters
   ##
