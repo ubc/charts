@@ -1,11 +1,11 @@
 apiVersion: v2
-name: ipeer
-description: iPeer helm chart
+name: oneloginsaml
+description: OneLoginSAML CWL 
 
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
+# to be deployed..
 #
 # Library charts provide useful utilities or functions for the chart developer. They're included as
 # a dependency of application charts to inject those utilities and functions into the rendering
@@ -14,17 +14,8 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.13
+version: 0.2.3
 
 # This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: 3.4.10
-
-dependencies:
-- name: mariadb
-  version: 11.x.x
-  repository: https://charts.bitnami.com/bitnami
-  condition: db.disableExternal
-  alias: db
+# incremented each time you make changes to the application.
+appVersion: 1.0.0
