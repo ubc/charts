@@ -11,6 +11,7 @@ workerSchedulerEnabled: false
 glu:
   batchEnabled: 'true'
   batchGroupSyncSchedule: '{"hour": "*/2", "minute": "20"}'
+  batchDisplayNameSyncSchedule: '{"hour": "*/3", "minute": "20"}'
   # defined in template. no support for values teampltes in helm, yet
   # batchGroupSyncMutexUrl: redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}
   batchGroupSyncMutexTtl: 1800
