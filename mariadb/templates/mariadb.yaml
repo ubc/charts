@@ -12,8 +12,6 @@ spec:
     name: {{ .Values.auth.existingSecret }}
     key: {{ .Values.auth.secretKeys.rootPasswordKey }}
   {{- end }}
-  replicas: {{ if eq .Values.architecture "replication" }}{{ .Values.secondary.replicaCount }}{{ else }}1{{ end }}
-  replicasAllowEvenNumber: true
   port: {{ .Values.primary.containerPorts.mysql }}
   storage:
     size: {{ .Values.persistence.size }}
@@ -23,14 +21,39 @@ spec:
     {{- toYaml .Values.resources | nindent 4 }}
 
   {{- if eq .Values.architecture "replication" }}
+  replicas: {{ .Values.secondary.replicaCount }}
+  replicasAllowEvenNumber: true
   replication:
     enabled: true
-    replicas: {{ .Values.secondary.replicaCount }}
-    {{- if .Values.replication.semiSync.enabled }}
-    semiSync:
-      ackReplicas: {{ .Values.replication.semiSync.ackReplicas }}
+    primary:
+      autoFailover: {{ .Values.primary.automaticFailover }}
+    replica:
+      replPasswordSecretKeyRef:
+        name: {{ include "mariadb.fullname" . }}-user-password
+        key: password-repl
+    {{- if .Values.secondary.semiSync.enabled }}
+    semiSyncEnabled: true
+    semiSyncAckTimeout: 10s
+    semiSyncWaitPoint: AfterCommit
+    syncBinlog: 1
     {{- end }}
+  primaryService:
+    type: {{ .Values.primary.service.type }}
+    metadata:
+      annotations:
+        {{- toYaml .Values.primary.service.annotations | nindent 12 }}
+  secondaryService:
+    type: {{ .Values.secondary.service.type }}
+    metadata:
+      annotations:
+        {{- toYaml .Values.secondary.service.annotations | nindent 12 }}
   {{- end }}
+
+  service:
+    type: {{ .Values.service.type }}
+    metadata:
+      annotations:
+        {{- toYaml .Values.service.annotations | nindent 12 }}
 
   {{- if .Values.backup.enabled }}
   backup:

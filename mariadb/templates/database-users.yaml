@@ -1,12 +1,5 @@
 {{- range .Values.databases }}
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "mariadb.fullname" $ }}-{{ .passwordSecret.name }}
-stringData:
-  password: {{ randAlphaNum 16 | b64enc | quote }}
----
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: User
 metadata:
@@ -16,8 +9,8 @@ spec:
   mariaDbRef:
     name: {{ include "mariadb.fullname" $ }}
   passwordSecretKeyRef:
-    name: {{ include "mariadb.fullname" $ }}-{{ .passwordSecret.name }}
-    key: {{ .passwordSecret.key }}
+    name: {{ include "mariadb.fullname" $ }}-user-password
+    key: password-{{ .user }}
 ---
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Grant
@@ -34,26 +27,6 @@ spec:
 
 {{- if and .Values.auth.username .Values.auth.database }}
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "mariadb.fullname" . }}-user-{{ .Values.auth.username }}
-stringData:
-  password: {{ .Values.auth.password | default (randAlphaNum 16) | quote }}
----
-apiVersion: k8s.mariadb.com/v1alpha1
-kind: User
-metadata:
-  name: {{ include "mariadb.fullname" . }}-{{ .Values.auth.username }}-localhost
-spec:
-  name: {{ .Values.auth.username }}
-  host: localhost
-  mariaDbRef:
-    name: {{ include "mariadb.fullname" . }}
-  passwordSecretKeyRef:
-    name: {{ include "mariadb.fullname" . }}-user-{{ .Values.auth.username }}
-    key: password
----
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: User
 metadata:
@@ -64,8 +37,8 @@ spec:
   mariaDbRef:
     name: {{ include "mariadb.fullname" . }}
   passwordSecretKeyRef:
-    name: {{ include "mariadb.fullname" . }}-user-{{ .Values.auth.username }}
-    key: password
+    name: {{ include "mariadb.fullname" . }}-user-password
+    key: password-{{ .Values.auth.username }}
 ---
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Grant

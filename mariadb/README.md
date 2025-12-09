@@ -34,34 +34,57 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | --- | --- | --- |
 | `architecture` | MariaDB architecture. Allowed values: `standalone` or `replication`. | `standalone` |
 | `image.registry` | Global Docker image registry. | `docker.io` |
-| `image.repository` | The image repository to use for the MariaDB instance. | `bitnami/mariadb` |
-| `image.tag` | The image tag to use. Overrides the chart's `appVersion`. | `"12.0.2-debian-12-r0"` |
+| `image.repository` | The image repository to use for the MariaDB instance. | `mariadb` |
+| `image.tag` | The image tag to use. | `"10.6"` |
 | `image.pullPolicy` | The image pull policy. | `IfNotPresent` |
-| `auth.existingSecret` | Name of an existing Kubernetes secret to use for authentication. | `mariadb-root-password` |
+| `auth.existingSecret` | Name of an existing Kubernetes secret to use for authentication. | `""` |
 | `auth.secretKeys.rootPasswordKey` | Key in the secret containing the root password. | `password` |
+| `auth.database` | Database to be created on startup. | `""` |
+| `auth.username` | User to be created on startup. | `""` |
+| `auth.password` | Password for the user. | `""` |
+| `auth.replicationPassword` | Password for replication user. | `""` |
+| `myCnf` | Custom MariaDB configuration (my.cnf). | `[mariadb]\nbind-address=0.0.0.0\ndefault_storage_engine=InnoDB\nbinlog_format=row\ninnodb_autoinc_lock_mode=2\nmax_allowed_packet=256M` |
+| `resources.limits.cpu` | CPU limits for the MariaDB container. | `500m` |
+| `resources.limits.memory` | Memory limits for the MariaDB container. | `1Gi` |
+| `resources.requests.cpu` | CPU requests for the MariaDB container. | `200m` |
+| `resources.requests.memory` | Memory requests for the MariaDB container. | `256Mi` |
+| `persistence.size` | The size of the persistent volume. | `10Gi` |
+| `service.type` | Kubernetes Service type for the common service. | `ClusterIP` |
+| `service.annotations` | Annotations for the common service. | `{}` |
 | `primary.containerPorts.mysql` | The port to expose MariaDB on. | `3306` |
-| `primary.persistence.enabled` | Enable or disable persistent storage for the primary instance. | `true` |
-| `primary.persistence.size` | The size of the persistent volume for the primary instance. | `10Gi` |
-| `primary.persistence.accessModes` | The access modes for the primary persistent volume. | `[ReadWriteOnce]` |
-| `primary.configuration` | Custom MariaDB configuration for the primary instance. | `[mysqld]\nbind-address=0.0.0.0\ndefault_storage_engine=InnoDB\nbinlog_format=row\ninnodb_autoinc_lock_mode=2\nmax_allowed_packet=256M` |
-| `primary.resources` | The CPU and memory resources for the primary MariaDB instance. | `{}` |
-| `secondary.replicaCount` | The number of secondary replicas to create (if `architecture` is `replication`). | `2` |
-| `replication.enabled` | Enable or disable replication. (Note: Bitnami chart uses `architecture: replication` for this). | `false` |
-| `replication.replicas` | The number of replicas to create. | `2` |
-| `replication.semiSync.enabled` | Enable or disable semi-synchronous replication. | `true` |
-| `replication.semiSync.ackReplicas` | The number of replicas that must acknowledge a transaction before the primary commits it. | `1` |
-| `backup.enabled` | Enable or disable backups. (Note: Bitnami chart handles backups via a separate chart). | `false` |
+| `primary.automaticFailover` | Enable automatic failover for primary. | `true` |
+| `primary.service.type` | Kubernetes Service type for the primary instance. | `ClusterIP` |
+| `primary.service.annotations` | Annotations for the primary service. | `{}` |
+| `secondary.enabled` | Enable secondary replicas. | `false` |
+| `secondary.replicaCount` | The number of secondary replicas to create. | `2` |
+| `secondary.service.type` | Kubernetes Service type for secondary instances. | `ClusterIP` |
+| `secondary.service.annotations` | Annotations for the secondary service. | `{}` |
+| `secondary.semiSync.enabled` | Enable semi-synchronous replication. | `true` |
+| `backup.enabled` | Enable or disable backups. | `false` |
 | `backup.schedule` | The cron schedule for backups. | `"0 0 * * *"` |
 | `backup.storage.size` | The size of the persistent volume for backups. | `10Gi` |
 | `backup.storage.accessModes` | The access modes for the backup persistent volume. | `[ReadWriteOnce]` |
 | `backup.retention.keep` | The number of backups to retain. | `3` |
-| `restore.enabled` | Enable or disable restore. (Note: Bitnami chart handles restores via a separate chart). | `false` |
+| `restore.enabled` | Enable or disable restore. | `false` |
 | `restore.backupName` | The name of the backup to restore from. | `""` |
 | `metrics.enabled` | Enable or disable metrics. | `false` |
 | `metrics.exporter.image.repository` | The image repository for the metrics exporter. | `prom/mysqld-exporter` |
-| `metrics.exporter.image.tag` | The image tag for the metrics exporter. | `v0.14.0` |
+| `metrics.exporter.image.tag` | The image tag for the metrics exporter. | `v0.15.1` |
 | `metrics.exporter.image.pullPolicy` | The image pull policy for the metrics exporter. | `IfNotPresent` |
-| `metrics.serviceMonitor.enabled` | Enable or disable the ServiceMonitor. | `true` |
+| `metrics.serviceMonitor.enabled` | If true, a ServiceMonitor resource will be created. | `false` |
 | `metrics.serviceMonitor.interval` | The scrape interval for the ServiceMonitor. | `30s` |
 | `metrics.serviceMonitor.scrapeTimeout` | The scrape timeout for the ServiceMonitor. | `10s` |
-| `databases` | A list of databases to create. (Note: Bitnami chart has a different way of creating databases). | `[]` |
+| `databases` | List of custom databases and users to create (each item should have `name`, `user`, `password`). | `[]` |
+
+## Testing
+```bash
+# standard
+helm install --debug mariadb-test .
+# replication
+helm install --debug mariadb-test --set architecture=replication --set secondary.replicaCount=4 .
+# with custom user and database
+helm install --debug mariadb-test --set architecture=replication --set secondary.replicaCount=4  --set auth.database=dbtest --set auth.username=dbtest .
+
+# clean up
+helm uninstall mariadb-test
+```

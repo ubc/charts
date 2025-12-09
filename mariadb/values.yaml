@@ -39,19 +39,28 @@ resources:
 persistence:
   size: 10Gi
 
+service:
+  type: ClusterIP
+  annotations: {}
+
 primary:
   containerPorts:
     mysql: 3306
+  automaticFailover: true
+  service:
+    type: ClusterIP
+    annotations: {}
 
 
 secondary:
   enabled: false
   replicaCount: 2
+  service:
+    type: ClusterIP
+    annotations: {}
   # Semi-synchronous replication
   semiSync:
     enabled: true
-    # Number of replicas to acknowledge a transaction before the primary commits it
-    ackReplicas: 1
 
 # The bitnami chart uses a separate chart for backups.
 # The backup section is kept here for reference but is not used by the bitnami chart directly.
