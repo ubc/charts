@@ -1,0 +1,36 @@
+{{- range .Values.databases }}
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: {{ include "mariadb.fullname" . }}-database-{{ .name }}
+spec:
+  # If you want the database to be created with a different name than the resource name
+  name: {{ .name }}
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  characterSet: utf8
+  collate: utf8_general_ci
+  # Delete the resource in the database whenever the CR gets deleted.
+  # Alternatively, you can specify Skip in order to omit deletion.
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
+{{- end }}
+
+{{- if .Values.auth.database }}
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: {{ include "mariadb.fullname" . }}-database-{{ .Values.auth.database }}
+spec:
+  name: {{ .Values.auth.database }}
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  characterSet: utf8
+  collate: utf8_general_ci
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
+{{- end }}

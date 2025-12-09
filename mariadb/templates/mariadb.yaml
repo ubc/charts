@@ -1,33 +1,30 @@
-apiVersion: mariadb.mmontes.io/v1alpha1
+apiVersion: k8s.mariadb.com/v1alpha1
 kind: MariaDB
 metadata:
   name: {{ include "mariadb.fullname" . }}
   labels:
     {{- include "mariadb.labels" . | nindent 4 }}
 spec:
-  image:
-    registry: {{ .Values.image.registry }}
-    repository: {{ .Values.image.repository }}
-    tag: {{ .Values.image.tag | default .Chart.AppVersion }}
-    pullPolicy: {{ .Values.image.pullPolicy }}
+  image: {{ printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) | quote }}
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+  {{- if .Values.auth.existingSecret }}
   rootPasswordSecretKeyRef:
     name: {{ .Values.auth.existingSecret }}
     key: {{ .Values.auth.secretKeys.rootPasswordKey }}
-  replicas: {{ .Values.secondary.replicaCount | default 1 }}
+  {{- end }}
+  replicas: {{ if eq .Values.architecture "replication" }}{{ .Values.secondary.replicaCount }}{{ else }}1{{ end }}
+  replicasAllowEvenNumber: true
   port: {{ .Values.primary.containerPorts.mysql }}
-  volumeClaimTemplate:
-    resources:
-      requests:
-        storage: {{ .Values.primary.persistence.size }}
-    accessModes:
-      {{- toYaml .Values.primary.persistence.accessModes | nindent 6 }}
+  storage:
+    size: {{ .Values.persistence.size }}
   myCnf: |
-{{ .Values.primary.configuration | indent 4 }}
+{{ .Values.myCnf | indent 4 }}
   resources:
-    {{- toYaml .Values.primary.resources | nindent 4 }}
+    {{- toYaml .Values.resources | nindent 4 }}
 
   {{- if eq .Values.architecture "replication" }}
   replication:
+    enabled: true
     replicas: {{ .Values.secondary.replicaCount }}
     {{- if .Values.replication.semiSync.enabled }}
     semiSync:
@@ -54,17 +51,12 @@ spec:
   metrics:
     exporter:
       image:
-        repository: {{ .Values.metrics.image.repository }}
-        tag: {{ .Values.metrics.image.tag }}
-        pullPolicy: {{ .Values.metrics.image.pullPolicy }}
+        repository: {{ .Values.metrics.exporter.image.repository }}
+        tag: {{ .Values.metrics.exporter.image.tag }}
+        pullPolicy: {{ .Values.metrics.exporter.image.pullPolicy }}
     {{- if .Values.metrics.serviceMonitor.enabled }}
     serviceMonitor:
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
     {{- end }}
-  {{- end }}
-
-  databases:
-  {{- range .Values.databases }}
-  - name: {{ .name }}
   {{- end }}

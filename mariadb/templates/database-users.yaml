@@ -1,0 +1,81 @@
+{{- range .Values.databases }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "mariadb.fullname" $ }}-{{ .passwordSecret.name }}
+stringData:
+  password: {{ randAlphaNum 16 | b64enc | quote }}
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: {{ include "mariadb.fullname" $ }}-{{ .user }}
+spec:
+  name: {{ .user }}
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" $ }}
+  passwordSecretKeyRef:
+    name: {{ include "mariadb.fullname" $ }}-{{ .passwordSecret.name }}
+    key: {{ .passwordSecret.key }}
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: {{ .user }}-grant
+spec:
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" $ }}
+  username: {{ .user }}
+  database: {{ .name }}
+  privileges:
+  - "ALL PRIVILEGES"
+{{- end }}
+
+{{- if and .Values.auth.username .Values.auth.database }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "mariadb.fullname" . }}-user-{{ .Values.auth.username }}
+stringData:
+  password: {{ .Values.auth.password | default (randAlphaNum 16) | quote }}
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: {{ include "mariadb.fullname" . }}-{{ .Values.auth.username }}-localhost
+spec:
+  name: {{ .Values.auth.username }}
+  host: localhost
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  passwordSecretKeyRef:
+    name: {{ include "mariadb.fullname" . }}-user-{{ .Values.auth.username }}
+    key: password
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: {{ include "mariadb.fullname" . }}-{{ .Values.auth.username }}-all
+spec:
+  name: {{ .Values.auth.username }}
+  host: "%"
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  passwordSecretKeyRef:
+    name: {{ include "mariadb.fullname" . }}-user-{{ .Values.auth.username }}
+    key: password
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: {{ include "mariadb.fullname" . }}-{{ .Values.auth.username }}-grant
+spec:
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  username: {{ .Values.auth.username }}
+  database: {{ .Values.auth.database }}
+  privileges:
+  - "ALL PRIVILEGES"
+{{- end }}

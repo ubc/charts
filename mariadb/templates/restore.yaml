@@ -1,0 +1,11 @@
+{{- if .Values.restore.enabled }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Restore
+metadata:
+  name: {{ include "mariadb.fullname" . }}-restore
+spec:
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  backupRef:
+    name: {{ .Values.restore.backupName }}
+{{- end }}
