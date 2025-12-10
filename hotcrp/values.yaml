@@ -47,7 +47,7 @@ web:
   image:
     repository: nginx
     pullPolicy: IfNotPresent
-    tag: "1.25-alpine"
+    tag: "1.28-alpine"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -96,7 +96,7 @@ ingress:
   #      - chart-example.local
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
+  # We usually recommend not specifying default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
@@ -121,50 +121,28 @@ tolerations: []
 affinity: {}
 
 ## DB chart configuration
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/mariadb/values.yaml
 ##
 db:
-  image:
-    registry: docker.io
-    repository: bitnamilegacy/mariadb
-    tag: 10.11.9-debian-12-r3
-  ## @param db.enabled Deploy a MariaDB server to satisfy the applications database requirements
+  ## @param db.enabled Deploy a MariaDB server to satisfy the application database requirements
   ## To use an external database set this to false and configure the `externalDatabase.*` parameters
   ##
   enabled: true
+
   ## @param mariadb.architecture MariaDB architecture. Allowed values: `standalone` or `replication`
   ##
-  architecture: standalone
+  architecture: replication
   ## MariaDB Authentication parameters
   ## @param mariadb.auth.rootPassword MariaDB root password
   ## @param mariadb.auth.database MariaDB custom database
   ## @param mariadb.auth.username MariaDB custom user name
   ## @param mariadb.auth.password MariaDB custom user password
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mariadb#setting-the-root-password-on-first-run
-  ##      https://github.com/bitnami/containers/blob/main/bitnami/mariadb/README.md#creating-a-database-on-first-run
-  ##      https://github.com/bitnami/containers/blob/main/bitnami/mariadb/README.md#creating-a-database-user-on-first-run
   ##
   auth:
-    rootPassword: ""
+    rootPassword:
     database: hotcrp
     username: hotcrp
-    password: ""
-  ## MariaDB Primary configuration
-  ##
-  primary:
-    ## MariaDB Primary Persistence parameters
-    ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
-    ## @param mariadb.primary.persistence.enabled Enable persistence on MariaDB using PVC(s)
-    ## @param mariadb.primary.persistence.storageClass Persistent Volume storage class
-    ## @param mariadb.primary.persistence.accessModes [array] Persistent Volume access modes
-    ## @param mariadb.primary.persistence.size Persistent Volume size
-    ##
-    persistence:
-      enabled: true
-      storageClass: ""
-      accessModes:
-        - ReadWriteOnce
-      size: 8Gi
+    password:
+
 ## External Database Configuration
 ## All of these values are only used if `mariadb.enabled=false`
 ##

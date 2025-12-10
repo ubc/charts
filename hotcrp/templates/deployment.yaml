@@ -54,12 +54,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "hotcrp.databaseSecretName" . }}
-                  key: mariadb-password
+                  key: password-{{ include "hotcrp.databaseUser" .}}
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "hotcrp.databaseSecretName" . }}
-                  key: mariadb-root-password
+                  name: {{ include "hotcrp.databaseRootSecretName" . }}
+                  key: password
             {{- if .Values.hotcrp.loginType }}
             - name: HOTCRP_LOGIN_TYPE
               value: {{ .Values.hotcrp.loginType }}
@@ -129,8 +129,12 @@ spec:
           configMap:
             name: {{ include "hotcrp.fullname" . }}-msmtp
         - name: hotcrp-log
+          {{- if .Values.hotcrp.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ template "hotcrp.fullname" . }}-app-log
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
         # Create the shared files volume to be used in both pods
         - name: shared-files
           emptyDir: {}

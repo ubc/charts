@@ -28,7 +28,16 @@ Create a default fully qualified db name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "hotcrp.db.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "db" "chartValues" .Values.db "context" $) -}}
+{{- if .Values.db.fullnameOverride -}}
+{{- .Values.db.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "db" .Values.db.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
@@ -125,12 +134,29 @@ Return the MariaDB Secret Name
     {{- if .Values.db.auth.existingSecret -}}
         {{- printf "%s" .Values.db.auth.existingSecret -}}
     {{- else -}}
-        {{- printf "%s" (include "hotcrp.db.fullname" .) -}}
+        {{- printf "%s-user-password" (include "hotcrp.db.fullname" .) -}}
     {{- end -}}
 {{- else if .Values.externalDatabase.existingSecret -}}
-    {{- include "common.tplvalues.render" (dict "value" .Values.externalDatabase.existingSecret "context" $) -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
 {{- else -}}
-    {{- printf "%s-externaldb" (include "common.names.fullname" .) -}}
+    {{- printf "%s-externaldb" (include "hotcrp.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Root Secret Name
+*/}}
+{{- define "hotcrp.databaseRootSecretName" -}}
+{{- if .Values.db.enabled }}
+    {{- if .Values.db.auth.existingSecret -}}
+        {{- printf "%s" .Values.db.auth.existingSecret -}}
+    {{- else -}}
+        {{- printf "%s-root" (include "hotcrp.db.fullname" .) -}}
+    {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
+{{- else -}}
+    {{- printf "%s-externaldb" (include "hotcrp.fullname" .) -}}
 {{- end -}}
 {{- end -}}
 
