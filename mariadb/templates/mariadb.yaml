@@ -21,7 +21,7 @@ spec:
     {{- toYaml .Values.resources | nindent 4 }}
 
   {{- if eq .Values.architecture "replication" }}
-  replicas: {{ .Values.secondary.replicaCount }}
+  replicas: {{ .Values.replicas }}
   replicasAllowEvenNumber: true
   replication:
     enabled: true

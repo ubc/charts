@@ -4,10 +4,12 @@
 
 architecture: standalone
 
+replicas: 2
+
 image:
   registry: docker.io
   repository: mariadb
-  tag: "10.6"
+  tag:
   pullPolicy: IfNotPresent
 
 auth:
@@ -53,7 +55,6 @@ primary:
 
 secondary:
   enabled: false
-  replicaCount: 2
   service:
     type: ClusterIP
     annotations: {}

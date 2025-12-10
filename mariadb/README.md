@@ -33,6 +33,7 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | Parameter | Description | Default |
 | --- | --- | --- |
 | `architecture` | MariaDB architecture. Allowed values: `standalone` or `replication`. | `standalone` |
+| `replicas` | Number of replicas (used when architecture is replication). | `2` |
 | `image.registry` | Global Docker image registry. | `docker.io` |
 | `image.repository` | The image repository to use for the MariaDB instance. | `mariadb` |
 | `image.tag` | The image tag to use. | `"10.6"` |
@@ -56,7 +57,6 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `primary.service.type` | Kubernetes Service type for the primary instance. | `ClusterIP` |
 | `primary.service.annotations` | Annotations for the primary service. | `{}` |
 | `secondary.enabled` | Enable secondary replicas. | `false` |
-| `secondary.replicaCount` | The number of secondary replicas to create. | `2` |
 | `secondary.service.type` | Kubernetes Service type for secondary instances. | `ClusterIP` |
 | `secondary.service.annotations` | Annotations for the secondary service. | `{}` |
 | `secondary.semiSync.enabled` | Enable semi-synchronous replication. | `true` |
@@ -79,7 +79,6 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `metrics.exporter.imagePullPolicy` | The image pull policy for the metrics exporter. | `IfNotPresent` |
 | `metrics.exporter.imagePullSecrets` | Image pull secrets for the metrics exporter. | `[]` |
 | `metrics.exporter.resources` | Resources for the metrics exporter. | `{}` |
-| `metrics.serviceMonitor.enabled` | If true, a ServiceMonitor resource will be created. | `false` |
 | `metrics.serviceMonitor.jobLabel` | Job label for the ServiceMonitor. | `""` |
 | `metrics.serviceMonitor.interval` | The scrape interval for the ServiceMonitor. | `30s` |
 | `metrics.serviceMonitor.scrapeTimeout` | The scrape timeout for the ServiceMonitor. | `10s` |
@@ -92,9 +91,9 @@ The following table lists the configurable parameters of the MariaDB chart and t
 # standard
 helm install --debug mariadb-test .
 # replication
-helm install --debug mariadb-test --set architecture=replication --set secondary.replicaCount=4 .
+helm install --debug mariadb-test --set architecture=replication --set replicas=4 .
 # with custom user and database
-helm install --debug mariadb-test --set architecture=replication --set secondary.replicaCount=4  --set auth.database=dbtest --set auth.username=dbtest .
+helm install --debug mariadb-test --set architecture=replication --set replicas=4  --set auth.database=dbtest --set auth.username=dbtest .
 
 # replication with backup enabled
 helm install --debug mariadb-test --set architecture=replication --set auth.database=dbtest --set auth.username=dbtest \
