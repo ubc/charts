@@ -7,10 +7,10 @@ metadata:
 spec:
   image: {{ printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) | quote }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
-  {{- if .Values.auth.existingSecret }}
+  {{- if and .Values.auth.existingSecret .Values.auth.rootPasswordKey }}
   rootPasswordSecretKeyRef:
     name: {{ .Values.auth.existingSecret }}
-    key: {{ .Values.auth.secretKeys.rootPasswordKey }}
+    key: {{ .Values.auth.rootPasswordKey }}
   {{- end }}
   port: {{ .Values.primary.containerPorts.mysql }}
   storage:

@@ -13,14 +13,15 @@ image:
   pullPolicy: IfNotPresent
 
 auth:
-  # To use existing secret, define existing secret value
+  # To use existing secret, define existing secret value and keys
   existingSecret:
-  secretKeys:
-    rootPasswordKey: password
-#  database: demo
-#  username: demo
-#  password: demo
-#  replicationPassword: repl
+  rootPasswordKey:
+  userPasswordKey:
+
+  database:
+  username:
+  password:
+  replicationPassword: repl
 
 myCnf: |-
   [mariadb]

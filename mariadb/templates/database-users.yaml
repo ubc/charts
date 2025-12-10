@@ -37,8 +37,13 @@ spec:
   mariaDbRef:
     name: {{ include "mariadb.fullname" . }}
   passwordSecretKeyRef:
+    {{- if and .Values.auth.existingSecret .Values.auth.userPasswordKey }}
+    name: {{ .Values.auth.existingSecret }}
+    key: {{ .Values.auth.userPasswordKey }}
+    {{- else }}
     name: {{ include "mariadb.fullname" . }}-user-password
     key: password-{{ .Values.auth.username }}
+    {{- end }}
 ---
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Grant

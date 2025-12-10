@@ -39,7 +39,8 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `image.tag` | The image tag to use. | `"10.6"` |
 | `image.pullPolicy` | The image pull policy. | `IfNotPresent` |
 | `auth.existingSecret` | Name of an existing Kubernetes secret to use for authentication. | `""` |
-| `auth.secretKeys.rootPasswordKey` | Key in the secret containing the root password. | `password` |
+| `auth.rootPasswordKey` | Key in the secret containing the root password. | `""` |
+| `auth.userPasswordKey` | Key in the secret containing the root password. | `""` |
 | `auth.database` | Database to be created on startup. | `""` |
 | `auth.username` | User to be created on startup. | `""` |
 | `auth.password` | Password for the user. | `""` |
