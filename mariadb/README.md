@@ -30,62 +30,62 @@ helm uninstall my-release
 
 The following table lists the configurable parameters of the MariaDB chart and their default values.
 
-| Parameter | Description | Default                                                                                                                                  |
-| --- | --- |------------------------------------------------------------------------------------------------------------------------------------------|
-| `architecture` | MariaDB architecture. Allowed values: `standalone` or `replication`. | `standalone`                                                                                                                             |
-| `image.registry` | Global Docker image registry. | `docker.io`                                                                                                                              |
-| `image.repository` | The image repository to use for the MariaDB instance. | `mariadb`                                                                                                                                |
-| `image.tag` | The image tag to use. | `"10.6"`                                                                                                                                 |
-| `image.pullPolicy` | The image pull policy. | `IfNotPresent`                                                                                                                           |
-| `auth.existingSecret` | Name of an existing Kubernetes secret to use for authentication. | `""`                                                                                                                                     |
-| `auth.secretKeys.rootPasswordKey` | Key in the secret containing the root password. | `password`                                                                                                                               |
-| `auth.database` | Database to be created on startup. | `""`                                                                                                                                     |
-| `auth.username` | User to be created on startup. | `""`                                                                                                                                     |
-| `auth.password` | Password for the user. | `""`                                                                                                                                     |
-| `auth.replicationPassword` | Password for replication user. | `""`                                                                                                                                     |
+| Parameter | Description | Default |
+| --- | --- | --- |
+| `architecture` | MariaDB architecture. Allowed values: `standalone` or `replication`. | `standalone` |
+| `image.registry` | Global Docker image registry. | `docker.io` |
+| `image.repository` | The image repository to use for the MariaDB instance. | `mariadb` |
+| `image.tag` | The image tag to use. | `"10.6"` |
+| `image.pullPolicy` | The image pull policy. | `IfNotPresent` |
+| `auth.existingSecret` | Name of an existing Kubernetes secret to use for authentication. | `""` |
+| `auth.secretKeys.rootPasswordKey` | Key in the secret containing the root password. | `password` |
+| `auth.database` | Database to be created on startup. | `""` |
+| `auth.username` | User to be created on startup. | `""` |
+| `auth.password` | Password for the user. | `""` |
+| `auth.replicationPassword` | Password for replication user. | `""` |
 | `myCnf` | Custom MariaDB configuration (my.cnf). | `[mariadb]\nbind-address=0.0.0.0\ndefault_storage_engine=InnoDB\nbinlog_format=row\ninnodb_autoinc_lock_mode=2\nmax_allowed_packet=256M` |
-| `resources.limits.cpu` | CPU limits for the MariaDB container. | `500m`                                                                                                                                   |
-| `resources.limits.memory` | Memory limits for the MariaDB container. | `1Gi`                                                                                                                                    |
-| `resources.requests.cpu` | CPU requests for the MariaDB container. | `200m`                                                                                                                                   |
-| `resources.requests.memory` | Memory requests for the MariaDB container. | `256Mi`                                                                                                                                  |
-| `persistence.size` | The size of the persistent volume. | `10Gi`                                                                                                                                   |
-| `service.type` | Kubernetes Service type for the common service. | `ClusterIP`                                                                                                                              |
-| `service.annotations` | Annotations for the common service. | `{}`                                                                                                                                     |
-| `primary.containerPorts.mysql` | The port to expose MariaDB on. | `3306`                                                                                                                                   |
-| `primary.automaticFailover` | Enable automatic failover for primary. | `true`                                                                                                                                   |
-| `primary.service.type` | Kubernetes Service type for the primary instance. | `ClusterIP`                                                                                                                              |
-| `primary.service.annotations` | Annotations for the primary service. | `{}`                                                                                                                                     |
-| `secondary.enabled` | Enable secondary replicas. | `false`                                                                                                                                  |
-| `secondary.replicaCount` | The number of secondary replicas to create. | `1`                                                                                                                                      |
-| `secondary.service.type` | Kubernetes Service type for secondary instances. | `ClusterIP`                                                                                                                              |
-| `secondary.service.annotations` | Annotations for the secondary service. | `{}`                                                                                                                                     |
-| `secondary.semiSync.enabled` | Enable semi-synchronous replication. | `true`                                                                                                                                   |
-| `backup.enabled` | Enable or disable backups. | `false`                                                                                                                                  |
-| `backup.databases` | List of databases to backup. Default backup all databases. | `[]`                                                                                                                                     |
-| `backup.schedule` | The cron schedule for backups. | `"0 0 * * *"`                                                                                                                            |
-| `backup.timezone` | Timezone for the backup schedule. | `"America/Vancouver"`                                                                                                                    |
-| `backup.compression` | Compression algorithm for backups. | `bzip2`                                                                                                                                  |
-| `backup.storage` | Configuration for backup storage (PVC, NFS, S3). | `{}`                                                                                                                                     |
-| `backup.stagingStorage.enabled` | Enable staging storage (required for S3). | `false`                                                                                                                                  |
-| `backup.args` | Arguments to pass to the backup command. | `[]`                                                                                                                                     |
-| `backup.retention` | Retention policy for backups. | `720h`                                                                                                                                   |
-| `backup.logLevel` | Log level for the backup job. | `info`                                                                                                                                   |
-| `backup.resources` | Resource requests and limits for the backup job. | `{requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 300m, memory: 512Mi}}`                                                             |
-| `bootstrapFrom` | Configuration to bootstrap new MariaDB instances from existing backups/sources. | `{}`                                                                                                                                     |
-| `restore.enabled` | Enable or disable restore. | `false`                                                                                                                                  |
-| `restore.backupName` | The name of the backup to restore from. | `""`                                                                                                                                     |
-| `metrics.enabled` | Enable or disable metrics. | `false`                                                                                                                                  |
-| `metrics.exporter.image` | The image for the metrics exporter. | `prom/mysqld-exporter:v0.18.0`                                                                                                           |
-| `metrics.exporter.imagePullPolicy` | The image pull policy for the metrics exporter. | `IfNotPresent`                                                                                                                           |
-| `metrics.exporter.imagePullSecrets` | Image pull secrets for the metrics exporter. | `[]`                                                                                                                                     |
-| `metrics.exporter.resources` | Resources for the metrics exporter. | `{}`                                                                                                                                     |
-| `metrics.serviceMonitor.enabled` | If true, a ServiceMonitor resource will be created. | `false`                                                                                                                                  |
-| `metrics.serviceMonitor.jobLabel` | Job label for the ServiceMonitor. | `""`                                                                                                                                     |
-| `metrics.serviceMonitor.interval` | The scrape interval for the ServiceMonitor. | `30s`                                                                                                                                    |
-| `metrics.serviceMonitor.scrapeTimeout` | The scrape timeout for the ServiceMonitor. | `10s`                                                                                                                                    |
-| `metrics.username` | Username of the monitoring user. | `""`                                                                                                                                     |
-| `metrics.passwordSecretKeyRef` | Reference to the password secret for the monitoring user. | `{}`                                                                                                                                     |
-| `databases` | List of custom databases and users to create (each item should have `name`, `user`, `password`). | `[]`                                                                                                                                     |
+| `resources.limits.cpu` | CPU limits for the MariaDB container. | `500m` |
+| `resources.limits.memory` | Memory limits for the MariaDB container. | `1Gi` |
+| `resources.requests.cpu` | CPU requests for the MariaDB container. | `200m` |
+| `resources.requests.memory` | Memory requests for the MariaDB container. | `256Mi` |
+| `persistence.size` | The size of the persistent volume. | `10Gi` |
+| `service.type` | Kubernetes Service type for the common service. | `ClusterIP` |
+| `service.annotations` | Annotations for the common service. | `{}` |
+| `primary.containerPorts.mysql` | The port to expose MariaDB on. | `3306` |
+| `primary.automaticFailover` | Enable automatic failover for primary. | `true` |
+| `primary.service.type` | Kubernetes Service type for the primary instance. | `ClusterIP` |
+| `primary.service.annotations` | Annotations for the primary service. | `{}` |
+| `secondary.enabled` | Enable secondary replicas. | `false` |
+| `secondary.replicaCount` | The number of secondary replicas to create. | `2` |
+| `secondary.service.type` | Kubernetes Service type for secondary instances. | `ClusterIP` |
+| `secondary.service.annotations` | Annotations for the secondary service. | `{}` |
+| `secondary.semiSync.enabled` | Enable semi-synchronous replication. | `true` |
+| `backup.enabled` | Enable or disable backups. | `false` |
+| `backup.databases` | List of databases to backup. Default backup all databases. | `[]` |
+| `backup.schedule` | The cron schedule for backups. | `"0 0 * * *"` |
+| `backup.timezone` | Timezone for the backup schedule. | `"America/Vancouver"` |
+| `backup.compression` | Compression algorithm for backups. | `bzip2` |
+| `backup.storage` | Configuration for backup storage (PVC, NFS, S3). | `{}` |
+| `backup.stagingStorage.enabled` | Enable staging storage (required for S3). | `false` |
+| `backup.args` | Arguments to pass to the backup command. | `[]` |
+| `backup.retention` | Retention policy for backups. | `720h` |
+| `backup.logLevel` | Log level for the backup job. | `info` |
+| `backup.resources` | Resource requests and limits for the backup job. | `{requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 300m, memory: 512Mi}}` |
+| `bootstrapFrom` | Configuration to bootstrap new MariaDB instances from existing backups/sources. | `{}` |
+| `restore.enabled` | Enable or disable restore. | `false` |
+| `restore.backupName` | The name of the backup to restore from. | `""` |
+| `metrics.enabled` | Enable or disable metrics. | `false` |
+| `metrics.exporter.image` | The image for the metrics exporter. | `prom/mysqld-exporter:v0.18.0` |
+| `metrics.exporter.imagePullPolicy` | The image pull policy for the metrics exporter. | `IfNotPresent` |
+| `metrics.exporter.imagePullSecrets` | Image pull secrets for the metrics exporter. | `[]` |
+| `metrics.exporter.resources` | Resources for the metrics exporter. | `{}` |
+| `metrics.serviceMonitor.enabled` | If true, a ServiceMonitor resource will be created. | `false` |
+| `metrics.serviceMonitor.jobLabel` | Job label for the ServiceMonitor. | `""` |
+| `metrics.serviceMonitor.interval` | The scrape interval for the ServiceMonitor. | `30s` |
+| `metrics.serviceMonitor.scrapeTimeout` | The scrape timeout for the ServiceMonitor. | `10s` |
+| `metrics.username` | Username of the monitoring user. | `""` |
+| `metrics.passwordSecretKeyRef` | Reference to the password secret for the monitoring user. | `{}` |
+| `databases` | List of custom databases and users to create (each item should have `name`, `user`, `password`). | `[]` |
 
 ## Testing
 ```bash
