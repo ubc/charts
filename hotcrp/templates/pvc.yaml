@@ -4,18 +4,19 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "common.names.fullname" . }}-app-log
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
-    {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+  name: {{ include "hotcrp.fullname" . }}-app-log
+  labels:
+    {{- include "hotcrp.labels" . | nindent 4 }}
+    {{- with .Values.commonLabels }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- if or .Values.hotcrp.persistence.annotations .Values.commonAnnotations }}
   annotations:
-    {{- if .Values.hotcrp.persistence.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.hotcrp.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- with .Values.hotcrp.persistence.annotations }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
-    {{- if .Values.commonAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- with .Values.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
 spec:
