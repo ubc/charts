@@ -2718,6 +2718,17 @@ entries:
     urls:
     - https://ubc.github.io/charts/ltps-ui-0.1.0.tgz
     version: 0.1.0
+  mariadb:
+  - apiVersion: v2
+    appVersion: 10.6.0
+    created: "2025-12-10T08:17:36.274028874Z"
+    description: A Helm chart for MariaDB
+    digest: 673c4146571c358c498fecb2250a2e0121fca98c773a902d5b8077f72b03355e
+    name: mariadb
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/mariadb-0.1.0/mariadb-0.1.0.tgz
+    version: 0.1.0
   mattermost:
   - apiVersion: v1
     appVersion: 7.1.3
@@ -6329,4 +6340,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-17T19:20:29.835258909Z"
+generated: "2025-12-10T08:17:36.274702266Z"
