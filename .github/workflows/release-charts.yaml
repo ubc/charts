@@ -30,6 +30,7 @@ jobs:
       - name: Add Helm repos
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add ubc https://ubc.github.io/charts
           helm repo update
 
       - name: Run chart-releaser
