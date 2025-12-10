@@ -102,6 +102,16 @@ helm install --debug mariadb-test --set architecture=replication --set auth.data
   --set backup.storage.volume.nfs.path=\/test \
   .
 
+# bootstrap from existing data, the restore file name should follow this format: backup.2024-08-26T12:24:34Z.sql and located in the nfs path
+helm install --debug mariadb-test --set architecture=replication --set auth.database=dbtest --set auth.username=dbtest \
+  --set bootstrapFrom.volume.nfs.server=storageverf.lthub.ubc.ca \
+  --set bootstrapFrom.volume.nfs.path=\/hotcrp-test \
+  --set bootstrapFrom.targetRecoveryTime=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+  --set bootstrapFrom.restoreJob.args\[0\]="dbtest" \
+  .
+
 # clean up
 helm uninstall mariadb-test
+kubectl delete pvc storage-mariadb-test-0 storage-mariadb-test-1
+kubectl delete secret mariadb-test-root
 ```
