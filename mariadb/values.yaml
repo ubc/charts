@@ -138,15 +138,18 @@ metrics:
   enabled: false
   # Exporter image
   exporter:
-    image:
-      repository: prom/mysqld-exporter
-      tag: v0.15.1
-      pullPolicy: IfNotPresent
+    image: prom/mysqld-exporter:v0.18.0
+    imagePullPolicy: IfNotPresent
+    imagePullSecrets: []
+    resources: {}
   # ServiceMonitor settings
   serviceMonitor:
-    # If true, a ServiceMonitor resource will be created
-    enabled: false
+    jobLabel:
     # Scrape interval
     interval: 30s
     # Scrape timeout
     scrapeTimeout: 10s
+  # Username is the username of the monitoring user used by the exporter.
+  username:
+  # PasswordSecretKeyRef is a reference to the password of the monitoring user used by the exporter.
+  passwordSecretKeyRef: {}

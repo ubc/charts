@@ -51,7 +51,7 @@ spec:
 
   {{- if .Values.bootstrapFrom }}
   bootstrapFrom:
-    {{-toYaml .Values.bootstrapFrom | nindent 4 }}
+    {{- toYaml .Values.bootstrapFrom | nindent 4 }}
   {{- end }}
 
   service:
@@ -62,14 +62,25 @@ spec:
 
   {{- if .Values.metrics.enabled }}
   metrics:
+    enabled: true
     exporter:
-      image:
-        repository: {{ .Values.metrics.exporter.image.repository }}
-        tag: {{ .Values.metrics.exporter.image.tag }}
-        pullPolicy: {{ .Values.metrics.exporter.image.pullPolicy }}
-    {{- if .Values.metrics.serviceMonitor.enabled }}
+      image: {{ .Values.metrics.exporter.image }}
+      imagePullPolicy: {{ .Values.metrics.exporter.imagePullPolicy }}
+      imagePullSecrets: {{ .Values.metrics.exporter.imagePullSecrets }}
+      {{- if .Values.metrics.exporter.resources }}
+      resources:
+        {{- toYaml .Values.metrics.exporter.resources | nindent 8 }}
+      {{- end }}
     serviceMonitor:
+      # prometheusRelease: kube-prometheus-stack
+      jobLabel: {{ include "mariadb.fullname" . }}-monitoring
       interval: {{ .Values.metrics.serviceMonitor.interval }}
       scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
+    {{- if .Values.metrics.username }}
+    username: {{ .Values.metrics.username }}
+    {{- end }}
+    {{- if .Values.metrics.passwordSecretKeyRef }}
+    passwordSecretKeyRef:
+      {{- toYaml .Values.metrics.passwordSecretKeyRef | nindent 6 }}
     {{- end }}
   {{- end }}

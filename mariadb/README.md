@@ -61,26 +61,30 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `secondary.service.annotations` | Annotations for the secondary service. | `{}` |
 | `secondary.semiSync.enabled` | Enable semi-synchronous replication. | `true` |
 | `backup.enabled` | Enable or disable backups. | `false` |
-| `backup.databases` | List of databases to backup.Default to backup all databases. | `[]` |
+| `backup.databases` | List of databases to backup. Default backup all databases. | `[]` |
 | `backup.schedule` | The cron schedule for backups. | `"0 0 * * *"` |
 | `backup.timezone` | Timezone for the backup schedule. | `"America/Vancouver"` |
 | `backup.compression` | Compression algorithm for backups. | `bzip2` |
-| `backup.storage.persistentVolumeClaim.resources.requests.storage` | Storage size for backups (when using PVC). | `100Mi` |
-| `backup.storage.persistentVolumeClaim.accessModes` | Access modes for backup storage. | `[ReadWriteOnce]` |
+| `backup.storage` | Configuration for backup storage (PVC, NFS, S3). | `{}` |
 | `backup.stagingStorage.enabled` | Enable staging storage (required for S3). | `false` |
 | `backup.args` | Arguments to pass to the backup command. | `[]` |
 | `backup.retention` | Retention policy for backups. | `720h` |
 | `backup.logLevel` | Log level for the backup job. | `info` |
 | `backup.resources` | Resource requests and limits for the backup job. | `{requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 300m, memory: 512Mi}}` |
+| `bootstrapFrom` | Configuration to bootstrap new MariaDB instances from existing backups/sources. | `{}` |
 | `restore.enabled` | Enable or disable restore. | `false` |
 | `restore.backupName` | The name of the backup to restore from. | `""` |
 | `metrics.enabled` | Enable or disable metrics. | `false` |
-| `metrics.exporter.image.repository` | The image repository for the metrics exporter. | `prom/mysqld-exporter` |
-| `metrics.exporter.image.tag` | The image tag for the metrics exporter. | `v0.15.1` |
-| `metrics.exporter.image.pullPolicy` | The image pull policy for the metrics exporter. | `IfNotPresent` |
+| `metrics.exporter.image` | The image for the metrics exporter. | `prom/mysqld-exporter:v0.18.0` |
+| `metrics.exporter.imagePullPolicy` | The image pull policy for the metrics exporter. | `IfNotPresent` |
+| `metrics.exporter.imagePullSecrets` | Image pull secrets for the metrics exporter. | `[]` |
+| `metrics.exporter.resources` | Resources for the metrics exporter. | `{}` |
 | `metrics.serviceMonitor.enabled` | If true, a ServiceMonitor resource will be created. | `false` |
+| `metrics.serviceMonitor.jobLabel` | Job label for the ServiceMonitor. | `""` |
 | `metrics.serviceMonitor.interval` | The scrape interval for the ServiceMonitor. | `30s` |
 | `metrics.serviceMonitor.scrapeTimeout` | The scrape timeout for the ServiceMonitor. | `10s` |
+| `metrics.username` | Username of the monitoring user. | `""` |
+| `metrics.passwordSecretKeyRef` | Reference to the password secret for the monitoring user. | `{}` |
 | `databases` | List of custom databases and users to create (each item should have `name`, `user`, `password`). | `[]` |
 
 ## Testing
