@@ -51,7 +51,6 @@ primary:
     type: ClusterIP
     annotations: {}
 
-
 secondary:
   enabled: false
   replicaCount: 2
@@ -62,26 +61,74 @@ secondary:
   semiSync:
     enabled: true
 
-# The bitnami chart uses a separate chart for backups.
-# The backup section is kept here for reference but is not used by the bitnami chart directly.
 backup:
   enabled: false
+  # List of the databases to backup. Default backup all databases
+  databases: []
   # Backup schedule (cron format)
   schedule: "0 0 * * *"
+  timezone: "America/Vancouver"
+  compression: bzip2
   # Storage for backups
-  storage:
-    # Storage size
-    size: 10Gi
-    # Access modes
-    accessModes:
-      - ReadWriteOnce
+  storage: {}
+    # Using PVC for storage
+#    persistentVolumeClaim:
+#      resources:
+#        requests:
+#          storage: 100Mi
+#      accessModes:
+#        - ReadWriteOnce
+    # Using NFS
+#    volume:
+#      nfs:
+#        server: nas.local
+#        path: /volume1/mariadb
+    # or using S3 as a backup destination
+#    s3:
+#      bucket: backups
+#      prefix: mariadb
+#      endpoint: minio.minio.svc.cluster.local:9000
+#      region: us-east-1
+#      accessKeyIdSecretKeyRef:
+#        name: minio
+#        key: access-key-id
+#      secretAccessKeySecretKeyRef:
+#        name: minio
+#        key: secret-access-key
+#      tls:
+#        enabled: true
+#        caSecretKeyRef:
+#          name: minio-ca
+#          key: ca.crt
+  # Define a PVC to use as staging area for keeping the backups while they are being processed.
+  # S3 is the only storage type that requires a staging area.
+  stagingStorage:
+    enabled: false
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 10Gi
+      accessModes:
+        - ReadWriteOnce
+  args: []
+#    - --single-transaction
+#    - --all-databases
+#    - --verbose
   # Retention policy
-  retention:
-    # Number of backups to keep
-    keep: 3
+  retention: 720h # 30 days
+  logLevel: info
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
 
-# The bitnami chart uses a separate chart for backups.
-# The restore section is kept here for reference but is not used by the bitnami chart directly.
+# bootstrap the databaes from backups/NFS/physicalbackup/pvc/s3/volumesnapshot
+# https://github.com/mariadb-operator/mariadb-operator/blob/main/docs/logical_backup.md#bootstrap-new-mariadb-instances
+bootstrapFrom: {}
+
 restore:
   enabled: false
   # The name of the backup to restore from

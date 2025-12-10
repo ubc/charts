@@ -49,26 +49,16 @@ spec:
         {{- toYaml .Values.secondary.service.annotations | nindent 12 }}
   {{- end }}
 
+  {{- if .Values.bootstrapFrom }}
+  bootstrapFrom:
+    {{-toYaml .Values.bootstrapFrom | nindent 4 }}
+  {{- end }}
+
   service:
     type: {{ .Values.service.type }}
     metadata:
       annotations:
         {{- toYaml .Values.service.annotations | nindent 12 }}
-
-  {{- if .Values.backup.enabled }}
-  backup:
-    schedule:
-      cron: "{{ .Values.backup.schedule }}"
-    storage:
-      volumeClaimTemplate:
-        resources:
-          requests:
-            storage: {{ .Values.backup.storage.size }}
-        accessModes:
-          {{- toYaml .Values.backup.storage.accessModes | nindent 10 }}
-    retention:
-      keep: {{ .Values.backup.retention.keep }}
-  {{- end }}
 
   {{- if .Values.metrics.enabled }}
   metrics:

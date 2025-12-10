@@ -1,0 +1,39 @@
+{{- if .Values.backup.enabled }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Backup
+metadata:
+  name: {{ include "mariadb.fullname" . }}-backup
+spec:
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  # inheritMetadata:
+  #   annotations:
+  #     database.myorg.io: mariadb
+  #   podMetadata:
+  #     labels:
+  #       sidecar.istio.io/inject: "false"
+  {{- if .Values.backup.databases }}
+  databases:
+    {{- toYaml .Values.backup.databases | nindent 4 }}
+  {{- end }}
+  schedule:
+    cron: {{ .Values.backup.schedule }}
+    suspend: false
+  timeZone: {{ .Values.backup.timezone }}
+  maxRetention: {{ .Values.backup.retention }}
+  serviceAccountName: {{ include "mariadb.fullname" . }}-backup
+  compression: {{ .Values.backup.compression }}
+  storage:
+    {{- toYaml .Values.backup.storage | nindent 4 }}
+  {{- if .Values.backup.stagingStorage.enabled}}
+  stagingStore:
+    {{- toYaml .Values.backup.stagingStorage | nindent 4 }}
+  {{- end }}
+  {{- if .Values.backup.args }}
+  args:
+    {{- toYaml .Values.backup.args | nindent 4 }}
+  {{- end }}
+  logLevel: {{ .Values.backup.logLevel }}
+  resources:
+    {{- toYaml .Values.backup.resources | nindent 4 }}
+{{- end }}

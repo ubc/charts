@@ -61,10 +61,17 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `secondary.service.annotations` | Annotations for the secondary service. | `{}` |
 | `secondary.semiSync.enabled` | Enable semi-synchronous replication. | `true` |
 | `backup.enabled` | Enable or disable backups. | `false` |
+| `backup.databases` | List of databases to backup.Default to backup all databases. | `[]` |
 | `backup.schedule` | The cron schedule for backups. | `"0 0 * * *"` |
-| `backup.storage.size` | The size of the persistent volume for backups. | `10Gi` |
-| `backup.storage.accessModes` | The access modes for the backup persistent volume. | `[ReadWriteOnce]` |
-| `backup.retention.keep` | The number of backups to retain. | `3` |
+| `backup.timezone` | Timezone for the backup schedule. | `"America/Vancouver"` |
+| `backup.compression` | Compression algorithm for backups. | `bzip2` |
+| `backup.storage.persistentVolumeClaim.resources.requests.storage` | Storage size for backups (when using PVC). | `100Mi` |
+| `backup.storage.persistentVolumeClaim.accessModes` | Access modes for backup storage. | `[ReadWriteOnce]` |
+| `backup.stagingStorage.enabled` | Enable staging storage (required for S3). | `false` |
+| `backup.args` | Arguments to pass to the backup command. | `[]` |
+| `backup.retention` | Retention policy for backups. | `720h` |
+| `backup.logLevel` | Log level for the backup job. | `info` |
+| `backup.resources` | Resource requests and limits for the backup job. | `{requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 300m, memory: 512Mi}}` |
 | `restore.enabled` | Enable or disable restore. | `false` |
 | `restore.backupName` | The name of the backup to restore from. | `""` |
 | `metrics.enabled` | Enable or disable metrics. | `false` |
@@ -84,6 +91,13 @@ helm install --debug mariadb-test .
 helm install --debug mariadb-test --set architecture=replication --set secondary.replicaCount=4 .
 # with custom user and database
 helm install --debug mariadb-test --set architecture=replication --set secondary.replicaCount=4  --set auth.database=dbtest --set auth.username=dbtest .
+
+# replication with backup enabled
+helm install --debug mariadb-test --set architecture=replication --set auth.database=dbtest --set auth.username=dbtest \
+  --set backup.enabled=true --set backup.schedule="0 0 * * *" \
+  --set backup.storage.volume.nfs.server=storageverf.lthub.ubc.ca \
+  --set backup.storage.volume.nfs.path=\/test \
+  .
 
 # clean up
 helm uninstall mariadb-test
