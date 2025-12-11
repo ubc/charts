@@ -52,17 +52,8 @@ spec:
   {{- end }}
 
   {{- if .Values.bootstrapFrom }}
-  {{- $bootstrapFrom := .Values.bootstrapFrom -}}
-  {{- $bootstrapFromImagePullSecrets := $bootstrapFrom.imagePullSecrets | default .Values.imagePullSecrets -}}
-  {{- $bootstrapFromOtherFields := omit $bootstrapFrom "imagePullSecrets" -}}
-  {{- if not (empty $bootstrapFromOtherFields) }}
   bootstrapFrom:
-    {{- if not (empty $bootstrapFromImagePullSecrets) }}
-    imagePullSecrets:
-      {{- $bootstrapFromImagePullSecrets | toYaml | nindent 6 }}
-    {{- end }}
-    {{- $bootstrapFromOtherFields | toYaml | nindent 4 }}
-  {{- end }}
+    {{- toYaml .Values.bootstrapFrom | nindent 4 }}
   {{- end }}
 
   service:
