@@ -8,4 +8,6 @@ spec:
     name: {{ include "mariadb.fullname" . }}
   backupRef:
     name: {{ .Values.restore.backupName }}
+  imagePullSecrets:
+    {{- .Values.restore.imagePullSecrets | default .Values.imagePullSecrets | toYaml | nindent 4 }}
 {{- end }}

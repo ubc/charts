@@ -140,6 +140,7 @@ restore:
   enabled: false
   # The name of the backup to restore from
   backupName: ""
+  imagePullSecrets: []
 
 metrics:
   enabled: false

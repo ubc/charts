@@ -80,6 +80,7 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `bootstrapFrom.imagePullSecrets` | imagePullSecrets for the bootstrap job. Overrides global `imagePullSecrets`. | `[]` |
 | `restore.enabled` | Enable or disable restore. | `false` |
 | `restore.backupName` | The name of the backup to restore from. | `""` |
+| `restore.imagePullSecrets` | imagePullSecrets for the restore job. Overrides global `imagePullSecrets`. | `[]` |
 | `metrics.enabled` | Enable or disable metrics. | `false` |
 | `metrics.exporter.image` | The image for the metrics exporter. | `prom/mysqld-exporter:v0.18.0` |
 | `metrics.exporter.imagePullPolicy` | The image pull policy for the metrics exporter. | `IfNotPresent` |
