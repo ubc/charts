@@ -17,11 +17,12 @@ auth:
   existingSecret:
   rootPasswordKey:
   userPasswordKey:
+  replPasswordKey:
 
   database:
   username:
   password:
-  replicationPassword: repl
+  replicationPassword:
 
 myCnf: |-
   [mariadb]
