@@ -131,10 +131,27 @@ Return the MariaDB Secret Name
 */}}
 {{- define "hotcrp.databaseSecretName" -}}
 {{- if .Values.db.enabled }}
-    {{- if .Values.db.auth.existingSecret -}}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
         {{- printf "%s" .Values.db.auth.existingSecret -}}
     {{- else -}}
         {{- printf "%s-user-password" (include "hotcrp.db.fullname" .) -}}
+    {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
+{{- else -}}
+    {{- printf "%s-externaldb" (include "hotcrp.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Secret Key
+*/}}
+{{- define "hotcrp.databaseSecretKey" -}}
+{{- if .Values.db.enabled }}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
+        {{- printf "%s" .Values.db.auth.userPasswordKey -}}
+    {{- else -}}
+        {{- printf "password-%s" (include "hotcrp.databaseUser" .) -}}
     {{- end -}}
 {{- else if .Values.externalDatabase.existingSecret -}}
     {{- tpl .Values.externalDatabase.existingSecret $ -}}
@@ -148,7 +165,7 @@ Return the MariaDB Root Secret Name
 */}}
 {{- define "hotcrp.databaseRootSecretName" -}}
 {{- if .Values.db.enabled }}
-    {{- if .Values.db.auth.existingSecret -}}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.rootPasswordKey -}}
         {{- printf "%s" .Values.db.auth.existingSecret -}}
     {{- else -}}
         {{- printf "%s-root" (include "hotcrp.db.fullname" .) -}}
@@ -160,3 +177,19 @@ Return the MariaDB Root Secret Name
 {{- end -}}
 {{- end -}}
 
+{{/*
+Return the MariaDB Root Secret Key
+*/}}
+{{- define "hotcrp.databaseRootSecretKey" -}}
+{{- if .Values.db.enabled }}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.rootPasswordKey -}}
+        {{- printf "%s" .Values.db.auth.rootPasswordKey -}}
+    {{- else -}}
+        {{- printf "password" -}}
+    {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
+{{- else -}}
+    {{- printf "%s-externaldb" (include "hotcrp.fullname" .) -}}
+{{- end -}}
+{{- end -}}

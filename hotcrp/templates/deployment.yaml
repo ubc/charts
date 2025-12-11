@@ -54,12 +54,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "hotcrp.databaseSecretName" . }}
-                  key: password-{{ include "hotcrp.databaseUser" .}}
+                  key: {{ include "hotcrp.databaseSecretKey" . }}
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "hotcrp.databaseRootSecretName" . }}
-                  key: password
+                  key: {{ include "hotcrp.databaseRootSecretKey" . }}
             {{- if .Values.hotcrp.loginType }}
             - name: HOTCRP_LOGIN_TYPE
               value: {{ .Values.hotcrp.loginType }}
