@@ -6,6 +6,8 @@ metadata:
 spec:
   mariaDbRef:
     name: {{ include "mariadb.fullname" . }}
+  imagePullSecrets:
+    {{- .Values.backup.imagePullSecrets | default .Values.imagePullSecrets | toYaml | nindent 4 }}
   # inheritMetadata:
   #   annotations:
   #     database.myorg.io: mariadb

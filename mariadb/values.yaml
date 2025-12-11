@@ -2,6 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+imagePullSecrets: []
+
 architecture: standalone
 
 replicas: 2
@@ -11,6 +13,7 @@ image:
   repository: mariadb
   tag:
   pullPolicy: IfNotPresent
+  pullSecrets: []
 
 auth:
   # To use existing secret, define existing secret value and keys
@@ -68,6 +71,7 @@ backup:
   enabled: false
   # List of the databases to backup. Default backup all databases
   databases: []
+  imagePullSecrets: []
   # Backup schedule (cron format)
   schedule: "0 0 * * *"
   timezone: "America/Vancouver"

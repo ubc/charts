@@ -7,6 +7,8 @@ metadata:
 spec:
   image: {{ printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) | quote }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
+  imagePullSecrets:
+    {{- .Values.image.pullSecrets | default .Values.imagePullSecrets | toYaml | nindent 4 }}
   {{- if and .Values.auth.existingSecret .Values.auth.rootPasswordKey }}
   rootPasswordSecretKeyRef:
     name: {{ .Values.auth.existingSecret }}
@@ -51,7 +53,9 @@ spec:
 
   {{- if .Values.bootstrapFrom }}
   bootstrapFrom:
-    {{- toYaml .Values.bootstrapFrom | nindent 4 }}
+    imagePullSecrets:
+      {{- .Values.bootstrapFrom.imagePullSecrets | default .Values.imagePullSecrets | toYaml | nindent 6 }}
+    {{- omit .Values.bootstrapFrom "imagePullSecrets" | toYaml | nindent 4 }}
   {{- end }}
 
   service:
@@ -66,7 +70,8 @@ spec:
     exporter:
       image: {{ .Values.metrics.exporter.image }}
       imagePullPolicy: {{ .Values.metrics.exporter.imagePullPolicy }}
-      imagePullSecrets: {{ .Values.metrics.exporter.imagePullSecrets }}
+      imagePullSecrets:
+        {{- .Values.metrics.exporter.imagePullSecrets | default .Values.imagePullSecrets | toYaml | nindent 8 }}
       {{- if .Values.metrics.exporter.resources }}
       resources:
         {{- toYaml .Values.metrics.exporter.resources | nindent 8 }}
