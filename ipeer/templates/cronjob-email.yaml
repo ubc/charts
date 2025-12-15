@@ -19,21 +19,16 @@ spec:
               cake/console/cake send_emails
             env:
             - name: IPEER_DB_HOST
-              value: {{ template "ipeer.db.fullname" . }}
+              value: {{ include "ipeer.databaseHost" .}}
             - name: IPEER_DB_PORT
-              value: {{ .Values.db.service.port | quote }}
+              value: {{ .Values.db.primary.containerPorts.mysql | quote }}
             - name: IPEER_DB_USER
-              value: {{ .Values.db.auth.username | quote }}
+              value: {{ include "ipeer.databaseUser" .}}
             - name: IPEER_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                {{- if .Values.db.disableExternal }}
-                  name: {{ template "ipeer.db.secretName" . }}
-                  key: mariadb-password
-                {{- else }}
-                  name: {{ template "ipeer.fullname" . }}
-                  key: db_password
-                {{- end }}
+                  name: {{ include "ipeer.databaseSecretName" . }}
+                  key: {{ include "ipeer.databaseSecretKey" . }}
             - name: IPEER_SESSION_SAVE
               value: {{ .Values.ipeer.session_save | quote }}
             {{- if .Values.ipeer.caliper.enabled }}

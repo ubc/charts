@@ -15,16 +15,19 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.13
+version: 0.2.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 appVersion: 3.4.10
 
+sources:
+  - https://github.com/ubc/charts/tree/master/ipeer
+
 dependencies:
-- name: mariadb
-  version: 11.x.x
-  repository: https://charts.bitnami.com/bitnami
-  condition: db.disableExternal
-  alias: db
+  - condition: db.enabled
+    name: mariadb
+    version: "*"
+    alias: db
+    repository: https://ubc.github.io/charts
