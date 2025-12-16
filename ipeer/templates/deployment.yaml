@@ -36,6 +36,15 @@ spec:
         - name: nginx-config-volume
           configMap:
             name: {{ include "ipeer.fullname" . }}-nginx-config
+
+        - name: login-cwl-volume
+          configMap:
+            name: {{ include "ipeer.fullname" . }}-login-cwl
+
+        - name: php-files-volume
+          configMap:
+            name: {{ include "ipeer.fullname" . }}-php-files
+
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -43,6 +52,12 @@ spec:
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           env:
+          - name: IPEER_SECRET_KEY
+            value: {{ .Values.ipeer.secretKey | quote  }}
+          - name: SAML_JWT_PARM
+            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
+          - name: IPEER_AUTH_SHIBB_URL
+            value: {{ .Values.ipeer.auth.shibboleth.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST
             value: {{ include "ipeer.databaseHost" .}}
           - name: IPEER_DB_PORT
@@ -54,6 +69,8 @@ spec:
               secretKeyRef:
                 name: {{ include "ipeer.databaseSecretName" . }}
                 key: {{ include "ipeer.databaseSecretKey" . }}
+          - name: IPEER_SUPPORT_EMAIL
+            value: {{ .Values.ipeer.supportEmail }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
           {{- if .Values.ipeer.caliper.enabled }}
@@ -90,6 +107,12 @@ spec:
           - name: IPEER_AUTH_LDAP_fallbackInternal
             value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
           {{- end }}
+          {{- if eq .Values.ipeer.auth.method "Shibboleth" }}
+          - name: IPEER_AUTH_SHIBBOLETH_sessionInitiatorURL
+            value: {{ .Values.ipeer.auth.shibboleth.sessionInitiatorURL | quote }}
+          - name: IPEER_AUTH_SHIBBOLETH_logoutURL
+            value: {{ .Values.ipeer.auth.shibboleth.logoutURL | quote }}
+          {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
             value: "2"
@@ -101,6 +124,20 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /shared
+
+            - name: login-cwl-volume     # login_level2
+              mountPath: /var/www/html/app/plugins/guard/views/elements/login_default.ctp
+              subPath: login_cwl.php
+            - name: php-files-volume
+              mountPath: /var/www/html/app/controllers/homeubcsaml_controller.php
+              subPath: homeubcsaml_controller.php
+            - name: php-files-volume
+              mountPath: /var/www/html/app/config/routes.php
+              subPath: routes.php
+            - name: php-files-volume
+              mountPath: /var/www/html/app/controllers/homeubcsamllogout_controller.php
+              subPath: homeubcsamllogout_controller.php
+
           # After the container has started, copy the PHP files from this
           # container's local filesystem to the shared volume, which is
           # mounted at /shared.
@@ -182,6 +219,12 @@ spec:
           command: ["cake/console/cake"]
           args: ["worker", "run"]
           env:
+          - name: IPEER_SECRET_KEY
+            value: {{ .Values.ipeer.secretKey | quote  }}
+          - name: SAML_JWT_PARM
+            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
+          - name: IPEER_AUTH_SHIBB_URL
+            value: {{ .Values.ipeer.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST
             value: {{ template "ipeer.db.fullname" . }}
           - name: IPEER_DB_PORT
@@ -233,6 +276,10 @@ spec:
             value: {{ .Values.ipeer.auth.ldap.attributeMap | quote }}
           - name: IPEER_AUTH_LDAP_fallbackInternal
             value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
+          {{- end }}
+          {{- if eq .Values.ipeer.auth.method "shibboleth" }}
+          - name: IPEER_AUTH_SHIBBOLETH_sessionInitiatorURL
+            value: {{ .Values.ipeer.auth.shibboleth.sessionInitiatorURL | quote }}
           {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG

@@ -73,7 +73,9 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: ipeer-example.local
-      paths: ['/']
+      paths:
+      - path: '/'
+
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -107,6 +109,9 @@ affinity: {}
 ipeer:
   session_save: database
   debug: false
+  secretKey:
+  jwtSecretKeyParm:
+  supportEmail:
   auth:
     method: default
     ldap:
@@ -119,7 +124,8 @@ ipeer:
       attributeSearchFilters: '[]'
       attributeMap: '{}'
       fallbackInternal: true
-    shibboleth: {}
+    shibboleth:
+      authShibbolethURL:
   caliper:
     enabled: false
     host: https://caliper.imsglobal.org/caliper/44c6173f-907f-40c5-8c93-a1acfaa6485c/message
