@@ -53,13 +53,13 @@ spec:
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           env:
           - name: IPEER_SECRET_KEY
-            {{- if .Values.ipeer.auth.shibboleth.existingSecret }}
+            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.ipeer.auth.shibboleth.existingSecret }}
-                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKey | default "secret-key" }}
+                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
             {{- else }}
-            value: {{ .Values.ipeer.auth.shibboleth.secretKey | default .Values.ipeer.secretKey | quote  }}
+            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote  }}
             {{- end }}
           - name: SAML_JWT_PARM
             value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
@@ -84,7 +84,14 @@ spec:
           - name: CALIPER_HOST
             value: {{ .Values.ipeer.caliper.host }}
           - name: CALIPER_API_KEY
-            value: {{ .Values.ipeer.caliper.apikey }}
+            {{- if .Values.ipeer.caliper.existingApiKeyRef }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.caliper.existingApiKeyRef.name }}
+                key: {{ .Values.ipeer.caliper.existingApiKeyRef.key | default "apikey" }}
+            {{- else }}
+            value: {{ .Values.ipeer.caliper.apikey | quote  }}
+            {{- end }}
           - name:  CALIPER_BASE_URL
             value: {{ .Values.ipeer.caliper.baseURL }}
           - name: CALIPER_ACTOR_BASE_URL
