@@ -125,8 +125,14 @@ ipeer:
       fallbackInternal: true
     shibboleth:
       authShibbolethURL:
+      # The secret key for Shibboleth authentication.
+      # This can be set directly as a string or referenced from an existing Kubernetes secret.
       secretKey:
+      # If using an existing Kubernetes secret, provide the name of the secret here.
+      # This secret should contain the Shibboleth secret key.
       existingSecret:
+      # If using an existing Kubernetes secret, specify the key within that secret
+      # where the Shibboleth secret is stored. Defaults to "secret-key".
       existingSecretKey: secret-key
   caliper:
     enabled: false
