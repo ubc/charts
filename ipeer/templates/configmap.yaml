@@ -1,3 +1,4 @@
+{{- if eq .Values.ipeer.auth.method "Saml" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -22,3 +23,5 @@ data:
 {{ .Files.Get "files/app_controller.php" | indent 4 }}
   cake_libs_controller_components_auth.php: |-
 {{ .Files.Get "files/cake_libs_controller_components_auth.php" | indent 4 }}
+
+{{- end }}
