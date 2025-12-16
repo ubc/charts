@@ -240,41 +240,43 @@ spec:
           args: ["worker", "run"]
           env:
           - name: IPEER_SECRET_KEY
-            {{- if .Values.ipeer.auth.shibboleth.existingSecret }}
+            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.ipeer.auth.shibboleth.existingSecret }}
-                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKey | default "secret-key" }}
+                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
             {{- else }}
-            value: {{ .Values.ipeer.auth.shibboleth.secretKey | default .Values.ipeer.secretKey | quote  }}
+            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote  }}
             {{- end }}
           - name: SAML_JWT_PARM
             value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
           - name: IPEER_AUTH_SHIBB_URL
-            value: {{ .Values.ipeer.authShibbolethURL | quote  }}
+            value: {{ .Values.ipeer.auth.shibboleth.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST
-            value: {{ template "ipeer.db.fullname" . }}
+            value: {{ include "ipeer.databaseHost" .}}
           - name: IPEER_DB_PORT
-            value: {{ .Values.db.service.port | quote }}
+            value: {{ .Values.db.primary.containerPorts.mysql | quote }}
           - name: IPEER_DB_USER
-            value: {{ .Values.db.auth.username | quote }}
+            value: {{ include "ipeer.databaseUser" .}}
           - name: IPEER_DB_PASSWORD
             valueFrom:
               secretKeyRef:
-              {{- if .Values.db.disableExternal }}
-                name: {{ template "ipeer.db.secretName" . }}
-                key: mariadb-password
-              {{- else }}
-                name: {{ template "ipeer.fullname" . }}
-                key: db_password
-              {{- end }}
+                name: {{ include "ipeer.databaseSecretName" . }}
+                key: {{ include "ipeer.databaseSecretKey" . }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
           {{- if .Values.ipeer.caliper.enabled }}
           - name: CALIPER_HOST
             value: {{ .Values.ipeer.caliper.host }}
           - name: CALIPER_API_KEY
-            value: {{ .Values.ipeer.caliper.apikey }}
+            {{- if .Values.ipeer.caliper.existingApiKeyRef }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.caliper.existingApiKeyRef.name }}
+                key: {{ .Values.ipeer.caliper.existingApiKeyRef.key | default "apikey" }}
+            {{- else }}
+            value: {{ .Values.ipeer.caliper.apikey | quote  }}
+            {{- end }}
           - name:  CALIPER_BASE_URL
             value: {{ .Values.ipeer.caliper.baseURL }}
           - name: CALIPER_ACTOR_BASE_URL

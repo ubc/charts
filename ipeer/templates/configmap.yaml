@@ -4,7 +4,7 @@ metadata:
   name: {{ include "ipeer.fullname" . }}-login-cwl
 data:
   login_cwl.php: |-
-    {{ .Files.Get "files/login_cwl.php" | nindent 4 }}
+{{ .Files.Get "files/login_cwl.php" | nindent 4 }}
 
 ---
 apiVersion: v1
@@ -13,12 +13,12 @@ metadata:
   name: {{ include "ipeer.fullname" . }}-php-files
 data:
   homeubcsaml_controller.php: |-
-    {{ .Files.Get "files/homeubcsaml_controller.php" | nindent 4 }}
+{{ .Files.Get "files/homeubcsaml_controller.php" | indent 4 }}
   routes.php: |-
-    {{ .Files.Get "files/routes.php" | nindent 4 }}
+{{ .Files.Get "files/routes.php" | indent 4 }}
   homeubcsamllogout_controller.php: |-
-    {{ .Files.Get "files/homeubcsamllogout_controller.php" | nindent 4 }}
+{{ .Files.Get "files/homeubcsamllogout_controller.php" | indent 4 }}
   app_controller.php: |-
-    {{ .Files.Get "files/app_controller.php" | nindent 4 }}
+{{ .Files.Get "files/app_controller.php" | indent 4 }}
   cake_libs_controller_components_auth.php: |-
-    {{ .Files.Get "files/cake_libs_controller_components_auth.php" | nindent 4 }}
+{{ .Files.Get "files/cake_libs_controller_components_auth.php" | indent 4 }}
