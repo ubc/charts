@@ -53,7 +53,14 @@ spec:
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           env:
           - name: IPEER_SECRET_KEY
-            value: {{ .Values.ipeer.secretKey | quote  }}
+            {{- if .Values.ipeer.auth.shibboleth.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.auth.shibboleth.existingSecret }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKey | default "secret-key" }}
+            {{- else }}
+            value: {{ .Values.ipeer.auth.shibboleth.secretKey | default .Values.ipeer.secretKey | quote  }}
+            {{- end }}
           - name: SAML_JWT_PARM
             value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
           - name: IPEER_AUTH_SHIBB_URL
@@ -137,6 +144,12 @@ spec:
             - name: php-files-volume
               mountPath: /var/www/html/app/controllers/homeubcsamllogout_controller.php
               subPath: homeubcsamllogout_controller.php
+            - name: php-files-volume
+              mountPath: /var/www/html/app/app_controller.php
+              subPath: app_controller.php
+            - name: php-files-volume
+              mountPath: /var/www/html/cake/libs/controller/components/auth.php
+              subPath: cake_libs_controller_components_auth.php
 
           # After the container has started, copy the PHP files from this
           # container's local filesystem to the shared volume, which is
@@ -220,7 +233,14 @@ spec:
           args: ["worker", "run"]
           env:
           - name: IPEER_SECRET_KEY
-            value: {{ .Values.ipeer.secretKey | quote  }}
+            {{- if .Values.ipeer.auth.shibboleth.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.auth.shibboleth.existingSecret }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKey | default "secret-key" }}
+            {{- else }}
+            value: {{ .Values.ipeer.auth.shibboleth.secretKey | default .Values.ipeer.secretKey | quote  }}
+            {{- end }}
           - name: SAML_JWT_PARM
             value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
           - name: IPEER_AUTH_SHIBB_URL
