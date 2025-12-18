@@ -140,7 +140,7 @@ app:
   replicaCount: 1
   image:
     repository: ubcctlt/compair-app
-    tag: latest
+    tag:
     pullPolicy: IfNotPresent
   persistence:
     enabled: false
