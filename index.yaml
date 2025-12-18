@@ -645,6 +645,34 @@ entries:
   compair:
   - apiVersion: v2
     appVersion: 1.2.13
+    created: "2025-12-18T01:34:22.043860532Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: Pairing peer answers for deeper learning through comparison
+    digest: 9ad9d2404392ab7890fef061569c32ad357aa60c2b33c2e62afa077da3579446
+    home: http://ubc.github.io/compair/
+    keywords:
+    - compair
+    - acj
+    - peer learning
+    - education
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    - email: andrew.gardener@ubc.ca
+      name: Andrew Gardener
+    name: compair
+    sources:
+    - http://github.com/ubc/compair
+    urls:
+    - https://github.com/ubc/charts/releases/download/compair-0.10.1/compair-0.10.1.tgz
+    version: 0.10.1
+  - apiVersion: v2
+    appVersion: 1.2.13
     created: "2025-12-18T00:56:12.636902233Z"
     dependencies:
     - alias: db
@@ -6710,4 +6738,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-18T00:56:12.637567117Z"
+generated: "2025-12-18T01:34:22.044605941Z"
