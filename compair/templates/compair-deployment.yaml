@@ -322,6 +322,7 @@ spec:
               key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
           value: {{ include "compair.databaseName" .}}
+      {{- if not .Values.db.bootstrapFrom }}
       - name: init-db
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
         command: ["sh", "-c", "python manage.py database create {{ if .Values.demoInstance }}--sample_data{{ end }}"]
@@ -340,6 +341,7 @@ spec:
               key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
           value: {{ include "compair.databaseName" .}}
+      {{- end }}
       - name: upgrade-db
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
         command: ["sh", "-c", "alembic upgrade head"]
