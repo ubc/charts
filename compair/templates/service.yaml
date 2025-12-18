@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "compair.fullname" . }}-app
+  labels:
+    {{- include "compair.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.externalPort }}
+      targetPort: {{ .Values.app.service.internalPort }}
+  selector:
+    {{- include "compair.selectorLabels" . | nindent 4 }}
+    tier: app

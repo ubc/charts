@@ -2,58 +2,57 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-worker-scheduler
+  name: {{ include "compair.fullname" . }}-worker-scheduler
   labels:
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-    {{- if .Values.CI_PIPELINE_ID }}
-    autodeployed: "true"
-    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
-    {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
-    {{- end }}
+    {{- include "compair.labels" . | nindent 4 }}
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ template "fullname" . }}
-      stage: {{ .Values.stage }}
+      {{- include "compair.selectorLabels" . | nindent 6 }}
       tier: worker-scheduler
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        app: {{ template "fullname" . }}
-        stage: {{ .Values.stage }}
+        {{- include "compair.selectorLabels" . | nindent 8 }}
         tier: worker-scheduler
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "compair.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}-worker-scheduler
-        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
         command: ["celery", "--app=celery_worker.celery", "beat", "--loglevel=INFO"]
         env:
         - name: DB_HOST
-          value: "{{ template "fullname" . }}-db"
+          value: {{ include "compair.databaseHost" .}}
         - name: DB_PORT
-          value: {{ .Values.dbPort | quote }}
+          value: {{ include "compair.databasePort" . }}
         - name: DB_USERNAME
-          value: {{ .Values.dbUsername | quote }}
+          value: {{ include "compair.databaseUser" .}}
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: mysql_password
+              name: {{ include "compair.databaseSecretName" . }}
+              key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
-          value: {{ .Values.dbName | quote }}
+          value: {{ include "compair.databaseName" .}}
         - name: DB_CONN_OPTIONS
-          value: {{ .Values.dbConnOptions | squote }}
+          value: {{ .Values.db.connOptions | squote }}
         - name: CELERY_BROKER_URL
-          value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
+          value: "redis://{{ include "compair.fullname" . }}-redis:{{ .Values.redis.service.port }}"
         - name: ATTACHMENT_UPLOAD_LIMIT
           value: {{ .Values.attachment.uploadLimit | quote }}
         - name: ATTACHMENT_ALLOWED_EXTENSIONS
@@ -101,12 +100,17 @@ spec:
         {{- if .Values.saml.enabled }}
         - name: SAML_SETTINGS_FILE
           value: {{ .Values.saml.settingsFile | quote }}
-        {{- if .Values.saml.settings }}
+        {{- if or .Values.saml.settings .Values.saml.existingSettingsRef }}
         - name: SAML_SETTINGS
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.saml.existingSettingsRef }}
+              name: {{ .Values.saml.existingSettingsRef }}
+              key: {{ .Values.saml.existingSettingsKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: saml_settings
+              {{- end }}
         {{- end }}
         - name: SAML_METADATA_URL
           value: {{ .Values.saml.metadataUrl | quote }}
@@ -138,12 +142,17 @@ spec:
           value: {{ .Values.lrs.xapi.statementEndpoint | quote }}
         - name: LRS_XAPI_USERNAME
           value: {{ .Values.lrs.xapi.username | quote }}
-        {{- if .Values.lrs.xapi.password }}
+        {{- if or .Values.lrs.xapi.password .Values.lrs.xapi.existingPasswordRef }}
         - name: LRS_XAPI_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.lrs.xapi.existingPasswordRef }}
+              name: {{ .Values.lrs.xapi.existingPasswordRef }}
+              key: {{ .Values.lrs.xapi.existingPasswordKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: xapi_password
+              {{- end }}
         {{- end }}
         {{- end }}
         - name: CALIPER_ENABLED
@@ -151,12 +160,17 @@ spec:
         {{- if .Values.lrs.caliper.enabled }}
         - name: LRS_CALIPER_HOST
           value: {{ .Values.lrs.caliper.host | quote }}
-        {{- if .Values.lrs.caliper.api_key }}
+        {{- if or .Values.lrs.caliper.api_key .Values.lrs.caliper.existingApiKeyRef }}
         - name: LRS_CALIPER_API_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.lrs.caliper.existingApiKeyRef }}
+              name: {{ .Values.lrs.caliper.existingApiKeyRef }}
+              key: {{ .Values.lrs.caliper.existingApiKeyKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: caliper_api_key
+              {{- end }}
         {{- end }}
         {{- end }}
         - name: LRS_APP_BASE_URL
@@ -172,8 +186,13 @@ spec:
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+          {{- if .Values.existingSecretKeyRef }}
+              name: {{ .Values.existingSecretKeyRef }}
+              key: {{ .Values.existingSecretKeyKey }}
+          {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: secret_key
+          {{- end }}
         - name: C_FORCE_ROOT
           value: {{ .Values.cForceRoot | quote }}
         - name: ENFORCE_SSL
@@ -201,12 +220,17 @@ spec:
           value: {{ .Values.mail.useTLS | quote }}
         - name: MAIL_USERNAME
           value: {{ .Values.mail.username | quote }}
-        {{- if .Values.mail.password }}
+        {{- if or .Values.mail.password .Values.mail.existingPasswordRef }}
         - name: MAIL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.mail.existingPasswordRef }}
+              name: {{ .Values.mail.existingPasswordRef }}
+              key: {{ .Values.mail.existingPAsswordKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: mail_password
+              {{- end }}
         {{- end }}
         - name: MAIL_DEFAULT_SENDER
           value: {{ .Values.mail.defaultSender | quote }}
@@ -220,12 +244,17 @@ spec:
           value: {{ .Values.kaltura.serviceURL | quote }}
         - name: KALTURA_PARTNER_ID
           value: {{ .Values.kaltura.partnerId | quote }}
-        {{- if .Values.kaltura.secret }}
+        {{- if or .Values.kaltura.secret .Values.kaltura.existingSecretRef }}
         - name: KALTURA_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.kaltura.existingSecretRef }}
+              name: {{ .Values.kaltura.existingSecretRef }}
+              key: {{ .Values.kaltura.existingSecretKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: kaltura_secret
+              {{- end }}
         {{- end }}
         - name: KALTURA_USER_ID
           value: {{ .Values.kaltura.userId | quote }}

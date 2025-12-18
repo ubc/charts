@@ -1,0 +1,41 @@
+{{- if .Values.app.ingress.enabled }}
+{{- $hosts := append .Values.app.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
+{{- $serviceName := include "compair.fullname" . }}
+{{- $servicePort := .Values.app.service.externalPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "compair.fullname" . }}
+  annotations:
+    {{- range $key, $value := .Values.app.ingress.annotations }}
+      {{ $key  }}: {{ $value | quote  }}
+    {{- end }}
+  labels:
+    {{- include "compair.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.app.ingress.class }}
+  ingressClassName: {{ .Values.app.ingress.class }}
+  {{- end }}
+  rules:
+  {{- range $host := $hosts }}
+  - host: {{ $host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $serviceName  }}-app
+            port:
+              number: {{ $servicePort  }}
+  {{- end }}
+  {{- if and (hasKey .Values.app.ingress.annotations "kubernetes.io/tls-acme") (index .Values.app.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
+  tls:
+  - hosts:
+  {{- range $host := $hosts }}
+      - {{ $host }}
+  {{- end }}
+    secretName: {{ include "compair.fullname" . }}-tls
+  {{- end }}
+{{ end }}

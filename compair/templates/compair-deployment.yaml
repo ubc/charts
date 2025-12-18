@@ -1,57 +1,59 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-app
+  name: {{ include "compair.fullname" . }}-app
   labels:
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-    {{- if .Values.CI_PIPELINE_ID }}
-    autodeployed: "true"
-    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
-    {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
-    {{- end }}
+    {{- include "compair.labels" . | nindent 4 }}
+    tier: app
 spec:
   replicas: {{ .Values.app.replicaCount }}
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ template "fullname" . }}
-      stage: {{ .Values.stage }}
+      {{- include "compair.selectorLabels" . | nindent 6 }}
       tier: app
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        app: {{ template "fullname" . }}
-        stage: {{ .Values.stage }}
+        {{- include "compair.selectorLabels" . | nindent 8 }}
         tier: app
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "compair.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
         - name: DB_HOST
-          value: "{{ template "fullname" . }}-db"
+          value: {{ include "compair.databaseHost" .}}
         - name: DB_PORT
-          value: {{ .Values.dbPort | quote }}
+          value: {{ include "compair.databasePort" . }}
         - name: DB_USERNAME
-          value: {{ .Values.dbUsername | quote }}
+          value: {{ include "compair.databaseUser" .}}
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: mysql_password
+              name: {{ include "compair.databaseSecretName" . }}
+              key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
-          value: {{ .Values.dbName | quote }}
+          value: {{ include "compair.databaseName" .}}
         - name: DB_CONN_OPTIONS
-          value: {{ .Values.dbConnOptions | squote }}
+          value: {{ .Values.db.connOptions | squote }}
         - name: CELERY_BROKER_URL
-          value: "redis://{{ template "fullname" . }}-redis:{{ .Values.redis.service.port }}"
+          value: "redis://{{ include "compair.fullname" . }}-redis:{{ .Values.redis.service.port }}"
         - name: ATTACHMENT_UPLOAD_LIMIT
           value: {{ .Values.attachment.uploadLimit | quote }}
         - name: ATTACHMENT_ALLOWED_EXTENSIONS
@@ -99,12 +101,17 @@ spec:
         {{- if .Values.saml.enabled }}
         - name: SAML_SETTINGS_FILE
           value: {{ .Values.saml.settingsFile | quote }}
-        {{- if .Values.saml.settings }}
+        {{- if or .Values.saml.settings .Values.saml.existingSettingsRef }}
         - name: SAML_SETTINGS
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.saml.existingSettingsRef }}
+              name: {{ .Values.saml.existingSettingsRef }}
+              key: {{ .Values.saml.existingSettingsKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: saml_settings
+              {{- end }}
         {{- end }}
         - name: SAML_METADATA_URL
           value: {{ .Values.saml.metadataUrl | quote }}
@@ -136,12 +143,17 @@ spec:
           value: {{ .Values.lrs.xapi.statementEndpoint | quote }}
         - name: LRS_XAPI_USERNAME
           value: {{ .Values.lrs.xapi.username | quote }}
-        {{- if .Values.lrs.xapi.password }}
+        {{- if or .Values.lrs.xapi.password .Values.lrs.xapi.existingPasswordRef }}
         - name: LRS_XAPI_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.lrs.xapi.existingPasswordRef }}
+              name: {{ .Values.lrs.xapi.existingPasswordRef }}
+              key: {{ .Values.lrs.xapi.existingPasswordKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: xapi_password
+              {{- end }}
         {{- end }}
         {{- end }}
         - name: CALIPER_ENABLED
@@ -149,12 +161,17 @@ spec:
         {{- if .Values.lrs.caliper.enabled }}
         - name: LRS_CALIPER_HOST
           value: {{ .Values.lrs.caliper.host | quote }}
-        {{- if .Values.lrs.caliper.api_key }}
+        {{- if or .Values.lrs.caliper.api_key .Values.lrs.caliper.existingApiKeyRef }}
         - name: LRS_CALIPER_API_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.lrs.caliper.existingApiKeyRef }}
+              name: {{ .Values.lrs.caliper.existingApiKeyRef }}
+              key: {{ .Values.lrs.caliper.existingApiKeyKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: caliper_api_key
+              {{- end }}
         {{- end }}
         {{- end }}
         - name: LRS_APP_BASE_URL
@@ -170,8 +187,13 @@ spec:
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+          {{- if .Values.existingSecretKeyRef }}
+              name: {{ .Values.existingSecretKeyRef }}
+              key: {{ .Values.existingSecretKeyKey }}
+          {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: secret_key
+          {{- end }}
         - name: ENFORCE_SSL
           value: {{ .Values.enforceSSL | quote }}
         - name: DEMO_INSTALLATION
@@ -197,12 +219,17 @@ spec:
           value: {{ .Values.mail.useTLS | quote }}
         - name: MAIL_USERNAME
           value: {{ .Values.mail.username | quote }}
-        {{- if .Values.mail.password }}
+        {{- if or .Values.mail.password .Values.mail.existingPasswordRef }}
         - name: MAIL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.mail.existingPasswordRef }}
+              name: {{ .Values.mail.existingPasswordRef }}
+              key: {{ .Values.mail.existingPAsswordKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: mail_password
+              {{- end }}
         {{- end }}
         - name: MAIL_DEFAULT_SENDER
           value: {{ .Values.mail.defaultSender | quote }}
@@ -216,12 +243,17 @@ spec:
           value: {{ .Values.kaltura.serviceURL | quote }}
         - name: KALTURA_PARTNER_ID
           value: {{ .Values.kaltura.partnerId | quote }}
-        {{- if .Values.kaltura.secret }}
+        {{- if or .Values.kaltura.secret .Values.kaltura.existingSecretRef }}
         - name: KALTURA_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              {{- if .Values.kaltura.existingSecretRef }}
+              name: {{ .Values.kaltura.existingSecretRef }}
+              key: {{ .Values.kaltura.existingSecretKey }}
+              {{- else }}
+              name: {{ include "compair.fullname" . }}
               key: kaltura_secret
+              {{- end }}
         {{- end }}
         - name: KALTURA_USER_ID
           value: {{ .Values.kaltura.userId | quote }}
@@ -264,12 +296,12 @@ spec:
 {{ toYaml .Values.app.resources | indent 10 }}
       {{- if .Values.app.persistence.enabled }}
         volumeMounts:
-        - name: {{ template "fullname" . }}-persistent-storage
+        - name: {{ include "compair.fullname" . }}-persistent-storage
           mountPath: /code/persistent
       volumes:
-      - name: {{ template "fullname" . }}-persistent-storage
+      - name: {{ include "compair.fullname" . }}-persistent-storage
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-app-pvc
+          claimName: {{ include "compair.fullname" . }}-app-pvc
       {{- end }}
       initContainers:
       - name: wait-for-db-service
@@ -278,126 +310,51 @@ spec:
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
         - name: DB_HOST
-          value: "{{ template "fullname" . }}-db"
+          value: {{ include "compair.databaseHost" .}}
         - name: DB_PORT
-          value: {{ .Values.dbPort | quote }}
+          value: {{ include "compair.databasePort" . }}
         - name: DB_USERNAME
-          value: {{ .Values.dbUsername | quote }}
+          value: {{ include "compair.databaseUser" .}}
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: mysql_password
+              name: {{ include "compair.databaseSecretName" . }}
+              key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
-          value: {{ .Values.dbName | quote }}
+          value: {{ include "compair.databaseName" .}}
       - name: init-db
-        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
         command: ["sh", "-c", "python manage.py database create {{ if .Values.demoInstance }}--sample_data{{ end }}"]
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
         - name: DB_HOST
-          value: "{{ template "fullname" . }}-db"
+          value: {{ include "compair.databaseHost" .}}
         - name: DB_PORT
-          value: {{ .Values.dbPort | quote }}
+          value: {{ include "compair.databasePort" . }}
         - name: DB_USERNAME
-          value: {{ .Values.dbUsername | quote }}
+          value: {{ include "compair.databaseUser" .}}
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: mysql_password
+              name: {{ include "compair.databaseSecretName" . }}
+              key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
-          value: {{ .Values.dbName | quote }}
+          value: {{ include "compair.databaseName" .}}
       - name: upgrade-db
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
         command: ["sh", "-c", "alembic upgrade head"]
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
         - name: DB_HOST
-          value: "{{ template "fullname" . }}-db"
+          value: {{ include "compair.databaseHost" .}}
         - name: DB_PORT
-          value: {{ .Values.dbPort | quote }}
+          value: {{ include "compair.databasePort" . }}
         - name: DB_USERNAME
-          value: {{ .Values.dbUsername | quote }}
+          value: {{ include "compair.databaseUser" .}}
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: mysql_password
+              name: {{ include "compair.databaseSecretName" . }}
+              key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
-          value: {{ .Values.dbName | quote }}
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ template "fullname" . }}-app
-  labels:
-    app: {{ template "fullname" . }}
-    stage: {{ .Values.stage }}
-    tier: app
-    {{- if .Values.CI_PIPELINE_ID }}
-    autodeployed: "true"
-    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
-    {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
-    {{- end }}
-spec:
-  type: {{ .Values.app.service.type }}
-  ports:
-    - port: {{ .Values.app.service.externalPort }}
-      targetPort: {{ .Values.app.service.internalPort }}
-  selector:
-    app: {{ template "fullname" . }}
-    stage: {{ .Values.stage }}
-    tier: app
-
-{{- if .Values.app.ingress.enabled }}
-{{- $hosts := append .Values.app.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
-{{- $serviceName := include "fullname" . }}
-{{- $servicePort := .Values.app.service.externalPort }}
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ template "fullname" . }}
-  annotations:
-    {{- range $key, $value := .Values.app.ingress.annotations }}
-      {{ $key  }}: {{ $value | quote  }}
-    {{- end }}
-  labels:
-    app: {{ template "fullname" . }}
-    stage: {{ .Values.stage }}
-    tier: app
-    {{- if .Values.CI_PIPELINE_ID }}
-    autodeployed: "true"
-    pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
-    {{- end }}
-    {{- if .Values.CI_BUILD_ID }}
-    build_id: "{{ .Values.CI_BUILD_ID }}"
-    {{- end }}
-spec:
-  rules:
-  {{- range $host := $hosts }}
-  - host: {{ $host }}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ $serviceName  }}-app
-            port:
-              number: {{ $servicePort  }}
-  {{- end }}
-  {{- if and (hasKey .Values.app.ingress.annotations "kubernetes.io/tls-acme") (index .Values.app.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
-  tls:
-  - hosts:
-    {{- range $host := $hosts }}
-      - {{ $host }}
-    {{- end }}
-    secretName: {{ template "fullname" . }}-tls
-  {{- end }}
-{{ end }}
+          value: {{ include "compair.databaseName" .}}

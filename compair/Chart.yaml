@@ -6,7 +6,7 @@ keywords:
   - peer learning
   - education
 name: compair
-version: 0.9.1
+version: 0.10.0
 appVersion: 1.2.13
 home: http://ubc.github.io/compair/
 sources:
@@ -16,3 +16,9 @@ maintainers:
     email: pan.luo@ubc.ca
   - name: Andrew Gardener
     email: andrew.gardener@ubc.ca
+dependencies:
+  - condition: db.enabled
+    name: mariadb
+    version: "*"
+    alias: db
+    repository: https://ubc.github.io/charts
