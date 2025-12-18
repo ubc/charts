@@ -17,6 +17,12 @@ spec:
   port: {{ .Values.primary.containerPorts.mysql }}
   storage:
     size: {{ .Values.persistence.size }}
+    {{- if .Values.persistence.storageClassName }}
+    storageClassName: {{ .Values.persistence.storageClassName }}
+    {{- end }}
+    {{- if .Values.persistence.ephemeral }}
+    ephemeral: true
+    {{- end }}
   myCnf: |
 {{ .Values.myCnf | indent 4 }}
   resources:
