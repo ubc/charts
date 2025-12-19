@@ -318,7 +318,7 @@ Also, we can't use a single if because lazy evaluation is not an option
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "moodle.imagePullSecrets" -}}
-{{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.memcached.image .Values.redis.image .Values.shibd.image) "context" $) -}}
+{{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.memcached.image .Values.redis.image .Values.shib.image) "context" $) -}}
 {{- end }}
 
 {{/*
