@@ -9,6 +9,7 @@
 
 fullnameOverride:
 nameOverride:
+commonAnnotations: {}
 
 replicas: 1
 #debug: true
@@ -249,9 +250,9 @@ persistence:
   accessMode: ReadWriteMany
   size: 8Gi
   # existingClaim: ""
-  # resources:
+  resources: {}
   # PVC annotations, could be used for NFS subdir external provisioner
-  #annotations:
+  annotations: {}
   #  nfs.io/storage-path: "moodle"
 
 ## Define affinity for the moodle pod

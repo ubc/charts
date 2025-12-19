@@ -23,22 +23,27 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ include "moodle.fullname" . }}-app-pvc
+  {{- if or .Values.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- with .Values.persistence.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
   labels:
     {{- include "moodle.labels" . | nindent 4 }}
     tier: filestore
-  {{- if .Values.persistence.annotations }}
-  annotations:
-    {{- range $key, $value := .Values.persistence.annotations }}
-    {{ $key }}: {{ $value | quote }}
-    {{- end }}
-  {{- end }}
 spec:
+  {{- if .Values.persistence.storageClass }}
+  storageClassName: {{ .Values.persistence.storageClass | quote }}
+  {{- end }}
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
-  storageClassName: {{ .Values.persistence.storageClass | quote }}
   {{- if not .Values.persistence.storageClass }}
   selector:
     matchLabels:
