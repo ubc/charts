@@ -3,9 +3,9 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: {{ template "moodle.fullname" . }}-app-pv
+  name: {{ include "moodle.fullname" . }}-app-pv
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: filestore
 spec:
   accessModes:
@@ -22,9 +22,9 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "moodle.fullname" . }}-app-pvc
+  name: {{ include "moodle.fullname" . }}-app-pvc
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: filestore
   {{- if .Values.persistence.annotations }}
   annotations:
@@ -42,8 +42,7 @@ spec:
   {{- if not .Values.persistence.storageClass }}
   selector:
     matchLabels:
-      app: {{ template "moodle.fullname" . }}
-      stage: {{ .Values.stage }}
+      {{- include "moodle.selectorLabels" . | nindent 6 }}
       tier: filestore
   {{- end }}
 {{- end -}}

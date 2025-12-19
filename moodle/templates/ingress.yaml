@@ -4,16 +4,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ template "moodle.fullname" . }}
+  name: {{ include "moodle.fullname" . }}
   annotations:
   {{- $tls := false }}
   {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: app
 spec:
+  {{- if .Values.ingress.class }}
+  ingressClassName: {{ .Values.ingress.class }}
+  {{- end }}
   rules:
     {{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
     {{- range $host := $hosts }}
@@ -30,7 +33,7 @@ spec:
     {{- end -}}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
   tls:
-    - secretName: {{ template "moodle.fullname" . }}-tls
+    - secretName: {{ include "moodle.fullname" . }}-tls
       hosts:
       {{- range $host := $hosts }}
         - {{ $host }}

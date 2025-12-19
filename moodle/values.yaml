@@ -7,7 +7,9 @@
 #   imagePullSecrets:
 #     - myRegistryKeySecretName
 
-stage: dev
+fullnameOverride:
+nameOverride:
+
 replicas: 1
 #debug: true
 ## Moodle image version
@@ -86,105 +88,18 @@ hpa:
 ## https://github.com/helm/charts/blob/master/stable/mariadb/values.yaml
 ##
 db:
-  ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
+  enabled: true
+  ## Whether to deploy a mariadb server to satisfy the application database requirements. To use an external database set this to false and configure the externalDatabase parameters
   disableExternal: true
   ## standalone or replication
   architecture: standalone
   # use default image from upstream
-  #image:
-  #  tag: 10.2
   db:
     type: mariadb
   auth:
     #rootPassword:
     database: &dbName moodle
     username: &dbUser moodle
-
-    ## If the password is not specified, mariadb will generates a random password
-    ##
-    # password: &dbPass
-    # replicationUser: replicator
-    # replicationPassword:
-    # existingSecret:
-
-  ## Enable persistence using Persistent Volume Claims
-  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-  ##
-  master:
-    persistence:
-      enabled: true
-      ## mariadb data Persistent Volume Storage Class
-      ## If defined, storageClassName: <storageClass>
-      ## If set to "-", storageClassName: "", which disables dynamic provisioning
-      ## If undefined (the default) or set to null, no storageClassName spec is
-      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      ##   GKE, AWS & OpenStack)
-      ##
-      # storageClass: "-"
-      accessMode: ReadWriteOnce
-      size: 8Gi
-    config: |-
-      [mysqld]
-      skip-name-resolve
-      explicit_defaults_for_timestamp
-      basedir=/opt/bitnami/mariadb
-      plugin_dir=/opt/bitnami/mariadb/plugin
-      port=3306
-      socket=/opt/bitnami/mariadb/tmp/mysql.sock
-      tmpdir=/opt/bitnami/mariadb/tmp
-      max_allowed_packet=16M
-      bind-address=0.0.0.0
-      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-      log-error=/opt/bitnami/mariadb/logs/mysqld.log
-      character-set-server=UTF8
-      collation-server=utf8_general_ci
-      expire-logs-days=90
-
-      [client]
-      port=3306
-      socket=/opt/bitnami/mariadb/tmp/mysql.sock
-      default-character-set=UTF8
-      plugin_dir=/opt/bitnami/mariadb/plugin
-
-      [manager]
-      port=3306
-      socket=/opt/bitnami/mariadb/tmp/mysql.sock
-      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-
-  slave:
-    config: |-
-      [mysqld]
-      skip-name-resolve
-      explicit_defaults_for_timestamp
-      basedir=/opt/bitnami/mariadb
-      port=3306
-      socket=/opt/bitnami/mariadb/tmp/mysql.sock
-      tmpdir=/opt/bitnami/mariadb/tmp
-      max_allowed_packet=16M
-      bind-address=0.0.0.0
-      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-      log-error=/opt/bitnami/mariadb/logs/mysqld.log
-      character-set-server=UTF8
-      collation-server=utf8_general_ci
-      expire-logs-days=90
-
-      [client]
-      port=3306
-      socket=/opt/bitnami/mariadb/tmp/mysql.sock
-      default-character-set=UTF8
-
-      [manager]
-      port=3306
-      socket=/opt/bitnami/mariadb/tmp/mysql.sock
-      pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
-
-  service:
-    # uncomment name to use external service
-    #name:
-    #endpoints:
-    #  - 10.0.0.1
-    #  - 10.0.0.2
-    port: 3306
 
   ## Define affinity for the pod
   ## Sometimes required when persistent volumes are defined externally
@@ -278,6 +193,8 @@ ingress:
   ## Set to true to enable ingress record generation
   enabled: false
 
+  class:
+
   ## The list of hostnames to be covered with this ingress record.
   ## Most likely this will be just one host, but in the event more hosts are needed, this is an array
   hosts:
@@ -299,7 +216,6 @@ ingress:
   ##
   ## If tls is set to true, annotation ingress.kubernetes.io/secure-backends: "true" will automatically be set
   annotations:
-    kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: *uploadMaxFileSize
 
@@ -428,18 +344,6 @@ cronjob:
   concurrencyPolicy: Forbid
   #activeDeadlineSeconds: 0
 
-backupCronjob:
-  enabled: false
-  image:
-    repository: bitnami/mariadb
-    tag: 10.5
-  # imagePullPolicy:
-  schedule: "00 11 * * *"
-  volume:
-    nfs:
-      server: archivep02.lthub.ubc.ca
-      path: /export/archives/moodle-education-db
-
 memcached:
   # enable internal memcached deployment and services, set to false to
   # use external memcached cluster
@@ -449,7 +353,7 @@ memcached:
   image:
     repository: memcached
     tag: 1.5-alpine
-  # imagePullPolicy:
+  imagePullPolicy: IfNotPresent
   replicas: 1
   resources:
     requests:
@@ -461,7 +365,7 @@ memcached:
     image:
       repository: quay.io/prometheus/memcached-exporter
       tag: latest
-    # imagePullPolicy:
+    imagePullPolicy: IfNotPresent
     resources:
       requests:
         memory: 16Mi
@@ -476,7 +380,7 @@ redis:
   image:
     repository: redis
     tag: 5.0-alpine
-  # imagePullPolicy:
+  imagePullPolicy: IfNotPresent
   replicas: 1
   resources:
     requests:
@@ -488,7 +392,7 @@ redis:
     image:
       repository: oliver006/redis_exporter
       tag: latest
-    # imagePullPolicy:
+    imagePullPolicy: IfNotPresent
     resources:
       requests:
         memory: 16Mi
@@ -526,6 +430,7 @@ shib:
     requests:
       memory: 64Mi
       cpu: 50m
+  attributeMap:
 #  attributeMap: |
 #    <Attributes xmlns="urn:mace:shibboleth:2.0:attribute-map" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 #    </Attributes>

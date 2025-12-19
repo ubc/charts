@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "moodle.fullname" . }}
+  name: {{ include "moodle.fullname" . }}
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,7 +12,8 @@ spec:
     protocol: TCP
     name: {{ .Values.service.name }}
   selector:
-    app: {{ template "moodle.fullname" . }}
+    {{- include "moodle.selectorLabels" . | nindent 4 }}
+    tier: app
 
 {{- if .Values.memcached.enabled }}
 ---
@@ -20,9 +21,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "moodle.fullname" . }}-memcached
+  name: {{ include "moodle.fullname" . }}-memcached
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -35,7 +36,8 @@ spec:
     protocol: TCP
     name: metrics
   selector:
-    app: {{ template "moodle.fullname" . }}-memcached
+    {{- include "moodle.selectorLabels" . | nindent 4 }}
+    tier: cache
 {{- end -}}
 
 {{- if .Values.redis.enabled }}
@@ -44,9 +46,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "moodle.fullname" . }}-redis
+  name: {{ include "moodle.fullname" . }}-redis
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -59,7 +61,8 @@ spec:
     protocol: TCP
     name: metrics
   selector:
-    app: {{ template "moodle.fullname" . }}-redis
+    {{- include "moodle.selectorLabels" . | nindent 4 }}
+    tier: cache
 {{- end -}}
 
 {{- if not .Values.db.disableExternal }}
@@ -69,7 +72,7 @@ kind: Service
 metadata:
   name: {{ template "moodle.db.fullname" . }}
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
 spec:
   ports:
   - port: {{ .Values.db.service.port }}
@@ -83,7 +86,7 @@ apiVersion: v1
 metadata:
   name: {{ template "moodle.db.fullname" . }}
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
 subsets:
 - addresses:
   {{- range .Values.db.service.endpoints }}
@@ -101,9 +104,9 @@ subsets:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "moodle.fullname" . }}-shibd
+  name: {{ include "moodle.fullname" . }}-shibd
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -112,5 +115,6 @@ spec:
     protocol: TCP
     name: shibd
   selector:
-    app: {{ template "moodle.fullname" . }}-shibd
+    {{- include "moodle.selectorLabels" . | nindent 4 }}
+    tier: auth
 {{- end -}}

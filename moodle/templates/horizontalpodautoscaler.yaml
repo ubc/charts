@@ -2,15 +2,15 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "moodle.fullname" . }}
+  name: {{ include "moodle.fullname" . }}
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: app
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "moodle.fullname" . }}
+    name: {{ include "moodle.fullname" . }}
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   targetCPUUtilizationPercentage: {{ .Values.hpa.targetCPUUtilizationPercentage }}

@@ -1,6 +1,7 @@
 apiVersion: v2
 name: moodle
-version: 0.1.15
+version: 0.2.0
+appVersion: 4.5.8
 description: Moodle is a learning platform designed to provide educators, administrators and learners with a single robust, secure and integrated system to create personalised learning environments
 keywords:
 - moodle
@@ -15,10 +16,10 @@ maintainers:
 engine: gotpl
 
 dependencies:
-- name: mariadb
-  version: 11.x.x
-  repository: https://charts.bitnami.com/bitnami
-  condition: db.disableExternal
-  alias: db
-  tags:
-    - moodle-database
+  - name: mariadb
+    condition: db.enabled
+    version: "*"
+    alias: db
+    repository: https://ubc.github.io/charts
+    tags:
+      - moodle-database

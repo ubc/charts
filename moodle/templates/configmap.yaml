@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "moodle.fullname" . }}-cm
+  name: {{ include "moodle.fullname" . }}-cm
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: configmap
 data:
   attribute-map.xml: |

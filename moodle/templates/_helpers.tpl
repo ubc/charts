@@ -30,51 +30,53 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*{{ define "moodle.fullname" -}}*/}}
+{{/*{{- if .Values.fullnameOverride }}*/}}
+{{/*{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}*/}}
+{{/*{{- else }}*/}}
+{{/*{{- $name := default .Chart.Name .Values.nameOverride }}*/}}
+{{/*{{- if contains $name .Release.Name }}*/}}
+{{/*{{- .Release.Name | trunc 63 | trimSuffix "-" }}*/}}
+{{/*{{- else }}*/}}
+{{/*{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}*/}}
+{{/*{{- end }}*/}}
+{{/*{{- end }}*/}}
+{{/*{{- end }}*/}}
+
 {{/*
-Create a default fully qualified app name.
+Create a default fully qualified app name for the database.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "moodle.db.fullname" -}}
-{{- if .Values.db.disableExternal }}
-{{- include "call-nested" (list . "db" "mariadb.primary.fullname") | default .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name "db" -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "moodle.db.secretname" -}}
-{{- if .Values.db.auth.existingSecret }}
-  {{- .Values.db.auth.existingSecret -}}
-{{- else -}}
-  {{- if .Values.db.disableExternal }}
-    {{- include "call-nested" (list . "db" "common.names.fullname") }}
-  {{- else -}}
-    {{- template "moodle.fullname" . }}
-  {{- end -}}
-{{- end -}}
+{{- include "call-nested" (list . "db" "mariadb.fullname") -}}
 {{- end -}}
 
 {{- define "moodle.secretname" -}}
 {{- if .Values.moodleExistingSecret }}
 {{- .Values.moodleExistingSecret -}}
 {{- else -}}
-{{ template "moodle.fullname" . }}
+{{ include "moodle.fullname" . }}
 {{- end -}}
 {{- end -}}
 
-{{- define "common_labels" }}
-app: {{ template "moodle.fullname" . }}
-stage: {{ .Values.stage }}
-chart: {{ print .Chart.Name "-" .Chart.Version | replace "+" "_" | quote }}
-release: {{ .Release.Name | quote }}
-heritage: {{ .Release.Service | quote }}
-{{- if .Values.CI_PIPELINE_ID }}
-autodeployed: "true"
-pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
+{{/*
+Common labels
+*/}}
+{{- define "moodle.labels" -}}
+helm.sh/chart: {{ include "moodle.chart" . }}
+{{ include "moodle.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-{{- if .Values.CI_BUILD_ID }}
-build_id: "{{ .Values.CI_BUILD_ID }}"
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "moodle.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "moodle.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
@@ -109,7 +111,7 @@ Also, we can't use a single if because lazy evaluation is not an option
 
 {{/* Moodle container spec */}}
 {{- define "moodle.app.spec" }}
-image: '{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}'
+image: '{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}'
 imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
 env:
 - name: SERVER_NAME
@@ -117,23 +119,18 @@ env:
 - name: MOODLE_DB_TYPE
   value: {{ default "mariadb" .Values.db.db.type | quote }}
 - name: MOODLE_DB_HOST
-  value: {{ template "moodle.db.fullname" . }}
+  value: {{ include "moodle.databaseHost" .}}
 - name: MOODLE_DB_PORT
-  value: {{ .Values.db.service.port | quote }}
+  value: {{ include "moodle.databasePort" . }}
 - name: MOODLE_DB_USER
-  value: {{ default "moodle" .Values.db.auth.username | quote }}
+  value: {{ include "moodle.databaseUser" .}}
 - name: MOODLE_DB_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.secretname" . }}
-      key: mariadb-password
-    {{- else }}
-      name: {{ template "moodle.db.secretname" . }}
-      key: db_password
-    {{- end }}
+      name: {{ include "moodle.databaseSecretName" . }}
+      key: {{ include "moodle.databaseSecretKey" . }}
 - name: MOODLE_DB_NAME
-  value: {{ .Values.db.auth.database | quote }}
+  value: {{ include "moodle.databaseName" .}}
 {{- if .Values.db.db.prefix }}
 - name: MOODLE_DB_PREFIX
   value: {{ .Values.db.db.prefix | quote }}
@@ -177,23 +174,18 @@ env:
 {{- if .Values.ubcCoursePayment.enabled }}
 {{/* Course payment db on same db server as moodle */}}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_HOST
-  value: {{ template "moodle.db.fullname" . }}
+  value: {{ include "moodle.databaseHost" .}}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_NAME
   value: {{ default "" .Values.ubcCoursePayment.db.name | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_USER
-  value: {{ default "moodle" .Values.db.auth.username | quote }}
+  value: {{ include "moodle.databaseUser" .}}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.secretname" . }}
-      key: mariadb-password
-    {{- else }}
-      name: {{ template "moodle.db.secretname" . }}
-      key: db_password
-    {{- end }}
+      name: {{ include "moodle.databaseSecretName" . }}
+      key: {{ include "moodle.databaseSecretKey" . }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_PORT
-  value: {{ .Values.db.service.port | quote }}
+  value: {{ include "moodle.databasePort" . }}
 - name: MOODLE_UBC_COURSE_PAYMENT_UPLOAD_DIR
   value: {{ default "" .Values.ubcCoursePayment.uploadDir | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_CBM_DEBUG
@@ -231,7 +223,7 @@ env:
   value: {{ .Values.uploadMaxFileSize | quote }}
 {{- if .Values.redis.enabled }}
 - name: REDIS_HOST
-  value: {{ template "moodle.fullname" . }}-redis
+  value: {{ include "moodle.fullname" . }}-redis
 - name: REDIS_PORT
   value: "6379"
 - name: REDIS_DB
@@ -261,25 +253,20 @@ env:
 - name: SHIBD_ODBC_LIB
   value: {{ .Values.shib.odbc.lib }}
 - name: SHIBD_ODBC_SERVER
-  value: {{ template "moodle.db.fullname" . | default .Values.db.service.name }}
+  value: {{ include "moodle.databaseHost" .}}
 - name: SHIBD_ODBC_PORT
-  value: {{ .Values.db.service.port | quote }}
+  value: {{ include "moodle.databasePort" . }}
 - name: SHIBD_ODBC_DATABASE
-  value: {{ .Values.db.auth.database| quote }}
+  value: {{ include "moodle.databaseName" .}}
 - name: SHIB_ODBC_USER
-  value: {{ default "moodle" .Values.db.auth.username | quote }}
+  value: {{ include "moodle.databaseUser" .}}
 - name: SHIB_ODBC_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.disableExternal }}
-      name: {{ template "moodle.db.secretname" . }}
-      key: mariadb-password
-    {{- else }}
-      name: {{ template "moodle.db.secretname" . }}
-      key: db_password
-    {{- end }}
+      name: {{ include "moodle.databaseSecretName" . }}
+      key: {{ include "moodle.databaseSecretKey" . }}
 - name: SHIBD_SERVICE_NAME
-  value: {{ template "moodle.fullname" . }}-shibd
+  value: {{ include "moodle.fullname" . }}-shibd
 - name: SHIBD_SERVICE_PORT
   value: {{ .Values.shib.port | quote }}
 {{- end }}
@@ -298,7 +285,7 @@ volumeMounts:
 - name: moodle-data
 {{- if .Values.persistence.enabled }}
   persistentVolumeClaim:
-    claimName: {{ template "moodle.fullname" . }}-app-pvc
+    claimName: {{ include "moodle.fullname" . }}-app-pvc
 {{- else }}
   emptyDir: {}
 {{- end }}
@@ -359,5 +346,122 @@ imagePullSecrets:
 {{- range .Values.metrics.image.pullSecrets }}
   - name: {{ . }}
 {{- end }}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Return the MariaDB Hostname
+*/}}
+{{- define "moodle.databaseHost" -}}
+{{- if .Values.db.enabled }}
+    {{- if eq .Values.db.architecture "replication" }}
+        {{- printf "%s-primary" (include "moodle.db.fullname" .) | trunc 63 | trimSuffix "-" -}}
+    {{- else -}}
+        {{- printf "%s" (include "moodle.db.fullname" .) -}}
+    {{- end -}}
+{{- else -}}
+    {{- printf "%s" .Values.externalDatabase.host -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Port
+*/}}
+{{- define "moodle.databasePort" -}}
+{{- if .Values.db.enabled }}
+    {{- printf "3306" | quote -}}
+{{- else -}}
+    {{- printf "%d" (.Values.externalDatabase.port | int ) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Database Name
+*/}}
+{{- define "moodle.databaseName" -}}
+{{- if .Values.db.enabled }}
+    {{- printf "%s" .Values.db.auth.database -}}
+{{- else -}}
+    {{- printf "%s" .Values.externalDatabase.database -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB User
+*/}}
+{{- define "moodle.databaseUser" -}}
+{{- if .Values.db.enabled }}
+    {{- printf "%s" .Values.db.auth.username -}}
+{{- else -}}
+    {{- printf "%s" .Values.externalDatabase.user -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Secret Name
+*/}}
+{{- define "moodle.databaseSecretName" -}}
+{{- if .Values.db.enabled }}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
+        {{- printf "%s" .Values.db.auth.existingSecret -}}
+    {{- else -}}
+        {{- printf "%s-user-password" (include "moodle.db.fullname" .) -}}
+    {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
+{{- else -}}
+    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Secret Key
+*/}}
+{{- define "moodle.databaseSecretKey" -}}
+{{- if .Values.db.enabled }}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
+        {{- printf "%s" .Values.db.auth.userPasswordKey -}}
+    {{- else -}}
+        {{- printf "password-%s" (include "moodle.databaseUser" .) -}}
+    {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
+{{- else -}}
+    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Root Secret Name
+*/}}
+{{- define "moodle.databaseRootSecretName" -}}
+{{- if .Values.db.enabled }}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.rootPasswordKey -}}
+        {{- printf "%s" .Values.db.auth.existingSecret -}}
+    {{- else -}}
+        {{- printf "%s-root" (include "moodle.db.fullname" .) -}}
+    {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
+{{- else -}}
+    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the MariaDB Root Secret Key
+*/}}
+{{- define "moodle.databaseRootSecretKey" -}}
+{{- if .Values.db.enabled }}
+    {{- if and .Values.db.auth.existingSecret .Values.db.auth.rootPasswordKey -}}
+        {{- printf "%s" .Values.db.auth.rootPasswordKey -}}
+    {{- else -}}
+        {{- printf "password" -}}
+    {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+    {{- tpl .Values.externalDatabase.existingSecret $ -}}
+{{- else -}}
+    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
 {{- end -}}
 {{- end -}}

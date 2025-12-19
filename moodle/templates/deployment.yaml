@@ -1,22 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "moodle.fullname" . }}
+  name: {{ include "moodle.fullname" . }}
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: app
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: {{ template "moodle.fullname" . }}
-      release: "{{ .Release.Name }}"
+      {{- include "moodle.selectorLabels" . | nindent 6 }}
+      tier: app
   template:
     metadata:
       labels:
-        app: {{ template "moodle.fullname" . }}
-        chart: {{ template "moodle.chart" . }}
-        release: "{{ .Release.Name }}"
+        {{- include "moodle.labels" . | nindent 8 }}
+        tier: app
 {{- if or .Values.podAnnotations .Values.metrics.enabled }}
       annotations:
   {{- if .Values.podAnnotations }}
@@ -37,11 +36,11 @@ spec:
         hostnames:
         - "status.localhost"
       initContainers:
-      - name: init-{{ template "moodle.fullname" . }}
+      - name: init-{{ include "moodle.fullname" . }}
           {{- include "moodle.app.spec" . | indent 8 }}
         args: ["echo", "Initialized"]
       containers:
-      - name: {{ template "moodle.fullname" . }}
+      - name: {{ include "moodle.fullname" . }}
       {{- include "moodle.app.spec" . | indent 8 }}
         ports:
         - name: http
@@ -85,23 +84,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "moodle.fullname" . }}-memcached
+  name: {{ include "moodle.fullname" . }}-memcached
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: cache
 spec:
   replicas: {{ .Values.memcached.replicas }}
   selector:
     matchLabels:
-      app: {{ template "moodle.fullname" . }}-memcached
+      {{- include "moodle.selectorLabels" . | nindent 6 }}
+      tier: cache
   template:
     metadata:
       labels:
-        app: {{ template "moodle.fullname" . }}-memcached
+        {{- include "moodle.selectorLabels" . | nindent 8 }}
+        tier: cache
     spec:
+      {{- include "moodle.imagePullSecrets" . | indent 6 }}
       containers:
       {{- if .Values.memcached.exporter.enabled }}
-      - name: {{ template "moodle.fullname" . }}-memcached-exporter
+      - name: {{ include "moodle.fullname" . }}-memcached-exporter
         image: '{{ .Values.memcached.exporter.image.repository }}:{{ .Values.memcached.exporter.image.tag | default "latest" }}'
         imagePullPolicy: {{ default "" .Values.memcached.exporter.imagePullPolicy | quote }}
         ports:
@@ -116,7 +118,7 @@ spec:
         resources:
   {{ toYaml .Values.memcached.exporter.resources | indent 10 }}
   {{- end }}
-- name: {{ template "moodle.fullname" . }}-memcached
+- name: {{ include "moodle.fullname" . }}-memcached
   image: '{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag | default "latest" }}'
   imagePullPolicy: {{ default "" .Values.memcached.imagePullPolicy | quote }}
   args: ["-m", "{{ .Values.memcached.memory }}"]
@@ -138,23 +140,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "moodle.fullname" . }}-redis
+  name: {{ include "moodle.fullname" . }}-redis
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: cache
 spec:
   replicas: {{ .Values.redis.replicas }}
   selector:
     matchLabels:
-      app: {{ template "moodle.fullname" . }}-redis
+      {{- include "moodle.selectorLabels" . | nindent 6 }}
+      tier: cache
   template:
     metadata:
       labels:
-        app: {{ template "moodle.fullname" . }}-redis
+        {{- include "moodle.labels" . | nindent 8 }}
+        tier: cache
     spec:
+      {{- include "moodle.imagePullSecrets" . | indent 6 }}
       containers:
       {{- if .Values.redis.exporter.enabled }}
-      - name: {{ template "moodle.fullname" . }}-redis-exporter
+      - name: {{ include "moodle.fullname" . }}-redis-exporter
         image: '{{ .Values.redis.exporter.image.repository }}:{{ .Values.redis.exporter.image.tag | default "latest" }}'
         imagePullPolicy: {{ default "" .Values.redis.exporter.imagePullPolicy | quote }}
         ports:
@@ -169,7 +174,7 @@ spec:
         resources:
 {{ toYaml .Values.redis.exporter.resources | indent 10 }}
       {{- end }}
-      - name: {{ template "moodle.fullname" . }}-redis
+      - name: {{ include "moodle.fullname" . }}-redis
         image: '{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag | default "latest" }}'
         imagePullPolicy: {{ default "" .Values.redis.imagePullPolicy | quote }}
         ports:
@@ -190,22 +195,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "moodle.fullname" . }}-shibd
+  name: {{ include "moodle.fullname" . }}-shibd
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "moodle.labels" . | nindent 4 }}
     tier: auth
 spec:
   replicas: {{ .Values.shib.replicas }}
   selector:
     matchLabels:
-      app: {{ template "moodle.fullname" . }}-shibd
+      {{- include "moodle.selectorLabels" . | nindent 6 }}
+      tier: auth
   template:
     metadata:
       labels:
-        app: {{ template "moodle.fullname" . }}-shibd
+        {{- include "moodle.labels" . | nindent 8 }}
+        tier: auth
     spec:
+      {{- include "moodle.imagePullSecrets" . | indent 6 }}
       containers:
-      - name: {{ template "moodle.fullname" . }}-shibd
+      - name: {{ include "moodle.fullname" . }}-shibd
         image: '{{ .Values.shib.image.repository }}:{{ .Values.shib.image.tag | default "latest" }}'
         imagePullPolicy: {{ default "" .Values.shib.imagePullPolicy | quote }}
         ports:
@@ -231,23 +239,18 @@ spec:
         - name: SHIBD_ODBC_LIB
           value: {{ .Values.shib.odbc.lib }}
         - name: SHIBD_ODBC_SERVER
-          value: {{ template "moodle.db.fullname" . | default .Values.db.service.name }}
+          value: {{ include "moodle.databaseHost" .}}
         - name: SHIBD_ODBC_PORT
-          value: {{ .Values.db.service.port | quote }}
+          value: {{ include "moodle.databasePort" . }}
         - name: SHIBD_ODBC_DATABASE
-          value: {{ .Values.db.auth.database | quote }}
+          value: {{ include "moodle.databaseName" .}}
         - name: SHIB_ODBC_USER
-          value: {{ default "moodle" .Values.db.auth.username | quote }}
+          value: {{ include "moodle.databaseUser" .}}
         - name: SHIB_ODBC_PASSWORD
           valueFrom:
             secretKeyRef:
-            {{- if .Values.db.disableExternal }}
-              name: {{ template "moodle.db.secretname" . }}
-              key: mariadb-password
-            {{- else }}
-              name: {{ template "moodle.db.secretname" . }}
-              key: db_password
-            {{- end }}
+              name: {{ include "moodle.databaseSecretName" . }}
+              key: {{ include "moodle.databaseSecretKey" . }}
         - name: LOG_LEVEL
           value: {{ default "INFO" .Values.shib.logLevel | quote }}
         livenessProbe:
@@ -270,11 +273,11 @@ spec:
       volumes:
       - name: shibd-cert
         secret:
-          secretName: {{ template "moodle.fullname" . }}-shibd
+          secretName: {{ include "moodle.fullname" . }}-shibd
       {{- if .Values.shib.attributeMap }}
       - name: attribute-map
         configMap:
-          name: {{ template "moodle.fullname" . }}-cm
+          name: {{ include "moodle.fullname" . }}-cm
       {{- end }}
     {{- end }}
 {{- end -}}
