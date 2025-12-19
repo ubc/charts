@@ -321,6 +321,19 @@ Return the proper Docker Image Registry Secret Names
 {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.memcached.image .Values.redis.image .Values.shib.image) "context" $) -}}
 {{- end }}
 
+{{- define "common.tplvalues.render" -}}
+{{- $value := typeIs "string" .value | ternary .value (.value | toYaml) }}
+{{- if contains "{{" (toJson .value) }}
+  {{- if .scope }}
+      {{- tpl (cat "{{- with $.RelativeScope -}}" $value "{{- end }}") (merge (dict "RelativeScope" .scope) .context) }}
+  {{- else }}
+    {{- tpl $value .context }}
+  {{- end }}
+{{- else }}
+    {{- $value }}
+{{- end }}
+{{- end -}}
+
 {{/*
 Return the proper Docker Image Registry Secret Names evaluating values as templates
 {{ include "common.images.renderPullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "context" $) }}

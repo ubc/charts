@@ -30,7 +30,7 @@ spec:
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
       {{- end }}
-{{- include "moodle.imagePullSecrets" . | indent 6 }}
+      {{- include "moodle.imagePullSecrets" . | nindent 6 }}
       hostAliases:
       - ip: "127.0.0.1"
         hostnames:
@@ -100,7 +100,7 @@ spec:
         {{- include "moodle.selectorLabels" . | nindent 8 }}
         tier: cache
     spec:
-      {{- include "moodle.imagePullSecrets" . | indent 6 }}
+      {{- include "moodle.imagePullSecrets" . | nindent 6 }}
       containers:
       {{- if .Values.memcached.exporter.enabled }}
       - name: {{ include "moodle.fullname" . }}-memcached-exporter
@@ -156,7 +156,7 @@ spec:
         {{- include "moodle.labels" . | nindent 8 }}
         tier: cache
     spec:
-      {{- include "moodle.imagePullSecrets" . | indent 6 }}
+      {{- include "moodle.imagePullSecrets" . | nindent 6 }}
       containers:
       {{- if .Values.redis.exporter.enabled }}
       - name: {{ include "moodle.fullname" . }}-redis-exporter
@@ -211,7 +211,7 @@ spec:
         {{- include "moodle.labels" . | nindent 8 }}
         tier: auth
     spec:
-      {{- include "moodle.imagePullSecrets" . | indent 6 }}
+      {{- include "moodle.imagePullSecrets" . | nindent 6 }}
       containers:
       - name: {{ include "moodle.fullname" . }}-shibd
         image: '{{ .Values.shib.image.repository }}:{{ .Values.shib.image.tag | default "latest" }}'
