@@ -645,6 +645,34 @@ entries:
   compair:
   - apiVersion: v2
     appVersion: 1.3.3
+    created: "2025-12-19T07:44:24.9416852Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: Pairing peer answers for deeper learning through comparison
+    digest: 95213274c736a6a22e39334af0c3043d646bc77b24475e7c2adc3c8e68d2e146
+    home: http://ubc.github.io/compair/
+    keywords:
+    - compair
+    - acj
+    - peer learning
+    - education
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    - email: andrew.gardener@ubc.ca
+      name: Andrew Gardener
+    name: compair
+    sources:
+    - http://github.com/ubc/compair
+    urls:
+    - https://github.com/ubc/charts/releases/download/compair-0.10.4/compair-0.10.4.tgz
+    version: 0.10.4
+  - apiVersion: v2
+    appVersion: 1.3.3
     created: "2025-12-18T05:46:11.225897109Z"
     dependencies:
     - alias: db
@@ -4639,6 +4667,35 @@ entries:
     version: 0.1.0
   moodle:
   - apiVersion: v2
+    appVersion: 4.5.8
+    created: "2025-12-19T07:44:25.102164729Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      tags:
+      - moodle-database
+      version: '*'
+    description: Moodle is a learning platform designed to provide educators, administrators
+      and learners with a single robust, secure and integrated system to create personalised
+      learning environments
+    digest: 22a242414c3142831ec02ed50ef25dbbe09aca12dbf31469018bd325d6904704
+    home: http://www.moodle.org/
+    keywords:
+    - moodle
+    - learning
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: moodle
+    sources:
+    - https://github.com/ubc/moodle-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/moodle-0.2.0/moodle-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     created: "2024-11-26T21:49:43.769293229Z"
     dependencies:
     - alias: db
@@ -6814,4 +6871,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-18T05:46:11.227020095Z"
+generated: "2025-12-19T07:44:25.103007786Z"
