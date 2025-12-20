@@ -155,20 +155,24 @@ env:
 - name: MOODLE_SITE_LANG
   value: {{ default "en" .Values.moodleLang | quote }}
 - name: SMTP_HOST
-  value: {{ default "" .Values.smtpHost | quote }}
+  value: {{ default "" .Values.smtp.host | quote }}
 - name: SMTP_PORT
-  value: {{ default "" .Values.smtpPort | quote }}
+  value: {{ default "" .Values.smtp.port | quote }}
 - name: SMTP_USER
-  value: {{ default "" .Values.smtpUser | quote }}
+  value: {{ default "" .Values.smtp.user | quote }}
 - name: SMTP_PASSWORD
+{{- if or .Values.smtp.password .Values.smtp.existingPassword }}
   valueFrom:
     secretKeyRef:
-      name: {{ template "moodle.secretname" . }}
-      key: smtp_password
+      name: {{ if .Values.smtp.existingPassword }}{{ .Values.smtp.existingPassword }}{{ else }}{{ include "moodle.fullname" . }}{{ end }}
+      key: {{ if .Values.smtp.existingPassword }}smtp-password{{ else }}smtp_password{{ end }}
+{{- else }}
+  value: ""
+{{- end }}
 - name: SMTP_PROTOCOL
-  value: {{ default "" .Values.smtpProtocol | quote }}
+  value: {{ default "" .Values.smtp.protocol | quote }}
 - name: SMTP_AUTH
-  value: {{ default "" .Values.smtpAuth | quote }}
+  value: {{ default "" .Values.smtp.auth | quote }}
 - name: MOODLE_NOREPLY_ADDRESS
   value: {{ default "" .Values.moodleNoReplyAddress | quote }}
 {{- if .Values.ubcCoursePayment.enabled }}
@@ -370,6 +374,13 @@ imagePullSecrets:
 
 
 {{/*
+Return the external database name
+*/}}
+{{- define "moodle.externalDatabaseName" -}}
+{{- printf "%s-db" (include "moodle.fullname" .) -}}
+{{- end -}}
+
+{{/*
 Return the MariaDB Hostname
 */}}
 {{- define "moodle.databaseHost" -}}
@@ -379,8 +390,8 @@ Return the MariaDB Hostname
     {{- else -}}
         {{- printf "%s" (include "moodle.db.fullname" .) -}}
     {{- end -}}
-{{- else -}}
-    {{- printf "%s" .Values.externalDatabase.host -}}
+{{- else if .Values.externalDatabase.enabled -}}
+    {{- include "moodle.externalDatabaseName" . -}}
 {{- end -}}
 {{- end -}}
 
@@ -390,7 +401,7 @@ Return the MariaDB Port
 {{- define "moodle.databasePort" -}}
 {{- if .Values.db.enabled }}
     {{- printf "3306" | quote -}}
-{{- else -}}
+{{- else if .Values.externalDatabase.enabled -}}
     {{- printf "%d" (.Values.externalDatabase.port | int ) -}}
 {{- end -}}
 {{- end -}}
@@ -401,7 +412,7 @@ Return the MariaDB Database Name
 {{- define "moodle.databaseName" -}}
 {{- if .Values.db.enabled }}
     {{- printf "%s" .Values.db.auth.database -}}
-{{- else -}}
+{{- else if .Values.externalDatabase.enabled -}}
     {{- printf "%s" .Values.externalDatabase.database -}}
 {{- end -}}
 {{- end -}}
@@ -412,7 +423,7 @@ Return the MariaDB User
 {{- define "moodle.databaseUser" -}}
 {{- if .Values.db.enabled }}
     {{- printf "%s" .Values.db.auth.username -}}
-{{- else -}}
+{{- else if .Values.externalDatabase.enabled -}}
     {{- printf "%s" .Values.externalDatabase.user -}}
 {{- end -}}
 {{- end -}}
@@ -427,10 +438,12 @@ Return the MariaDB Secret Name
     {{- else -}}
         {{- printf "%s-user-password" (include "moodle.db.fullname" .) -}}
     {{- end -}}
-{{- else if .Values.externalDatabase.existingSecret -}}
-    {{- tpl .Values.externalDatabase.existingSecret $ -}}
-{{- else -}}
-    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
+{{- else if .Values.externalDatabase.enabled -}}
+    {{- if .Values.externalDatabase.existingSecret -}}
+        {{- tpl .Values.externalDatabase.existingSecret $ -}}
+    {{- else -}}
+        {{- printf "%s" (include "moodle.fullname" .) -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -444,10 +457,8 @@ Return the MariaDB Secret Key
     {{- else -}}
         {{- printf "password-%s" (include "moodle.databaseUser" .) -}}
     {{- end -}}
-{{- else if .Values.externalDatabase.existingSecret -}}
-    {{- tpl .Values.externalDatabase.existingSecret $ -}}
-{{- else -}}
-    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
+{{- else if .Values.externalDatabase.enabled -}}
+    db_password
 {{- end -}}
 {{- end -}}
 
@@ -461,10 +472,12 @@ Return the MariaDB Root Secret Name
     {{- else -}}
         {{- printf "%s-root" (include "moodle.db.fullname" .) -}}
     {{- end -}}
-{{- else if .Values.externalDatabase.existingSecret -}}
-    {{- tpl .Values.externalDatabase.existingSecret $ -}}
-{{- else -}}
-    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
+{{- else if .Values.externalDatabase.enabled -}}
+    {{- if .Values.externalDatabase.existingSecret -}}
+        {{- tpl .Values.externalDatabase.existingSecret $ -}}
+    {{- else -}}
+        {{- printf "%s" (include "moodle.fullname" .) -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -478,9 +491,7 @@ Return the MariaDB Root Secret Key
     {{- else -}}
         {{- printf "password" -}}
     {{- end -}}
-{{- else if .Values.externalDatabase.existingSecret -}}
-    {{- tpl .Values.externalDatabase.existingSecret $ -}}
-{{- else -}}
-    {{- printf "%s-externaldb" (include "moodle.fullname" .) -}}
+{{- else if .Values.externalDatabase.enabled -}}
+    db-root-password
 {{- end -}}
 {{- end -}}

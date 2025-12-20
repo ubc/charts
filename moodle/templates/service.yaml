@@ -65,18 +65,18 @@ spec:
     tier: cache
 {{- end -}}
 
-{{- if not .Values.db.disableExternal }}
+{{- if .Values.externalDatabase.enabled }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "moodle.db.fullname" . }}
+  name: {{ include "moodle.externalDatabaseName" . }}
   labels:
     {{- include "moodle.labels" . | nindent 4 }}
 spec:
   ports:
-  - port: {{ .Values.db.service.port }}
-    targetPort: {{ .Values.db.service.port }}
+  - port: {{ .Values.externalDatabase.service.port }}
+    targetPort: {{ .Values.externalDatabase.service.port }}
     protocol: TCP
     name: db
 
@@ -84,16 +84,16 @@ spec:
 kind: Endpoints
 apiVersion: v1
 metadata:
-  name: {{ template "moodle.db.fullname" . }}
+  name: {{ include "moodle.externalDatabaseName" . }}
   labels:
     {{- include "moodle.labels" . | nindent 4 }}
 subsets:
 - addresses:
-  {{- range .Values.db.service.endpoints }}
+  {{- range .Values.externalDatabase.service.endpoints }}
   - ip: {{ . }}
   {{- end }}
   ports:
-  - port: {{ .Values.db.service.port }}
+  - port: {{ .Values.externalDatabase.service.port }}
     name: db
     protocol: TCP
 {{- end -}}

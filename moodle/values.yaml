@@ -45,9 +45,9 @@ moodleUsername: user
 ## Application password
 ## Defaults to a random 10-character alphanumeric string if not set
 ##
-# moodlePassword:
+moodlePassword:
 # or use existing secret for moodle password
-# moodleExistingSecret:
+moodleExistingSecret:
 
 ## Admin email
 ## ref: https://github.com/bitnami/bitnami-docker-moodle#configuration
@@ -66,12 +66,14 @@ moodleShortName: "Moodle"
 
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/bitnami-docker-moodle/#smtp-configuration
-# smtpHost:
-# smtpPort:
-# smtpUser:
-# smtpPassword:
-# smtpProtocol:
-# smtpAuth:
+smtp:
+  host:
+  port:
+  user:
+  password:
+  existingPassword:
+  protocol:
+  auth:
 
 uploadMaxFileSize: &uploadMaxFileSize 20m
 
@@ -101,6 +103,19 @@ db:
     #rootPassword:
     database: &dbName moodle
     username: &dbUser moodle
+
+externalDatabase:
+  enabled: false
+  port: 3306
+  database: moodle
+  user: moodle
+  password:
+  existingSecret:
+
+  service:
+    enabled: true
+    endpoints: []
+    port: 3306
 
   ## Define affinity for the pod
   ## Sometimes required when persistent volumes are defined externally
@@ -422,8 +437,8 @@ shib:
     attributeMapUrl: https://example.com/attribute-map.xml
   sp:
     entityId: https://sp.example.com
-    # key:
-    # cert:
+    key:
+    cert:
   odbc:
     driver: MySql
     lib: odbc-store.so
