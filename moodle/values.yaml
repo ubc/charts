@@ -92,8 +92,6 @@ hpa:
 ##
 db:
   enabled: true
-  ## Whether to deploy a mariadb server to satisfy the application database requirements. To use an external database set this to false and configure the externalDatabase parameters
-  disableExternal: true
   ## standalone or replication
   architecture: standalone
   # use default image from upstream
@@ -439,6 +437,7 @@ shib:
     entityId: https://sp.example.com
     key:
     cert:
+    existingSecretRef:
   odbc:
     driver: MySql
     lib: odbc-store.so

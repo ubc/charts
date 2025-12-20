@@ -59,6 +59,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
+{{- define "moodle.shibSPSecretName" -}}
+{{- if .Values.shib.sp.existingSecretRef -}}
+    {{- .Values.shib.sp.existingSecretRef -}}
+{{- else -}}
+    {{- printf "%s-shibd" (include "moodle.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Common labels
 */}}

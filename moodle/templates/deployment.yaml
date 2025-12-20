@@ -261,7 +261,7 @@ spec:
             port: 1600
         resources:
 {{ toYaml .Values.shib.resources | indent 10 }}
-    {{ if .Values.shib.sp.key }}
+    {{ if or .Values.shib.sp.key .Values.shib.sp.existingSecretRef }}
         volumeMounts:
         - name: shibd-cert
           mountPath: /etc/shibboleth/cert
@@ -273,7 +273,7 @@ spec:
       volumes:
       - name: shibd-cert
         secret:
-          secretName: {{ include "moodle.fullname" . }}-shibd
+          secretName: {{ include "moodle.shibSPSecretName" . }}
       {{- if .Values.shib.attributeMap }}
       - name: attribute-map
         configMap:
