@@ -241,7 +241,7 @@ spec:
         - name: SHIBD_ODBC_SERVER
           value: {{ include "moodle.databaseHost" .}}
         - name: SHIBD_ODBC_PORT
-          value: {{ include "moodle.databasePort" . }}
+          value: {{ include "moodle.databasePort" . | quote }}
         - name: SHIBD_ODBC_DATABASE
           value: {{ include "moodle.databaseName" .}}
         - name: SHIB_ODBC_USER

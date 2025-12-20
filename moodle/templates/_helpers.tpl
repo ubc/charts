@@ -121,7 +121,7 @@ env:
 - name: MOODLE_DB_HOST
   value: {{ include "moodle.databaseHost" .}}
 - name: MOODLE_DB_PORT
-  value: {{ include "moodle.databasePort" . }}
+  value: {{ include "moodle.databasePort" . | quote }}
 - name: MOODLE_DB_USER
   value: {{ include "moodle.databaseUser" .}}
 - name: MOODLE_DB_PASSWORD
@@ -189,7 +189,7 @@ env:
       name: {{ include "moodle.databaseSecretName" . }}
       key: {{ include "moodle.databaseSecretKey" . }}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_PORT
-  value: {{ include "moodle.databasePort" . }}
+  value: {{ include "moodle.databasePort" . | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_UPLOAD_DIR
   value: {{ default "" .Values.ubcCoursePayment.uploadDir | quote }}
 - name: MOODLE_UBC_COURSE_PAYMENT_CBM_DEBUG
@@ -259,7 +259,7 @@ env:
 - name: SHIBD_ODBC_SERVER
   value: {{ include "moodle.databaseHost" .}}
 - name: SHIBD_ODBC_PORT
-  value: {{ include "moodle.databasePort" . }}
+  value: {{ include "moodle.databasePort" . | quote }}
 - name: SHIBD_ODBC_DATABASE
   value: {{ include "moodle.databaseName" .}}
 - name: SHIB_ODBC_USER
