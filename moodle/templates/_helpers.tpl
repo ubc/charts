@@ -408,7 +408,7 @@ Return the MariaDB Port
 */}}
 {{- define "moodle.databasePort" -}}
 {{- if .Values.db.enabled }}
-    {{- printf "3306" | quote -}}
+    {{- printf "3306" -}}
 {{- else if .Values.externalDatabase.enabled -}}
     {{- printf "%d" (.Values.externalDatabase.port | int ) -}}
 {{- end -}}
