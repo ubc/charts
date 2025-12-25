@@ -112,7 +112,7 @@ externalDatabase:
 
   service:
     enabled: true
-    endpoints: []
+    externalName: ""
     port: 3306
 
   ## Define affinity for the pod

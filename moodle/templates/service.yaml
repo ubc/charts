@@ -74,30 +74,13 @@ metadata:
   labels:
     {{- include "moodle.labels" . | nindent 4 }}
 spec:
+  type: ExternalName
+  externalName: {{ .Values.externalDatabase.service.externalName }}
   ports:
   - port: {{ .Values.externalDatabase.service.port }}
     targetPort: {{ .Values.externalDatabase.service.port }}
     protocol: TCP
     name: db
-
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: {{ include "moodle.externalDatabaseName" . }}-slice
-  labels:
-    kubernetes.io/service-name: {{ include "moodle.externalDatabaseName" . }}
-    {{- include "moodle.labels" . | nindent 4 }}
-addressType: IPv4
-ports:
-  - name: db
-    protocol: TCP
-    port: {{ .Values.externalDatabase.service.port }}
-endpoints:
-  {{- range .Values.externalDatabase.service.endpoints }}
-  - addresses:
-      - {{ . }}
-  {{- end }}
 {{- end -}}
 
 {{- if .Values.shib.enabled }}
