@@ -8,7 +8,7 @@ metadata:
 spec:
   replicas: {{ .Values.app.replicaCount }}
   strategy:
-    type: Recreate
+    type: RollingUpdate
   selector:
     matchLabels:
       {{- include "compair.selectorLabels" . | nindent 6 }}
