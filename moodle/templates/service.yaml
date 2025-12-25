@@ -76,6 +76,7 @@ metadata:
 spec:
   type: ExternalName
   externalName: {{ .Values.externalDatabase.service.externalName }}
+  internalTrafficPolicy: Cluster
   ports:
   - port: {{ .Values.externalDatabase.service.port }}
     targetPort: {{ .Values.externalDatabase.service.port }}
