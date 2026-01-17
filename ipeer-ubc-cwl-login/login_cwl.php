@@ -15,12 +15,8 @@ function isUrlWorking($url) {
     return false;
 }
 
-//echo($_ENV['IPEER_AUTH_SHIBB_URL']);
 
-//$authShibbUrl = $_ENV['IPEER_AUTH_SHIBB_URL'] ?? 'https://ipeer.elearning.ubc.ca/login?defaultlogin=true';
-
-//02JUNE2025 - STG ENV
-$authShibbUrl = $_ENV['IPEER_AUTH_SHIBB_URL'] ?? 'https://ipeer-stg.apps.ctlt.ubc.ca/login?defaultlogin=true';
+$authShibbUrl = $_ENV['IPEER_AUTH_SHIBB_URL'] ?? '/login?defaultlogin=true';
 
 
 // Define the URL to check using the value of $authShibbUrl
