@@ -43,28 +43,13 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          - path: /
-            pathType: Prefix
+          - path: {{ .path }}
+            pathType: {{ .type | default "Prefix" }}
             backend:
               service:
-                name: {{ $fullName }}
+                name: {{ .service | default $fullName  }}
                 port:
-                  number: {{ $svcPort }}
-          {{- $samlServiceName := default (printf "%s-cwl-oneloginsaml" $fullName) $.Values.ingress.samlServiceName }}
-          - path: /public/saml/auth.php
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ $samlServiceName }}
-                port:
-                  number: 80
-          - path: /public/saml/logout.php
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ $samlServiceName }}
-                port:
-                  number: 80
+                  number: {{ .port | default $svcPort }}
           {{- end }}
     {{- end }}
   {{- end }}
