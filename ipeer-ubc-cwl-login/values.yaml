@@ -19,7 +19,7 @@ web:
     pullPolicy: IfNotPresent
     tag: "1.24-alpine"
   # set request timeout in seconds, some results need more time to calculate
-  timeout: "3000"
+  timeout: ""
 
 worker:
   enabled: false
