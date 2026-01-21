@@ -65,7 +65,14 @@ replicas: {{ .Values.replicaCount }}
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           env:
           - name: IPEER_SECRET_KEY
-            value: {{ .Values.ipeer.secretKey | quote  }}
+            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
+            {{- else }}
+            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote }}
+            {{- end }}
           - name: SAML_JWT_PARM
             value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
           - name: IPEER_AUTH_SHIBB_URL
