@@ -51,7 +51,6 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "ipeer.labels" -}}
-helm.sh/chart: {{ include "ipeer.chart" . }}
 {{ include "ipeer.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
