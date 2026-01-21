@@ -115,6 +115,7 @@ ipeer:
   supportEmail: ''
   auth:
     method: default
+    custom_error_message: ''
     ldap:
       host: ldap.example.com
       port: 636

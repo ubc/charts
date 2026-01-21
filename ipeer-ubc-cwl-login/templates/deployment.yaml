@@ -97,6 +97,8 @@ replicas: {{ .Values.replicaCount }}
           - name: CALIPER_ACTOR_UNIQUE_IDENTIFIER_PARAM
             value: {{ .Values.ipeer.caliper.actorUniqueIdParam }}
           {{- end }}
+          - name: CUSTOM_AUTH_ERROR_MESSAGE
+            value: {{ .Values.ipeer.auth.custom_error_message | quote }}
           - name: IPEER_AUTH
             value: {{ .Values.ipeer.auth.method }}
           {{- if eq .Values.ipeer.auth.method "Ldap" }}
@@ -141,9 +143,6 @@ replicas: {{ .Values.replicaCount }}
             - name: login-cwl-volume     # login_level2
               mountPath: /var/www/html/app/plugins/guard/views/elements/login_default.ctp
               subPath: login_cwl.php
-            - name: php-files-volume
-              mountPath: /var/www/html/cake/libs/controller/components/auth.php 
-              subPath: cake_libs_controller_components_auth.php 
             {{- end }}
 
             #- name: login-cwl-volume     # login_level2
@@ -217,7 +216,6 @@ spec:
   template:
     metadata:
       annotations:
-        rollme: {{ now | quote }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
