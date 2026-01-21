@@ -129,8 +129,8 @@ ipeer:
     shibboleth: {}
   caliper:
     enabled: false
-    host: https://caliper.imsglobal.org/caliper/44c6173f-907f-40c5-8c93-a1acfaa6485c/message
-    apikey: 44c6173f-907f-40c5-8c93-a1acfaa6485c
+    host: ''
+    apikey: ''
     existingApiKeyRef: {}
     baseURL: http://localhost.test.com/
     actorBaseURL: http://www.ubc.ca/%s
