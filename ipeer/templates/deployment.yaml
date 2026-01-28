@@ -13,10 +13,10 @@ spec:
       {{- include "ipeer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- end }}
       labels:
         {{- include "ipeer.selectorLabels" . | nindent 8 }}
     spec:
@@ -32,20 +32,10 @@ spec:
         - name: shared-files
           emptyDir: {}
 
-        # Add the ConfigMap we declared above as a volume for the pod
         - name: nginx-config-volume
           configMap:
             name: {{ include "ipeer.fullname" . }}-nginx-config
 
-        {{- if eq .Values.ipeer.auth.method "Saml" }}
-        - name: login-cwl-volume
-          configMap:
-            name: {{ include "ipeer.fullname" . }}-login-cwl
-
-        - name: php-files-volume
-          configMap:
-            name: {{ include "ipeer.fullname" . }}-php-files
-        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -53,6 +43,19 @@ spec:
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           env:
+          - name: IPEER_SECRET_KEY
+            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
+            {{- else }}
+            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote }}
+            {{- end }}
+          - name: SAML_JWT_PARM
+            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
+          - name: IPEER_AUTH_SHIBB_URL
+            value: {{ .Values.ipeer.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST
             value: {{ include "ipeer.databaseHost" .}}
           - name: IPEER_DB_PORT
@@ -65,7 +68,7 @@ spec:
                 name: {{ include "ipeer.databaseSecretName" . }}
                 key: {{ include "ipeer.databaseSecretKey" . }}
           - name: IPEER_SUPPORT_EMAIL
-            value: {{ .Values.ipeer.supportEmail }}
+            value: {{ .Values.ipeer.supportEmail | quote }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
           {{- if .Values.ipeer.caliper.enabled }}
@@ -78,7 +81,7 @@ spec:
                 name: {{ .Values.ipeer.caliper.existingApiKeyRef.name }}
                 key: {{ .Values.ipeer.caliper.existingApiKeyRef.key | default "apikey" }}
             {{- else }}
-            value: {{ .Values.ipeer.caliper.apikey | quote  }}
+            value: {{ .Values.ipeer.caliper.apikey | quote }}
             {{- end }}
           - name:  CALIPER_BASE_URL
             value: {{ .Values.ipeer.caliper.baseURL }}
@@ -87,6 +90,8 @@ spec:
           - name: CALIPER_ACTOR_UNIQUE_IDENTIFIER_PARAM
             value: {{ .Values.ipeer.caliper.actorUniqueIdParam }}
           {{- end }}
+          - name: CUSTOM_AUTH_ERROR_MESSAGE
+            value: {{ .Values.ipeer.auth.custom_error_message | quote }}
           - name: IPEER_AUTH
             value: {{ .Values.ipeer.auth.method }}
           {{- if eq .Values.ipeer.auth.method "Ldap" }}
@@ -115,21 +120,6 @@ spec:
           - name: IPEER_AUTH_SHIBBOLETH_logoutURL
             value: {{ .Values.ipeer.auth.shibboleth.logoutURL | quote }}
           {{- end }}
-          {{- if eq .Values.ipeer.auth.method "Saml" }}
-          - name: IPEER_SECRET_KEY
-            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
-                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
-            {{- else }}
-            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote  }}
-            {{- end }}
-          - name: SAML_JWT_PARM
-            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
-          - name: IPEER_AUTH_SHIBB_URL
-            value: {{ .Values.ipeer.auth.shibboleth.authShibbolethURL | quote  }}
-          {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
             value: "2"
@@ -141,26 +131,7 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /shared
-            {{- if eq .Values.ipeer.auth.method "Saml" }}
-            - name: login-cwl-volume     # login_level2
-              mountPath: /var/www/html/app/plugins/guard/views/elements/login_default.ctp
-              subPath: login_cwl.php
-            - name: php-files-volume
-              mountPath: /var/www/html/app/controllers/homeubcsaml_controller.php
-              subPath: homeubcsaml_controller.php
-            - name: php-files-volume
-              mountPath: /var/www/html/app/config/routes.php
-              subPath: routes.php
-            - name: php-files-volume
-              mountPath: /var/www/html/app/controllers/homeubcsamllogout_controller.php
-              subPath: homeubcsamllogout_controller.php
-            - name: php-files-volume
-              mountPath: /var/www/html/app/app_controller.php
-              subPath: app_controller.php
-            - name: php-files-volume
-              mountPath: /var/www/html/cake/libs/controller/components/auth.php
-              subPath: cake_libs_controller_components_auth.php
-            {{- end }}
+
           # After the container has started, copy the PHP files from this
           # container's local filesystem to the shared volume, which is
           # mounted at /shared.
@@ -208,22 +179,22 @@ kind: Deployment
 metadata:
   name: {{ include "ipeer.fullname" . }}-worker
   labels:
-    compoment: worker
+    component: worker
     {{- include "ipeer.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      compoment: worker
+      component: worker
       {{- include "ipeer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- end }}
       labels:
-        compoment: worker
+        component: worker
         {{- include "ipeer.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -242,6 +213,19 @@ spec:
           command: ["cake/console/cake"]
           args: ["worker", "run"]
           env:
+          - name: IPEER_SECRET_KEY
+            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
+            {{- else }}
+            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote }}
+            {{- end }}
+          - name: SAML_JWT_PARM
+            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
+          - name: IPEER_AUTH_SHIBB_URL
+            value: {{ .Values.ipeer.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST
             value: {{ include "ipeer.databaseHost" .}}
           - name: IPEER_DB_PORT
@@ -299,21 +283,6 @@ spec:
           {{- if eq .Values.ipeer.auth.method "shibboleth" }}
           - name: IPEER_AUTH_SHIBBOLETH_sessionInitiatorURL
             value: {{ .Values.ipeer.auth.shibboleth.sessionInitiatorURL | quote }}
-          {{- end }}
-          {{- if eq .Values.ipeer.auth.method "Saml" }}
-          - name: IPEER_SECRET_KEY
-            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
-                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
-            {{- else }}
-            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote  }}
-            {{- end }}
-          - name: SAML_JWT_PARM
-            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
-          - name: IPEER_AUTH_SHIBB_URL
-            value: {{ .Values.ipeer.auth.shibboleth.authShibbolethURL | quote  }}
           {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
