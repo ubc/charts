@@ -75,7 +75,14 @@ replicas: {{ .Values.replicaCount }}
           - name: CALIPER_HOST
             value: {{ .Values.ipeer.caliper.host }}
           - name: CALIPER_API_KEY
-            value: {{ .Values.ipeer.caliper.apikey }}
+            {{- if .Values.ipeer.caliper.existingApiKeyRef }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.caliper.existingApiKeyRef.name }}
+                key: {{ .Values.ipeer.caliper.existingApiKeyRef.key | default "apikey" }}
+            {{- else }}
+            value: {{ .Values.ipeer.caliper.apikey | quote }}
+            {{- end }}
           - name:  CALIPER_BASE_URL
             value: {{ .Values.ipeer.caliper.baseURL }}
           - name: CALIPER_ACTOR_BASE_URL
@@ -172,13 +179,13 @@ kind: Deployment
 metadata:
   name: {{ include "ipeer.fullname" . }}-worker
   labels:
-    compoment: worker
+    component: worker
     {{- include "ipeer.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      compoment: worker
+      component: worker
       {{- include "ipeer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
@@ -187,7 +194,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        compoment: worker
+        component: worker
         {{- include "ipeer.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}

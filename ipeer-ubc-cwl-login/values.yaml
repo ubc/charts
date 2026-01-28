@@ -75,10 +75,6 @@ ingress:
     - host: ipeer-example.local
       paths: ['/']
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-  samlServiceName: ""
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -106,7 +102,6 @@ tolerations: []
 affinity: {}
 
 ipeer:
-  secretKey: 'your_secret_key'
   jwtSecretKeyParm: 'id_parm_url'
   authShibbolethURL: 'https://shibboleth.url'
   session_save: database
