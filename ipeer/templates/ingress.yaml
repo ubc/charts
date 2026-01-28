@@ -11,9 +11,9 @@ data:
 
 ---
 
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1
-{{- else -}}
+{{- else }}
 apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
@@ -45,23 +45,13 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          {{- if kindIs "string" . }}
-          - path: {{ . }}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $fullName }}
-                port:
-                  number: {{ $svcPort }}
-          {{- else }}
           - path: {{ .path }}
             pathType: {{ .type | default "Prefix" }}
             backend:
               service:
-                name: {{ .service | default $fullName }}
+                name: {{ .service | default $fullName  }}
                 port:
                   number: {{ .port | default $svcPort }}
-          {{- end }}
           {{- end }}
     {{- end }}
   {{- end }}
