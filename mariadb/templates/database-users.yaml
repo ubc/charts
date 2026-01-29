@@ -8,6 +8,7 @@ spec:
   name: {{ .user }}
   mariaDbRef:
     name: {{ include "mariadb.fullname" $ }}
+  maxUserConnections: {{ .maxUserConnections | default $.Values.auth.maxUserConnections }}
   passwordSecretKeyRef:
     name: {{ include "mariadb.fullname" $ }}-user-password
     key: password-{{ .user }}
@@ -36,6 +37,7 @@ spec:
   host: "%"
   mariaDbRef:
     name: {{ include "mariadb.fullname" . }}
+  maxUserConnections: {{ .Values.auth.maxUserConnections }}
   passwordSecretKeyRef:
     {{- if and .Values.auth.existingSecret .Values.auth.userPasswordKey }}
     name: {{ .Values.auth.existingSecret }}
