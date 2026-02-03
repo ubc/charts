@@ -70,6 +70,10 @@ spec:
               secretKeyRef:
                 name: {{ include "ipeer.databaseSecretName" . }}
                 key: {{ include "ipeer.databaseSecretKey" . }}
+          {{- if .Values.ipeer.db_connection_encoding }}
+          - name: IPEER_DB_ENCODING
+            value: {{ .Values.ipeer.db_connection_encoding | quote }}
+          {{- end }}
           - name: IPEER_SUPPORT_EMAIL
             value: {{ .Values.ipeer.supportEmail | quote }}
           - name: IPEER_SESSION_SAVE
@@ -240,6 +244,10 @@ spec:
               secretKeyRef:
                 name: {{ include "ipeer.databaseSecretName" . }}
                 key: {{ include "ipeer.databaseSecretKey" . }}
+          {{- if .Values.ipeer.db_connection_encoding }}
+          - name: IPEER_DB_ENCODING
+            value: {{ .Values.ipeer.db_connection_encoding | quote }}
+          {{- end }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
           {{- if .Values.ipeer.caliper.enabled }}
