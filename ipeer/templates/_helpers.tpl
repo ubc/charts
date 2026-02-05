@@ -1,21 +1,6 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
-For calling a template with subchart context
-From https://github.com/helm/helm/issues/4535#issuecomment-477778391
-*/}}
-{{- define "call-nested" }}
-{{- $dot := index . 0 }}
-{{- $subchart := index . 1 | splitList "." }}
-{{- $template := index . 2 }}
-{{- $values := $dot.Values }}
-{{- range $subchart }}
-{{- $values = index $values . }}
-{{- end }}
-{{- include $template (dict "Chart" (dict "Name" (last $subchart)) "Values" $values "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
-{{- end }}
-
-{{/*
 Expand the name of the chart.
 */}}
 {{- define "ipeer.name" -}}
@@ -38,13 +23,6 @@ If release name contains chart name it will be used as a full name.
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
-{{- end }}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "ipeer.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -111,28 +89,6 @@ Return the MariaDB Hostname
 {{- end -}}
 
 {{/*
-Return the MariaDB Port
-*/}}
-{{- define "ipeer.databasePort" -}}
-{{- if .Values.db.enabled }}
-    {{- printf "3306" -}}
-{{- else -}}
-    {{- printf "%d" (.Values.externalDatabase.port | int ) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the MariaDB Database Name
-*/}}
-{{- define "ipeer.databaseName" -}}
-{{- if .Values.db.enabled }}
-    {{- printf "%s" .Values.db.auth.database -}}
-{{- else -}}
-    {{- printf "%s" .Values.externalDatabase.database -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return the MariaDB User
 */}}
 {{- define "ipeer.databaseUser" -}}
@@ -169,40 +125,6 @@ Return the MariaDB Secret Key
         {{- printf "%s" .Values.db.auth.userPasswordKey -}}
     {{- else -}}
         {{- printf "password-%s" (include "ipeer.databaseUser" .) -}}
-    {{- end -}}
-{{- else if .Values.externalDatabase.existingSecret -}}
-    {{- tpl .Values.externalDatabase.existingSecret $ -}}
-{{- else -}}
-    {{- printf "%s-externaldb" (include "ipeer.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the MariaDB Root Secret Name
-*/}}
-{{- define "ipeer.databaseRootSecretName" -}}
-{{- if .Values.db.enabled }}
-    {{- if and .Values.db.auth.existingSecret .Values.db.auth.rootPasswordKey -}}
-        {{- printf "%s" .Values.db.auth.existingSecret -}}
-    {{- else -}}
-        {{- printf "%s-root" (include "ipeer.db.fullname" .) -}}
-    {{- end -}}
-{{- else if .Values.externalDatabase.existingSecret -}}
-    {{- tpl .Values.externalDatabase.existingSecret $ -}}
-{{- else -}}
-    {{- printf "%s-externaldb" (include "ipeer.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the MariaDB Root Secret Key
-*/}}
-{{- define "ipeer.databaseRootSecretKey" -}}
-{{- if .Values.db.enabled }}
-    {{- if and .Values.db.auth.existingSecret .Values.db.auth.rootPasswordKey -}}
-        {{- printf "%s" .Values.db.auth.rootPasswordKey -}}
-    {{- else -}}
-        {{- printf "password" -}}
     {{- end -}}
 {{- else if .Values.externalDatabase.existingSecret -}}
     {{- tpl .Values.externalDatabase.existingSecret $ -}}
