@@ -2364,6 +2364,24 @@ entries:
   ipeer:
   - apiVersion: v2
     appVersion: 3.4.10
+    created: "2026-02-05T00:06:53.337624092Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: iPeer OneLoginSAML Hybrid Helm Chart
+    digest: 2f21d4b51f5c5ac8e7db9df3ae91f9349843444b60102327ae435c25547d1c88
+    name: ipeer
+    sources:
+    - https://github.com/ubc/charts/tree/master/ipeer
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ipeer-0.4.1/ipeer-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
+    appVersion: 3.4.10
     created: "2026-02-04T22:52:28.574636918Z"
     dependencies:
     - alias: db
@@ -7482,4 +7500,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-02-04T22:52:28.575300998Z"
+generated: "2026-02-05T00:06:53.338402157Z"
