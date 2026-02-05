@@ -93,23 +93,14 @@ ipeer:
   auth:
     method: default
     custom_error_message: ''
-    ldap:
-      host: ldap.example.com
-      port: 636
-      serviceUsername: 'uid=USERNAME, ou=Special Users, o=school.ca'
-      servicePassword: PASSWORD
-      baseDn: 'ou=Campus Login, o=school.ca'
-      usernameField: 'uid'
-      attributeSearchFilters: '[]'
-      attributeMap: '{}'
-      fallbackInternal: true
+    ldap: {}
     shibboleth: {}
   caliper:
     enabled: false
     host: ''
     apikey: ''
     existingApiKeyRef: {}
-    baseURL: http://localhost.test.com/
+    baseURL: ''
     actorBaseURL: http://www.ubc.ca/%s
     actorUniqueIdParam: username
 
@@ -145,8 +136,8 @@ db:
   ##
   auth:
     #rootPassword:
-    database: &dbName ipeer
-    username: &dbUser ipeer
+    database: ipeer
+    username: ipeer
 
     ## If the password is not specified, mariadb will generates a random password
     ##

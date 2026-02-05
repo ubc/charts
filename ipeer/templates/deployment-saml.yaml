@@ -1,3 +1,4 @@
+{{- if .Values.ipeersaml.image.repository }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -57,3 +58,4 @@ spec:
   selector:
     app: {{ template "ipeersaml.service_name" . }}
     stage: {{ .Values.stage }}
+{{- end }}

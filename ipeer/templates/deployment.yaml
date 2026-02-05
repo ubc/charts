@@ -248,6 +248,8 @@ spec:
           - name: IPEER_DB_ENCODING
             value: {{ .Values.ipeer.db_connection_encoding | quote }}
           {{- end }}
+          - name: IPEER_SUPPORT_EMAIL
+            value: {{ .Values.ipeer.supportEmail | quote }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
           {{- if .Values.ipeer.caliper.enabled }}
@@ -269,6 +271,8 @@ spec:
           - name: CALIPER_ACTOR_UNIQUE_IDENTIFIER_PARAM
             value: {{ .Values.ipeer.caliper.actorUniqueIdParam }}
           {{- end }}
+          - name: CUSTOM_AUTH_ERROR_MESSAGE
+            value: {{ .Values.ipeer.auth.custom_error_message | quote }}
           - name: IPEER_AUTH
             value: {{ .Values.ipeer.auth.method }}
           {{- if eq .Values.ipeer.auth.method "Ldap" }}
@@ -291,9 +295,11 @@ spec:
           - name: IPEER_AUTH_LDAP_fallbackInternal
             value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
           {{- end }}
-          {{- if eq .Values.ipeer.auth.method "shibboleth" }}
+          {{- if eq .Values.ipeer.auth.method "Shibboleth" }}
           - name: IPEER_AUTH_SHIBBOLETH_sessionInitiatorURL
             value: {{ .Values.ipeer.auth.shibboleth.sessionInitiatorURL | quote }}
+          - name: IPEER_AUTH_SHIBBOLETH_logoutURL
+            value: {{ .Values.ipeer.auth.shibboleth.logoutURL | quote }}
           {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
