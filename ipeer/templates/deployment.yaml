@@ -57,6 +57,19 @@ spec:
             {{- end }}
           - name: SAML_JWT_PARM
             value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
+          {{- if .Values.ipeer.auth.shibboleth }}
+          - name: SAML_SETTINGS
+            {{- if .Values.ipeer.auth.shibboleth.existingSettingsSecretRef }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.auth.shibboleth.existingSettingsSecretRef.name }}
+                key: {{ .Values.ipeer.auth.shibboleth.existingSettingsSecretRef.key | default "saml-settings" }}
+            {{- else }}
+            value: {{ .Values.ipeer.auth.shibboleth.settings | quote }}
+            {{- end }}
+          - name: SAML_LOGOUT_URL
+            value: {{ .Values.ipeer.auth.shibboleth.logoutUrl | quote }}
+          {{- end }}
           - name: IPEER_AUTH_SHIBB_URL
             value: {{ .Values.ipeer.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST

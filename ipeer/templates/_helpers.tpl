@@ -132,7 +132,3 @@ Return the MariaDB Secret Key
     {{- printf "%s-externaldb" (include "ipeer.fullname" .) -}}
 {{- end -}}
 {{- end -}}
-
-{{- define "ipeersaml.service_name" -}}
-ipeer-{{ .Values.stage }}-cwl-oneloginsaml
-{{- end -}}
