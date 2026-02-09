@@ -6,8 +6,8 @@ metadata:
     component: web
     {{- include "ipeer.labels" . | nindent 4 }}
 spec:
-{{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+{{- if not .Values.app.autoscaling.enabled }}
+  replicas: {{ .Values.app.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
@@ -27,7 +27,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ include "ipeer.serviceAccountName" . }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
@@ -55,8 +57,6 @@ spec:
             {{- else }}
             value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote }}
             {{- end }}
-          - name: SAML_JWT_PARM
-            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
           {{- if .Values.ipeer.auth.shibboleth }}
           - name: SAML_SETTINGS
             {{- if .Values.ipeer.auth.shibboleth.existingSettingsSecretRef }}
@@ -70,8 +70,6 @@ spec:
           - name: SAML_LOGOUT_URL
             value: {{ .Values.ipeer.auth.shibboleth.logoutUrl | quote }}
           {{- end }}
-          - name: IPEER_AUTH_SHIBB_URL
-            value: {{ .Values.ipeer.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST
             value: {{ include "ipeer.databaseHost" .}}
           - name: IPEER_DB_PORT
@@ -151,7 +149,6 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /shared
-
           # After the container has started, copy the PHP files from this
           # container's local filesystem to the shared volume, which is
           # mounted at /shared.
@@ -161,11 +158,13 @@ spec:
                 command: ["/bin/sh", "-c", "cp -r /var/www/html/app/webroot/. /shared"]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
+
         - name: {{ .Chart.Name }}-web
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          image: "{{ .Values.web_proxy.image.repository }}:{{ .Values.web_proxy.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.web_proxy.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 80
@@ -221,7 +220,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ include "ipeer.serviceAccountName" . }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -242,10 +243,6 @@ spec:
             {{- else }}
             value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote }}
             {{- end }}
-          - name: SAML_JWT_PARM
-            value: {{ .Values.ipeer.jwtSecretKeyParm | quote  }}
-          - name: IPEER_AUTH_SHIBB_URL
-            value: {{ .Values.ipeer.authShibbolethURL | quote  }}
           - name: IPEER_DB_HOST
             value: {{ include "ipeer.databaseHost" .}}
           - name: IPEER_DB_PORT
