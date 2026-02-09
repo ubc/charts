@@ -1,4 +1,4 @@
 apiVersion: v2
 name: lti-shim
-version: 0.5.7
+version: 0.5.8
 description: LTI proxy that anonymizes personal information

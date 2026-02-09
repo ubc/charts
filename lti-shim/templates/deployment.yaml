@@ -53,9 +53,23 @@ spec:
           - name: DB_DATABASE
             value: {{ .Values.postgres.database | quote }}
           - name: DB_USERNAME
+            {{- if .Values.postgres.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.existingSecret }}
+                key: {{ .Values.postgres.existingSecretUsernameKey }}
+            {{- else }}
             value: {{ .Values.postgres.username | quote }}
+            {{- end }}
           - name: DB_PASSWORD
+            {{- if .Values.postgres.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.existingSecret }}
+                key: {{ .Values.postgres.existingSecretPasswordKey }}
+            {{- else }}
             value: {{ .Values.postgres.password | quote }}
+            {{- end }}
           - name: FAKE_EMAIL_DOMAIN
             value: {{ .Values.app.fakeEmailDomain | quote }}
           - name: SESSION_DRIVER

@@ -64,6 +64,9 @@ postgres:
   database: postgres
   username: postgres
   password: postgres
+  existingSecret: ""
+  existingSecretUsernameKey: "username"
+  existingSecretPasswordKey: "password"
 
 admin:
   name: admin
