@@ -104,16 +104,6 @@ ipeer:
     actorBaseURL: http://www.ubc.ca/%s
     actorUniqueIdParam: username
 
-ipeersaml:
-  image:
-    pullPolicy: Always
-
-  replicaCount: 1
-  service:
-    externalPort: 80
-    internalPort: 80
-    type: ClusterIP
-
 ##
 ## MariaDB chart configuration
 ##
