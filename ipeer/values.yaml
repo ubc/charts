@@ -2,24 +2,29 @@
 # This is a YAML-formatted file...
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
 stage: dev
 
 app:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 70
   image:
     repository: ubcctlt/ipeer
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
-web:
+web_proxy:
   image:
     repository: nginx
     pullPolicy: IfNotPresent
     tag: "1.24-alpine"
   # set request timeout in seconds, some results need more time to calculate
-  timeout: ""
+  request_timeout: ""
 
 worker:
   enabled: false
@@ -55,25 +60,13 @@ service:
   port: 80
 
 ingress:
-  enabled: false
+  host: ""
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    #nginx.ingress.kubernetes.io/backend-protocol: "FCGI"
-    #nginx.ingress.kubernetes.io/fastcgi-index: "index.php"
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: ipeer-example.local
-      paths: ['/']
-  tls: []
+    kubernetes.io/tls-acme: "true"
+  tls: {}
 
 resources: {}
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 
@@ -84,8 +77,6 @@ affinity: {}
 ipeer:
   # Database connection character encoding (e.g. 'utf8'). Leave empty to use the app-level SQL driver default.
   db_connection_encoding: ''
-  jwtSecretKeyParm: 'id_parm_url'
-  authShibbolethURL: 'https://shibboleth.url'
   session_save: database
   debug: false
   # Default contact email address exposed to the application; override per environment.
