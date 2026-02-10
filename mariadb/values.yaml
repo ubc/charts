@@ -69,6 +69,11 @@ secondary:
   # Semi-synchronous replication
   semiSync:
     enabled: true
+  # Replica recovery settings
+  replica:
+    recovery:
+      enabled: false
+      errorDurationThreshold: 5m
 
 backup:
   enabled: false

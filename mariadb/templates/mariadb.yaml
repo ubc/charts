@@ -41,6 +41,13 @@ spec:
       replPasswordSecretKeyRef:
         name: {{ include "mariadb.fullname" . }}-user-password
         key: password-repl
+      {{- if .Values.secondary.replica.recovery.enabled }}
+      recovery:
+        enabled: true
+        {{- if .Values.secondary.replica.recovery.errorDurationThreshold }}
+        errorDurationThreshold: {{ .Values.secondary.replica.recovery.errorDurationThreshold }}
+        {{- end }}
+      {{- end }}
     {{- if .Values.secondary.semiSync.enabled }}
     semiSyncEnabled: true
     semiSyncAckTimeout: 10s
