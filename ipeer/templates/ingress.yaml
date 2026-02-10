@@ -19,8 +19,10 @@ metadata:
     {{- include "ipeer.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/fastcgi-params-configmap: {{ $fullName }}
+    {{- if .Values.web_proxy.request_timeout }}
     nginx.ingress.kubernetes.io/proxy-send-timeout: {{ .Values.web_proxy.request_timeout | quote }}
     nginx.ingress.kubernetes.io/proxy-read-timeout: {{ .Values.web_proxy.request_timeout | quote }}
+    {{- end }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

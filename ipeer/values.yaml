@@ -1,7 +1,3 @@
-# Default values for ipeer.
-# This is a YAML-formatted file...
-# Declare variables to be passed into your templates.
-
 stage: dev
 
 app:
@@ -14,8 +10,7 @@ app:
     targetMemoryUtilizationPercentage: 70
   image:
     repository: ubcctlt/ipeer
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
+    pullPolicy: Always
     tag: ""
 
 web_proxy:
@@ -82,9 +77,7 @@ ipeer:
   # Default contact email address exposed to the application; override per environment.
   supportEmail: ''
   auth:
-    method: default
     custom_error_message: ''
-    ldap: {}
     shibboleth: {}
   caliper:
     enabled: false
