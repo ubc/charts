@@ -110,34 +110,6 @@ spec:
           {{- end }}
           - name: CUSTOM_AUTH_ERROR_MESSAGE
             value: {{ .Values.ipeer.auth.custom_error_message | quote }}
-          - name: IPEER_AUTH
-            value: {{ .Values.ipeer.auth.method }}
-          {{- if eq .Values.ipeer.auth.method "Ldap" }}
-          - name: IPEER_AUTH_LDAP_host
-            value: {{ .Values.ipeer.auth.ldap.host | quote }}
-          - name: IPEER_AUTH_LDAP_port
-            value: {{ .Values.ipeer.auth.ldap.port | quote }}
-          - name: IPEER_AUTH_LDAP_serviceUsername
-            value: {{ .Values.ipeer.auth.ldap.serviceUsername }}
-          - name: IPEER_AUTH_LDAP_servicePassword
-            value: {{ .Values.ipeer.auth.ldap.servicePassword }}
-          - name: IPEER_AUTH_LDAP_baseDn
-            value: {{ .Values.ipeer.auth.ldap.baseDn }}
-          - name: IPEER_AUTH_LDAP_usernameField
-            value: {{ .Values.ipeer.auth.ldap.usernameField }}
-          - name: IPEER_AUTH_LDAP_attributeSearchFilters
-            value: {{ .Values.ipeer.auth.ldap.attributeSearchFilters | quote }}
-          - name: IPEER_AUTH_LDAP_attributeMap
-            value: {{ .Values.ipeer.auth.ldap.attributeMap | quote }}
-          - name: IPEER_AUTH_LDAP_fallbackInternal
-            value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
-          {{- end }}
-          {{- if eq .Values.ipeer.auth.method "Shibboleth" }}
-          - name: IPEER_AUTH_SHIBBOLETH_sessionInitiatorURL
-            value: {{ .Values.ipeer.auth.shibboleth.sessionInitiatorURL | quote }}
-          - name: IPEER_AUTH_SHIBBOLETH_logoutURL
-            value: {{ .Values.ipeer.auth.shibboleth.logoutURL | quote }}
-          {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
             value: "2"
@@ -234,15 +206,6 @@ spec:
           command: ["cake/console/cake"]
           args: ["worker", "run"]
           env:
-          - name: IPEER_SECRET_KEY
-            {{- if .Values.ipeer.auth.shibboleth.existingSecretKeyRef }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.name }}
-                key: {{ .Values.ipeer.auth.shibboleth.existingSecretKeyRef.key | default "secret-key" }}
-            {{- else }}
-            value: {{ .Values.ipeer.auth.shibboleth.secretKey | quote }}
-            {{- end }}
           - name: IPEER_DB_HOST
             value: {{ include "ipeer.databaseHost" .}}
           - name: IPEER_DB_PORT
@@ -270,7 +233,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.ipeer.caliper.existingApiKeyRef.name }}
-                key: {{ .Values.ipeer.caliper.existingApiKeyRef.key | default "apikey" }}
+                key: {{ .Values.ipeer.caliper.existingApiKeyRef.key | default "caliper-apikey" }}
             {{- else }}
             value: {{ .Values.ipeer.caliper.apikey | quote  }}
             {{- end }}
@@ -280,36 +243,6 @@ spec:
             value: {{ .Values.ipeer.caliper.actorBaseURL }}
           - name: CALIPER_ACTOR_UNIQUE_IDENTIFIER_PARAM
             value: {{ .Values.ipeer.caliper.actorUniqueIdParam }}
-          {{- end }}
-          - name: CUSTOM_AUTH_ERROR_MESSAGE
-            value: {{ .Values.ipeer.auth.custom_error_message | quote }}
-          - name: IPEER_AUTH
-            value: {{ .Values.ipeer.auth.method }}
-          {{- if eq .Values.ipeer.auth.method "Ldap" }}
-          - name: IPEER_AUTH_LDAP_host
-            value: {{ .Values.ipeer.auth.ldap.host | quote }}
-          - name: IPEER_AUTH_LDAP_port
-            value: {{ .Values.ipeer.auth.ldap.port | quote }}
-          - name: IPEER_AUTH_LDAP_serviceUsername
-            value: {{ .Values.ipeer.auth.ldap.serviceUsername }}
-          - name: IPEER_AUTH_LDAP_servicePassword
-            value: {{ .Values.ipeer.auth.ldap.servicePassword }}
-          - name: IPEER_AUTH_LDAP_baseDn
-            value: {{ .Values.ipeer.auth.ldap.baseDn }}
-          - name: IPEER_AUTH_LDAP_usernameField
-            value: {{ .Values.ipeer.auth.ldap.usernameField }}
-          - name: IPEER_AUTH_LDAP_attributeSearchFilters
-            value: {{ .Values.ipeer.auth.ldap.attributeSearchFilters | quote }}
-          - name: IPEER_AUTH_LDAP_attributeMap
-            value: {{ .Values.ipeer.auth.ldap.attributeMap | quote }}
-          - name: IPEER_AUTH_LDAP_fallbackInternal
-            value: {{ .Values.ipeer.auth.ldap.fallbackInternal | quote }}
-          {{- end }}
-          {{- if eq .Values.ipeer.auth.method "Shibboleth" }}
-          - name: IPEER_AUTH_SHIBBOLETH_sessionInitiatorURL
-            value: {{ .Values.ipeer.auth.shibboleth.sessionInitiatorURL | quote }}
-          - name: IPEER_AUTH_SHIBBOLETH_logoutURL
-            value: {{ .Values.ipeer.auth.shibboleth.logoutURL | quote }}
           {{- end }}
           {{- if .Values.ipeer.debug }}
           - name: IPEER_DEBUG
