@@ -79,6 +79,8 @@ backup:
   enabled: false
   # Backup type. Options: logical, physical
   type: logical
+  # waitForIt specifies whether the backup should wait for MariaDB to be ready.
+  waitForIt: true
   # List of the databases to backup. Default backup all databases
   databases: []
   imagePullSecrets: []
