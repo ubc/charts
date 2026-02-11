@@ -1,0 +1,34 @@
+{{- if and .Values.backup.enabled (eq .Values.backup.type "physical") }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: {{ include "mariadb.fullname" . }}-physicalbackup
+spec:
+  mariaDbRef:
+    name: {{ include "mariadb.fullname" . }}
+  imagePullSecrets:
+    {{- .Values.backup.imagePullSecrets | default .Values.imagePullSecrets | toYaml | nindent 4 }}
+  schedule:
+    cron: {{ .Values.backup.schedule }}
+    suspend: false
+    immediate: {{ .Values.backup.physical.immediate }}
+  target: {{ .Values.backup.physical.target }}
+  compression: {{ .Values.backup.compression }}
+  maxRetention: {{ .Values.backup.retention }}
+  storage:
+    {{- toYaml .Values.backup.storage | nindent 4 }}
+  {{- if .Values.backup.stagingStorage.enabled }}
+  stagingStorage:
+    {{- omit .Values.backup.stagingStorage "enabled" | toYaml | nindent 4 }}
+  {{- end }}
+  timeout: {{ .Values.backup.physical.timeout }}
+  podAffinity: {{ .Values.backup.physical.podAffinity }}
+  serviceAccountName: {{ include "mariadb.fullname" . }}-backup
+  {{- if .Values.backup.args }}
+  args:
+    {{- toYaml .Values.backup.args | nindent 4 }}
+  {{- end }}
+  logLevel: {{ .Values.backup.logLevel }}
+  resources:
+    {{- toYaml .Values.backup.resources | nindent 4 }}
+{{- end }}
