@@ -1,4 +1,4 @@
-{{- if .Values.backup.enabled }}
+{{- if and .Values.backup.enabled (eq .Values.backup.type "logical") }}
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Backup
 metadata:
@@ -27,9 +27,9 @@ spec:
   compression: {{ .Values.backup.compression }}
   storage:
     {{- toYaml .Values.backup.storage | nindent 4 }}
-  {{- if .Values.backup.stagingStorage.enabled}}
+  {{- if .Values.backup.stagingStorage.enabled }}
   stagingStore:
-    {{- toYaml .Values.backup.stagingStorage | nindent 4 }}
+    {{- omit .Values.backup.stagingStorage "enabled" | toYaml | nindent 4 }}
   {{- end }}
   {{- if .Values.backup.args }}
   args:

@@ -77,12 +77,25 @@ secondary:
 
 backup:
   enabled: false
+  # Backup type. Options: logical, physical
+  type: logical
   # List of the databases to backup. Default backup all databases
   databases: []
   imagePullSecrets: []
   # Backup schedule (cron format)
   schedule: "0 0 * * *"
   timezone: "America/Vancouver"
+  # Physical backup specific settings
+  physical:
+    # Immediate specifies whether the backup should be taken immediately after creation.
+    immediate: true
+    # Target specifies the MariaDB instance to backup, Replica or PreferReplica.
+    # https://mariadb.com/docs/tools/mariadb-enterprise-operator/backup-and-restore/physical_backup#target-policy
+    target: Replica
+    # Timeout for the backup to complete.
+    timeout: 1h
+    # PodAffinity specifies whether the backup pod should be scheduled on the same node as the MariaDB instance.
+    podAffinity: true
   compression: bzip2
   # Storage for backups
   storage: {}
