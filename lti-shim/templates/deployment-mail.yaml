@@ -46,6 +46,20 @@ spec:
           - name: POSTGRES_DBNAME
             value: {{ .Values.postgres.database | quote }}
           - name: POSTGRES_USERNAME
+            {{- if .Values.postgres.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.existingSecret }}
+                key: {{ .Values.postgres.existingSecretUsernameKey }}
+            {{- else }}
             value: {{ .Values.postgres.username | quote }}
+            {{- end }}
           - name: POSTGRES_PASSWORD
+            {{- if .Values.postgres.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.existingSecret }}
+                key: {{ .Values.postgres.existingSecretPasswordKey }}
+            {{- else }}
             value: {{ .Values.postgres.password | quote }}
+            {{- end }}
