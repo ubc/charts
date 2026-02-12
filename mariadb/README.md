@@ -48,12 +48,15 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `auth.username` | User to be created on startup. | `""` |
 | `auth.password` | Password for the user. | `""` |
 | `auth.replicationPassword` | Password for replication user. | `""` |
+| `auth.maxUserConnections` | Maximum number of simultaneous connections allowed per user. | `50` |
 | `myCnf` | Custom MariaDB configuration (my.cnf). | `[mariadb]\nbind-address=0.0.0.0\ndefault_storage_engine=InnoDB\nbinlog_format=row\ninnodb_autoinc_lock_mode=2\nmax_allowed_packet=256M` |
 | `resources.limits.cpu` | CPU limits for the MariaDB container. | `500m` |
 | `resources.limits.memory` | Memory limits for the MariaDB container. | `1Gi` |
 | `resources.requests.cpu` | CPU requests for the MariaDB container. | `200m` |
 | `resources.requests.memory` | Memory requests for the MariaDB container. | `256Mi` |
 | `persistence.size` | The size of the persistent volume. | `10Gi` |
+| `persistence.storageClassName` | Storage class name for the persistent volume. | `""` |
+| `persistence.ephemeral` | Use ephemeral storage instead of a persistent volume. | `false` |
 | `service.type` | Kubernetes Service type for the common service. | `ClusterIP` |
 | `service.annotations` | Annotations for the common service. | `{}` |
 | `primary.containerPorts.mysql` | The port to expose MariaDB on. | `3306` |
@@ -64,14 +67,23 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `secondary.service.type` | Kubernetes Service type for secondary instances. | `ClusterIP` |
 | `secondary.service.annotations` | Annotations for the secondary service. | `{}` |
 | `secondary.semiSync.enabled` | Enable semi-synchronous replication. | `true` |
+| `secondary.replica.recovery.enabled` | Enable replica recovery. | `false` |
+| `secondary.replica.recovery.errorDurationThreshold` | Threshold duration of errors before recovery is triggered. | `5m` |
 | `backup.enabled` | Enable or disable backups. | `false` |
+| `backup.type` | Backup type. Allowed values: `logical` or `physical`. | `logical` |
+| `backup.waitForIt` | Whether the backup should wait for MariaDB to be ready. | `true` |
 | `backup.databases` | List of databases to backup. Default backup all databases. | `[]` |
 | `backup.schedule` | The cron schedule for backups. | `"0 0 * * *"` |
 | `backup.timezone` | Timezone for the backup schedule. | `"America/Vancouver"` |
+| `backup.physical.immediate` | Whether the physical backup should be taken immediately after creation. | `true` |
+| `backup.physical.target` | The MariaDB instance to backup (e.g., `Replica` or `PreferReplica`). | `Replica` |
+| `backup.physical.timeout` | Timeout for the physical backup to complete. | `1h` |
+| `backup.physical.podAffinity` | Whether the physical backup pod should be scheduled on the same node as the MariaDB instance. | `true` |
 | `backup.compression` | Compression algorithm for backups. | `bzip2` |
-| `backup.storage` | Configuration for backup storage (PVC, NFS, S3). | `{}` |
+| `backup.storage` | Configuration for backup storage (PVC, NFS, S3). For physical backups, only S3 and VolumnSnapshot are supported| `{}` |
 | `backup.imagePullSecrets` | imagePullSecrets for the backup job. Overrides global `imagePullSecrets`. | `[]` |
 | `backup.stagingStorage.enabled` | Enable staging storage (required for S3). | `false` |
+| `backup.stagingStorage.persistentVolumeClaim` | PVC configuration for staging storage. | `{}` |
 | `backup.args` | Arguments to pass to the backup command. | `[]` |
 | `backup.retention` | Retention policy for backups. | `720h` |
 | `backup.logLevel` | Log level for the backup job. | `info` |
@@ -105,8 +117,22 @@ helm install --debug mariadb-test --set architecture=replication --set replicas=
 # replication with backup enabled
 helm install --debug mariadb-test --set architecture=replication --set auth.database=dbtest --set auth.username=dbtest \
   --set backup.enabled=true --set backup.schedule="0 0 * * *" \
-  --set backup.storage.volume.nfs.server=storageverf.lthub.ubc.ca \
+  --set backup.storage.volume.nfs.server=nfs.example.com \
   --set backup.storage.volume.nfs.path=\/test \
+  .
+
+# replication with physical backup enabled
+helm install --debug mariadb-test --set architecture=replication --set auth.database=dbtest --set auth.username=dbtest \
+  --set backup.enabled=true --set backup.type=physical --set backup.schedule="0 0 * * *" \
+  --set backup.storage.s3.bucket=s3-backup-bucket \
+  --set backup.storage.s3.prefix=service-name \
+  --set backup.storage.s3.endpoint=s3.amazonaws.com \
+  --set backup.storage.s3.region=ca-central-1 \
+  --set backup.storage.s3.accessKeyIdSecretKeyRef.name=id-secret-name \
+  --set backup.storage.s3.accessKeyIdSecretKeyRef.key=id-secret-key \
+  --set backup.storage.s3.secretAccessKeySecretKeyRef.name=key-secret-name \
+  --set backup.storage.s3.secretAccessKeySecretKeyRef.key=key-secret-key \
+  --set backup.storage.s3.tls.enabled=true
   .
 
 # bootstrap from existing data, the restore file name should follow this format: backup.2024-08-26T12:24:34Z.sql and located in the nfs path
