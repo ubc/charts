@@ -114,6 +114,10 @@ spec:
           - name: IPEER_DEBUG
             value: "2"
           {{- end }}
+          {{- if .Values.ipeer.enable_maintenance_mode }}
+          - name: IPEER_MAINTENANCE
+            value: "true"
+          {{- end }}
           ports:
             - name: fastcgi
               containerPort: 9000

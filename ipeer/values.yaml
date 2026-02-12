@@ -74,6 +74,7 @@ ipeer:
   db_connection_encoding: ''
   session_save: database
   debug: false
+  enable_maintenance_mode: false
   # Default contact email address exposed to the application; override per environment.
   supportEmail: ''
   auth:
