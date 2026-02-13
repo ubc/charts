@@ -1,0 +1,15 @@
+{{- if and .Values.memcached.enabled .Values.memcached.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "mediawiki.fullname" . }}-memcached
+  labels:
+    {{- include "common_labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "mediawiki.fullname" . }}-memcached
+  endpoints:
+  - port: metrics
+    interval: 30s
+{{- end }}

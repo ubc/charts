@@ -248,6 +248,8 @@ memcached:
     requests:
       memory: 64Mi
       cpu: 50m
+  serviceMonitor:
+    enabled: false
   # memcached exporter for Prometheus
   exporter:
     enabled: false
