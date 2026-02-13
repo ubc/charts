@@ -48,6 +48,9 @@ spec:
         errorDurationThreshold: {{ .Values.secondary.replica.recovery.errorDurationThreshold }}
         {{- end }}
       {{- end }}
+      bootstrapFrom:
+        physicalBackupTemplateRef:
+          name: {{ include "mariadb.fullname" . }}-physicalbackup
     {{- if .Values.secondary.semiSync.enabled }}
     semiSyncEnabled: true
     semiSyncAckTimeout: 10s
