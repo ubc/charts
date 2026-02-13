@@ -5124,6 +5124,35 @@ entries:
   moodle:
   - apiVersion: v2
     appVersion: 4.5.8
+    created: "2026-02-13T07:24:37.530730567Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      tags:
+      - moodle-database
+      version: '*'
+    description: Moodle is a learning platform designed to provide educators, administrators
+      and learners with a single robust, secure and integrated system to create personalised
+      learning environments
+    digest: c1cb78b4656dd0e2cb7ca7092e36a32adf977d8b9e67fd96197ec5c388747c2c
+    home: http://www.moodle.org/
+    keywords:
+    - moodle
+    - learning
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: moodle
+    sources:
+    - https://github.com/ubc/moodle-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/moodle-0.2.14/moodle-0.2.14.tgz
+    version: 0.2.14
+  - apiVersion: v2
+    appVersion: 4.5.8
     created: "2026-02-13T06:37:54.754314703Z"
     dependencies:
     - alias: db
@@ -7704,4 +7733,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-02-13T07:19:41.327965162Z"
+generated: "2026-02-13T07:24:37.531400929Z"
