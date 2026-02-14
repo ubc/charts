@@ -61,6 +61,7 @@ metadata:
   name: {{ template "mediawiki.fullname" . }}-memcached
   labels:
     {{- include "common_labels" . | indent 4 }}
+    app.kubernetes.io/component: memcached
 spec:
   type: ClusterIP
   ports:

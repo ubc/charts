@@ -8,7 +8,8 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "mediawiki.fullname" . }}-memcached
+      app: {{ template "mediawiki.fullname" . }}
+      app.kubernetes.io/component: memcached
   endpoints:
   - port: metrics
     interval: 30s
