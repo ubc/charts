@@ -12,6 +12,8 @@ Runtime environment variables
   value: {{ .Values.glu.batchEnabled | quote }}
 - name: GLU_BATCH_GROUP_SYNC_SCHEDULE
   value: {{ .Values.glu.batchGroupSyncSchedule | quote }}
+- name: GLU_BATCH_DISPLAYNAME_SYNC_SCHEDULE
+  value: {{ .Values.glu.batchDisplayNameSyncSchedule | quote }}
 - name: GLU_BATCH_GROUP_SYNC_MUTEX_URL
   value: "redis://{{ template "github-learning-ubc.fullname" . }}-redis:{{ .Values.redis.service.port }}"
 - name: GLU_BATCH_GROUP_SYNC_MUTEX_TTL
