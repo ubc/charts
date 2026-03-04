@@ -80,6 +80,7 @@ ipeer:
   auth:
     custom_error_message: ''
     shibboleth: {}
+  existingSecuritySaltRef: {}
   caliper:
     enabled: false
     host: ''
