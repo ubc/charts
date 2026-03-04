@@ -89,6 +89,13 @@ spec:
             value: {{ .Values.ipeer.supportEmail | quote }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
+          {{- if .Values.ipeer.existingSecuritySaltRef }}
+          - name: IPEER_SECURITY_SALT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.existingSecuritySaltRef.name }}
+                key: {{ .Values.ipeer.existingSecuritySaltRef.key | default "security-salt" }}
+          {{- end }}
           {{- if .Values.ipeer.caliper.enabled }}
           - name: CALIPER_HOST
             value: {{ .Values.ipeer.caliper.host }}
@@ -229,6 +236,13 @@ spec:
             value: {{ .Values.ipeer.supportEmail | quote }}
           - name: IPEER_SESSION_SAVE
             value: {{ .Values.ipeer.session_save | quote }}
+          {{- if .Values.ipeer.existingSecuritySaltRef }}
+          - name: IPEER_SECURITY_SALT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ipeer.existingSecuritySaltRef.name }}
+                key: {{ .Values.ipeer.existingSecuritySaltRef.key | default "security-salt" }}
+          {{- end }}
           {{- if .Values.ipeer.caliper.enabled }}
           - name: CALIPER_HOST
             value: {{ .Values.ipeer.caliper.host }}
