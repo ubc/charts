@@ -125,6 +125,14 @@ spec:
           - name: IPEER_MAINTENANCE
             value: "true"
           {{- end }}
+          {{- if .Values.ipeer.enforce_referrer }}
+          - name: IPEER_ENFORCE_REFERRER
+            value: "true"
+          {{- end }}
+          {{- if .Values.ipeer.referrer_allowed_domains }}
+          - name: IPEER_REFERRER_ALLOWED_DOMAINS
+            value: {{ .Values.ipeer.referrer_allowed_domains | quote }}
+          {{- end }}
           ports:
             - name: fastcgi
               containerPort: 9000
