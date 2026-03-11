@@ -1,6 +1,8 @@
 1. Get the application URL by running these commands:
-{{- if .Values.ingress.host }}
-  http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.host }}
+{{- if .Values.ingress.hosts }}
+  {{- range $host := .Values.ingress.hosts }}
+  http{{ if $host.tls }}s{{ end }}://{{ $host.host }}
+  {{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "ipeer.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
