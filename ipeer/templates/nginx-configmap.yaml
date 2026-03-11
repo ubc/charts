@@ -30,10 +30,11 @@ data:
         sendfile off;
 
         client_max_body_size 100m;
-
+        {{- if .Values.ipeer.auth.shibboleth }}
         location ~ ^/public/saml/ {
           try_files $uri /index.php?$query_string;
         }
+        {{- end }}
 
         location ~ \.php$ {
           include fastcgi_params;

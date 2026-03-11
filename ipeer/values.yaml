@@ -24,6 +24,10 @@ web_proxy:
 worker:
   enabled: false
 
+cronjob:
+  email:
+    enabled: false
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

@@ -1,4 +1,4 @@
-{{- if .Values.ingress.host -}}
+{{- if .Values.ingress.hosts -}}
 {{- $fullName := include "ipeer.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 
@@ -27,14 +27,17 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tls }}
   tls:
+    {{- range $host := .Values.ingress.hosts }}
+    {{- if $host.tls }}
     - hosts:
-        - {{ .Values.ingress.host | quote }}
-      secretName: {{ .Values.ingress.tls.secretName }}
-  {{- end }}
+        - {{ $host.host | quote }}
+      secretName: {{ $host.tls.secretName }}
+    {{- end }}
+    {{- end }}
   rules:
-    - host: {{ .Values.ingress.host | quote }}
+    {{- range $host := .Values.ingress.hosts }}
+    - host: {{ $host.host | quote }}
       http:
         paths:
           - path: /
@@ -44,4 +47,5 @@ spec:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
+    {{- end }}
 {{- end }}
