@@ -3656,6 +3656,16 @@ entries:
   mariadb:
   - apiVersion: v2
     appVersion: "10.6"
+    created: "2026-03-12T18:51:39.706805295Z"
+    description: A Helm chart for MariaDB
+    digest: 669ee8e3d007d8a097e6067374686d83284c0c17d6bdad3a9e96121981da5c57
+    name: mariadb
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/mariadb-0.1.18/mariadb-0.1.18.tgz
+    version: 0.1.18
+  - apiVersion: v2
+    appVersion: "10.6"
     created: "2026-02-13T07:19:41.327311509Z"
     description: A Helm chart for MariaDB
     digest: 7d2898c6d5e5ff44535a06b647ce6b5570717bfa3a4594ec21f0c48a43df2545
@@ -7924,4 +7934,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-12T08:34:34.994238056Z"
+generated: "2026-03-12T18:51:39.707535664Z"
