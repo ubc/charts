@@ -1929,6 +1929,33 @@ entries:
   hotcrp:
   - apiVersion: v2
     appVersion: sha-b72192d
+    created: "2026-03-12T08:34:34.993552072Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: A Helm chart for Hotcrp
+    digest: 031a46b6579d255c06a3bf0bbc88e2fa0a3506e5d904e4a51ceb0384000b0145
+    keywords:
+    - application
+    - http
+    - php
+    - web
+    - hotcrp
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: hotcrp
+    sources:
+    - https://github.com/ubc/charts/tree/master/hotcrp
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/hotcrp-0.3.9/hotcrp-0.3.9.tgz
+    version: 0.3.9
+  - apiVersion: v2
+    appVersion: sha-b72192d
     created: "2025-12-11T19:24:18.235647928Z"
     dependencies:
     - alias: db
@@ -7897,4 +7924,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-11T20:57:11.302736946Z"
+generated: "2026-03-12T08:34:34.994238056Z"
