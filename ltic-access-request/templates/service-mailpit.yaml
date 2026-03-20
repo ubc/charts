@@ -1,0 +1,22 @@
+{{- if .Values.mailpit.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ltic-access-request.fullname" . }}-mailpit
+  labels:
+    {{- include "ltic-access-request.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.mailpit.port.http }}
+      protocol: TCP
+      name: http
+    - port: {{ .Values.mailpit.port.smtp }}
+      targetPort: {{ .Values.mailpit.port.smtp }}
+      protocol: TCP
+      name: smtp
+  selector:
+    component: {{ include "ltic-access-request.fullname" . }}-mailpit
+{{- end }}
+

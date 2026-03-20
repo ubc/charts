@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ltic-access-request.fullname" . }}
+  labels:
+    {{- include "ltic-access-request.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ltic-access-request.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ltic-access-request.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: DB_HOST
+              value: {{ include "helper.db.host" .}}
+            - name: DB_NAME
+              value: {{ .Values.db.auth.database }}
+            - name: DB_USER
+              value: {{ .Values.db.auth.username }}
+            - name: DB_PASSWORD
+              value: {{ .Values.db.auth.password }}
+            - name: FLASK_ENV
+              value: {{ .Values.app.flask.env }}
+            - name: SECRET_KEY
+              value: {{ .Values.app.flask.secretKey }}
+            {{- if .Values.mailpit.enabled }}
+            - name: SMTP_HOST
+              value: {{ include "ltic-access-request.fullname" . }}-mailpit
+            - name: SMTP_PORT
+              value: {{ .Values.mailpit.port.smtp | quote}}
+            - name: SMTP_USE_TLS
+              value: 'false'
+            {{- else }}
+            - name: SMTP_HOST
+              value: {{ .Values.app.smtp.host }}
+            - name: SMTP_PORT
+              value: {{ .Values.app.smtp.port | quote}}
+            - name: SMTP_USE_TLS
+              value: {{ .Values.app.smtp.useTls }}
+            {{- end }}
+            - name: SMTP_USER
+              value: {{ .Values.app.smtp.user }}
+            - name: SMTP_PASSWORD
+              value: {{ .Values.app.smtp.password }}
+            - name: SMTP_FROM
+              value: {{ .Values.app.smtp.from }}
+            - name: ALLOWED_EMAIL_DOMAINS
+              value: {{ .Values.app.smtp.allowedEmailDomains }}
+            - name: SERVICENOW_EMAIL
+              value: {{ .Values.app.smtp.serviceNowEmail }}
+            - name: BASE_URL
+              value: https://{{ .Values.ingress.host }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

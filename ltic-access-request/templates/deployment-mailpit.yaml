@@ -1,0 +1,53 @@
+{{- if .Values.mailpit.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ltic-access-request.fullname" . }}-mailpit
+  labels:
+    {{- include "ltic-access-request.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: {{ include "ltic-access-request.fullname" . }}-mailpit
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        component: {{ include "ltic-access-request.fullname" . }}-mailpit
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: mailpit
+          image: "{{ .Values.mailpit.image.repository }}:{{ .Values.mailpit.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.mailpit.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.mailpit.port.http }}
+              protocol: TCP
+            - name: smtp
+              containerPort: {{ .Values.mailpit.port.smtp }}
+              protocol: TCP
+          livenessProbe:
+              httpGet:
+                path: /mailpit
+                port: http
+          readinessProbe:
+              httpGet:
+                path: /mailpit
+                port: http
+          env:
+            - name: MP_WEBROOT
+              value: 'mailpit'
+{{- end }}
