@@ -3413,6 +3413,23 @@ entries:
     urls:
     - https://ubc.github.io/charts/lti-shim-0.1.0.tgz
     version: 0.1.0
+  ltic-access-request:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-03-20T10:42:42.26838167Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: LTIC Access Request Hub
+    digest: 137c6990116761b3ca749a9cea3c7222d51720f17203320694ed278cb7513e1a
+    name: ltic-access-request
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltic-access-request-0.0.1/ltic-access-request-0.0.1.tgz
+    version: 0.0.1
   ltps-recon:
   - apiVersion: v1
     created: "2024-10-31T22:51:51.006969396Z"
@@ -7981,4 +7998,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-12T21:19:18.470503477Z"
+generated: "2026-03-20T10:42:42.269088008Z"
