@@ -54,6 +54,8 @@ spec:
           env:
             - name: DB_HOST
               value: {{ include "helper.db.host" .}}
+            - name: DB_PORT
+              value: 3306
             - name: DB_NAME
               value: {{ .Values.db.auth.database }}
             - name: DB_USER
