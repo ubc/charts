@@ -3179,6 +3179,17 @@ entries:
     urls:
     - https://ubc.github.io/charts/ipeer-0.1.0.tgz
     version: 0.1.0
+  ipeer-ng:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2026-03-25T23:08:58.918157111Z"
+    description: iPeer NG (v4+)
+    digest: 49dabdccabd4e5d9a060d947da2faeab0c89fda5aeb06a2329f955841888e2be
+    name: ipeer-ng
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ipeer-ng-0.1.0/ipeer-ng-0.1.0.tgz
+    version: 0.1.0
   ltbot:
   - apiVersion: v1
     created: "2022-10-07T02:53:18.348909835Z"
@@ -8046,4 +8057,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-20T12:03:48.157799189Z"
+generated: "2026-03-25T23:08:58.91888253Z"
