@@ -1,0 +1,63 @@
+# Target namespace for all resources.
+# Leave empty to use whatever namespace helm install --namespace specifies.
+# Must be created by the developer; this chart does not manage namespace creation.
+namespace: ""
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+# Arbitrary non-sensitive env vars added to the ConfigMap as-is.
+# Use this for DJANGO_SETTINGS_MODULE, IPEER_ALLOWED_HOSTS, IPEER_GUNICORN_WORKERS, etc.
+env: {}
+
+ipeer:
+  replicaCount: 1
+  resources: {} # requests+limit keys, with cpu+memory subkeys
+  auth_mode: local # or 'saml'
+  saml: # this only takes effect when auth_mode=='saml'
+    serviceProvider:
+      baseUrl: ""  # e.g. https://ipeer.subdomain.ubc.ca
+      entityId: "" # e.g. https://ipeer.subdomain.ubc.ca/saml/metadata/
+      attributeMapping: ""
+      certMountPath: /etc/ipeer/saml
+      # Filenames written under certMountPath:
+      keyFilename: sp-key.pem
+      certFilename: sp-cert.pem
+      # Corresponding keys in the ExternalSecret-managed Secret:
+      keySecretKey: saml-sp-key
+      certSecretKey: saml-sp-cert
+      # External secret store path and property names:
+      externalSecretPath: ""
+      externalSecretKeyProperty: ""
+      externalSecretCertProperty: ""
+    idProvider:
+      metadataUrl: "" # e.g. https://authentication.stg.id.ubc.ca/idp/shibboleth
+      friendlyName: ""
+
+ipeerStaticFiles:
+  appImagePath: /ipeer/staticfiles
+  image:
+    repository: nginx
+    tag: 1.29-alpine
+    pullPolicy: IfNotPresent
+  resources: {} # requests+limit keys, with cpu+memory subkeys
+
+# ExternalSecret (external-secrets.io/v1) configuration.
+# It gets mounted into the app Deployment.
+externalSecret:
+  secretStoreRefName: ""
+  secretStoreRefKind: SecretStore # or ClusterSecretStore
+  refreshInterval: 1h
+  data: [] # additional data
+
+ingress:
+  enabled: false
+  className: ""
+  host: ""
+  annotations: {}
+  tlsAcme:
+    enabled: true
+    secretName: ""  # defaults to <fullname>-tls
+

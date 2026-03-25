@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ipeer.fullname" . }}-app
+  {{- include "ipeer.namespace" . | nindent 2 }}
+  labels:
+    {{- include "ipeer.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.ipeer.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: app
+      {{- include "ipeer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app.kubernetes.io/component: app
+        {{- include "ipeer.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+        # Since the static files are coupled to a particular git commit and env var configuration,
+        # we collect them at the pod-level.
+        - name: collectstatic
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["uv", "run", "python", "manage.py", "collectstatic", "--noinput"]
+          envFrom:
+            - configMapRef:
+                name: {{ include "ipeer.fullname" . }}
+            - secretRef:
+                name: {{ include "ipeer.fullname" . }}
+          volumeMounts:
+            - name: static-files
+              mountPath: {{ .Values.ipeerStaticFiles.appImagePath }}
+      containers:
+        - name: ipeer-static-files
+          image: "{{ .Values.ipeerStaticFiles.image.repository }}:{{ .Values.ipeerStaticFiles.image.tag }}"
+          imagePullPolicy: {{ .Values.ipeerStaticFiles.image.pullPolicy }}
+          ports:
+            - name: static
+              containerPort: 80
+              protocol: TCP
+          {{- with .Values.ipeerStaticFiles.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: static-files
+              mountPath: /static
+              readOnly: true
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+        - name: ipeer
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "ipeer.fullname" . }}
+            - secretRef:
+                name: {{ include "ipeer.fullname" . }}
+          {{- if eq .Values.ipeer.auth_mode "saml" }}
+          volumeMounts:
+            - name: saml-certs
+              mountPath: {{ .Values.ipeer.saml.serviceProvider.certMountPath }}
+              readOnly: true
+          {{- end }}
+          {{- with .Values.ipeer.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: static-files
+          emptyDir: {}
+        - name: nginx-config
+          configMap:
+            name: {{ include "ipeer.fullname" . }}-nginx
+        {{- if eq .Values.ipeer.auth_mode "saml" }}
+        - name: saml-certs
+          secret:
+            secretName: {{ include "ipeer.fullname" . }}
+            items:
+              - key: {{ .Values.ipeer.saml.serviceProvider.keySecretKey }}
+                path: {{ .Values.ipeer.saml.serviceProvider.keyFilename }}
+              - key: {{ .Values.ipeer.saml.serviceProvider.certSecretKey }}
+                path: {{ .Values.ipeer.saml.serviceProvider.certFilename }}
+        {{- end }}

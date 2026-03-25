@@ -1,0 +1,44 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "ipeer.fullname" . }}
+  {{- include "ipeer.namespace" . | nindent 2 }}
+  labels:
+    {{- include "ipeer.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.ingress.tlsAcme.enabled }}
+    kubernetes.io/tls-acme: "true"
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path: /static/
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "ipeer.fullname" . }}-app
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "ipeer.fullname" . }}-app
+                port:
+                  number: 8000
+  {{- if .Values.ingress.tlsAcme.enabled }}
+  tls:
+    - secretName: {{ .Values.ingress.tlsAcme.secretName | default (printf "%s-tls" (include "ipeer.fullname" .)) }}
+      hosts:
+        - {{ .Values.ingress.host | quote }}
+  {{- end }}
+{{- end }}
