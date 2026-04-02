@@ -37,6 +37,7 @@ spec:
     enabled: true
     primary:
       autoFailover: {{ .Values.primary.automaticFailover }}
+      autoFailoverDelay: {{ .Values.primary.automaticFailoverDelay }}
     replica:
       replPasswordSecretKeyRef:
         name: {{ include "mariadb.fullname" . }}-user-password

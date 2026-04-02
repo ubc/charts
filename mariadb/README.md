@@ -61,6 +61,7 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `service.annotations` | Annotations for the common service. | `{}` |
 | `primary.containerPorts.mysql` | The port to expose MariaDB on. | `3306` |
 | `primary.automaticFailover` | Enable automatic failover for primary. | `true` |
+| `primary.automaticFailoverDelay` | Add a delay before triggering the failover operation to avoid failovers due to transient issues. Note that the delay should be lower than the readiness probe failure threshold (e.g. 20 seconds delay when readiness threshold is 30 seconds). | `5s` |
 | `primary.service.type` | Kubernetes Service type for the primary instance. | `ClusterIP` |
 | `primary.service.annotations` | Annotations for the primary service. | `{}` |
 | `secondary.enabled` | Enable secondary replicas. | `false` |
