@@ -2,6 +2,9 @@ stage: dev
 
 app:
   replicaCount: 1
+  phpfpm:
+    # Override PHP-FPM pm.max_children (leave unset to use image default)
+    pmMaxChildren: ""
   autoscaling:
     enabled: false
     minReplicas: 1

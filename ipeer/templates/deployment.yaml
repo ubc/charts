@@ -41,6 +41,12 @@ spec:
           configMap:
             name: {{ include "ipeer.fullname" . }}-nginx-config
 
+        {{- if .Values.app.phpfpm.pmMaxChildren }}
+        - name: phpfpm-config-volume
+          configMap:
+            name: {{ include "ipeer.fullname" . }}-phpfpm-config
+        {{- end }}
+
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -142,6 +148,11 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /shared
+            {{- if .Values.app.phpfpm.pmMaxChildren }}
+            - name: phpfpm-config-volume
+              mountPath: /usr/local/etc/php-fpm.d/zzz-fpm-override.conf
+              subPath: zzz-fpm-override.conf
+            {{- end }}
           # After the container has started, copy the PHP files from this
           # container's local filesystem to the shared volume, which is
           # mounted at /shared.
