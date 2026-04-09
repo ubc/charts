@@ -1,3 +1,4 @@
+{{- if .Values.ltijs.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,3 +51,4 @@ spec:
             value: {{ .Values.ltijs.platform.accessTokenEndpoint }}
           - name: PLATFORM_JWKS_ENDPOINT
             value: {{ .Values.ltijs.platform.jwksEndpoint }}
+{{- end }}
