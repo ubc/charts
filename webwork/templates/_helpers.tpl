@@ -96,10 +96,14 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "app.db.fullname" -}}
-{{- if .Values.db.disableExternal }}
-{{- include "call-nested" (list . "db" "mariadb.primary.fullname") | default .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.db.enabled -}}
+{{- if eq .Values.db.architecture "replication" -}}
+{{- printf "%s-primary" (include "call-nested" (list . "db" "mariadb.fullname")) | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- if .Values.db.service.name}}
+{{- include "call-nested" (list . "db" "mariadb.fullname") | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- else -}}
+{{- if .Values.db.service.name -}}
 {{- printf "%s" .Values.db.service.name -}}
 {{- else -}}
 {{- printf "%s-%s" .Release.Name "db" -}}
@@ -130,9 +134,9 @@ env:
 - name: WEBWORK_DB_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.disableExternal }}
-      name: {{ template "app.db.fullname" . }}
-      key: mariadb-password
+    {{- if .Values.db.enabled }}
+      name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
+      key: password-{{ .Values.db.auth.username }}
     {{- else }}
       name: {{ template "webwork.fullname" . }}
       key: db_password
@@ -184,9 +188,9 @@ env:
 - name: SHIB_ODBC_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.disableExternal }}
-      name: {{ template "app.db.fullname" . }}
-      key: mariadb-password
+    {{- if .Values.db.enabled }}
+      name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
+      key: password-{{ .Values.db.auth.username }}
     {{- else }}
       name: {{ template "webwork.fullname" . }}
       key: db_password

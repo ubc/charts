@@ -231,9 +231,9 @@ spec:
         - name: SHIB_ODBC_PASSWORD
           valueFrom:
             secretKeyRef:
-            {{- if .Values.db.disableExternal }}
-              name: {{ template "app.db.fullname" . }}
-              key: mariadb-password
+            {{- if .Values.db.enabled }}
+              name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
+              key: password-{{ .Values.db.auth.username }}
             {{- else }}
               name: {{ template "webwork.fullname" . }}
               key: db_password

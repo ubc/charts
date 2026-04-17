@@ -15,7 +15,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.11
+version: 0.1.12
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
@@ -24,9 +24,9 @@ appVersion: 2.18.0
 
 dependencies:
 - name: mariadb
-  version: 12.x.x
-  repository: https://charts.bitnami.com/bitnami
-  condition: db.disableExternal
+  version: "*"
+  repository: https://ubc.github.io/charts
+  condition: db.enabled
   alias: db
   tags:
     - webwork-database
