@@ -121,6 +121,11 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
+  annotations: {}
+    # AWS NLB example:
+    # service.beta.kubernetes.io/aws-load-balancer-type: external
+    # service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    # service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
   # uncomment to enable hostPort on deployment
   # hostPort: 80
   # uncomment to specify a nodePort
