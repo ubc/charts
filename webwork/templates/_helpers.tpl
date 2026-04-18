@@ -112,9 +112,23 @@ env:
 - name: WEBWORK_DB_DRIVER
   value: {{ .Values.db.db.driver | quote }}
 - name: WEBWORK_DB_HOST
+{{- if eq (include "webwork.db.provider" .) "ack" }}
+  valueFrom:
+    configMapKeyRef:
+      name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+      key: endpoint
+{{- else }}
   value: {{ template "app.db.fullname" . }}
+{{- end }}
 - name: WEBWORK_DB_PORT
+{{- if eq (include "webwork.db.provider" .) "ack" }}
+  valueFrom:
+    configMapKeyRef:
+      name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+      key: port
+{{- else }}
   value: {{ .Values.db.service.port | quote }}
+{{- end }}
 - name: WEBWORK_DB_NAME
   value: {{ .Values.db.auth.database | quote }}
 - name: WEBWORK_DB_USER
@@ -122,13 +136,7 @@ env:
 - name: WEBWORK_DB_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.enabled }}
-      name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
-      key: password-{{ .Values.db.auth.username }}
-    {{- else }}
-      name: {{ include "webwork.fullname" . }}
-      key: db_password
-    {{- end }}
+      {{- include "webwork.db.passwordSecretRef" . | nindent 6 }}
 - name: WEBWORK_ROOT_URL
   value: {{ .Values.rootUrl | quote }}
 - name: WEBWORK_TIMEZONE
@@ -172,9 +180,23 @@ env:
 - name: SHIBD_ODBC_LIB
   value: {{ .Values.shibd.odbc.lib | quote }}
 - name: SHIBD_ODBC_PORT
+{{- if eq (include "webwork.db.provider" .) "ack" }}
+  valueFrom:
+    configMapKeyRef:
+      name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+      key: port
+{{- else }}
   value: {{ .Values.db.service.port | quote }}
+{{- end }}
 - name: SHIBD_ODBC_SERVER
+{{- if eq (include "webwork.db.provider" .) "ack" }}
+  valueFrom:
+    configMapKeyRef:
+      name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+      key: endpoint
+{{- else }}
   value: {{ template "app.db.fullname" . }}
+{{- end }}
 - name: SHIBD_SERVICE_NAME
   value: {{ template "webwork.fullname" . }}-shibd
 - name: SHIBD_SERVICE_PORT
@@ -182,13 +204,7 @@ env:
 - name: SHIB_ODBC_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.enabled }}
-      name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
-      key: password-{{ .Values.db.auth.username }}
-    {{- else }}
-      name: {{ include "webwork.fullname" . }}
-      key: db_password
-    {{- end }}
+      {{- include "webwork.db.passwordSecretRef" . | nindent 6 }}
 - name: SHIB_ODBC_USER
   value: {{ .Values.db.auth.username | quote }}
 volumeMounts:
