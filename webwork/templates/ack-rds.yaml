@@ -1,0 +1,116 @@
+{{- if eq (include "webwork.db.provider" .) "ack" }}
+{{- $_ := required "db.ack.vpcId is required when db.provider is ack" .Values.db.ack.vpcId }}
+{{- if not .Values.db.ack.subnetIDs }}
+{{- fail "db.ack.subnetIDs must contain at least one entry when db.provider is ack" }}
+{{- end }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "webwork.fullname" . }}-rds-endpoint
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+data:
+  endpoint: ""
+  port: ""
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: {{ include "webwork.fullname" . }}-rds-sg
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  name: {{ include "webwork.fullname" . }}-rds-sg
+  description: Security group for {{ include "webwork.fullname" . }} RDS MariaDB instance
+  vpcID: {{ .Values.db.ack.vpcId | quote }}
+  ingressRules:
+  {{- range .Values.db.ack.ingressCIDRs }}
+  - ipProtocol: tcp
+    fromPort: 3306
+    toPort: 3306
+    ipRanges:
+    - cidrIP: {{ . | quote }}
+  {{- end }}
+---
+apiVersion: rds.services.k8s.aws/v1alpha1
+kind: DBSubnetGroup
+metadata:
+  name: {{ include "webwork.fullname" . }}-db-subnet-group
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  name: {{ include "webwork.fullname" . }}-db-subnet-group
+  description: DB subnet group for {{ include "webwork.fullname" . }}
+  subnetIDs:
+  {{- range .Values.db.ack.subnetIDs }}
+  - {{ . | quote }}
+  {{- end }}
+---
+apiVersion: rds.services.k8s.aws/v1alpha1
+kind: DBInstance
+metadata:
+  name: {{ include "webwork.fullname" . }}
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  dbInstanceIdentifier: {{ include "webwork.fullname" . }}
+  dbInstanceClass: {{ .Values.db.ack.dbInstanceClass | quote }}
+  engine: mariadb
+  engineVersion: {{ .Values.db.ack.engineVersion | quote }}
+  masterUsername: {{ .Values.db.auth.username | quote }}
+  masterUserPassword:
+    name: {{ include "webwork.fullname" . }}-ack-db-password
+    key: password
+  dbName: {{ .Values.db.auth.database | quote }}
+  allocatedStorage: {{ .Values.db.ack.allocatedStorage }}
+  dbSubnetGroupName: {{ include "webwork.fullname" . }}-db-subnet-group
+  vpcSecurityGroupRefs:
+  - from:
+      name: {{ include "webwork.fullname" . }}-rds-sg
+  # NOTE: vpcSecurityGroupRefs is an ACK cross-resource reference supported in
+  # rds-controller >= 0.1.x. If your ACK RDS controller version does not support it,
+  # replace with:
+  #   vpcSecurityGroupIDs:
+  #   - <sg-id>   # supply after the SecurityGroup CRD is reconciled
+  multiAZ: {{ .Values.db.ack.multiAZ }}
+  storageType: {{ .Values.db.ack.storageType | quote }}
+  storageEncrypted: {{ .Values.db.ack.storageEncrypted }}
+---
+apiVersion: services.k8s.aws/v1alpha1
+kind: FieldExport
+metadata:
+  name: {{ include "webwork.fullname" . }}-rds-endpoint-address
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  from:
+    resource:
+      group: rds.services.k8s.aws
+      kind: DBInstance
+      name: {{ include "webwork.fullname" . }}
+    path: .status.endpoint.address
+  to:
+    kind: ConfigMap
+    name: {{ include "webwork.fullname" . }}-rds-endpoint
+    namespace: {{ .Release.Namespace }}
+    key: endpoint
+---
+apiVersion: services.k8s.aws/v1alpha1
+kind: FieldExport
+metadata:
+  name: {{ include "webwork.fullname" . }}-rds-endpoint-port
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  from:
+    resource:
+      group: rds.services.k8s.aws
+      kind: DBInstance
+      name: {{ include "webwork.fullname" . }}
+    path: .status.endpoint.port
+  to:
+    kind: ConfigMap
+    name: {{ include "webwork.fullname" . }}-rds-endpoint
+    namespace: {{ .Release.Namespace }}
+    key: port
+{{- end }}
