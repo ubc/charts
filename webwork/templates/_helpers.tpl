@@ -76,21 +76,6 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "common_labels" }}
-app: {{ template "webwork.fullname" . }}
-stage: {{ .Values.stage }}
-chart: {{ print .Chart.Name "-" .Chart.Version | replace "+" "_" | quote }}
-release: {{ .Release.Name | quote }}
-heritage: {{ .Release.Service | quote }}
-{{- if .Values.CI_PIPELINE_ID }}
-autodeployed: "true"
-pipeline_id: "{{  .Values.CI_PIPELINE_ID }}"
-{{- end }}
-{{- if .Values.CI_BUILD_ID }}
-build_id: "{{ .Values.CI_BUILD_ID }}"
-{{- end }}
-{{- end }}
-
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -120,7 +105,10 @@ image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.App
 imagePullPolicy: {{ .Values.image.pullPolicy }}
 env:
 - name: WEBWORK_SECRET
-  value: {{ .Values.secret | quote }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "webwork.fullname" . }}
+      key: webwork_secret
 - name: WEBWORK_DB_DRIVER
   value: {{ .Values.db.db.driver | quote }}
 - name: WEBWORK_DB_HOST
@@ -138,7 +126,7 @@ env:
       name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
       key: password-{{ .Values.db.auth.username }}
     {{- else }}
-      name: {{ template "webwork.fullname" . }}
+      name: {{ include "webwork.fullname" . }}
       key: db_password
     {{- end }}
 - name: WEBWORK_ROOT_URL
@@ -155,6 +143,12 @@ env:
   value: {{ .Values.smtp.server | quote }}
 - name: WEBWORK_SMTP_SENDER
   value: {{ .Values.smtp.sender | quote }}
+- name: SKIP_UPLOAD_OPL_statistics
+  value: "true"
+- name: MAX_REQUEST_SIZE
+  value: {{ .Values.maxRequestSize | quote }}
+- name: MOJO_PUBSUB_EXPERIMENTAL
+  value: "1"
 - name: LOG_LEVEL
   value: {{ .Values.shibd.log_level | quote }}
 - name: SHIBBOLETH_IDP_DISCOVERY_URL
@@ -192,17 +186,11 @@ env:
       name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
       key: password-{{ .Values.db.auth.username }}
     {{- else }}
-      name: {{ template "webwork.fullname" . }}
+      name: {{ include "webwork.fullname" . }}
       key: db_password
     {{- end }}
 - name: SHIB_ODBC_USER
   value: {{ .Values.db.auth.username | quote }}
-- name: SKIP_UPLOAD_OPL_statistics
-  value: "true"
-- name: MAX_REQUEST_SIZE
-  value: {{ .Values.maxRequestSize | quote }}
-- name: MOJO_PUBSUB_EXPERIMENTAL
-  value: "1"
 volumeMounts:
 - name: webwork-course-data
   mountPath: /opt/webwork/courses

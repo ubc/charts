@@ -22,7 +22,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "webwork.fullname" . }}-shibd
+  name: {{ include "webwork.fullname" . }}-shibd
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
 spec:
@@ -33,15 +33,16 @@ spec:
     protocol: TCP
     name: shibd
   selector:
-    app: {{ template "webwork.fullname" . }}-shibd
-{{- end -}}
+    app.kubernetes.io/name: {{ include "webwork.name" . }}-shibd
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{- if .Values.r.enabled }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "webwork.fullname" . }}-r
+  name: {{ include "webwork.fullname" . }}-r
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
 spec:
@@ -52,5 +53,6 @@ spec:
     protocol: TCP
     name: rserve
   selector:
-    app: {{ template "webwork.fullname" . }}-r
-{{- end -}}
+    app.kubernetes.io/name: {{ include "webwork.name" . }}-r
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

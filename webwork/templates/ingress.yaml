@@ -1,40 +1,44 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "webwork.fullname" . -}}
-{{- $servicePort := .Values.service.externalPort -}}
+{{- $servicePort := .Values.service.port -}}
+{{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ template "webwork.fullname" . }}
-  annotations:
-  {{- range $key, $value := .Values.ingress.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
+  name: {{ include "webwork.fullname" . }}
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- end }}
   rules:
-    {{- $hosts := append .Values.ingress.hosts .Values.CI_ENVIRONMENT_HOSTNAME | compact | uniq }}
     {{- range $host := $hosts }}
-    - host: {{ $host }}
+    {{- $hostname := $host }}
+    {{- $paths := list "/" }}
+    {{- if not (kindIs "string" $host) }}
+      {{- $hostname = $host.host }}
+      {{- if $host.paths }}{{- $paths = $host.paths }}{{- end }}
+    {{- end }}
+    - host: {{ $hostname | quote }}
       http:
         paths:
-          - path: /
+          {{- range $path := $paths }}
+          - path: {{ $path }}
             pathType: Prefix
             backend:
               service:
                 name: {{ $serviceName }}
                 port:
                   number: {{ $servicePort }}
-    {{- end -}}
-  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
+          {{- end }}
+    {{- end }}
+  {{- if .Values.ingress.tls }}
   tls:
-    - secretName: {{ template "webwork.fullname" . }}-tls
-      hosts:
-      {{- range $host := $hosts }}
-        - {{ $host }}
-      {{- end -}}
-{{- if .Values.ingress.tls }}
-{{ toYaml .Values.ingress.tls | indent 4 }}
+    {{- toYaml .Values.ingress.tls | nindent 4 }}
+  {{- end }}
 {{- end }}
-  {{- end -}}
-{{- end -}}

@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ template "webwork.fullname" . }}-classlist-cronjob
+  name: {{ include "webwork.fullname" . }}-classlist-cronjob
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "webwork.labels" . | nindent 4 }}
     tier: cronjob
 spec:
   schedule: {{ .Values.cronjob.lti_update_classlist.schedule | quote }}
@@ -30,9 +30,9 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ template "webwork.fullname" . }}-grades-cronjob
+  name: {{ include "webwork.fullname" . }}-grades-cronjob
   labels:
-    {{- include "common_labels" . | indent 4 }}
+    {{- include "webwork.labels" . | nindent 4 }}
     tier: cronjob
 spec:
   schedule: {{ .Values.cronjob.lti_update_grades.schedule | quote }}
@@ -52,4 +52,3 @@ spec:
           volumes:
             {{- include "webwork.app.mounts" . | indent 10 }}
 {{- end }}
-

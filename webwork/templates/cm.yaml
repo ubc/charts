@@ -4,23 +4,23 @@ kind: ConfigMap
 metadata:
   name: {{ include "webwork.fullname" . }}
   labels:
-  {{- include "webwork.labels" . | nindent 4 }}
+    {{- include "webwork.labels" . | nindent 4 }}
 data:
-  localOverrides:
-  {{ toYaml (.Values.webworkFiles).localOverrides | indent 2 }}
-  authen_saml2:
-  {{ toYaml (.Values.webworkFiles).authen_saml2 | indent 2 }}
-{{- end}}
+  localOverrides: |
+    {{ (.Values.webworkFiles).localOverrides | nindent 4 }}
+  authen_saml2: |
+    {{ (.Values.webworkFiles).authen_saml2 | nindent 4 }}
+{{- end }}
 
 {{- if .Values.shibd.idp.attribute_map }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "webwork.fullname" . }}-cm
+  name: {{ include "webwork.fullname" . }}-cm
   labels:
-  {{- include "webwork.labels" . | nindent 4 }}
+    {{- include "webwork.labels" . | nindent 4 }}
 data:
   attribute-map.xml: |
-    {{ toYaml .Values.shibd.idp.attribute_map | nindent 4 }}
-{{- end}}
+    {{ .Values.shibd.idp.attribute_map | nindent 4 }}
+{{- end }}

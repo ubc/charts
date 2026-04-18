@@ -16,8 +16,8 @@ fullnameOverride: ""
 rootUrl: http://localhost
 timezone: America/Vancouver
 systemTimezone: America/Vancouver
-# mojolicious secret passphrase for security features
-secret: '4zaMnJwCFCFKXMVr2mrtMiudEksy4t4ncmrW4RAo7zmqgqkntPXFWYAauXkJLP9q'
+# mojolicious secret passphrase - leave empty to auto-generate a stable random value
+secret: ""
 rHost: ""
 supportEmail: support@example.edu
 # file upload size limit in bytes
@@ -121,7 +121,6 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
-  externalPort: 80
   # uncomment to enable hostPort on deployment
   # hostPort: 80
   # uncomment to specify a nodePort
@@ -129,9 +128,11 @@ service:
 
 ingress:
   enabled: false
+  # className is required for Kubernetes >= 1.18 with IngressClass resources
+  className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
     - host: chart-example.local
       paths: ["/"]
