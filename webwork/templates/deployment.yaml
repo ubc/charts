@@ -237,19 +237,27 @@ spec:
         - name: SHIBD_ODBC_DATABASE
           value: {{ .Values.db.auth.database | quote }}
         - name: SHIBD_ODBC_PORT
+          {{- if eq (include "webwork.db.provider" .) "ack" }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+              key: port
+          {{- else }}
           value: {{ .Values.db.service.port | quote }}
+          {{- end }}
         - name: SHIBD_ODBC_SERVER
+          {{- if eq (include "webwork.db.provider" .) "ack" }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+              key: endpoint
+          {{- else }}
           value: {{ template "app.db.fullname" . }}
+          {{- end }}
         - name: SHIB_ODBC_PASSWORD
           valueFrom:
             secretKeyRef:
-            {{- if .Values.db.enabled }}
-              name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
-              key: password-{{ .Values.db.auth.username }}
-            {{- else }}
-              name: {{ include "webwork.fullname" . }}
-              key: db_password
-            {{- end }}
+              {{- include "webwork.db.passwordSecretRef" . | nindent 14 }}
         - name: SHIB_ODBC_USER
           value: {{ .Values.db.auth.username | quote }}
         - name: LOG_LEVEL
