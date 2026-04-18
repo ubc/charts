@@ -177,7 +177,13 @@ affinity: {}
 # ref: https://github.com/ubc/charts/tree/master/mariadb
 ##
 db:
-  ## Set to true to deploy the bundled mariadb chart. Set to false to use an external database.
+  ## provider selects the database backend:
+  ##   ""         auto: resolves to "local" if db.enabled=true, else "external"
+  ##   "local"    bundled UBC mariadb subchart (also set db.enabled: true)
+  ##   "ack"      AWS ACK RDS controller provisions a managed MariaDB instance
+  ##   "external" externally-managed database; supply db.service.name and db.auth.password
+  provider: ""
+  ## Set to true to deploy the bundled mariadb chart. Required when provider is "local".
   enabled: false
   ## standalone or replication
   architecture: standalone
@@ -218,6 +224,26 @@ db:
     #  - 10.0.0.2
     port: 3306
 
+  ack:
+    # AWS region where the RDS instance will be created
+    region: us-west-2
+    # RDS instance class
+    dbInstanceClass: db.t3.medium
+    # MariaDB engine version
+    engineVersion: "10.6"
+    # Allocated storage in GiB
+    allocatedStorage: 20
+    storageType: gp3
+    storageEncrypted: true
+    # Enable Multi-AZ deployment
+    multiAZ: false
+    # VPC ID for the SecurityGroup (required when provider is "ack")
+    vpcId: ""
+    # Subnet IDs for the DBSubnetGroup (required when provider is "ack"; at least two)
+    subnetIDs: []
+    # CIDR blocks allowed to reach RDS on port 3306
+    ingressCIDRs:
+      - 10.0.0.0/8
 
 shibd:
   enabled: false
