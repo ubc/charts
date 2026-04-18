@@ -270,3 +270,36 @@ volumeMounts:
 {{- end }}
 
 {{- end }}
+
+{{/*
+Resolve the effective database provider.
+  "" (empty) auto-detects from db.enabled for backward compatibility:
+    db.enabled: true  → "local"
+    db.enabled: false → "external"
+*/}}
+{{- define "webwork.db.provider" -}}
+{{- if .Values.db.provider -}}
+{{- .Values.db.provider -}}
+{{- else if .Values.db.enabled -}}
+local
+{{- else -}}
+external
+{{- end -}}
+{{- end }}
+
+{{/*
+Returns the secretKeyRef block (name + key lines) for WEBWORK_DB_PASSWORD
+based on the effective provider. Indent with nindent after inclusion.
+*/}}
+{{- define "webwork.db.passwordSecretRef" -}}
+{{- if eq (include "webwork.db.provider" .) "local" -}}
+name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
+key: password-{{ .Values.db.auth.username }}
+{{- else if eq (include "webwork.db.provider" .) "ack" -}}
+name: {{ printf "%s-ack-db-password" (include "webwork.fullname" .) }}
+key: password
+{{- else -}}
+name: {{ include "webwork.fullname" . }}
+key: db_password
+{{- end -}}
+{{- end }}
