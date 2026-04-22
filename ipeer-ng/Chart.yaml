@@ -2,5 +2,5 @@ apiVersion: v2
 name: ipeer-ng
 description: iPeer NG (v4+)
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "latest" # continuous deployment used; no discrete version numbers

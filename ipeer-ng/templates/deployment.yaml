@@ -14,6 +14,10 @@ spec:
   template:
     metadata:
       annotations:
+        # This annotation cross-references the generated configmap.yaml definition.
+        # If our config map changes, the annotation here will change, which will force
+        # the app containers to redeploy. Since Helm applies configmaps before workloads
+        # this should work fine.
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: app
@@ -65,8 +69,11 @@ spec:
                 name: {{ include "ipeer.fullname" . }}
             - secretRef:
                 name: {{ include "ipeer.fullname" . }}
-          {{- if eq .Values.ipeer.auth_mode "saml" }}
           volumeMounts:
+            - name: static-files
+              mountPath: {{ .Values.ipeerStaticFiles.appImagePath }}
+              readOnly: true
+          {{- if eq .Values.ipeer.auth_mode "saml" }}
             - name: saml-certs
               mountPath: {{ .Values.ipeer.saml.serviceProvider.certMountPath }}
               readOnly: true
