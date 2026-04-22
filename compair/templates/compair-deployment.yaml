@@ -325,7 +325,7 @@ spec:
       {{- if not .Values.db.bootstrapFrom }}
       - name: init-db
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
-        command: ["sh", "-c", "python manage.py database create {{ if .Values.demoInstance }}--sample_data{{ end }}"]
+        command: ["sh", "-c", "FLASK_APP=manage flask database create{{ if .Values.demoInstance }} --sample-data{{ end }}"]
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
         - name: DB_HOST
