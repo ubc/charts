@@ -3200,6 +3200,16 @@ entries:
   ipeer-ng:
   - apiVersion: v2
     appVersion: latest
+    created: "2026-04-22T23:33:09.408241473Z"
+    description: iPeer NG (v4+)
+    digest: 72824d7708b22bd49719f49622606568c4d00075c8518b6775b61daaf9814a72
+    name: ipeer-ng
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ipeer-ng-0.1.1/ipeer-ng-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: latest
     created: "2026-03-25T23:08:58.918157111Z"
     description: iPeer NG (v4+)
     digest: 49dabdccabd4e5d9a060d947da2faeab0c89fda5aeb06a2329f955841888e2be
@@ -8129,4 +8139,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-18T00:48:08.601004703Z"
+generated: "2026-04-22T23:33:09.408881717Z"
