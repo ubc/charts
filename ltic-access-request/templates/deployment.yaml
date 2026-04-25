@@ -79,7 +79,7 @@ spec:
             - name: SMTP_PORT
               value: {{ .Values.app.smtp.port | quote}}
             - name: SMTP_USE_TLS
-              value: {{ .Values.app.smtp.useTls }}
+              value: {{ .Values.app.smtp.useTls | quote }}
             {{- end }}
             - name: SMTP_USER
               value: {{ .Values.app.smtp.user }}
