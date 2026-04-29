@@ -57,7 +57,7 @@ primary:
   containerPorts:
     mysql: 3306
   automaticFailover: true
-  automaticFailoverDelay: 0s
+  automaticFailoverDelay: 5s
   service:
     type: ClusterIP
     annotations: {}
