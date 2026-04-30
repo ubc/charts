@@ -44,6 +44,10 @@ resources:
     cpu: 200m
     memory: 256Mi
 
+# Pin MariaDB pods (primary + replicas) to nodes matching these labels.
+# Leave empty to let the scheduler choose. Maps directly to `MariaDB.spec.nodeSelector`.
+nodeSelector: {}
+
 persistence:
   size: 10Gi
   storageClassName:

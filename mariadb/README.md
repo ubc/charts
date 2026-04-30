@@ -57,6 +57,7 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `persistence.size` | The size of the persistent volume. | `10Gi` |
 | `persistence.storageClassName` | Storage class name for the persistent volume. | `""` |
 | `persistence.ephemeral` | Use ephemeral storage instead of a persistent volume. | `false` |
+| `nodeSelector` | Pin MariaDB pods (primary + replicas) to nodes matching these labels. Maps directly to `MariaDB.spec.nodeSelector`. | `{}` |
 | `service.type` | Kubernetes Service type for the common service. | `ClusterIP` |
 | `service.annotations` | Annotations for the common service. | `{}` |
 | `primary.containerPorts.mysql` | The port to expose MariaDB on. | `3306` |
