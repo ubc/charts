@@ -116,88 +116,48 @@ hpa:
   targetCPUUtilizationPercentage: 50
 ##
 ## MariaDB chart configuration
-# ref: https://github.com/kubernetes/charts/tree/master/stable/mariadb
+## Subchart values are forwarded to the UBC `mariadb` chart at https://ubc.github.io/charts.
+## Only the most common knobs are listed here; any field accepted by that chart can be set under `db:`.
+## ref: https://github.com/ubc/charts/tree/master/mariadb
 ##
 db:
-  ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
-  disableExternal: true
+  ## Whether to provision a MariaDB instance via the UBC `mariadb` subchart.
+  ## Set to false to point the wiki at an externally managed database; in that
+  ## case configure `externalDatabase.*` below.
+  ##
+  enabled: true
+
   ## standalone or replication
   architecture: standalone
-  # use default image from upstream
-  #image:
-  #  tag: 10.2
-  auth:
-    #rootPassword:
-    database: &dbName mediawiki
-    username: &dbUser wiki
-    schema:
 
-    ## If the password is not specified, mariadb will generates a random password
-    ##
-    # password: &dbPass
-    # replicationUser: replicator
-    # replicationPassword:
-
-  ## Enable persistence using Persistent Volume Claims
-  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ## MariaDB authentication. `auth.username` + `auth.database` cause the
+  ## subchart to create the database, user, and grant via the mariadb-operator.
+  ## If `auth.password` is omitted, the subchart generates a random one and
+  ## stores it in the `<release>-db-user-password` secret.
   ##
-  master:
-    persistence:
-      enabled: true
-      ## mariadb data Persistent Volume Storage Class
-      ## If defined, storageClassName: <storageClass>
-      ## If set to "-", storageClassName: "", which disables dynamic provisioning
-      ## If undefined (the default) or set to null, no storageClassName spec is
-      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      ##   GKE, AWS & OpenStack)
-      ##
-      # storageClass: "-"
-      accessMode: ReadWriteOnce
-      size: 8Gi
-    config: |-
-      [mysqld]
-      skip-name-resolve
-      explicit_defaults_for_timestamp
-      port=3306
-      max_allowed_packet=16M
-      bind-address=0.0.0.0
-      character-set-server=UTF8
-      collation-server=utf8_general_ci
-      expire-logs-days=90
+  auth:
+    database: mediawiki
+    username: wiki
+    # password:
 
-      [client]
-      port=3306
-      default-character-set=UTF8
+  persistence:
+    size: 10Gi
+    # storageClassName:
 
-      [manager]
-      port=3306
-
-  slave:
-    config: |-
-      [mysqld]
-      skip-name-resolve
-      explicit_defaults_for_timestamp
-      port=3306
-      max_allowed_packet=16M
-      bind-address=0.0.0.0
-      character-set-server=UTF8
-      collation-server=utf8_general_ci
-      expire-logs-days=90
-
-      [client]
-      port=3306
-      default-character-set=UTF8
-
-      [manager]
-      port=3306
-
-  service:
-    # uncomment name to use external service
-    #name:
-    #endpoints:
-    #  - 10.0.0.1
-    #  - 10.0.0.2
-    port: 3306
+## External database settings — only used when `db.enabled` is false.
+## The chart will read the password from `existingSecret`/`existingSecretPasswordKey`
+## if both are set; otherwise it stores `externalDatabase.password` in a chart-owned
+## secret under the `db_password` key.
+##
+externalDatabase:
+  host: ""
+  port: 3306
+  user: wiki
+  database: mediawiki
+  schema: ""
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""
 
 node_services:
   enabled: true

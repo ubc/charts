@@ -6,21 +6,6 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
-For calling a template with subchart context
-From https://github.com/helm/helm/issues/4535#issuecomment-477778391
-*/}}
-{{- define "call-nested" }}
-{{- $dot := index . 0 }}
-{{- $subchart := index . 1 | splitList "." }}
-{{- $template := index . 2 }}
-{{- $values := $dot.Values }}
-{{- range $subchart }}
-{{- $values = index $values . }}
-{{- end }}
-{{- include $template (dict "Chart" (dict "Name" (last $subchart)) "Values" $values "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
-{{- end }}
-
-{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
@@ -30,12 +15,96 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Fully qualified name of the `mariadb` subchart (aliased as `db`).
+Mirrors the subchart's own `mariadb.fullname` logic so secret/service names line up.
 */}}
 {{- define "mediawiki.db.fullname" -}}
-{{- $name := printf "%s-%s" .Release.Name "db" -}}
-{{- default $name .Values.db.service.name | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.db.fullnameOverride -}}
+{{- .Values.db.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "db" .Values.db.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Database connection helpers — switch between the embedded UBC mariadb subchart
+and an externally managed database based on `db.enabled`.
+*/}}
+{{- define "mediawiki.db.host" -}}
+{{- if .Values.db.enabled -}}
+  {{- if eq .Values.db.architecture "replication" -}}
+    {{- printf "%s-primary" (include "mediawiki.db.fullname" .) | trunc 63 | trimSuffix "-" -}}
+  {{- else -}}
+    {{- include "mediawiki.db.fullname" . -}}
+  {{- end -}}
+{{- else -}}
+  {{- .Values.externalDatabase.host -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "mediawiki.db.port" -}}
+{{- if .Values.db.enabled -}}
+  {{- (((.Values.db.primary).containerPorts).mysql) | default 3306 -}}
+{{- else -}}
+  {{- .Values.externalDatabase.port | default 3306 -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "mediawiki.db.user" -}}
+{{- if .Values.db.enabled -}}
+  {{- .Values.db.auth.username -}}
+{{- else -}}
+  {{- .Values.externalDatabase.user -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "mediawiki.db.name" -}}
+{{- if .Values.db.enabled -}}
+  {{- .Values.db.auth.database -}}
+{{- else -}}
+  {{- .Values.externalDatabase.database -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "mediawiki.db.schema" -}}
+{{- if .Values.db.enabled -}}
+  {{- default "" .Values.db.auth.schema -}}
+{{- else -}}
+  {{- default "" .Values.externalDatabase.schema -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "mediawiki.db.passwordSecretName" -}}
+{{- if .Values.db.enabled -}}
+  {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
+    {{- .Values.db.auth.existingSecret -}}
+  {{- else -}}
+    {{- printf "%s-user-password" (include "mediawiki.db.fullname" .) -}}
+  {{- end -}}
+{{- else if .Values.externalDatabase.existingSecret -}}
+  {{- .Values.externalDatabase.existingSecret -}}
+{{- else -}}
+  {{- include "mediawiki.fullname" . -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "mediawiki.db.passwordSecretKey" -}}
+{{- if .Values.db.enabled -}}
+  {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
+    {{- .Values.db.auth.userPasswordKey -}}
+  {{- else -}}
+    {{- printf "password-%s" .Values.db.auth.username -}}
+  {{- end -}}
+{{- else if and .Values.externalDatabase.existingSecret .Values.externalDatabase.existingSecretPasswordKey -}}
+  {{- .Values.externalDatabase.existingSecretPasswordKey -}}
+{{- else -}}
+  {{- "db_password" -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "common_labels" }}
@@ -102,25 +171,20 @@ image: '{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }
 imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
 env:
 - name: MEDIAWIKI_DB_HOST
-  value: {{ template "mediawiki.db.fullname" . | default .Values.db.service.name }}
+  value: {{ include "mediawiki.db.host" . | quote }}
 - name: MEDIAWIKI_DB_PORT
-  value: {{ .Values.db.service.port | quote }}
+  value: {{ include "mediawiki.db.port" . | quote }}
 - name: MEDIAWIKI_DB_USER
-  value: {{ default "wiki" .Values.db.auth.username | quote }}
+  value: {{ include "mediawiki.db.user" . | quote }}
 - name: MEDIAWIKI_DB_PASSWORD
   valueFrom:
     secretKeyRef:
-    {{- if .Values.db.disableExternal }}
-      name: {{ include "call-nested" (list . "db" "common.names.fullname") }}
-      key: mariadb-password
-    {{- else }}
-      name: {{ template "mediawiki.fullname" . }}
-      key: db_password
-    {{- end }}
+      name: {{ include "mediawiki.db.passwordSecretName" . }}
+      key: {{ include "mediawiki.db.passwordSecretKey" . }}
 - name: MEDIAWIKI_DB_NAME
-  value: {{ .Values.db.auth.database | quote }}
+  value: {{ include "mediawiki.db.name" . | quote }}
 - name: MEDIAWIKI_DB_SCHEMA
-  value: {{ .Values.db.auth.schema | quote }}
+  value: {{ include "mediawiki.db.schema" . | quote }}
 - name: MEDIAWIKI_ADMIN_USER
   value: {{ default "" .Values.adminUser | quote }}
 - name: MEDIAWIKI_ADMIN_PASS

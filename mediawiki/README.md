@@ -14,7 +14,7 @@ $ helm install stable/mediawiki
 
 This chart bootstraps a [MediaWiki](https://github.com/ubc/mediawiki-docker) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-It also packages the [Bitnami MariaDB chart](https://github.com/kubernetes/charts/tree/master/stable/mariadb) which is required for bootstrapping a MariaDB deployment for the database requirements of the MediaWiki application.
+It also packages the UBC [`mariadb`](https://github.com/ubc/charts/tree/master/mariadb) chart (operator-driven, via [mariadb-operator](https://github.com/mariadb-operator/mariadb-operator)) to provision the database, user, and grant required by MediaWiki. To use a database that is managed outside the cluster, disable the subchart and set the `externalDatabase.*` parameters.
 
 ## Prerequisites
 
@@ -60,7 +60,19 @@ The following tables lists the configurable parameters of the MediaWiki chart an
 | `smtpHostID`                         | SMTP host ID                             | `nil`                                                   |
 | `smtpUser`                           | SMTP user                                | `nil`                                                   |
 | `smtpPassword`                       | SMTP password                            | `nil`                                                   |
-| `mariadb.mariadbRootPassword`        | MariaDB admin password                   | `nil`                                                   |
+| `db.enabled`                         | Provision MariaDB via the UBC `mariadb` subchart (operator-managed). Set to `false` to use an externally managed database via `externalDatabase.*`. | `true` |
+| `db.architecture`                    | `standalone` or `replication` (forwarded to the `mariadb` subchart). | `standalone` |
+| `db.auth.database`                   | Database name to create. The subchart emits a `Database` CR for this name. | `mediawiki` |
+| `db.auth.username`                   | Application user to create. The subchart emits matching `User`+`Grant` CRs and stores a generated password in the secret `<release>-db-user-password` under key `password-<username>`. | `wiki` |
+| `db.auth.password`                   | Override the generated password (optional). | _generated_ |
+| `db.auth.existingSecret` / `db.auth.userPasswordKey` | Use an existing secret for the user password instead of the generated one. | _unset_ |
+| `db.persistence.size`                | PVC size for the MariaDB instance. | `10Gi` |
+| `db.persistence.storageClassName`    | Storage class for the MariaDB PVC. | _cluster default_ |
+| `externalDatabase.host`              | Hostname of an externally managed MariaDB. Required when `db.enabled=false`. | `""` |
+| `externalDatabase.port`              | Port of the external database. | `3306` |
+| `externalDatabase.user` / `externalDatabase.database` | Credentials and database for the external server. | `wiki` / `mediawiki` |
+| `externalDatabase.password`          | Password for the external user. Stored in a chart-owned secret unless `existingSecret` is set. | `""` |
+| `externalDatabase.existingSecret` / `externalDatabase.existingSecretPasswordKey` | Resolve the external password from an existing secret. | _unset_ |
 | `serviceType`                        | Kubernetes Service type                  | `LoadBalancer`                                          |
 | `persistence.enabled`                | Enable persistence using PVC             | `true`                                                  |
 | `persistence.apache.storageClass`    | PVC Storage Class for Apache volume      | `nil` (uses alpha storage class annotation)  |
@@ -76,11 +88,22 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 $ helm install --name my-release \
-  --set mediawikiUser=admin,mediawikiPassword=password,mariadb.mariadbRootPassword=secretpassword \
+  --set adminUser=admin,adminPassword=password,db.auth.password=secretpassword \
     stable/mediawiki
 ```
 
-The above command sets the MediaWiki administrator account username and password to `admin` and `password` respectively. Additionally it sets the MariaDB `root` user password to `secretpassword`.
+The above command sets the MediaWiki administrator account username and password to `admin` and `password` respectively, and pins the application's database password to `secretpassword` (otherwise the subchart generates a random one).
+
+To point the chart at an externally managed database instead:
+
+```console
+$ helm install my-release . \
+  --set db.enabled=false \
+  --set externalDatabase.host=db.example.com \
+  --set externalDatabase.user=wiki \
+  --set externalDatabase.database=mediawiki \
+  --set externalDatabase.password=secretpassword
+```
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
 
