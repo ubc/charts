@@ -3858,6 +3858,16 @@ entries:
   mariadb:
   - apiVersion: v2
     appVersion: "10.6"
+    created: "2026-04-30T23:07:49.169767329Z"
+    description: A Helm chart for MariaDB
+    digest: 91dc7c20db8135f32da568801ffa626aad80e010ab8af7b3f2bbbed744f0b676
+    name: mariadb
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/mariadb-0.1.22/mariadb-0.1.22.tgz
+    version: 0.1.22
+  - apiVersion: v2
+    appVersion: "10.6"
     created: "2026-04-29T23:21:57.670065259Z"
     description: A Helm chart for MariaDB
     digest: 09ac366be08f5c15ba5b941114b0cab9a6a4e594b7056bc3b211c72c43de4250
@@ -4149,6 +4159,33 @@ entries:
     - https://ubc.github.io/charts/mattermost-0.1.0.tgz
     version: 0.1.0
   mediawiki:
+  - apiVersion: v2
+    appVersion: 1.43.4
+    created: "2026-04-30T23:07:49.323523306Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: Extremely powerful, scalable software and a feature-rich wiki implementation
+      that uses PHP to process and display data stored in a database.
+    digest: a426dd300e480c68e1a72c88251ac4cf1691ec5273295ee2aaec261d9dac1026
+    home: http://www.mediawiki.org/
+    keywords:
+    - mediawiki
+    - wiki
+    - http
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: mediawiki
+    sources:
+    - https://github.com/ubc/mediawiki-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/mediawiki-0.9.0/mediawiki-0.9.0.tgz
+    version: 0.9.0
   - apiVersion: v2
     appVersion: 1.43.4
     created: "2026-02-14T00:35:23.730804882Z"
@@ -8249,4 +8286,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-29T23:21:57.670705325Z"
+generated: "2026-04-30T23:07:49.324490391Z"
