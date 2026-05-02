@@ -48,6 +48,10 @@ resources:
 # Leave empty to let the scheduler choose. Maps directly to `MariaDB.spec.nodeSelector`.
 nodeSelector: {}
 
+# Tolerate node taints so MariaDB pods can land on dedicated/tainted node pools.
+# Maps directly to `MariaDB.spec.tolerations`.
+tolerations: []
+
 persistence:
   size: 10Gi
   storageClassName:
