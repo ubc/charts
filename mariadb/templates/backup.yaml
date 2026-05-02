@@ -9,6 +9,10 @@ spec:
     waitForIt: {{ .Values.backup.waitForIt }}
   imagePullSecrets:
     {{- .Values.backup.imagePullSecrets | default .Values.imagePullSecrets | toYaml | nindent 4 }}
+  {{- with .Values.backup.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   # inheritMetadata:
   #   annotations:
   #     database.myorg.io: mariadb

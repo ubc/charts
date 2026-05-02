@@ -78,7 +78,8 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `backup.databases` | List of databases to backup. Default backup all databases. | `[]` |
 | `backup.schedule` | The cron schedule for backups. | `"0 0 * * *"` |
 | `backup.timezone` | Timezone for the backup schedule. | `"America/Vancouver"` |
-| `backup.physical.immediate` | Whether the physical backup should be taken immediately after creation. | `true` |
+| `backup.tolerations` | Tolerate node taints on backup pods. Backup pods are typically co-located with MariaDB primaries/replicas (`physical.podAffinity: true`), so they need the same tolerations as the DB pods. Maps to `Backup.spec.tolerations` / `PhysicalBackup.spec.tolerations`. | `[]` |
+| `backup.physical.immediate` | Whether the physical backup should be taken immediately on first reconcile. Default `false` because a fresh install has no data yet, and a brownfield install seeded via `bootstrapFrom` would otherwise capture a mid-restore snapshot. Set to `true` only if you explicitly want a first-reconcile backup. | `false` |
 | `backup.physical.target` | The MariaDB instance to backup (e.g., `Replica` or `PreferReplica`). | `Replica` |
 | `backup.physical.timeout` | Timeout for the physical backup to complete. | `1h` |
 | `backup.physical.podAffinity` | Whether the physical backup pod should be scheduled on the same node as the MariaDB instance. | `true` |

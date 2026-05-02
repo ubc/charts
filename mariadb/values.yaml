@@ -96,10 +96,19 @@ backup:
   # Backup schedule (cron format)
   schedule: "0 0 * * *"
   timezone: "America/Vancouver"
+  # Tolerate node taints on backup pods. Backup pods are co-located with
+  # MariaDB primaries/replicas when `physical.podAffinity: true`, so they
+  # need to tolerate the same taints as the DB pods.
+  # Maps directly to `Backup.spec.tolerations` / `PhysicalBackup.spec.tolerations`.
+  tolerations: []
   # Physical backup specific settings
   physical:
     # Immediate specifies whether the backup should be taken immediately after creation.
-    immediate: true
+    # Default is false: a fresh install rarely benefits from an instant backup
+    # (the DB has no data yet, or is being seeded via bootstrapFrom and an
+    # immediate backup would capture an inconsistent mid-restore snapshot).
+    # Flip to true only if you explicitly want a backup taken on first reconcile.
+    immediate: false
     # Target specifies the MariaDB instance to backup, Replica or PreferReplica.
     # https://mariadb.com/docs/tools/mariadb-enterprise-operator/backup-and-restore/physical_backup#target-policy
     target: Replica
