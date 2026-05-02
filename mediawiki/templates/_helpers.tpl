@@ -236,6 +236,10 @@ env:
 {{- end }}
 - name: MEDIAWIKI_ENABLE_BOT_PASSWORDS
   value: {{ .Values.mediawikiEnableBotPasswords | quote }}
+{{- if .Values.mediawikiReadOnly }}
+- name: MEDIAWIKI_READONLY
+  value: {{ .Values.mediawikiReadOnly | quote }}
+{{- end }}
 - name: SMTP_HOST_ID
   value: {{ default "" .Values.smtpHostID | quote }}
 - name: SMTP_HOST

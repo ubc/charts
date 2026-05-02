@@ -74,6 +74,11 @@ mediawikiUploadPath: //example.com/images
 # Enable bot password
 mediawikiEnableBotPasswords: true
 
+# Put the wiki into read-only mode. When set to a non-empty string, MediaWiki's
+# $wgReadOnly is set to that value and shown to users as the reason. Leave unset
+# (or empty) to allow normal editing.
+# mediawikiReadOnly: "Wiki is in read-only mode for maintenance."
+
 mediawikiUserRedirect:
   created: Main_Page
   blocked: Main_Page
