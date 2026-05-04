@@ -141,6 +141,10 @@ spec:
           - name: IPEER_REFERRER_ALLOWED_DOMAINS
             value: {{ .Values.ipeer.referrer_allowed_domains | quote }}
           {{- end }}
+          {{- if .Values.ipeer.auth.force_saml_login }}
+          - name: FORCE_SAML_LOGIN
+            value: "true"
+          {{- end }}
           ports:
             - name: fastcgi
               containerPort: 9000
