@@ -221,6 +221,9 @@ db:
     username: compair
     password:
 
+  primary:
+    automaticFailoverDelay: 5s # default, overridden per env
+
   connOptions: '{"charset":"utf8mb4"}'
 
 ## External Database Configuration
