@@ -40,6 +40,30 @@ assert_yq_absent "no postgresql CR for default" \
 #     "$HERE/values/invalid-postgres-mariadb-on.yaml" \
 #     "db.type=postgres requires db.mariadb.enabled=false"
 
+assert_fails_with "guard: postgres + mariadb subchart on" \
+  "$HERE/values/invalid-postgres-mariadb-on.yaml" \
+  "db.type=postgres requires db.mariadb.enabled=false"
+
+assert_fails_with "guard: mariadb + mariadb subchart off" \
+  "$HERE/values/invalid-mariadb-mariadb-off.yaml" \
+  "db.type=mariadb requires db.mariadb.enabled=true"
+
+assert_fails_with "guard: db.enabled + externalDatabase.enabled" \
+  "$HERE/values/invalid-both-enabled.yaml" \
+  "db.enabled and externalDatabase.enabled are mutually exclusive"
+
+assert_fails_with "guard: external mariadb but subchart still on" \
+  "$HERE/values/invalid-external-mariadb-still-on.yaml" \
+  "externalDatabase.enabled=true requires db.mariadb.enabled=false"
+
+assert_fails_with "guard: bad db.type" \
+  "$HERE/values/invalid-bad-type.yaml" \
+  'db.type must be "mariadb" or "postgres"'
+
+assert_fails_with "guard: shib + postgres" \
+  "$HERE/values/invalid-shib-postgres.yaml" \
+  "shib.enabled=true is not supported with postgres"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

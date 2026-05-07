@@ -1,0 +1,8 @@
+db:
+  enabled: false
+  mariadb:
+    enabled: true   # WRONG: must be false when externalDatabase is on
+externalDatabase:
+  enabled: true
+  user: moodle
+  password: x

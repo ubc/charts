@@ -1,0 +1,5 @@
+db:
+  enabled: true
+  type: mariadb
+  mariadb:
+    enabled: false  # WRONG: must be true when db.type=mariadb

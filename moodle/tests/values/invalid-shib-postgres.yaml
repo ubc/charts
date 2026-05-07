@@ -1,0 +1,7 @@
+db:
+  enabled: true
+  type: postgres
+  mariadb:
+    enabled: false
+shib:
+  enabled: true
