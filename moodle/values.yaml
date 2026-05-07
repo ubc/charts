@@ -92,15 +92,65 @@ hpa:
 ##
 db:
   enabled: true
+  ## Engine selector. mariadb (default) | postgres.
+  ## When postgres, the chart renders a postgresql.acid.zalan.do CR consumed
+  ## by a pre-installed zalando postgres-operator (the operator itself is NOT
+  ## installed by this chart).
+  type: mariadb
+  ## Gates the bundled mariadb subchart via Chart.yaml condition.
+  ## Must be:
+  ##   true  when db.enabled=true AND db.type=mariadb (the default common case)
+  ##   false when db.type=postgres
+  ##   false when db.enabled=false + externalDatabase.enabled=true
+  ##         (external-mariadb users must set this explicitly when upgrading)
+  ## The validation guard rejects mismatches at template time.
+  mariadb:
+    enabled: true
   ## standalone or replication
   architecture: standalone
-  # use default image from upstream
+  # DEPRECATED: use db.type instead. This field is retained for one minor
+  # version for backward compatibility but is no longer consulted for engine
+  # selection — db.type drives MOODLE_DB_TYPE via the moodle.dbDialect helper.
   db:
     type: mariadb
   auth:
     #rootPassword:
     database: &dbName moodle
     username: &dbUser moodle
+  ## Postgres (zalando postgres-operator). Only consulted when db.type=postgres.
+  postgres:
+    ## Required by the operator. clusterName must start with teamId.
+    teamId: ctlt
+    ## Defaults to "<teamId>-<release>-moodle" when empty.
+    clusterName: ""
+    numberOfInstances: 2
+    version: "16"
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+    tolerations: []
+    nodeAffinity: {}
+    volume:
+      size: 10Gi
+      storageClass: ""
+    ## Database + role created by the operator. Moodle authenticates as `username`.
+    database: moodle
+    username: moodle
+    ## Continuous WAL archiving via the operator. Off by default.
+    ## AWS credentials must reach the postgres pods via cluster-level setup
+    ## (IRSA, pod-identity, or operator env) — the chart does not wire them.
+    backup:
+      enabled: false
+      s3Bucket: ""
+      s3Region: ""
+      s3Endpoint: ""
+      retentionDays: 7
+    ## Deep-merged into the rendered CR's spec: for fields not surfaced above.
+    extraManifest: {}
 
 externalDatabase:
   enabled: false

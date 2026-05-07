@@ -16,12 +16,23 @@ FAIL=0
 # Added by later tasks. Example:
 #   assert_renders "default mariadb" "$HERE/values/internal-mariadb.yaml"
 
+assert_renders "default internal mariadb" "$HERE/values/internal-mariadb.yaml"
+
 # === yq assertions ===
 # Added by later tasks. Example:
 #   assert_yq "default MOODLE_DB_TYPE=mariadb" \
 #     "$HERE/values/internal-mariadb.yaml" \
 #     '... | select(.kind == "Deployment" and .metadata.labels.tier == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_TYPE") | .value' \
 #     "mariadb"
+
+assert_yq "default MOODLE_DB_TYPE=mariadb" \
+  "$HERE/values/internal-mariadb.yaml" \
+  'select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_TYPE") | .value' \
+  "mariadb"
+
+assert_yq_absent "no postgresql CR for default" \
+  "$HERE/values/internal-mariadb.yaml" \
+  'select((.apiVersion // "") == "acid.zalan.do/v1" and (.kind // "") == "postgresql")'
 
 # === Guard tests ===
 # Added by later tasks. Example:
