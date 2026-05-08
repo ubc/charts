@@ -31,14 +31,20 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Compute the postgresql clusterName: explicit user value, else "<teamId>-<release>-<chartname>".
-The operator requires the name to start with the teamId.
+Compute the postgresql clusterName.
+
+Default: same as `moodle.fullname` (e.g. "<release>-moodle"). Note: zalando
+postgres-operator installations with `enable_team_id_clustername_prefix:
+true` (the upstream default) require the name to start with the teamId. If
+your operator has that flag set, override this via db.postgres.clusterName
+explicitly (e.g. "<teamId>-<anything>") — the `clusterName` field is the
+escape hatch.
 */}}
 {{- define "moodle.postgresClusterName" -}}
 {{- if .Values.db.postgres.clusterName -}}
   {{- .Values.db.postgres.clusterName -}}
 {{- else -}}
-  {{- printf "%s-%s-moodle" .Values.db.postgres.teamId .Release.Name | trunc 63 | trimSuffix "-" -}}
+  {{- include "moodle.fullname" . -}}
 {{- end -}}
 {{- end -}}
 
