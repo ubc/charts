@@ -1,0 +1,10 @@
+# Minimal postgres-shaped values that exercise db.type=postgres BUT do not
+# render the postgresql CR (template doesn't exist yet — added in Task 6).
+# Purpose at this stage: prove MOODLE_DB_TYPE flips to "pgsql".
+db:
+  enabled: true
+  type: postgres
+  mariadb:
+    enabled: false
+ingress:
+  enabled: false

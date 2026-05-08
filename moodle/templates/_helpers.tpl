@@ -125,7 +125,7 @@ env:
 - name: SERVER_NAME
   value: https://{{ index .Values.ingress.hosts 0 | default .Values.CI_ENVIRONMENT_HOSTNAME | default "http://localhost" }}:443
 - name: MOODLE_DB_TYPE
-  value: {{ default "mariadb" .Values.db.db.type | quote }}
+  value: {{ include "moodle.dbDialect" . | quote }}
 - name: MOODLE_DB_HOST
   value: {{ include "moodle.databaseHost" .}}
 - name: MOODLE_DB_PORT
@@ -501,5 +501,16 @@ Return the MariaDB Root Secret Key
     {{- end -}}
 {{- else if .Values.externalDatabase.enabled -}}
     db-root-password
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the Moodle DB dialect string for MOODLE_DB_TYPE. Reads db.type as
+the source of truth; falls back to the legacy db.db.type for mariadb-only
+backward compatibility (deprecated, removed in a future minor version).
+*/}}
+{{- define "moodle.dbDialect" -}}
+{{- if eq .Values.db.type "postgres" -}}pgsql
+{{- else -}}{{- default "mariadb" .Values.db.db.type -}}
 {{- end -}}
 {{- end -}}

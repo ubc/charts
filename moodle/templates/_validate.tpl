@@ -20,7 +20,7 @@ actionable message instead of letting a misconfig boot a broken pod.
 {{- if and (not .Values.db.enabled) .Values.externalDatabase.enabled .Values.db.mariadb.enabled -}}
 {{- fail "externalDatabase.enabled=true requires db.mariadb.enabled=false (the bundled mariadb subchart must be disabled)" -}}
 {{- end -}}
-{{- if and .Values.shib.enabled (eq .Values.db.type "postgres") -}}
+{{- if and .Values.shib.enabled (eq (include "moodle.dbDialect" .) "pgsql") -}}
 {{- fail "shib.enabled=true is not supported with postgres in this chart version" -}}
 {{- end -}}
 {{- end -}}

@@ -68,3 +68,17 @@ assert_yq_absent() {
     echo "FAIL [absent] $name -- expected 0 matches, got $count"; FAIL=$((FAIL+1))
   fi
 }
+
+assert_yq_partial() {
+  local name=$1 values=$2 show=$3 expr=$4 expected=$5
+  local actual
+  if ! actual=$(helm template "$RELEASE" "$CHART" -f "$values" --show-only "$show" 2>/dev/null | yq -r "$expr" 2>/dev/null); then
+    echo "FAIL [yq] $name -- render or yq failed"; FAIL=$((FAIL+1)); return
+  fi
+  if [[ "$actual" == "$expected" ]]; then
+    echo "PASS [yq] $name"; PASS=$((PASS+1))
+  else
+    echo "FAIL [yq] $name -- expected '$expected', got '$actual'"
+    FAIL=$((FAIL+1))
+  fi
+}

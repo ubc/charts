@@ -34,6 +34,12 @@ assert_yq_absent "no postgresql CR for default" \
   "$HERE/values/internal-mariadb.yaml" \
   'select((.apiVersion // "") == "acid.zalan.do/v1" and (.kind // "") == "postgresql")'
 
+assert_yq_partial "postgres MOODLE_DB_TYPE=pgsql" \
+  "$HERE/values/internal-postgres-shallow.yaml" \
+  templates/deployment.yaml \
+  '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_TYPE") | .value' \
+  "pgsql"
+
 # === Guard tests ===
 # Added by later tasks. Example:
 #   assert_fails_with "postgres + mariadb on" \
