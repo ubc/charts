@@ -91,14 +91,10 @@ tolerations: []
 affinity: {}
 
 db:
-  enabled: true
-  architecture: standalone
-  auth:
-    database: ltic-access-request
-    username: ltic-access-request
-    password: ltic-access-request
-  persistence:
-    size: 1Gi
+  name: course-directory
+  username: course-directory
+  password: course-directory
+  host: somehost
 
 app:
   flask:

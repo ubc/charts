@@ -52,16 +52,16 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-            - name: DB_HOST
-              value: {{ include "helper.db.host" .}}
-            - name: DB_PORT
-              value: '3306'
-            - name: DB_NAME
-              value: {{ .Values.db.auth.database }}
-            - name: DB_USER
-              value: {{ .Values.db.auth.username }}
+            - name: POSTGRES_USER
+              value: {{ .Values.db.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.db.password }}
+            - name: POSTGRES_DB
+              value: {{ .Values.db.name }}
+            - name: DATABASE_URL
+              value: {{ printf "postgresql+psycopg://%s:%s@%s:5432/%s" .Values.db.username .Values.db.password .Values.db.host .Values.db.name | quote }}
             - name: DB_PASSWORD
-              value: {{ .Values.db.auth.password }}
+              value: {{ .Values.db.password }}
             - name: FLASK_ENV
               value: {{ .Values.app.flask.env }}
             - name: SECRET_KEY
