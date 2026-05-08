@@ -17,7 +17,7 @@ engine: gotpl
 
 dependencies:
   - name: mariadb
-    condition: db.enabled
+    condition: db.mariadb.enabled
     version: "*"
     alias: db
     repository: https://ubc.github.io/charts

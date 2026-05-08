@@ -70,6 +70,44 @@ assert_fails_with "guard: shib + postgres" \
   "$HERE/values/invalid-shib-postgres.yaml" \
   "shib.enabled=true is not supported with postgres"
 
+assert_renders "external mariadb scenario" "$HERE/values/external-mariadb.yaml"
+
+assert_yq_absent "external mariadb: no mariadb StatefulSet" \
+  "$HERE/values/external-mariadb.yaml" \
+  '. | select((.kind // "") == "StatefulSet" and ((.metadata.name // "") | test("mariadb")))'
+
+assert_yq "external mariadb: ExternalName service on port 3306" \
+  "$HERE/values/external-mariadb.yaml" \
+  'select(.kind == "Service" and .spec.type == "ExternalName") | .spec.ports[0].port' \
+  "3306"
+
+# Internal-postgres helper outputs (CR not rendered yet — that's Task 6;
+# the helpers must already produce the right values though, since the
+# Deployment env block reads them).
+assert_yq_partial "postgres internal: MOODLE_DB_HOST is clusterName" \
+  "$HERE/values/internal-postgres-shallow.yaml" \
+  templates/deployment.yaml \
+  '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_HOST") | .value' \
+  "ctlt-release-name-moodle"
+
+assert_yq_partial "postgres internal: MOODLE_DB_PORT=5432" \
+  "$HERE/values/internal-postgres-shallow.yaml" \
+  templates/deployment.yaml \
+  '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PORT") | .value' \
+  "5432"
+
+assert_yq_partial "postgres internal: MOODLE_DB_PASSWORD references operator secret" \
+  "$HERE/values/internal-postgres-shallow.yaml" \
+  templates/deployment.yaml \
+  '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PASSWORD") | .valueFrom.secretKeyRef.name' \
+  "moodle.ctlt-release-name-moodle.credentials.postgresql.acid.zalan.do"
+
+assert_yq_partial "postgres internal: MOODLE_DB_PASSWORD secret key is 'password'" \
+  "$HERE/values/internal-postgres-shallow.yaml" \
+  templates/deployment.yaml \
+  '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PASSWORD") | .valueFrom.secretKeyRef.key' \
+  "password"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

@@ -30,6 +30,18 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Compute the postgresql clusterName: explicit user value, else "<teamId>-<release>-<chartname>".
+The operator requires the name to start with the teamId.
+*/}}
+{{- define "moodle.postgresClusterName" -}}
+{{- if .Values.db.postgres.clusterName -}}
+  {{- .Values.db.postgres.clusterName -}}
+{{- else -}}
+  {{- printf "%s-%s-moodle" .Values.db.postgres.teamId .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
 {{/*{{ define "moodle.fullname" -}}*/}}
 {{/*{{- if .Values.fullnameOverride }}*/}}
 {{/*{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}*/}}
@@ -393,7 +405,9 @@ Return the MariaDB Hostname
 */}}
 {{- define "moodle.databaseHost" -}}
 {{- if .Values.db.enabled }}
-    {{- if eq .Values.db.architecture "replication" }}
+    {{- if eq .Values.db.type "postgres" -}}
+        {{- include "moodle.postgresClusterName" . -}}
+    {{- else if eq .Values.db.architecture "replication" }}
         {{- printf "%s-primary" (include "moodle.db.fullname" .) | trunc 63 | trimSuffix "-" -}}
     {{- else -}}
         {{- printf "%s" (include "moodle.db.fullname" .) -}}
@@ -408,9 +422,13 @@ Return the MariaDB Port
 */}}
 {{- define "moodle.databasePort" -}}
 {{- if .Values.db.enabled }}
-    {{- printf "3306" -}}
+    {{- if eq .Values.db.type "postgres" -}}5432{{- else -}}3306{{- end -}}
 {{- else if .Values.externalDatabase.enabled -}}
-    {{- printf "%d" (.Values.externalDatabase.port | int ) -}}
+    {{- if .Values.externalDatabase.port -}}
+        {{- printf "%d" (.Values.externalDatabase.port | int) -}}
+    {{- else if eq .Values.db.type "postgres" -}}5432
+    {{- else -}}3306
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -419,9 +437,13 @@ Return the MariaDB Database Name
 */}}
 {{- define "moodle.databaseName" -}}
 {{- if .Values.db.enabled }}
-    {{- printf "%s" .Values.db.auth.database -}}
+    {{- if eq .Values.db.type "postgres" -}}
+        {{- .Values.db.postgres.database -}}
+    {{- else -}}
+        {{- .Values.db.auth.database -}}
+    {{- end -}}
 {{- else if .Values.externalDatabase.enabled -}}
-    {{- printf "%s" .Values.externalDatabase.database -}}
+    {{- .Values.externalDatabase.database -}}
 {{- end -}}
 {{- end -}}
 
@@ -430,9 +452,13 @@ Return the MariaDB User
 */}}
 {{- define "moodle.databaseUser" -}}
 {{- if .Values.db.enabled }}
-    {{- printf "%s" .Values.db.auth.username -}}
+    {{- if eq .Values.db.type "postgres" -}}
+        {{- .Values.db.postgres.username -}}
+    {{- else -}}
+        {{- .Values.db.auth.username -}}
+    {{- end -}}
 {{- else if .Values.externalDatabase.enabled -}}
-    {{- printf "%s" .Values.externalDatabase.user -}}
+    {{- .Values.externalDatabase.user -}}
 {{- end -}}
 {{- end -}}
 
@@ -441,7 +467,11 @@ Return the MariaDB Secret Name
 */}}
 {{- define "moodle.databaseSecretName" -}}
 {{- if .Values.db.enabled }}
-    {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
+    {{- if eq .Values.db.type "postgres" -}}
+        {{- printf "%s.%s.credentials.postgresql.acid.zalan.do"
+              .Values.db.postgres.username
+              (include "moodle.postgresClusterName" .) -}}
+    {{- else if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
         {{- printf "%s" .Values.db.auth.existingSecret -}}
     {{- else -}}
         {{- printf "%s-user-password" (include "moodle.db.fullname" .) -}}
@@ -460,7 +490,8 @@ Return the MariaDB Secret Key
 */}}
 {{- define "moodle.databaseSecretKey" -}}
 {{- if .Values.db.enabled }}
-    {{- if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
+    {{- if eq .Values.db.type "postgres" -}}password
+    {{- else if and .Values.db.auth.existingSecret .Values.db.auth.userPasswordKey -}}
         {{- printf "%s" .Values.db.auth.userPasswordKey -}}
     {{- else -}}
         {{- printf "password-%s" (include "moodle.databaseUser" .) -}}
