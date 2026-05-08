@@ -398,8 +398,15 @@ metrics:
   enabled: false
   image:
     registry: docker.io
-    repository: lusotycoon/apache-exporter
-    tag: v0.5.0
+    ## Modern, OCI-v2 fork of apache_exporter. The previous default
+    ## (lusotycoon/apache-exporter:v0.5.0) is published as Docker Schema v1
+    ## and is rejected by containerd 2.0+. Pinned to an immutable digest
+    ## via the tag@sha256:... form so the resolved image is stable; bump
+    ## by re-resolving:
+    ##   docker pull bitnami/apache-exporter:latest && \
+    ##   docker inspect bitnami/apache-exporter:latest | jq -r '.[0].RepoDigests'
+    repository: bitnami/apache-exporter
+    tag: "latest@sha256:3002c681abb4669806416befee79e11b92fedc2b08089c40e65ec273c9c82a86"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.

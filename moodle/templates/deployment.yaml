@@ -58,7 +58,10 @@ spec:
       - name: metrics
         image: {{ template "moodle.metrics.image" . }}
         imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
-        command: [ '/bin/apache_exporter', '-scrape_uri', 'http://status.localhost:80/server-status/?auto']
+        # --scrape_uri=<URL> form is accepted by both the legacy Go-flag
+        # apache_exporter (lusotycoon) and the modern kingpin-based fork
+        # (bitnami / Lusitaniae). Single-dash form fails the latter.
+        command: [ '/bin/apache_exporter', '--scrape_uri=http://status.localhost:80/server-status/?auto']
         ports:
         - name: metrics
           containerPort: 9117
