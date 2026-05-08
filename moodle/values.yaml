@@ -461,6 +461,27 @@ memcached:
         memory: 16Mi
         cpu: 20m
 
+## Mailpit — optional in-cluster SMTP catcher with a web UI. Useful on
+## staging/test environments to inspect outgoing mail without delivering
+## any of it. Pair with:
+##     smtp:
+##       host: <release>-mailpit
+##       port: 1025
+## to redirect Moodle's outbound email into mailpit. UI is on port 8025;
+## reach it via `kubectl port-forward svc/<release>-mailpit 8025:8025`
+## or by adding your own Ingress.
+mailpit:
+  enabled: false
+  image:
+    repository: axllent/mailpit
+    tag: v1.21.5
+  imagePullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 20m
+
 redis:
   # enable internal redis deployment and services, set to false to
   # use external redis cluster

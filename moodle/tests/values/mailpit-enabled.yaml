@@ -1,0 +1,5 @@
+# Mailpit enabled — internal SMTP catcher for staging/test envs.
+ingress:
+  enabled: false
+mailpit:
+  enabled: true

@@ -194,6 +194,47 @@ spec:
 {{ toYaml .Values.redis.resources | indent 10 }}
 {{- end -}}
 
+{{- if .Values.mailpit.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "moodle.fullname" . }}-mailpit
+  labels:
+    {{- include "moodle.labels" . | nindent 4 }}
+    tier: mail
+spec:
+  replicas: {{ .Values.mailpit.replicas }}
+  selector:
+    matchLabels:
+      {{- include "moodle.selectorLabels" . | nindent 6 }}
+      tier: mail
+  template:
+    metadata:
+      labels:
+        {{- include "moodle.labels" . | nindent 8 }}
+        tier: mail
+    spec:
+      {{- include "moodle.imagePullSecrets" . | nindent 6 }}
+      containers:
+      - name: {{ include "moodle.fullname" . }}-mailpit
+        image: '{{ .Values.mailpit.image.repository }}:{{ .Values.mailpit.image.tag | default "latest" }}'
+        imagePullPolicy: {{ default "" .Values.mailpit.imagePullPolicy | quote }}
+        ports:
+        - name: smtp
+          containerPort: 1025
+        - name: http
+          containerPort: 8025
+        livenessProbe:
+          tcpSocket:
+            port: 1025
+        readinessProbe:
+          tcpSocket:
+            port: 1025
+        resources:
+{{ toYaml .Values.mailpit.resources | indent 10 }}
+{{- end -}}
+
 {{- if .Values.shib.enabled }}
 ---
 apiVersion: apps/v1

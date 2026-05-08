@@ -182,6 +182,31 @@ assert_yq_absent "external postgres: no postgresql CR" \
   "$HERE/values/external-postgres.yaml" \
   '. | select((.kind // "") == "postgresql")'
 
+# === mailpit ===
+assert_renders "mailpit enabled scenario" "$HERE/values/mailpit-enabled.yaml"
+
+assert_yq "mailpit: Deployment exists with tier=mail" \
+  "$HERE/values/mailpit-enabled.yaml" \
+  'select(.kind == "Deployment" and (.metadata.labels.tier // "") == "mail") | .metadata.name | test("-mailpit$")' \
+  "true"
+
+assert_yq "mailpit: Service has 2 ports" \
+  "$HERE/values/mailpit-enabled.yaml" \
+  'select(.kind == "Service" and ((.metadata.name // "") | test("-mailpit$"))) | .spec.ports | length' \
+  "2"
+
+assert_yq_exists "mailpit: SMTP port 1025 exposed" \
+  "$HERE/values/mailpit-enabled.yaml" \
+  'select(.kind == "Service" and ((.metadata.name // "") | test("-mailpit$"))) | .spec.ports[] | select(.port == 1025 and .name == "smtp")'
+
+assert_yq_exists "mailpit: HTTP UI port 8025 exposed" \
+  "$HERE/values/mailpit-enabled.yaml" \
+  'select(.kind == "Service" and ((.metadata.name // "") | test("-mailpit$"))) | .spec.ports[] | select(.port == 8025 and .name == "http")'
+
+assert_yq_absent "mailpit: no mailpit Deployment when disabled" \
+  "$HERE/values/internal-mariadb.yaml" \
+  'select(.kind == "Deployment" and (.metadata.labels.tier // "") == "mail")'
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"
