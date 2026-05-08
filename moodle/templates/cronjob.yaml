@@ -25,7 +25,10 @@ spec:
             command:
             - /bin/sh
             - -c
-            - /usr/bin/sudo -E -u www-data /usr/local/bin/php admin/cli/cron.php
+            # -H resets HOME to the target user's home (/var/www) so libpq's
+            # client-cert lookup at ~/.postgresql/postgresql.crt doesn't EACCES
+            # against root's home (/root, mode 0700) on postgres deployments.
+            - /usr/bin/sudo -E -H -u www-data /usr/local/bin/php admin/cli/cron.php
           restartPolicy: OnFailure
           volumes:
             {{- include "moodle.app.mounts" . | indent 12 }}
