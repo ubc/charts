@@ -165,6 +165,16 @@ env:
 - name: MOODLE_DB_PREFIX
   value: {{ .Values.db.db.prefix | quote }}
 {{- end }}
+{{- if eq (include "moodle.dbDialect" .) "pgsql" }}
+{{- /*
+     Force libpq sslmode so connections don't fall back to non-SSL (which
+     spilo's pg_hba rejects) and so libpq doesn't try to load a client cert
+     from ~/.postgresql/ (which is unreadable for www-data when sudo -E
+     preserves HOME=/root, e.g. in the cron container).
+*/}}
+- name: PGSSLMODE
+  value: {{ default "require" .Values.db.postgres.sslmode | quote }}
+{{- end }}
 - name: MOODLE_URL
   value: https://{{ index .Values.ingress.hosts 0 | default .Values.CI_ENVIRONMENT_HOSTNAME | default "http://localhost" }}
 - name: MOODLE_ADMIN_USER

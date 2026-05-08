@@ -108,6 +108,15 @@ assert_yq_partial "postgres internal: MOODLE_DB_PASSWORD secret key is 'password
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PASSWORD") | .valueFrom.secretKeyRef.key' \
   "password"
 
+# spilo's default pg_hba rejects non-SSL connections; sslmode=require also
+# bypasses libpq's client-cert lookup which fails under sudo -E in the cron
+# container (HOME=/root unreadable by www-data).
+assert_yq_partial "postgres internal: PGSSLMODE=require" \
+  "$HERE/values/internal-postgres.yaml" \
+  templates/deployment.yaml \
+  '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "PGSSLMODE") | .value' \
+  "require"
+
 assert_renders "internal postgres scenario" "$HERE/values/internal-postgres.yaml"
 
 assert_yq_exists "internal postgres: exactly one postgresql CR" \

@@ -140,6 +140,13 @@ db:
     ## Database + role created by the operator. Moodle authenticates as `username`.
     database: moodle
     username: moodle
+    ## libpq sslmode for the moodle pod's connection. Default `require` because
+    ## spilo's default pg_hba rejects non-SSL connections from non-localhost.
+    ## Setting `require` also makes libpq skip the client-cert lookup in
+    ## ~/.postgresql/, which avoids EACCES errors in the cron container where
+    ## sudo -E preserves HOME=/root. Override only if your operator config or
+    ## TLS setup demands something else (e.g. verify-ca, verify-full).
+    sslmode: require
     ## Continuous WAL archiving via the operator. Off by default.
     ## AWS credentials must reach the postgres pods via cluster-level setup
     ## (IRSA, pod-identity, or operator env) — the chart does not wire them.
