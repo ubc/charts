@@ -143,6 +143,22 @@ assert_yq_absent "internal postgres: no mariadb StatefulSet" \
   "$HERE/values/internal-postgres.yaml" \
   '. | select((.kind // "") == "StatefulSet" and ((.metadata.name // "") | test("mariadb")))'
 
+assert_renders "external postgres scenario" "$HERE/values/external-postgres.yaml"
+
+assert_yq "external postgres: ExternalName service on port 5432" \
+  "$HERE/values/external-postgres.yaml" \
+  'select(.kind == "Service" and .spec.type == "ExternalName") | .spec.ports[0].port' \
+  "5432"
+
+assert_yq "external postgres: MOODLE_DB_TYPE=pgsql" \
+  "$HERE/values/external-postgres.yaml" \
+  'select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_TYPE") | .value' \
+  "pgsql"
+
+assert_yq_absent "external postgres: no postgresql CR" \
+  "$HERE/values/external-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql")'
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

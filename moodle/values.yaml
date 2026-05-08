@@ -154,7 +154,9 @@ db:
 
 externalDatabase:
   enabled: false
-  port: 3306
+  ## Engine-derived default: 3306 (db.type=mariadb) or 5432 (db.type=postgres).
+  ## Set explicitly to override.
+  port:
   database: moodle
   user: moodle
   password:
@@ -163,7 +165,9 @@ externalDatabase:
   service:
     enabled: true
     externalName: ""
-    port: 3306
+    ## Reserved for future use; the rendered Service port follows externalDatabase.port
+    ## (or the engine default) via the moodle.databasePort helper.
+    port:
 
   ## Define affinity for the pod
   ## Sometimes required when persistent volumes are defined externally
