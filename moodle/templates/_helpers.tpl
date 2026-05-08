@@ -215,6 +215,8 @@ env:
   value: {{ default "" .Values.smtp.auth | quote }}
 - name: MOODLE_NOREPLY_ADDRESS
   value: {{ default "" .Values.moodleNoReplyAddress | quote }}
+- name: MOODLE_NOEMAILEVER
+  value: "{{ if .Values.moodleNoEmailEver }}true{{ else }}false{{ end }}"
 {{- if .Values.ubcCoursePayment.enabled }}
 {{/* Course payment db on same db server as moodle */}}
 - name: MOODLE_UBC_COURSE_PAYMENT_DB_HOST

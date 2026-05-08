@@ -56,6 +56,11 @@ moodleEmail: user@example.com
 ## No Reply Address
 # moodleNoReplyAddress: noreply@example.com
 
+## When true, Moodle won't send any outgoing email (notifications,
+## password resets, forum digests, etc). Useful for staging/test
+## environments. MUST stay false on production.
+moodleNoEmailEver: false
+
 ## Set to `yes` to allow the container to be started with blank passwords
 ## ref: https://github.com/bitnami/bitnami-docker-moodle#environment-variables
 allowEmptyPassword: "yes"
