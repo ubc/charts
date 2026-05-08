@@ -1932,6 +1932,22 @@ entries:
   course-directory:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-05-08T18:21:43.074806064Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: Course Directory
+    digest: 299684ff8cd904f1404d9563fb3aa99f2dc852b02b2e402691615ded297033d1
+    name: course-directory
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/course-directory-0.0.2/course-directory-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-05-08T18:17:20.80666334Z"
     dependencies:
     - alias: db
@@ -8653,4 +8669,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-08T18:17:20.807333484Z"
+generated: "2026-05-08T18:21:43.075631683Z"
