@@ -88,7 +88,7 @@ assert_yq_partial "postgres internal: MOODLE_DB_HOST is clusterName" \
   "$HERE/values/internal-postgres.yaml" \
   templates/deployment.yaml \
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_HOST") | .value' \
-  "release-name-moodle"
+  "release-name-moodle-pg"
 
 assert_yq_partial "postgres internal: MOODLE_DB_PORT=5432" \
   "$HERE/values/internal-postgres.yaml" \
@@ -100,7 +100,7 @@ assert_yq_partial "postgres internal: MOODLE_DB_PASSWORD references operator sec
   "$HERE/values/internal-postgres.yaml" \
   templates/deployment.yaml \
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PASSWORD") | .valueFrom.secretKeyRef.name' \
-  "moodle.release-name-moodle.credentials.postgresql.acid.zalan.do"
+  "moodle.release-name-moodle-pg.credentials.postgresql.acid.zalan.do"
 
 assert_yq_partial "postgres internal: MOODLE_DB_PASSWORD secret key is 'password'" \
   "$HERE/values/internal-postgres.yaml" \
@@ -117,7 +117,7 @@ assert_yq_exists "internal postgres: exactly one postgresql CR" \
 assert_yq "internal postgres: CR name follows moodle.fullname" \
   "$HERE/values/internal-postgres.yaml" \
   '. | select((.kind // "") == "postgresql") | .metadata.name' \
-  "release-name-moodle"
+  "release-name-moodle-pg"
 
 assert_yq "internal postgres: numberOfInstances=2" \
   "$HERE/values/internal-postgres.yaml" \

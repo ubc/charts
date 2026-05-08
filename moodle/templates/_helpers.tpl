@@ -33,18 +33,22 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{/*
 Compute the postgresql clusterName.
 
-Default: same as `moodle.fullname` (e.g. "<release>-moodle"). Note: zalando
-postgres-operator installations with `enable_team_id_clustername_prefix:
-true` (the upstream default) require the name to start with the teamId. If
-your operator has that flag set, override this via db.postgres.clusterName
-explicitly (e.g. "<teamId>-<anything>") — the `clusterName` field is the
-escape hatch.
+Default: "<moodle.fullname>-pg" (e.g. "<release>-moodle-pg"). The "-pg"
+suffix is required to avoid colliding with the chart's own Service
+(also named "<moodle.fullname>") — the zalando operator creates a master
+Service of the same name as the postgresql CR.
+
+Note: zalando postgres-operator installations with
+`enable_team_id_clustername_prefix: true` (the upstream default) require
+the name to start with the teamId. If your operator has that flag set,
+override this via db.postgres.clusterName explicitly (e.g.
+"<teamId>-<anything>") — the `clusterName` field is the escape hatch.
 */}}
 {{- define "moodle.postgresClusterName" -}}
 {{- if .Values.db.postgres.clusterName -}}
   {{- .Values.db.postgres.clusterName -}}
 {{- else -}}
-  {{- include "moodle.fullname" . -}}
+  {{- printf "%s-pg" (include "moodle.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 
