@@ -27,7 +27,9 @@ jobs:
           yq --version
 
       - name: Build moodle chart deps
-        run: helm dependency build moodle
+        run: |
+          helm repo add ubc https://ubc.github.io/charts
+          helm dependency build moodle
 
       - name: Run moodle render assertions
         run: bash moodle/tests/run.sh
