@@ -17,3 +17,16 @@ jobs:
 
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct-lint.yaml --target-branch ${{ github.event.repository.default_branch }}
+
+      - name: Install yq
+        run: |
+          curl -fsSL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+            -o /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+          yq --version
+
+      - name: Build moodle chart deps
+        run: helm dependency build moodle
+
+      - name: Run moodle render assertions
+        run: bash moodle/tests/run.sh
