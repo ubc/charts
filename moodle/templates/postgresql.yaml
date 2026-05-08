@@ -1,0 +1,51 @@
+{{- if and .Values.db.enabled (eq .Values.db.type "postgres") -}}
+{{- include "moodle.validateDb" . -}}
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  name: {{ include "moodle.postgresClusterName" . }}
+  labels:
+    {{- include "moodle.labels" . | nindent 4 }}
+    tier: db
+spec:
+  teamId: {{ .Values.db.postgres.teamId | quote }}
+  postgresql:
+    version: {{ .Values.db.postgres.version | quote }}
+  numberOfInstances: {{ .Values.db.postgres.numberOfInstances }}
+  volume:
+    size: {{ .Values.db.postgres.volume.size }}
+    {{- with .Values.db.postgres.volume.storageClass }}
+    storageClass: {{ . }}
+    {{- end }}
+  databases:
+    {{ .Values.db.postgres.database }}: {{ .Values.db.postgres.username }}
+  users:
+    # Empty flag list creates a plain LOGIN role (operator default when NOLOGIN is not set).
+    {{ .Values.db.postgres.username }}: []
+  resources:
+    {{- toYaml .Values.db.postgres.resources | nindent 4 }}
+  {{- with .Values.db.postgres.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.db.postgres.nodeAffinity }}
+  nodeAffinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .Values.db.postgres.backup.enabled }}
+  env:
+    - name: WAL_S3_BUCKET
+      value: {{ .Values.db.postgres.backup.s3Bucket | quote }}
+    - name: AWS_REGION
+      value: {{ .Values.db.postgres.backup.s3Region | quote }}
+    {{- with .Values.db.postgres.backup.s3Endpoint }}
+    - name: AWS_ENDPOINT
+      value: {{ . | quote }}
+    {{- end }}
+    - name: BACKUP_NUM_TO_RETAIN
+      value: {{ .Values.db.postgres.backup.retentionDays | quote }}
+  {{- end }}
+  {{- with .Values.db.postgres.extraManifest }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end -}}

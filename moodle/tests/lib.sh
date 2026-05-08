@@ -50,7 +50,8 @@ assert_yq() {
 assert_yq_exists() {
   local name=$1 values=$2 expr=$3
   local count
-  count=$(helm template "$RELEASE" "$CHART" -f "$values" 2>/dev/null | yq -s "[.[] | $expr] | length" 2>/dev/null || echo 0)
+  # yq v4: use eval-all to load all YAML docs before filtering (yq -s is --split-exp in v4, not slurp)
+  count=$(helm template "$RELEASE" "$CHART" -f "$values" 2>/dev/null | yq eval-all "[. | $expr] | length" 2>/dev/null || echo 0)
   if [[ "${count:-0}" -ge 1 ]]; then
     echo "PASS [exists] $name"; PASS=$((PASS+1))
   else
@@ -61,7 +62,8 @@ assert_yq_exists() {
 assert_yq_absent() {
   local name=$1 values=$2 expr=$3
   local count
-  count=$(helm template "$RELEASE" "$CHART" -f "$values" 2>/dev/null | yq -s "[.[] | $expr] | length" 2>/dev/null || echo 0)
+  # yq v4: use eval-all to load all YAML docs before filtering (yq -s is --split-exp in v4, not slurp)
+  count=$(helm template "$RELEASE" "$CHART" -f "$values" 2>/dev/null | yq eval-all "[. | $expr] | length" 2>/dev/null || echo 0)
   if [[ "${count:-0}" -eq 0 ]]; then
     echo "PASS [absent] $name"; PASS=$((PASS+1))
   else

@@ -35,7 +35,7 @@ assert_yq_absent "no postgresql CR for default" \
   'select((.apiVersion // "") == "acid.zalan.do/v1" and (.kind // "") == "postgresql")'
 
 assert_yq_partial "postgres MOODLE_DB_TYPE=pgsql" \
-  "$HERE/values/internal-postgres-shallow.yaml" \
+  "$HERE/values/internal-postgres.yaml" \
   templates/deployment.yaml \
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_TYPE") | .value' \
   "pgsql"
@@ -85,28 +85,63 @@ assert_yq "external mariadb: ExternalName service on port 3306" \
 # the helpers must already produce the right values though, since the
 # Deployment env block reads them).
 assert_yq_partial "postgres internal: MOODLE_DB_HOST is clusterName" \
-  "$HERE/values/internal-postgres-shallow.yaml" \
+  "$HERE/values/internal-postgres.yaml" \
   templates/deployment.yaml \
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_HOST") | .value' \
   "ctlt-release-name-moodle"
 
 assert_yq_partial "postgres internal: MOODLE_DB_PORT=5432" \
-  "$HERE/values/internal-postgres-shallow.yaml" \
+  "$HERE/values/internal-postgres.yaml" \
   templates/deployment.yaml \
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PORT") | .value' \
   "5432"
 
 assert_yq_partial "postgres internal: MOODLE_DB_PASSWORD references operator secret" \
-  "$HERE/values/internal-postgres-shallow.yaml" \
+  "$HERE/values/internal-postgres.yaml" \
   templates/deployment.yaml \
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PASSWORD") | .valueFrom.secretKeyRef.name' \
   "moodle.ctlt-release-name-moodle.credentials.postgresql.acid.zalan.do"
 
 assert_yq_partial "postgres internal: MOODLE_DB_PASSWORD secret key is 'password'" \
-  "$HERE/values/internal-postgres-shallow.yaml" \
+  "$HERE/values/internal-postgres.yaml" \
   templates/deployment.yaml \
   '. | select(.kind == "Deployment" and (.metadata.labels.tier // "") == "app") | .spec.template.spec.containers[0].env[] | select(.name == "MOODLE_DB_PASSWORD") | .valueFrom.secretKeyRef.key' \
   "password"
+
+assert_renders "internal postgres scenario" "$HERE/values/internal-postgres.yaml"
+
+assert_yq_exists "internal postgres: exactly one postgresql CR" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.apiVersion // "") == "acid.zalan.do/v1" and (.kind // "") == "postgresql")'
+
+assert_yq "internal postgres: CR name is teamId-release-moodle" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql") | .metadata.name' \
+  "ctlt-release-name-moodle"
+
+assert_yq "internal postgres: numberOfInstances=2" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql") | .spec.numberOfInstances' \
+  "2"
+
+assert_yq "internal postgres: pg version=16" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql") | .spec.postgresql.version' \
+  "16"
+
+assert_yq "internal postgres: databases.moodle owner is moodle" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql") | .spec.databases.moodle' \
+  "moodle"
+
+assert_yq "internal postgres: extraManifest deep-merged" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql") | .spec.maintenanceWindows[0]' \
+  "Sun:00:00-Sun:03:00"
+
+assert_yq_absent "internal postgres: no mariadb StatefulSet" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "StatefulSet" and ((.metadata.name // "") | test("mariadb")))'
 
 if (( FAIL > 0 )); then
   echo
