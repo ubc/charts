@@ -43,7 +43,7 @@ spec:
       value: {{ . | quote }}
     {{- end }}
     - name: BACKUP_NUM_TO_RETAIN
-      value: {{ .Values.db.postgres.backup.retentionDays | quote }}
+      value: {{ .Values.db.postgres.backup.retentionCount | quote }}
   {{- end }}
   {{- with .Values.db.postgres.extraManifest }}
   {{- toYaml . | nindent 2 }}

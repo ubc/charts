@@ -82,7 +82,7 @@ db:
       enabled: false            # opt-in; requires AWS creds via cluster-level setup
       s3Bucket: ""
       s3Region: ""
-      retentionDays: 7
+      retentionCount: 7        # number of full backup snapshots to keep
     extraManifest: {}           # deep-merged into the rendered CR's spec:
 ```
 

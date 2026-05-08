@@ -148,7 +148,10 @@ db:
       s3Bucket: ""
       s3Region: ""
       s3Endpoint: ""
-      retentionDays: 7
+      ## Number of full backup snapshots to keep (passed as BACKUP_NUM_TO_RETAIN
+      ## to spilo/WAL-G). Despite the legacy name, this is a count, not a duration.
+      ## With one full backup per day, 7 ≈ one week of retention.
+      retentionCount: 7
     ## Deep-merged into the rendered CR's spec: for fields not surfaced above.
     extraManifest: {}
 

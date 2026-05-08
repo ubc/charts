@@ -29,7 +29,7 @@ db:
       enabled: true
       s3Bucket: my-org-moodle-pg-wal
       s3Region: us-west-2
-      retentionDays: 14
+      retentionCount: 14   # number of full backup snapshots to keep (BACKUP_NUM_TO_RETAIN)
 
 ingress:
   enabled: true
