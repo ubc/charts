@@ -139,6 +139,20 @@ assert_yq "internal postgres: extraManifest deep-merged" \
   '. | select((.kind // "") == "postgresql") | .spec.maintenanceWindows[0]' \
   "Sun:00:00-Sun:03:00"
 
+# zalando CRD requires every spec.resources.* value to be a string; YAML
+# parses unit-less numbers (cpu: 1) as int and the operator rejects them
+# at admission time. Pin the rendered type with `tag` so this can't
+# regress silently. (`!!str` for strings, `!!int` for ints, etc.)
+assert_yq "internal postgres: limits.cpu is rendered as string" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql") | .spec.resources.limits.cpu | tag' \
+  "!!str"
+
+assert_yq "internal postgres: requests.cpu is rendered as string" \
+  "$HERE/values/internal-postgres.yaml" \
+  '. | select((.kind // "") == "postgresql") | .spec.resources.requests.cpu | tag' \
+  "!!str"
+
 assert_yq_absent "internal postgres: no mariadb StatefulSet" \
   "$HERE/values/internal-postgres.yaml" \
   '. | select((.kind // "") == "StatefulSet" and ((.metadata.name // "") | test("mariadb")))'

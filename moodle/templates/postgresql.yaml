@@ -22,8 +22,24 @@ spec:
   users:
     # Empty flag list creates a plain LOGIN role (operator default when NOLOGIN is not set).
     {{ .Values.db.postgres.username }}: []
+  {{- /*
+       The zalando postgres-operator CRD requires every resource value to
+       be a string. YAML parses unit-less numbers (e.g. cpu: 1) as integers,
+       which the operator rejects at admission time. Render explicitly with
+       `quote` so users can write either `cpu: 1` or `cpu: "1"` and both
+       end up as strings in the rendered CR.
+  */}}
   resources:
-    {{- toYaml .Values.db.postgres.resources | nindent 4 }}
+    {{- with .Values.db.postgres.resources.requests }}
+    requests:
+      cpu: {{ .cpu | quote }}
+      memory: {{ .memory | quote }}
+    {{- end }}
+    {{- with .Values.db.postgres.resources.limits }}
+    limits:
+      cpu: {{ .cpu | quote }}
+      memory: {{ .memory | quote }}
+    {{- end }}
   {{- with .Values.db.postgres.tolerations }}
   tolerations:
     {{- toYaml . | nindent 4 }}
