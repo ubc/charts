@@ -114,13 +114,3 @@ app:
     useTls: 'true'
   allowedEmailDomains: 'ubc.ca,mail.ubc.ca'
   serviceNowEmail: 'helpdesk@example.com'
-
-mailpit:
-  enable: false  # app.smtp.host/app.smtp.port is ignored if mailpit is enabled
-  port:
-    http: 8025
-    smtp: 1025
-  image:
-    repository: axllent/mailpit
-    pullPolicy: IfNotPresent
-    tag: 'v1.29'

@@ -22,15 +22,6 @@ spec:
               number: {{ $.Values.service.port }}
         path: /
         pathType: Prefix
-      {{- if .Values.mailpit.enabled }}
-      - backend:
-          service:
-            name: {{ template "ltic-access-request.fullname" . }}-mailpit
-            port:
-              number: {{ $.Values.service.port }}
-        path: /mailpit
-        pathType: Prefix
-      {{- end }}
   {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (eq (index .Values.ingress.annotations "kubernetes.io/tls-acme") "true") }}
   tls:
     - hosts:
