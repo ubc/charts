@@ -1,0 +1,5 @@
+db:
+  enabled: true
+  type: postgres
+  mariadb:
+    enabled: true   # WRONG: must be false when db.type=postgres

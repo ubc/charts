@@ -45,6 +45,65 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Configuration
 
+### Database engine selection
+
+> See `docs/superpowers/specs/2026-05-07-moodle-postgres-support-design.md` for the full design.
+
+This chart supports two database engines:
+
+- **MariaDB (default)** — `db.type: mariadb` (or unset). The bundled UBC `mariadb` subchart provisions an internal database. This is the historical default; existing values files keep working without edits.
+- **PostgreSQL via zalando postgres-operator** — `db.type: postgres`. The chart renders a `postgresql.acid.zalan.do/v1` custom resource consumed by a pre-installed [zalando postgres-operator]. Set `db.mariadb.enabled: false` to disable the bundled mariadb subchart when using postgres.
+
+[zalando postgres-operator]: https://github.com/zalando/postgres-operator
+
+#### Postgres values
+
+```yaml
+db:
+  enabled: true
+  type: postgres
+  mariadb:
+    enabled: false             # required when db.type=postgres
+  postgres:
+    teamId: ctlt                # operator requires teamId; clusterName must start with it
+    clusterName: ""             # default: "<teamId>-<release>-moodle"
+    numberOfInstances: 2
+    version: "16"
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+    volume:
+      size: 10Gi
+      storageClass: ""
+    database: moodle
+    username: moodle
+    backup:
+      enabled: false            # opt-in; requires AWS creds via cluster-level setup
+      s3Bucket: ""
+      s3Region: ""
+      retentionCount: 7        # number of full backup snapshots to keep
+    extraManifest: {}           # deep-merged into the rendered CR's spec:
+```
+
+The Moodle pod consumes the postgres password from a Secret named
+`<username>.<clusterName>.credentials.postgresql.acid.zalan.do` that the
+operator creates and manages. The chart never sees the password directly.
+
+#### External database
+
+`externalDatabase.enabled: true` works for both engines. Engine selection still comes from `db.type`. The chart renders an `ExternalName` Service whose port follows `db.type` (3306 for mariadb, 5432 for postgres). Provide credentials via `externalDatabase.password` or `externalDatabase.existingSecret`.
+
+#### Upgrade note (chart 0.3.x)
+
+If you are upgrading from chart `0.2.x` and use `db.enabled: false` (external mariadb), you must add `db.mariadb.enabled: false` to your values file before installing `0.3.x`. The chart will fail `helm template` with an actionable message if you forget.
+
+#### Out of scope
+
+This chart does not install the zalando postgres-operator. The operator must already be reconciling resources in the target cluster.
+
+### Configuration parameters
+
 The following table lists the configurable parameters of the Moodle chart and their default values.
 
 |              Parameter                |                                       Description                                            |                   Default                               |

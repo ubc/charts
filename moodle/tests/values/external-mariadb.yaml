@@ -1,0 +1,13 @@
+db:
+  enabled: false
+  type: mariadb
+  mariadb:
+    enabled: false
+externalDatabase:
+  enabled: true
+  user: moodle
+  password: testpw
+  service:
+    externalName: db.example.com
+ingress:
+  enabled: false

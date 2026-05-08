@@ -78,8 +78,8 @@ spec:
   externalName: {{ .Values.externalDatabase.service.externalName }}
   internalTrafficPolicy: Cluster
   ports:
-  - port: {{ .Values.externalDatabase.service.port }}
-    targetPort: {{ .Values.externalDatabase.service.port }}
+  - port: {{ include "moodle.databasePort" . }}
+    targetPort: {{ include "moodle.databasePort" . }}
     protocol: TCP
     name: db
 {{- end -}}

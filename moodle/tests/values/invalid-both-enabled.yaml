@@ -1,0 +1,4 @@
+db:
+  enabled: true
+externalDatabase:
+  enabled: true     # WRONG: mutually exclusive with db.enabled

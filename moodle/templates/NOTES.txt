@@ -41,3 +41,31 @@
 
   echo Username: {{ .Values.moodleUsername }}
   echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "moodle.fullname" . }} -o jsonpath="{.data.moodle_password}" | base64 --decode)
+
+3. Database backend
+{{- if and .Values.db.enabled (eq .Values.db.type "postgres") }}
+
+  This install uses **PostgreSQL** via the zalando postgres-operator.
+
+  Cluster CR:     {{ include "moodle.postgresClusterName" . }} (kind: postgresql.acid.zalan.do/v1)
+  Master service: {{ include "moodle.postgresClusterName" . }}.{{ .Release.Namespace }}.svc.cluster.local:5432
+  Role:           {{ .Values.db.postgres.username }}
+  Credentials:    Secret {{ printf "%s.%s.credentials.postgresql.acid.zalan.do" .Values.db.postgres.username (include "moodle.postgresClusterName" .) }}
+
+  Note: The postgres-operator must already be installed and reconciling
+        postgresql.acid.zalan.do resources. This chart does not install it.
+  {{- if not .Values.db.postgres.backup.enabled }}
+
+  WARNING: db.postgres.backup.enabled is false. No WAL archiving is configured.
+           Set db.postgres.backup.enabled=true plus backup.s3Bucket and
+           backup.s3Region to enable continuous backups.
+  {{- end }}
+{{- else if .Values.externalDatabase.enabled }}
+
+  This install uses an **external** {{ include "moodle.dbDialect" . }} database at
+  {{ .Values.externalDatabase.service.externalName }}:{{ include "moodle.databasePort" . }}.
+{{- else }}
+
+  This install uses the bundled **MariaDB** subchart at
+  {{ include "moodle.databaseHost" . }}:{{ include "moodle.databasePort" . }}.
+{{- end }}

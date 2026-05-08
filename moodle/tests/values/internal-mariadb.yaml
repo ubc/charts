@@ -1,0 +1,4 @@
+# Default-shaped values for the internal-mariadb scenario.
+# This is intentionally minimal — defaults from values.yaml supply the rest.
+ingress:
+  enabled: false

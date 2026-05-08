@@ -1,0 +1,5 @@
+db:
+  enabled: true
+  type: banana
+  mariadb:
+    enabled: true

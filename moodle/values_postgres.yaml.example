@@ -1,0 +1,39 @@
+# Example overlay for installing Moodle on Postgres via the zalando
+# postgres-operator. Save as values.yaml or pass with -f to helm install.
+#
+# Prerequisite: the postgres-operator is already installed and reconciling
+# postgresql.acid.zalan.do resources in this cluster.
+
+db:
+  enabled: true
+  type: postgres
+  mariadb:
+    enabled: false       # required when db.type=postgres
+  postgres:
+    teamId: ctlt
+    numberOfInstances: 2
+    version: "16"
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+    volume:
+      size: 20Gi
+      storageClass: ""
+    database: moodle
+    username: moodle
+    backup:
+      enabled: true
+      s3Bucket: my-org-moodle-pg-wal
+      s3Region: us-west-2
+      retentionCount: 14   # number of full backup snapshots to keep (BACKUP_NUM_TO_RETAIN)
+
+ingress:
+  enabled: true
+  hosts:
+    - moodle.example.com
+
+# All other values inherit from chart defaults. See values.yaml.
