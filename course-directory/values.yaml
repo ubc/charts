@@ -110,3 +110,42 @@ app:
     useTls: 'true'
   allowedEmailDomains: 'ubc.ca,mail.ubc.ca'
   serviceNowEmail: 'helpdesk@example.com'
+
+# SAML 2.0 SSO (UBC CWL).
+# When `saml.enabled` is true, the chart creates an ExternalSecret that pulls
+# the SP keypair and IdP metadata from Vault into a Kubernetes Secret, mounts
+# the files into the pod, and sets the SAML_* env vars the Flask app expects.
+# Defaults are tuned for staging; override per environment.
+saml:
+  enabled: false
+  serviceProvider:
+    # Public-facing base URL (used to construct ACS + entity ID).
+    # Defaults to `https://{{ .Values.ingress.host }}` when left empty.
+    baseUrl: ""
+    entityId: ""  # defaults to "{baseUrl}/auth/saml/metadata" when empty
+    # Where the secret materials are mounted inside the pod.
+    certMountPath: /etc/saml
+    keyFilename: sp.key
+    certFilename: sp.crt
+    metadataFilename: idp-metadata.xml
+    # Keys produced inside the synced Kubernetes Secret. The deployment uses
+    # `items:` to map these onto the filenames above.
+    keySecretKey: sp-key
+    certSecretKey: sp-cert
+    metadataSecretKey: idp-metadata
+    # Vault path + property names that ExternalSecret pulls from.
+    externalSecretPath: "course-directory/saml"
+    externalSecretKeyProperty: "sp.key"
+    externalSecretCertProperty: "sp.crt"
+    externalSecretMetadataProperty: "idp-metadata.xml"
+  contact:
+    name: "Course Directory Admin"
+    email: "jason.hall@ubc.ca"
+
+# ExternalSecret (external-secrets.io/v1) configuration shared by all
+# chart-managed ExternalSecret resources. Activated whenever any feature
+# (currently: saml) needs Vault-backed secrets.
+externalSecret:
+  secretStoreRefName: ""
+  secretStoreRefKind: ClusterSecretStore  # or SecretStore
+  refreshInterval: 1h
