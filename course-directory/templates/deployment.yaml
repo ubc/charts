@@ -47,9 +47,16 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.volumeMounts }}
+          {{- if or .Values.volumeMounts .Values.saml.enabled }}
           volumeMounts:
+            {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if .Values.saml.enabled }}
+            - name: saml-certs
+              mountPath: {{ .Values.saml.serviceProvider.certMountPath }}
+              readOnly: true
+            {{- end }}
           {{- end }}
           env:
             - name: POSTGRES_USER
@@ -84,9 +91,43 @@ spec:
               value: {{ .Values.app.smtp.allowedEmailDomains }}
             - name: BASE_URL
               value: https://{{ .Values.ingress.host }}
-      {{- with .Values.volumes }}
+            {{- if .Values.saml.enabled }}
+            {{- $samlBaseUrl := .Values.saml.serviceProvider.baseUrl | default (printf "https://%s" .Values.ingress.host) }}
+            {{- $samlEntityId := .Values.saml.serviceProvider.entityId | default (printf "%s/auth/saml/metadata" $samlBaseUrl) }}
+            - name: SAML_ENABLED
+              value: "true"
+            - name: SAML_SP_BASE_URL
+              value: {{ $samlBaseUrl | quote }}
+            - name: SAML_SP_ENTITY_ID
+              value: {{ $samlEntityId | quote }}
+            - name: SAML_SP_CERT_PATH
+              value: {{ printf "%s/%s" .Values.saml.serviceProvider.certMountPath .Values.saml.serviceProvider.certFilename | quote }}
+            - name: SAML_SP_KEY_PATH
+              value: {{ printf "%s/%s" .Values.saml.serviceProvider.certMountPath .Values.saml.serviceProvider.keyFilename | quote }}
+            - name: SAML_IDP_METADATA_PATH
+              value: {{ printf "%s/%s" .Values.saml.serviceProvider.certMountPath .Values.saml.serviceProvider.metadataFilename | quote }}
+            - name: SAML_CONTACT_NAME
+              value: {{ .Values.saml.contact.name | quote }}
+            - name: SAML_CONTACT_EMAIL
+              value: {{ .Values.saml.contact.email | quote }}
+            {{- end }}
+      {{- if or .Values.volumes .Values.saml.enabled }}
       volumes:
+        {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.saml.enabled }}
+        - name: saml-certs
+          secret:
+            secretName: {{ include "ltic-access-request.fullname" . }}-saml
+            items:
+              - key: {{ .Values.saml.serviceProvider.keySecretKey }}
+                path: {{ .Values.saml.serviceProvider.keyFilename }}
+              - key: {{ .Values.saml.serviceProvider.certSecretKey }}
+                path: {{ .Values.saml.serviceProvider.certFilename }}
+              - key: {{ .Values.saml.serviceProvider.metadataSecretKey }}
+                path: {{ .Values.saml.serviceProvider.metadataFilename }}
+        {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
