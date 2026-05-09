@@ -1,0 +1,70 @@
+{{- if .Values.migrations.enabled }}
+{{/*
+Database migration Job — runs `flask db upgrade` once per Helm release
+revision before any pod is created or restarted.
+
+This is a Helm pre-install / pre-upgrade hook. With this in place,
+multiple replicas can be scaled safely: the schema is already at head
+by the time pods start, so each pod's defensive `flask db upgrade` in
+entrypoint.sh becomes a fast no-op.
+
+The Job name is suffixed with .Release.Revision so each upgrade
+creates a distinct Job (Helm refuses to recreate an existing hook
+resource by default). hook-delete-policy reaps prior succeeded
+revisions on the next install/upgrade.
+*/}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "ltic-access-request.fullname" . }}-migrate-r{{ .Release.Revision }}
+  labels:
+    {{- include "ltic-access-request.labels" . | nindent 4 }}
+    app.kubernetes.io/component: migrate
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: {{ .Values.migrations.backoffLimit | default 1 }}
+  ttlSecondsAfterFinished: {{ .Values.migrations.ttlSecondsAfterFinished | default 300 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ltic-access-request.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: migrate
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: OnFailure
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: migrate
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              echo "Waiting for postgres at ${POSTGRES_HOST}..."
+              until pg_isready -h "${POSTGRES_HOST}" -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" >/dev/null 2>&1; do
+                sleep 1
+              done
+              echo "Postgres reachable. Running flask db upgrade..."
+              flask db upgrade
+              echo "Migrations complete."
+          env:
+            {{- include "ltic-access-request.podEnv" . | nindent 12 }}
+          {{- with .Values.migrations.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

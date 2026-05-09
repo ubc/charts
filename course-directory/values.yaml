@@ -149,3 +149,17 @@ externalSecret:
   secretStoreRefName: ""
   secretStoreRefKind: ClusterSecretStore  # or SecretStore
   refreshInterval: 1h
+
+# Database migration Job — Helm pre-install/pre-upgrade hook that runs
+# `flask db upgrade` once per release revision before any pod is created.
+# Required for safe multi-replica deployments (otherwise N pods race the
+# upgrade on simultaneous start). Disable only for emergency manual
+# rollback scenarios.
+migrations:
+  enabled: true
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 300
+  resources: {}
+    # requests:
+    #   cpu: 50m
+    #   memory: 128Mi
