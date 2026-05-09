@@ -62,3 +62,63 @@ Return the MariaDB Hostname
     {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Common pod env block — used by both the Deployment and the migration Job
+so they stay in sync. Keep this in one place; do not duplicate the env list
+into individual templates.
+*/}}
+{{- define "ltic-access-request.podEnv" -}}
+- name: POSTGRES_USER
+  value: {{ .Values.db.username }}
+- name: POSTGRES_PASSWORD
+  value: {{ .Values.db.password }}
+- name: POSTGRES_DB
+  value: {{ .Values.db.name }}
+- name: POSTGRES_HOST
+  value: {{ .Values.db.host }}
+- name: DATABASE_URL
+  value: {{ printf "postgresql+psycopg://%s:%s@%s:5432/%s" .Values.db.username .Values.db.password .Values.db.host .Values.db.name | quote }}
+- name: DB_PASSWORD
+  value: {{ .Values.db.password }}
+- name: FLASK_ENV
+  value: {{ .Values.app.flask.env }}
+- name: SECRET_KEY
+  value: {{ .Values.app.flask.secretKey }}
+- name: SMTP_HOST
+  value: {{ .Values.app.smtp.host }}
+- name: SMTP_PORT
+  value: {{ .Values.app.smtp.port | quote}}
+- name: SMTP_USE_TLS
+  value: {{ .Values.app.smtp.useTls | quote }}
+- name: SMTP_USER
+  value: {{ .Values.app.smtp.user }}
+- name: SMTP_PASSWORD
+  value: {{ .Values.app.smtp.password }}
+- name: SMTP_FROM
+  value: {{ .Values.app.smtp.from }}
+- name: ALLOWED_EMAIL_DOMAINS
+  value: {{ .Values.app.smtp.allowedEmailDomains }}
+- name: BASE_URL
+  value: https://{{ .Values.ingress.host }}
+{{- if .Values.saml.enabled }}
+{{- $samlBaseUrl := .Values.saml.serviceProvider.baseUrl | default (printf "https://%s" .Values.ingress.host) }}
+{{- $samlEntityId := .Values.saml.serviceProvider.entityId | default (printf "%s/auth/saml/metadata" $samlBaseUrl) }}
+- name: SAML_ENABLED
+  value: "true"
+- name: SAML_SP_BASE_URL
+  value: {{ $samlBaseUrl | quote }}
+- name: SAML_SP_ENTITY_ID
+  value: {{ $samlEntityId | quote }}
+- name: SAML_SP_CERT_PATH
+  value: {{ printf "%s/%s" .Values.saml.serviceProvider.certMountPath .Values.saml.serviceProvider.certFilename | quote }}
+- name: SAML_SP_KEY_PATH
+  value: {{ printf "%s/%s" .Values.saml.serviceProvider.certMountPath .Values.saml.serviceProvider.keyFilename | quote }}
+- name: SAML_IDP_METADATA_PATH
+  value: {{ printf "%s/%s" .Values.saml.serviceProvider.certMountPath .Values.saml.serviceProvider.metadataFilename | quote }}
+- name: SAML_CONTACT_NAME
+  value: {{ .Values.saml.contact.name | quote }}
+- name: SAML_CONTACT_EMAIL
+  value: {{ .Values.saml.contact.email | quote }}
+{{- end }}
+{{- end -}}
