@@ -1932,6 +1932,16 @@ entries:
   course-directory:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-05-09T00:43:12.586606088Z"
+    description: Course Directory
+    digest: 23d1f111c20d9f3118f10ee0de6ddd941cbdbbead9fdf783f2bfce01efd62245
+    name: course-directory
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/course-directory-0.1.0/course-directory-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-05-08T20:38:13.731208313Z"
     description: Course Directory
     digest: b0f9fde850e7544fa15dbbf36cbb67f92b1c16b8d78724c422d0153ac9622a65
@@ -8747,4 +8757,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-08T20:38:13.7319775Z"
+generated: "2026-05-09T00:43:12.587868928Z"
