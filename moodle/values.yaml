@@ -490,13 +490,44 @@ redis:
   # prefix: ''
   image:
     repository: redis
-    tag: 5.0-alpine
+    # Default bumped from 5.0-alpine (EOL since 2022) to 7.4-alpine (current LTS).
+    # Redis 7 is a drop-in replacement for Moodle's session and MUC use.
+    tag: 7.4-alpine
   imagePullPolicy: IfNotPresent
   replicas: 1
   resources:
     requests:
       memory: 64Mi
       cpu: 50m
+
+  # Hard memory ceiling enforced inside Redis. Recommended ~75% of the
+  # container memory limit so Redis evicts under its own policy rather than
+  # being OOM-killed by the kernel. Format examples: "256mb", "1gb".
+  # Empty string disables maxmemory entirely (relies on container limit).
+  maxmemory: ""
+  # Eviction policy used when maxmemory is set. allkeys-lru works well for
+  # Moodle's mix of session + MUC application cache — least-recently-used
+  # entries are evicted regardless of TTL.
+  maxmemoryPolicy: allkeys-lru
+
+  # On-disk durability. When persistence.enabled is true:
+  #   - appendOnly:  AOF (append-only log, fsync every second); preferred
+  #                  durability mode. Replayed on pod restart.
+  #   - savePolicy:  RDB snapshot triggers. Each entry is "<seconds> <changes>".
+  #                  Empty list disables RDB snapshots.
+  # When persistence.enabled is false, both AOF and RDB are disabled
+  # (cache rebuilds on pod restart — original behaviour).
+  persistence:
+    enabled: false
+    storageClass: ""   # empty = use cluster default storage class
+    size: 8Gi
+    accessMode: ReadWriteOnce
+    annotations: {}
+  appendOnly: true
+  savePolicy:
+    - "3600 1"
+    - "300 100"
+    - "60 10000"
   # redis exporter for Prometheus
   exporter:
     enabled: false
