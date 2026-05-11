@@ -524,10 +524,27 @@ redis:
     accessMode: ReadWriteOnce
     annotations: {}
   appendOnly: true
+  # AOF fsync policy when appendOnly is true.
+  #   - "everysec" (default): fsync once a second. Strong durability;
+  #                           up to ~1s loss on crash.
+  #   - "no":                 let the OS decide (~30s window). Lower disk
+  #                           pressure on slow storage backends; up to ~30s
+  #                           loss on ungraceful crash. Graceful pod
+  #                           shutdown still flushes AOF.
+  #   - "always":             fsync every write. Highest durability,
+  #                           highest latency. Not recommended for Moodle.
+  appendFsync: everysec
   savePolicy:
     - "3600 1"
     - "300 100"
     - "60 10000"
+  # Readiness probe runs `redis-cli ping` inside the container. On slow
+  # storage (e.g. csi-rbd), AOF fsync can briefly block Redis past the
+  # default 1s timeout, flapping the pod NotReady. Raise timeoutSeconds
+  # on latency-sensitive PVCs.
+  readinessProbe:
+    timeoutSeconds: 1
+    failureThreshold: 3
   # redis exporter for Prometheus
   exporter:
     enabled: false

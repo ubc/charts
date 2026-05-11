@@ -202,11 +202,14 @@ spec:
         readinessProbe:
           # `redis-cli ping` fails while AOF/RDB is loading into memory, so
           # readiness reflects actual command-serving state rather than just
-          # the TCP listener being up.
+          # the TCP listener being up. timeoutSeconds is tunable because the
+          # ping exec briefly stalls when AOF fsync blocks on slow storage.
           exec:
             command: ["redis-cli", "ping"]
           initialDelaySeconds: 5
           periodSeconds: 5
+          timeoutSeconds: {{ .Values.redis.readinessProbe.timeoutSeconds | default 1 }}
+          failureThreshold: {{ .Values.redis.readinessProbe.failureThreshold | default 3 }}
         volumeMounts:
         - name: config
           mountPath: /etc/redis
