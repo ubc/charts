@@ -1,3 +1,4 @@
+{{- include "moodle.validateDb" . -}}
 {{- if .Values.fileRedactor.exifTool.enabled }}
 {{- /*
   Set $CFG->file_redactor_exifremovertoolpath in Moodle's mdl_config so
