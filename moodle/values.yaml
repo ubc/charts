@@ -434,6 +434,26 @@ cronjob:
   concurrencyPolicy: Forbid
   #activeDeadlineSeconds: 0
 
+## File-redactor configuration.
+##
+## Moodle 4.5+ ships core_files\redactor\services\exifremover_service which
+## strips EXIF metadata from uploaded images on every file write (including
+## restores). If no exiftool binary is configured, the service falls back to
+## a GD path that decompresses each image into PHP memory (see
+## files/classes/redactor/services/exifremover_service.php :recreate_image_gd),
+## which has been observed to OOM the cron pod during image-heavy course
+## restores at ~28% progress.
+##
+## The companion docker image (lthub/moodle, github.com/ubc/moodle-docker)
+## ships /usr/bin/exiftool via libimage-exiftool-perl. Enabling this hook
+## runs `admin/cli/cfg.php` as a post-install/post-upgrade Job to tell
+## Moodle to use that binary instead of the GD fallback. Disable in envs
+## where the moodle image does NOT include exiftool.
+fileRedactor:
+  exifTool:
+    enabled: true
+    path: /usr/bin/exiftool
+
 memcached:
   # enable internal memcached deployment and services, set to false to
   # use external memcached cluster

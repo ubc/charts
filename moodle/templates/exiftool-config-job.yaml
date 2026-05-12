@@ -1,0 +1,44 @@
+{{- if .Values.fileRedactor.exifTool.enabled }}
+{{- /*
+  Set $CFG->file_redactor_exifremovertoolpath in Moodle's mdl_config so
+  core_files\redactor\services\exifremover_service uses the exiftool binary
+  baked into the image (via libimage-exiftool-perl in moodle-docker) instead
+  of falling back to GD, which OOMs on image-heavy course restores.
+
+  Runs as a post-install/post-upgrade Hook Job — once per deploy, idempotent.
+  cfg.php is no-op when the value already matches.
+
+  Safe-by-design: if the exiftool binary isn't actually present in the
+  image, exifremover_service::get_exiftool_path() checks is_executable()
+  and falls back to GD anyway — same behavior as today, no crash.
+*/}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "moodle.fullname" . }}-set-exiftool-path
+  labels:
+    {{- include "moodle.labels" . | nindent 4 }}
+    tier: post-deploy
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      {{- include "moodle.imagePullSecrets" . | nindent 6 }}
+      containers:
+        - name: {{ include "moodle.fullname" . }}-cfg-exiftool
+          {{- include "moodle.app.spec" . | indent 10 }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              /usr/bin/sudo -E -H -u www-data /usr/local/bin/php \
+                /var/www/html/admin/cli/cfg.php \
+                --name=file_redactor_exifremovertoolpath \
+                --set={{ .Values.fileRedactor.exifTool.path | quote }}
+{{- end }}
