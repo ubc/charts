@@ -42,4 +42,10 @@ spec:
                 /var/www/html/admin/cli/cfg.php \
                 --name=file_redactor_exifremovertoolpath \
                 --set={{ .Values.fileRedactor.exifTool.path | quote }}
+      ## moodle.app.spec adds a volumeMounts entry referencing this volume
+      ## name. cfg.php doesn't actually need /moodledata, but the Job spec
+      ## must still declare the volume the helper expects or the Job is
+      ## rejected as invalid at apply time.
+      volumes:
+        {{- include "moodle.app.mounts" . | indent 8 }}
 {{- end }}
