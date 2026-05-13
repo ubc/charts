@@ -95,13 +95,14 @@ phpMemoryLimit: 128M
 ## (lthub/moodle:moodle-fpm since commit 5dc3a57; derivatives that FROM
 ## that image inherit it).
 ##
-## Example:
+## Example (note: customfiletypes uses 'type' and 'icon', NOT 'mimetype' /
+## 'coreicon' — Moodle's validator rejects entries missing those two):
 ##   extraConfig: |
 ##     $CFG->customfiletypes = [
 ##       (object)[
 ##         'extension' => 'ipynb',
-##         'mimetype'  => 'application/x-ipynb+json',
-##         'coreicon'  => 'sourcecode',
+##         'type'      => 'application/x-ipynb+json',
+##         'icon'      => 'sourcecode',
 ##         'groups'    => ['document'],
 ##       ],
 ##     ];
