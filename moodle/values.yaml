@@ -84,6 +84,29 @@ uploadMaxFileSize: &uploadMaxFileSize 20m
 
 phpMemoryLimit: 128M
 
+## Optional PHP snippet projected into /var/www/html/extra-config.php at
+## deploy time. Sourced by config.php (require_once ./extra-config.php)
+## after all other $CFG settings, so values here override anything declared
+## above. Useful for per-env tweaks that don't warrant a chart change
+## (e.g. customfiletypes, $CFG->debug, override URLs). Do NOT include the
+## opening <?php tag — the chart adds it.
+##
+## Requires the base image to include the include hook in config.php
+## (lthub/moodle:moodle-fpm since commit 5dc3a57; derivatives that FROM
+## that image inherit it).
+##
+## Example:
+##   extraConfig: |
+##     $CFG->customfiletypes = [
+##       (object)[
+##         'extension' => 'ipynb',
+##         'mimetype'  => 'application/x-ipynb+json',
+##         'coreicon'  => 'sourcecode',
+##         'groups'    => ['document'],
+##       ],
+##     ];
+extraConfig: ""
+
 # HorizontalPodAutoscaler
 hpa:
   enabled: false

@@ -323,6 +323,12 @@ env:
 volumeMounts:
 - name: moodle-data
   mountPath: /moodledata
+{{- if .Values.extraConfig }}
+- name: extra-config
+  mountPath: /var/www/html/extra-config.php
+  subPath: extra-config.php
+  readOnly: true
+{{- end }}
 {{- end }}
 
 
@@ -334,6 +340,11 @@ volumeMounts:
     claimName: {{ include "moodle.fullname" . }}-app-pvc
 {{- else }}
   emptyDir: {}
+{{- end }}
+{{- if .Values.extraConfig }}
+- name: extra-config
+  configMap:
+    name: {{ include "moodle.fullname" . }}-extra-config
 {{- end }}
 {{- end }}
 

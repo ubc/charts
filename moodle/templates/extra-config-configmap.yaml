@@ -1,0 +1,17 @@
+{{- if .Values.extraConfig }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "moodle.fullname" . }}-extra-config
+  labels:
+    {{- include "moodle.labels" . | nindent 4 }}
+    tier: configmap
+data:
+  # Sourced by /var/www/html/config.php (require_once ./extra-config.php)
+  # after all other $CFG settings, so values here override anything declared
+  # above. Image must include the include hook (moodle-fpm base image since
+  # config commit 5dc3a57).
+  extra-config.php: |
+    <?php
+{{ .Values.extraConfig | indent 4 }}
+{{- end -}}
