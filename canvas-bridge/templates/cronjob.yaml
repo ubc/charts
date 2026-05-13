@@ -1,0 +1,59 @@
+{{- if .Values.cleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "canvas-bridge.fullname" . }}-cleanup
+  labels:
+    {{- include "canvas-bridge.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.cleanup.schedule | quote }}
+  concurrencyPolicy: {{ .Values.cleanup.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.cleanup.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cleanup.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "canvas-bridge.selectorLabels" . | nindent 12 }}
+            app.kubernetes.io/component: cleanup
+        spec:
+          restartPolicy: OnFailure
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+            - name: cleanup
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command: ["python", "-m", "app.cleanup"]
+              env:
+                - name: DATA_DIR
+                  value: /data/uploads
+                - name: RETENTION_HOURS
+                  value: {{ .Values.app.retentionHours | quote }}
+              volumeMounts:
+                - name: uploads
+                  mountPath: /data/uploads
+              {{- with .Values.cleanup.resources }}
+              resources:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+          volumes:
+            - name: uploads
+              persistentVolumeClaim:
+                claimName: {{ include "canvas-bridge.fullname" . }}-uploads
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

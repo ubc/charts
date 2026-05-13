@@ -1,0 +1,88 @@
+# Default values for canvas-bridge.
+
+image:
+  repository: gcr.io/ctlt-apps/canvas-bridge
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  class: nginx
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    # Allow large zip uploads through to tusd (up to its --max-size limit).
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+  host: ""
+  # Auto-generated from fullname if empty.
+  tlsSecretName: ""
+
+# App container (FastAPI/uvicorn on port 8000)
+app:
+  baseUrl: ""           # e.g. https://canvas-bridge-stg.ltic.ubc.ca
+  environment: staging  # staging or production — selects CWL IdP endpoints
+  retentionHours: 24
+  # Defaults to baseUrl when empty.
+  samlEntityId: ""
+  resources: {}
+
+# tusd sidecar (resumable uploads on port 8080)
+tusd:
+  image:
+    repository: tusproject/tusd
+    tag: v2.6.0
+    pullPolicy: IfNotPresent
+  resources: {}
+
+# Persistent storage — use csi-rbd (Ceph RBD). Do NOT use NFS storage classes
+# (nfs-storage, nfs-moodle-prod, etc.); zip extraction is I/O intensive and
+# NFS causes failures under load.
+persistence:
+  uploads:
+    storageClass: csi-rbd
+    size: 1Ti
+    accessMode: ReadWriteOnce
+  tusStaging:
+    storageClass: csi-rbd
+    size: 100Gi
+    accessMode: ReadWriteOnce
+
+# ExternalSecret (external-secrets.io/v1) — pulls all sensitive values from a
+# single Vault path. Set `properties.*` to match Vault property names if they
+# differ from the defaults.
+externalSecret:
+  secretStoreRefName: ""
+  secretStoreRefKind: ClusterSecretStore  # or SecretStore
+  refreshInterval: 1h
+  path: ""  # Vault key path, e.g. "canvas-bridge/staging"
+  properties:
+    sessionSecret: session-secret
+    samlSpCert: saml-sp-cert
+    samlSpKey: saml-sp-key
+    samlIdpCert: saml-idp-cert
+
+# Cleanup CronJob — runs python -m app.cleanup to delete sessions older than
+# retentionHours. Mounts the uploads PVC.
+cleanup:
+  enabled: true
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

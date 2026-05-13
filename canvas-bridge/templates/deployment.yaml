@@ -1,0 +1,134 @@
+{{- include "canvas-bridge.validate" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "canvas-bridge.fullname" . }}
+  labels:
+    {{- include "canvas-bridge.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "canvas-bridge.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "canvas-bridge.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: {{ include "canvas-bridge.fullname" . }}-uploads
+        - name: tus-staging
+          persistentVolumeClaim:
+            claimName: {{ include "canvas-bridge.fullname" . }}-tus-staging
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: fastapi
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: BASE_URL
+              value: {{ .Values.app.baseUrl | quote }}
+            - name: ENVIRONMENT
+              value: {{ .Values.app.environment | quote }}
+            - name: DATA_DIR
+              value: /data/uploads
+            - name: RETENTION_HOURS
+              value: {{ .Values.app.retentionHours | quote }}
+            - name: SAML_ENTITY_ID
+              value: {{ .Values.app.samlEntityId | default .Values.app.baseUrl | quote }}
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "canvas-bridge.fullname" . }}
+                  key: session-secret
+            - name: SAML_SP_CERT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "canvas-bridge.fullname" . }}
+                  key: saml-sp-cert
+            - name: SAML_SP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "canvas-bridge.fullname" . }}
+                  key: saml-sp-key
+            - name: SAML_IDP_CERT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "canvas-bridge.fullname" . }}
+                  key: saml-idp-cert
+          volumeMounts:
+            - name: uploads
+              mountPath: /data/uploads
+            - name: tus-staging
+              mountPath: /data/tus-staging
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: fastapi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: fastapi
+          {{- with .Values.app.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+        - name: tusd
+          image: "{{ .Values.tusd.image.repository }}:{{ .Values.tusd.image.tag }}"
+          imagePullPolicy: {{ .Values.tusd.image.pullPolicy }}
+          args:
+            - --upload-dir=/data/tus-staging
+            - --host=0.0.0.0
+            - --port=8080
+            - --hooks-http=http://localhost:8000/api/tus-hook
+            - --hooks-enabled-events=post-finish
+            - --max-size=10737418240
+          ports:
+            - name: tusd
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: tus-staging
+              mountPath: /data/tus-staging
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: tusd
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: tusd
+          {{- with .Values.tusd.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "canvas-bridge.fullname" . }}-uploads
+  labels:
+    {{- include "canvas-bridge.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.uploads.accessMode }}
+  storageClassName: {{ .Values.persistence.uploads.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.uploads.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "canvas-bridge.fullname" . }}-tus-staging
+  labels:
+    {{- include "canvas-bridge.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.tusStaging.accessMode }}
+  storageClassName: {{ .Values.persistence.tusStaging.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.tusStaging.size }}
