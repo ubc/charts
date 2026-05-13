@@ -7,7 +7,9 @@ metadata:
     {{- include "moodle.labels" . | nindent 4 }}
     tier: app
 spec:
+  {{- if not .Values.hpa.enabled }}
   replicas: {{ .Values.replicas }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "moodle.selectorLabels" . | nindent 6 }}
