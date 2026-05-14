@@ -31,7 +31,7 @@ spec:
                 name: {{ include "canvas-bridge.fullname" . }}-app
                 port:
                   number: 8000
-  {{- if and (hasKey .Values.ingress.annotations "kubernetes.io/tls-acme") (index .Values.ingress.annotations "kubernetes.io/tls-acme" | eq "true") }}
+  {{- if .Values.ingress.tls }}
   tls:
     - hosts:
         - {{ .Values.ingress.host }}

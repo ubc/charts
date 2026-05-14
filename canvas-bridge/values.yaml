@@ -19,6 +19,7 @@ service:
 ingress:
   enabled: true
   class: nginx
+  tls: true
   annotations:
     kubernetes.io/tls-acme: "true"
     # Allow large zip uploads through to tusd (up to its --max-size limit).
