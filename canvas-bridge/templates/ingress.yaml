@@ -1,0 +1,40 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "canvas-bridge.fullname" . }}
+  labels:
+    {{- include "canvas-bridge.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.class }}
+  ingressClassName: {{ .Values.ingress.class }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /files/
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "canvas-bridge.fullname" . }}-tusd
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "canvas-bridge.fullname" . }}-app
+                port:
+                  number: 8000
+  {{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tlsSecretName | default (printf "%s-tls" (include "canvas-bridge.fullname" .)) }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "canvas-bridge.fullname" . }}-app
+  labels:
+    {{- include "canvas-bridge.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 8000
+      targetPort: fastapi
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "canvas-bridge.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "canvas-bridge.fullname" . }}-tusd
+  labels:
+    {{- include "canvas-bridge.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 8080
+      targetPort: tusd
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "canvas-bridge.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: web
