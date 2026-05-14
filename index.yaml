@@ -591,6 +591,18 @@ entries:
     urls:
     - https://ubc.github.io/charts/axlrd-0.0.1.tgz
     version: 0.0.1
+  canvas-bridge:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2026-05-14T18:13:30.622668133Z"
+    description: FastAPI service bridging Canvas LMS course exports into WordPress
+      (UBC Blogs)
+    digest: f9aff74c26bc385b3966919e80e728c5d635931ec5d2931f5285ff245660ff58
+    name: canvas-bridge
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/canvas-bridge-0.1.1/canvas-bridge-0.1.1.tgz
+    version: 0.1.1
   cardscanner:
   - apiVersion: v2
     appVersion: 0.0.1
@@ -8998,4 +9010,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-14T17:54:43.26254251Z"
+generated: "2026-05-14T18:13:30.624814494Z"
