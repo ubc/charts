@@ -37,6 +37,8 @@ app:
   retentionHours: 24
   # Defaults to baseUrl when empty.
   samlEntityId: ""
+  samlAcsPath: /auth/saml/callback
+  samlSloPath: /auth/logout
   resources: {}
 
 # tusd sidecar (resumable uploads on port 8080)
