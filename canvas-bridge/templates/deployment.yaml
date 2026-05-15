@@ -79,6 +79,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "canvas-bridge.fullname" . }}
                   key: saml-idp-cert
+            - name: CLEANUP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "canvas-bridge.fullname" . }}
+                  key: cleanup-secret
           volumeMounts:
             - name: uploads
               mountPath: /data/uploads

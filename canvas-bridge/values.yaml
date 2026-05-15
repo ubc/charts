@@ -75,15 +75,19 @@ externalSecret:
     samlSpCert: saml-sp-cert
     samlSpKey: saml-sp-key
     samlIdpCert: saml-idp-cert
+    cleanupSecret: cleanup-secret
 
-# Cleanup CronJob — runs python -m app.cleanup to delete sessions older than
-# retentionHours. Mounts the uploads PVC.
+# Cleanup CronJob — calls POST /internal/cleanup on the app service.
+# No PVC mount required.
 cleanup:
   enabled: true
   schedule: "0 * * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
+  image:
+    repository: curlimages/curl
+    tag: "latest"
   resources: {}
 
 nodeSelector: {}

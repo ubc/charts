@@ -25,25 +25,25 @@ spec:
           {{- end }}
           containers:
             - name: cleanup
-              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-              imagePullPolicy: {{ .Values.image.pullPolicy }}
-              command: ["python", "-m", "app.cleanup"]
+              image: "{{ .Values.cleanup.image.repository }}:{{ .Values.cleanup.image.tag }}"
+              command:
+                - sh
+                - -c
+                - |
+                  curl -sf -X POST "${CANVAS_BRIDGE_URL}/internal/cleanup" \
+                    -H "X-Internal-Token: ${CLEANUP_SECRET}"
               env:
-                - name: DATA_DIR
-                  value: /data/uploads
-                - name: RETENTION_HOURS
-                  value: {{ .Values.app.retentionHours | quote }}
-              volumeMounts:
-                - name: uploads
-                  mountPath: /data/uploads
+                - name: CANVAS_BRIDGE_URL
+                  value: "http://{{ include "canvas-bridge.fullname" . }}"
+                - name: CLEANUP_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "canvas-bridge.fullname" . }}
+                      key: cleanup-secret
               {{- with .Values.cleanup.resources }}
               resources:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
-          volumes:
-            - name: uploads
-              persistentVolumeClaim:
-                claimName: {{ include "canvas-bridge.fullname" . }}-uploads
           {{- with .Values.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}
