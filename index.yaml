@@ -594,6 +594,17 @@ entries:
   canvas-bridge:
   - apiVersion: v2
     appVersion: latest
+    created: "2026-05-15T23:17:38.401092217Z"
+    description: FastAPI service bridging Canvas LMS course exports into WordPress
+      (UBC Blogs)
+    digest: cebed86d7d6ac1b06716458bced9dae662327e98a797dcf76f3bfa379396cc81
+    name: canvas-bridge
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/canvas-bridge-0.1.2/canvas-bridge-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: latest
     created: "2026-05-14T18:13:30.622668133Z"
     description: FastAPI service bridging Canvas LMS course exports into WordPress
       (UBC Blogs)
@@ -9010,4 +9021,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-14T18:13:30.624814494Z"
+generated: "2026-05-15T23:17:38.401924479Z"
