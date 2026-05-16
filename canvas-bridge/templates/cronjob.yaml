@@ -34,7 +34,7 @@ spec:
                     -H "X-Internal-Token: ${CLEANUP_SECRET}"
               env:
                 - name: CANVAS_BRIDGE_URL
-                  value: "http://{{ include "canvas-bridge.fullname" . }}"
+                  value: {{ .Values.cleanup.internalUrl | quote }}
                 - name: CLEANUP_SECRET
                   valueFrom:
                     secretKeyRef:

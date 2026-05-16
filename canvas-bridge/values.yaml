@@ -85,6 +85,9 @@ cleanup:
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
+  # Internal k8s service URL for the app — stays within the cluster, avoids ingress.
+  # Format: http://<release-name>-app:8000
+  internalUrl: ""
   image:
     repository: curlimages/curl
     tag: "latest"
