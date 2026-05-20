@@ -64,4 +64,29 @@ spec:
   {{- with .Values.db.postgres.extraManifest }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
+  {{- if .Values.db.postgres.exporter.enabled }}
+  podAnnotations:
+    {{- toYaml .Values.db.postgres.exporter.podAnnotations | nindent 4 }}
+  sidecars:
+    - name: postgres-exporter
+      image: {{ printf "%s:%s" .Values.db.postgres.exporter.image.repository (required "db.postgres.exporter.image.tag is required when db.postgres.exporter.enabled=true" .Values.db.postgres.exporter.image.tag) | quote }}
+      imagePullPolicy: {{ .Values.db.postgres.exporter.imagePullPolicy | quote }}
+      ports:
+        - name: metrics
+          containerPort: 9187
+      env:
+        - name: DATA_SOURCE_URI
+          value: "localhost:5432/postgres?sslmode=disable"
+        - name: DATA_SOURCE_USER
+          value: postgres
+        - name: DATA_SOURCE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ printf "postgres.%s.credentials.postgresql.acid.zalan.do" (include "moodle.postgresClusterName" .) | quote }}
+              key: password
+      {{- with .Values.db.postgres.exporter.resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- end }}
 {{- end -}}

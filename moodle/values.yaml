@@ -188,6 +188,23 @@ db:
       ## to spilo/WAL-G). Despite the legacy name, this is a count, not a duration.
       ## With one full backup per day, 7 ≈ one week of retention.
       retentionCount: 7
+    ## Prometheus postgres-exporter sidecar injected into each postgres pod
+    ## via the operator's sidecars field. Connects to localhost so no extra
+    ## network policy is needed. Authenticates as the operator-managed
+    ## `postgres` superuser (secret auto-created by the operator).
+    exporter:
+      enabled: false
+      image:
+        repository: prometheuscommunity/postgres-exporter
+        tag: ""  # required — set explicitly in each env's values file
+      imagePullPolicy: IfNotPresent
+      resources:
+        requests:
+          memory: 64Mi
+          cpu: 50m
+      podAnnotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
     ## Deep-merged into the rendered CR's spec: for fields not surfaced above.
     extraManifest: {}
 
