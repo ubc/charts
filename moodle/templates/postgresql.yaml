@@ -69,7 +69,7 @@ spec:
     {{- toYaml .Values.db.postgres.exporter.podAnnotations | nindent 4 }}
   sidecars:
     - name: postgres-exporter
-      image: {{ printf "%s:%s" .Values.db.postgres.exporter.image.repository (required "db.postgres.exporter.image.tag is required when db.postgres.exporter.enabled=true" .Values.db.postgres.exporter.image.tag) | quote }}
+      image: {{ printf "%s:%s" .Values.db.postgres.exporter.image.repository .Values.db.postgres.exporter.image.tag | quote }}
       imagePullPolicy: {{ .Values.db.postgres.exporter.imagePullPolicy | quote }}
       ports:
         - name: metrics

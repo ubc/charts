@@ -195,8 +195,8 @@ db:
     exporter:
       enabled: false
       image:
-        repository: prometheuscommunity/postgres-exporter
-        tag: ""  # required — set explicitly in each env's values file
+        repository: quay.io/prometheuscommunity/postgres-exporter
+        tag: "v0.19.1"
       imagePullPolicy: IfNotPresent
       resources:
         requests:
