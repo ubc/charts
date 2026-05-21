@@ -36,7 +36,9 @@ Database connection helpers — switch between the embedded UBC mariadb subchart
 and an externally managed database based on `db.enabled`.
 */}}
 {{- define "mediawiki.db.host" -}}
-{{- if .Values.db.enabled -}}
+{{- if .Values.db.hostOverride -}}
+  {{- .Values.db.hostOverride -}}
+{{- else if .Values.db.enabled -}}
   {{- if eq .Values.db.architecture "replication" -}}
     {{- printf "%s-primary" (include "mediawiki.db.fullname" .) | trunc 63 | trimSuffix "-" -}}
   {{- else -}}

@@ -149,6 +149,12 @@ db:
     size: 10Gi
     # storageClassName:
 
+  ## Override MEDIAWIKI_DB_HOST regardless of db.enabled. Useful for phased
+  ## migrations: keep db.enabled=true so the MariaDB subchart provisions the
+  ## CR + bootstrap restore, but pin the app's connection string to a stable
+  ## Service alias (e.g. an externally-managed Service) until cutover.
+  # hostOverride: my-db-alias-service
+
 ## External database settings — only used when `db.enabled` is false.
 ## The chart will read the password from `existingSecret`/`existingSecretPasswordKey`
 ## if both are set; otherwise it stores `externalDatabase.password` in a chart-owned
