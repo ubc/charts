@@ -82,7 +82,7 @@ into individual templates.
 - name: FLASK_ENV
   value: {{ .Values.app.flask.env }}
 - name: FLASK_DEBUG
-  value: {{ .Values.app.flask.debug }}
+  value: {{ .Values.app.flask.debug | quote }}
 - name: SECRET_KEY
   value: {{ .Values.app.flask.secretKey }}
 {{- if .Values.app.smtp.host }}
