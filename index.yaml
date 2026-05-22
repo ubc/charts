@@ -3462,6 +3462,16 @@ entries:
   ladistra:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-05-22T22:35:53.949705269Z"
+    description: ladistra
+    digest: 73fb46bfd1d0f4f0f525fcd3903aef2ca806c9553255a8342ac8e9226faf260e
+    name: ladistra
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ladistra-0.0.5/ladistra-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-05-22T22:24:18.576586009Z"
     description: ladistra
     digest: 4309dfaee309e007d4135f1568544a95db7f9a735f3f0f32448a05a5ab370467
@@ -9180,4 +9190,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-22T22:24:18.577407047Z"
+generated: "2026-05-22T22:35:53.950542023Z"
