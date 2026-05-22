@@ -98,6 +98,7 @@ db:
 
 app:
   flask:
+    app: "wsgi:app"
     env: staging
     secretKey: YrMPnLidOFprMuNmxpIc3dT1sd0LErZy
     debug: 1

@@ -77,6 +77,8 @@ into individual templates.
   value: {{ .Values.db.name }}
 - name: POSTGRES_HOST
   value: {{ .Values.db.host }}
+- name: FLASK_APP
+  value: {{ .Values.app.flask.app }}
 - name: FLASK_ENV
   value: {{ .Values.app.flask.env }}
 - name: FLASK_DEBUG
