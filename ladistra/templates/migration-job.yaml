@@ -63,27 +63,8 @@ spec:
               echo "Migrations complete."
           env:
             {{- include "ladistra.podEnv" . | nindent 12 }}
-          {{- if .Values.saml.enabled }}
-          volumeMounts:
-            - name: saml-certs
-              mountPath: {{ .Values.saml.serviceProvider.certMountPath }}
-              readOnly: true
-          {{- end }}
           {{- with .Values.migrations.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- if .Values.saml.enabled }}
-      volumes:
-        - name: saml-certs
-          secret:
-            secretName: {{ include "ladistra.fullname" . }}-saml
-            items:
-              - key: {{ .Values.saml.serviceProvider.keySecretKey }}
-                path: {{ .Values.saml.serviceProvider.keyFilename }}
-              - key: {{ .Values.saml.serviceProvider.certSecretKey }}
-                path: {{ .Values.saml.serviceProvider.certFilename }}
-              - key: {{ .Values.saml.serviceProvider.metadataSecretKey }}
-                path: {{ .Values.saml.serviceProvider.metadataFilename }}
-      {{- end }}
 {{- end }}

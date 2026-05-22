@@ -88,7 +88,7 @@ into individual templates.
 {{- if .Values.app.smtp.host }}
 - name: MAIL_SERVER
   value: {{ .Values.app.smtp.host }}
-{{- end -}}
+{{- end }}
 - name: MAIL_PORT
   value: {{ .Values.app.smtp.port | quote}}
 - name: MAIL_USE_TLS
@@ -100,5 +100,5 @@ into individual templates.
 {{- if .Values.app.smtp.sender }}
 - name: MAIL_DEFAULT_SENDER
   value: {{ .Values.app.smtp.sender | quote }}
-{{- end -}}
+{{- end }}
 {{- end -}}
