@@ -3459,6 +3459,17 @@ entries:
     urls:
     - https://github.com/ubc/charts/releases/download/ipeer-ng-0.1.0/ipeer-ng-0.1.0.tgz
     version: 0.1.0
+  ladistra:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-05-22T21:41:07.695608257Z"
+    description: ladistra
+    digest: 5548b42942c49a5e2a15308256543ad7830caa9b0bc6e5e1d6058b12fd49e850
+    name: ladistra
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ladistra-0.0.1/ladistra-0.0.1.tgz
+    version: 0.0.1
   ltbot:
   - apiVersion: v1
     created: "2022-10-07T02:53:18.348909835Z"
@@ -9139,4 +9150,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-21T22:43:36.021981179Z"
+generated: "2026-05-22T21:41:07.696298442Z"
