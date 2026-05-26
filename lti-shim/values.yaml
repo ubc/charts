@@ -55,6 +55,8 @@ mail:
   relay:
     domains: "[example.com]"
     host: "[mail.example.com]"
+    # whitelist ubc relay server ip range
+    whitelist: "10.0.0.0/24"
     sasl:
       # please use string "yes" or "no"
       enable: "no"
