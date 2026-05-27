@@ -63,11 +63,11 @@ spec:
 apiVersion: rds.services.k8s.aws/v1alpha1
 kind: DBParameterGroup
 metadata:
-  name: {{ include "webwork.fullname" . }}-pg
+  name: {{ include "webwork.fullname" . }}-pg-{{ .Values.db.ack.engineVersion | replace "." "" }}
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
 spec:
-  name: {{ include "webwork.fullname" . }}-pg
+  name: {{ include "webwork.fullname" . }}-pg-{{ .Values.db.ack.engineVersion | replace "." "" }}
   family: {{ .Values.db.ack.parameterGroupFamily | default (printf "mariadb%s" .Values.db.ack.engineVersion) | quote }}
   description: "WeBWorK {{ include "webwork.fullname" . }} MariaDB parameters"
   parameterOverrides:
@@ -82,7 +82,7 @@ metadata:
 spec:
   dbInstanceIdentifier: {{ include "webwork.fullname" . }}
   dbInstanceClass: {{ .Values.db.ack.dbInstanceClass | quote }}
-  dbParameterGroupName: {{ include "webwork.fullname" . }}-pg
+  dbParameterGroupName: {{ include "webwork.fullname" . }}-pg-{{ .Values.db.ack.engineVersion | replace "." "" }}
   engine: mariadb
   engineVersion: {{ .Values.db.ack.engineVersion | quote }}
   masterUsername: {{ .Values.db.auth.username | quote }}
