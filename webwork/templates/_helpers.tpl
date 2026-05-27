@@ -103,11 +103,16 @@ securityContext:
   {{- toYaml .Values.securityContext | nindent 12 }}
 image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
 imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- if .Values.externalSecrets.enabled }}
+envFrom:
+- secretRef:
+    name: {{ .Values.externalSecrets.secretName }}
+{{- end }}
 env:
 - name: WEBWORK_SECRET
   valueFrom:
     secretKeyRef:
-      name: {{ include "webwork.fullname" . }}
+      name: {{ if .Values.externalSecrets.enabled }}{{ .Values.externalSecrets.secretName }}{{ else }}{{ include "webwork.fullname" . }}{{ end }}
       key: webwork_secret
 - name: WEBWORK_DB_DRIVER
   value: {{ .Values.db.db.driver | quote }}
@@ -308,7 +313,10 @@ Returns the secretKeyRef block (name + key lines) for WEBWORK_DB_PASSWORD
 based on the effective provider. Indent with nindent after inclusion.
 */}}
 {{- define "webwork.db.passwordSecretRef" -}}
-{{- if eq (include "webwork.db.provider" .) "local" -}}
+{{- if .Values.externalSecrets.enabled -}}
+name: {{ .Values.externalSecrets.secretName }}
+key: db_password
+{{- else if eq (include "webwork.db.provider" .) "local" -}}
 name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
 key: password-{{ .Values.db.auth.username }}
 {{- else if eq (include "webwork.db.provider" .) "ack" -}}

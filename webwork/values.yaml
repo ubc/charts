@@ -18,6 +18,15 @@ timezone: America/Vancouver
 systemTimezone: America/Vancouver
 # mojolicious secret passphrase - leave empty to auto-generate a stable random value
 secret: ""
+
+# External Secrets Operator integration. When enabled, the chart does NOT
+# generate the webwork_secret / ack-db-password Secrets; instead it sources
+# webwork_secret + db_password (and, via envFrom, the embedded config secrets
+# such as WW_CALIPER_API_KEY and WW_LTI_*_{PUBLIC,PRIVATE}_KEY consumed by
+# $ENV{...} in webworkFiles) from an ExternalSecret-managed Secret.
+externalSecrets:
+  enabled: false
+  secretName: ""
 rHost: ""
 supportEmail: support@example.edu
 # file upload size limit in bytes

@@ -87,8 +87,8 @@ spec:
   engineVersion: {{ .Values.db.ack.engineVersion | quote }}
   masterUsername: {{ .Values.db.auth.username | quote }}
   masterUserPassword:
-    name: {{ include "webwork.fullname" . }}-ack-db-password
-    key: password
+    name: {{ if .Values.externalSecrets.enabled }}{{ .Values.externalSecrets.secretName }}{{ else }}{{ include "webwork.fullname" . }}-ack-db-password{{ end }}
+    key: {{ if .Values.externalSecrets.enabled }}db_password{{ else }}password{{ end }}
   dbName: {{ .Values.db.auth.database | quote }}
   allocatedStorage: {{ .Values.db.ack.allocatedStorage }}
   dbSubnetGroupName: {{ include "webwork.fullname" . }}-db-subnet-group
