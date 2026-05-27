@@ -228,7 +228,7 @@ volumeMounts:
   mountPath: /opt/webwork/webwork2/conf/localOverrides.conf
   subPath: localOverrides.conf
   {{- end }}
-  {{- if (.Values.webworkFiles).authen_saml2 }}
+  {{- if or (.Values.webworkFiles).authen_saml2 .Values.externalSecrets.saml2SecretName }}
 - name: authen-saml2-config
   mountPath: /opt/webwork/webwork2/conf/authen_saml2.yml
   subPath: authen_saml2.yml
@@ -281,7 +281,14 @@ volumeMounts:
     - key: localOverrides
       path: localOverrides.conf
 {{- end }}
-{{- if (.Values.webworkFiles).authen_saml2 }}
+{{- if .Values.externalSecrets.saml2SecretName }}
+- name: authen-saml2-config
+  secret:
+    secretName: {{ .Values.externalSecrets.saml2SecretName }}
+    items:
+    - key: authen_saml2.yml
+      path: authen_saml2.yml
+{{- else if (.Values.webworkFiles).authen_saml2 }}
 - name: authen-saml2-config
   configMap:
     name: {{ template "webwork.fullname" . }}

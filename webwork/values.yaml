@@ -27,6 +27,11 @@ secret: ""
 externalSecrets:
   enabled: false
   secretName: ""
+  # Optional: name of an ExternalSecret-managed Secret holding a rendered
+  # `authen_saml2.yml` key (static SAML config + SP cert/signing_key from Vault).
+  # When set, conf/authen_saml2.yml is mounted from it instead of the ConfigMap,
+  # keeping the SP keypair out of values.
+  saml2SecretName: ""
 rHost: ""
 supportEmail: support@example.edu
 # file upload size limit in bytes
