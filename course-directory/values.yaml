@@ -100,6 +100,7 @@ app:
   flask:
     env: staging
     secretKey: YrMPnLidOFprMuNmxpIc3dT1sd0LErZy
+  analyticsPepper: XySNgbIi6VW59iZjZlTeKazYKUYh1w74
   port: 5000
   smtp:
     host: mail.example.com

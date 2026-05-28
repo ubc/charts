@@ -85,6 +85,8 @@ into individual templates.
   value: {{ .Values.app.flask.env }}
 - name: SECRET_KEY
   value: {{ .Values.app.flask.secretKey }}
+- name: ANALYTICS_PEPPER
+  value: {{ .Values.app.flask.analyticsPepper }}
 - name: SMTP_HOST
   value: {{ .Values.app.smtp.host }}
 - name: SMTP_PORT
