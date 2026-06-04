@@ -100,13 +100,18 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{/*
 Command prefix that drops privileges to the unprivileged web-server user.
 
-The container runs as root so the image entrypoint can fix file ownership
-("Fixing ownership and permissions"); the long-running app process then drops
-to www-data (uid 33) — matching the web pod's hypnotoad — so every WeBWorK
-process runs as the same user. This keeps EFS writes consistent: the efs-sc
-access points enforce gid 33, and WeBWorK gates file operations behind Perl
--w/-r checks evaluated against the caller's uid. `-E` preserves the environment
-(DB creds, WW_* secrets) across the privilege drop.
+The container starts as root so it can `sudo -u www-data` (drop privileges);
+the long-running app process runs as www-data (uid 33) — matching the web pod's
+hypnotoad — so every WeBWorK process runs as the same user. `-E` preserves the
+environment (DB creds, WW_* secrets) across the privilege drop.
+
+EFS ownership: the writable access points (courses, htdocs/tmp, htdocs/DATA,
+logs) enforce PosixUser uid=33/gid=33, so every file is born owned by www-data
+and is directly writable by the app — no dependency on group-write bits or on
+the entrypoint's "Fixing ownership and permissions" pass (which is now best-
+effort / a no-op, since root-in-pod is squashed to uid 33 on those mounts). The
+library access point stays uid=0/gid=33: it's the read-only OPL, consumed via
+the world-read bit, and keeps OPL-update (root) able to write it.
 
 Renders as inline JSON-array elements with a trailing comma, e.g.
   args: [{{ include "webwork.dropPrivPrefix" . }} 'bin/webwork2', 'minion', 'worker']
