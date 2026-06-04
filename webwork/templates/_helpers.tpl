@@ -97,6 +97,25 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 
+{{/*
+Command prefix that drops privileges to the unprivileged web-server user.
+
+The container runs as root so the image entrypoint can fix file ownership
+("Fixing ownership and permissions"); the long-running app process then drops
+to www-data (uid 33) — matching the web pod's hypnotoad — so every WeBWorK
+process runs as the same user. This keeps EFS writes consistent: the efs-sc
+access points enforce gid 33, and WeBWorK gates file operations behind Perl
+-w/-r checks evaluated against the caller's uid. `-E` preserves the environment
+(DB creds, WW_* secrets) across the privilege drop.
+
+Renders as inline JSON-array elements with a trailing comma, e.g.
+  args: [{{ include "webwork.dropPrivPrefix" . }} 'bin/webwork2', 'minion', 'worker']
+*/}}
+{{- define "webwork.dropPrivPrefix" -}}
+'sudo', '-E', '-u', {{ .Values.appUser | default "www-data" | squote }},
+{{- end -}}
+
+
 {{/* webwork container spec */}}
 {{- define "webwork.app.spec" }}
 securityContext:

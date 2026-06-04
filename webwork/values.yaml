@@ -16,6 +16,11 @@ fullnameOverride: ""
 rootUrl: http://localhost
 timezone: America/Vancouver
 systemTimezone: America/Vancouver
+# Unprivileged user the long-running WeBWorK processes (web hypnotoad, minion +
+# lti1p3 workers, LTI cronjobs) drop to via `sudo -E -u`. The container runs as
+# root so the entrypoint can fix file ownership; the app then drops to this user.
+# Keep aligned with the EFS access-point gid (www-data = uid/gid 33).
+appUser: www-data
 # mojolicious secret passphrase - leave empty to auto-generate a stable random value
 secret: ""
 

@@ -109,7 +109,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-worker-lti1p3
           {{- include "webwork.app.spec" . | indent 10 }}
-          args: ['./lib/DelayedJob/Run/run_all_jobs.pl']
+          args: [{{ include "webwork.dropPrivPrefix" . }} './lib/DelayedJob/Run/run_all_jobs.pl']
           resources:
             {{- toYaml .Values.worker.lti1p3.resources | nindent 12 }}
       volumes:
@@ -164,7 +164,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-worker-mojo
           {{- include "webwork.app.spec" . | indent 10 }}
-          args: ['sudo', '-E', '-u', 'www-data', 'bin/webwork2', 'minion', 'worker', '-m', 'production']
+          args: [{{ include "webwork.dropPrivPrefix" . }} 'bin/webwork2', 'minion', 'worker', '-m', 'production']
           resources:
             {{- toYaml .Values.worker.mojo.resources | nindent 12 }}
       volumes:
