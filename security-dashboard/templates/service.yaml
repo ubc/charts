@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "security-dashboard.fullname" . }}
+  labels:
+    {{- include "security-dashboard.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.app.port }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "security-dashboard.selectorLabels" . | nindent 4 }}
