@@ -8248,6 +8248,17 @@ entries:
     urls:
     - https://ubc.github.io/charts/satis-0.1.0.tgz
     version: 0.1.0
+  security-dashboard:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-06-11T22:19:33.026532153Z"
+    description: security-dashboard
+    digest: cba06a48aa4b73a28340f6f023c9a478faab7fc07ef9534aa729a39a3ffe4e89
+    name: security-dashboard
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/security-dashboard-0.0.1/security-dashboard-0.0.1.tgz
+    version: 0.0.1
   statspace:
   - apiVersion: v2
     appVersion: 5.6.0
@@ -9208,4 +9219,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-28T21:19:34.318020285Z"
+generated: "2026-06-11T22:19:33.027190037Z"
