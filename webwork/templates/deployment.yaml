@@ -12,6 +12,13 @@ spec:
   selector:
     matchLabels:
       {{- include "webwork.selectorLabels" . | nindent 6 }}
+      # tier scopes the selector to WEB pods: without it the selector also
+      # matches worker pods (superset labels) and the HPA computes utilization
+      # over workers that have no resource requests -> metrics unavailable.
+      # NOTE selector changes are immutable: upgrading an existing release
+      # requires `kubectl delete deployment <fullname> --cascade=orphan` first,
+      # then deleting the orphaned old ReplicaSet after the upgrade.
+      tier: app
   template:
     metadata:
       annotations:
