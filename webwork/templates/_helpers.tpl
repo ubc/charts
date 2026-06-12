@@ -236,6 +236,9 @@ env:
       {{- include "webwork.db.passwordSecretRef" . | nindent 6 }}
 - name: SHIB_ODBC_USER
   value: {{ .Values.db.auth.username | quote }}
+{{- with .Values.extraEnv }}
+{{ toYaml . }}
+{{- end }}
 volumeMounts:
 - name: webwork-course-data
   mountPath: /opt/webwork/courses

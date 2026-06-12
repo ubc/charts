@@ -64,6 +64,15 @@ ltiClient:
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
+## storageClass guidance (EKS/EFS): the WeBWorK web + workers all run as
+## www-data (uid 33). For the WRITABLE mounts the app must own/edit — course,
+## htdocsTmp, htdocsData, logs — use an access point that enforces uid=33 so
+## files are born www-data-owned (no chown/group-write dependency, no orphan
+## *_tmp dirs). On this platform that is StorageClass `efs-sc-uid33`. Keep the
+## read-only OPL `library` on `efs-sc` (uid=0): it is consumed via the
+## world-read bit and refreshed by root tooling (OPL-update). (Dynamic
+## provisioning; for a data migration onto pre-created APs, bind static PVs
+## instead and match storageClass to the PV.)
 coursePersistence:
   enabled: false
   ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
@@ -167,6 +176,13 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+# Startup probe for the web deployment. The default 40 x 15s = 600s is enough
+# for a normal boot, but a FIRST deploy on empty storage clones the ~2.3GB OPL
+# library and needs much longer — raise failureThreshold (e.g. 160) for that.
+startupProbe:
+  failureThreshold: 40
+  periodSeconds: 15
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -357,3 +373,10 @@ cronjob:
     schedule: "0 13 * * *"
     #startingDeadlineSeconds:
     restartPolicy: Never
+
+# Extra environment variables appended to all webwork containers (web +
+# workers). e.g. MOJO_TRUSTED_PROXIES so hypnotoad resolves the real client
+# IP through a multi-hop proxy chain (upstream ALB -> internal ALB).
+extraEnv: []
+# - name: MOJO_TRUSTED_PROXIES
+#   value: "10.0.0.0/16"

@@ -50,8 +50,8 @@ spec:
             httpGet:
               path: /webwork2
               port: http
-            failureThreshold: 40
-            periodSeconds: 15
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
           readinessProbe:
             httpGet:
               path: /webwork2
