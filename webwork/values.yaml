@@ -200,8 +200,19 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
+  # NOTE: requires metrics-server on the cluster and resources.requests on the
+  # web container (utilization is a percentage of the request). webwork is
+  # memory-heavy at idle (~2Gi) — scale on CPU, not memory.
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+  # scaleDown stabilization (seconds) — webwork load is bursty around deadlines
+  scaleDownStabilizationSeconds: 300
+
+# PodDisruptionBudget for the WEB deployment only (workers/R excluded): keeps
+# at least minAvailable pod through node consolidation / AMI drift evictions.
+pdb:
+  enabled: false
+  minAvailable: 1
 
 nodeSelector: {}
 
