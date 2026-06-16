@@ -97,17 +97,46 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 
+{{/*
+Command prefix that drops privileges to the unprivileged web-server user.
+
+The container starts as root so it can `sudo -u www-data` (drop privileges);
+the long-running app process runs as www-data (uid 33) — matching the web pod's
+hypnotoad — so every WeBWorK process runs as the same user. `-E` preserves the
+environment (DB creds, WW_* secrets) across the privilege drop.
+
+EFS ownership: the writable access points (courses, htdocs/tmp, htdocs/DATA,
+logs) enforce PosixUser uid=33/gid=33, so every file is born owned by www-data
+and is directly writable by the app — no dependency on group-write bits or on
+the entrypoint's "Fixing ownership and permissions" pass (which is now best-
+effort / a no-op, since root-in-pod is squashed to uid 33 on those mounts). The
+library access point stays uid=0/gid=33: it's the read-only OPL, consumed via
+the world-read bit, and keeps OPL-update (root) able to write it.
+
+Renders as inline JSON-array elements with a trailing comma, e.g.
+  args: [{{ include "webwork.dropPrivPrefix" . }} 'bin/webwork2', 'minion', 'worker']
+*/}}
+{{- define "webwork.dropPrivPrefix" -}}
+'sudo', '-E', '-u', {{ .Values.appUser | default "www-data" | squote }},
+{{- end -}}
+
+
 {{/* webwork container spec */}}
 {{- define "webwork.app.spec" }}
 securityContext:
   {{- toYaml .Values.securityContext | nindent 12 }}
 image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
 imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- if .Values.externalSecrets.enabled }}
+envFrom:
+- secretRef:
+    name: {{ .Values.externalSecrets.secretName }}
+{{- end }}
 env:
 - name: WEBWORK_SECRET
   valueFrom:
     secretKeyRef:
-      name: {{ include "webwork.fullname" . }}
+      name: {{ if .Values.externalSecrets.enabled }}{{ .Values.externalSecrets.secretName }}{{ else }}{{ include "webwork.fullname" . }}{{ end }}
       key: webwork_secret
 - name: WEBWORK_DB_DRIVER
   value: {{ .Values.db.db.driver | quote }}
@@ -207,6 +236,9 @@ env:
       {{- include "webwork.db.passwordSecretRef" . | nindent 6 }}
 - name: SHIB_ODBC_USER
   value: {{ .Values.db.auth.username | quote }}
+{{- with .Values.extraEnv }}
+{{ toYaml . }}
+{{- end }}
 volumeMounts:
 - name: webwork-course-data
   mountPath: /opt/webwork/courses
@@ -223,7 +255,7 @@ volumeMounts:
   mountPath: /opt/webwork/webwork2/conf/localOverrides.conf
   subPath: localOverrides.conf
   {{- end }}
-  {{- if (.Values.webworkFiles).authen_saml2 }}
+  {{- if or (.Values.webworkFiles).authen_saml2 .Values.externalSecrets.saml2SecretName }}
 - name: authen-saml2-config
   mountPath: /opt/webwork/webwork2/conf/authen_saml2.yml
   subPath: authen_saml2.yml
@@ -276,7 +308,14 @@ volumeMounts:
     - key: localOverrides
       path: localOverrides.conf
 {{- end }}
-{{- if (.Values.webworkFiles).authen_saml2 }}
+{{- if .Values.externalSecrets.saml2SecretName }}
+- name: authen-saml2-config
+  secret:
+    secretName: {{ .Values.externalSecrets.saml2SecretName }}
+    items:
+    - key: authen_saml2.yml
+      path: authen_saml2.yml
+{{- else if (.Values.webworkFiles).authen_saml2 }}
 - name: authen-saml2-config
   configMap:
     name: {{ template "webwork.fullname" . }}
@@ -308,7 +347,10 @@ Returns the secretKeyRef block (name + key lines) for WEBWORK_DB_PASSWORD
 based on the effective provider. Indent with nindent after inclusion.
 */}}
 {{- define "webwork.db.passwordSecretRef" -}}
-{{- if eq (include "webwork.db.provider" .) "local" -}}
+{{- if .Values.externalSecrets.enabled -}}
+name: {{ .Values.externalSecrets.secretName }}
+key: db_password
+{{- else if eq (include "webwork.db.provider" .) "local" -}}
 name: {{ printf "%s-user-password" (include "call-nested" (list . "db" "mariadb.fullname")) }}
 key: password-{{ .Values.db.auth.username }}
 {{- else if eq (include "webwork.db.provider" .) "ack" -}}

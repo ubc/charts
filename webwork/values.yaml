@@ -16,8 +16,27 @@ fullnameOverride: ""
 rootUrl: http://localhost
 timezone: America/Vancouver
 systemTimezone: America/Vancouver
+# Unprivileged user the long-running WeBWorK processes (web hypnotoad, minion +
+# lti1p3 workers, LTI cronjobs) drop to via `sudo -E -u`. The container runs as
+# root so the entrypoint can fix file ownership; the app then drops to this user.
+# Keep aligned with the EFS access-point gid (www-data = uid/gid 33).
+appUser: www-data
 # mojolicious secret passphrase - leave empty to auto-generate a stable random value
 secret: ""
+
+# External Secrets Operator integration. When enabled, the chart does NOT
+# generate the webwork_secret / ack-db-password Secrets; instead it sources
+# webwork_secret + db_password (and, via envFrom, the embedded config secrets
+# such as WW_CALIPER_API_KEY and WW_LTI_*_{PUBLIC,PRIVATE}_KEY consumed by
+# $ENV{...} in webworkFiles) from an ExternalSecret-managed Secret.
+externalSecrets:
+  enabled: false
+  secretName: ""
+  # Optional: name of an ExternalSecret-managed Secret holding a rendered
+  # `authen_saml2.yml` key (static SAML config + SP cert/signing_key from Vault).
+  # When set, conf/authen_saml2.yml is mounted from it instead of the ConfigMap,
+  # keeping the SP keypair out of values.
+  saml2SecretName: ""
 rHost: ""
 supportEmail: support@example.edu
 # file upload size limit in bytes
@@ -45,6 +64,15 @@ ltiClient:
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
+## storageClass guidance (EKS/EFS): the WeBWorK web + workers all run as
+## www-data (uid 33). For the WRITABLE mounts the app must own/edit — course,
+## htdocsTmp, htdocsData, logs — use an access point that enforces uid=33 so
+## files are born www-data-owned (no chown/group-write dependency, no orphan
+## *_tmp dirs). On this platform that is StorageClass `efs-sc-uid33`. Keep the
+## read-only OPL `library` on `efs-sc` (uid=0): it is consumed via the
+## world-read bit and refreshed by root tooling (OPL-update). (Dynamic
+## provisioning; for a data migration onto pre-created APs, bind static PVs
+## instead and match storageClass to the PV.)
 coursePersistence:
   enabled: false
   ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
@@ -149,6 +177,13 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# Startup probe for the web deployment. The default 40 x 15s = 600s is enough
+# for a normal boot, but a FIRST deploy on empty storage clones the ~2.3GB OPL
+# library and needs much longer — raise failureThreshold (e.g. 160) for that.
+startupProbe:
+  failureThreshold: 40
+  periodSeconds: 15
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -165,8 +200,19 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
+  # NOTE: requires metrics-server on the cluster and resources.requests on the
+  # web container (utilization is a percentage of the request). webwork is
+  # memory-heavy at idle (~2Gi) — scale on CPU, not memory.
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+  # scaleDown stabilization (seconds) — webwork load is bursty around deadlines
+  scaleDownStabilizationSeconds: 300
+
+# PodDisruptionBudget for the WEB deployment only (workers/R excluded): keeps
+# at least minAvailable pod through node consolidation / AMI drift evictions.
+pdb:
+  enabled: false
+  minAvailable: 1
 
 nodeSelector: {}
 
@@ -338,3 +384,10 @@ cronjob:
     schedule: "0 13 * * *"
     #startingDeadlineSeconds:
     restartPolicy: Never
+
+# Extra environment variables appended to all webwork containers (web +
+# workers). e.g. MOJO_TRUSTED_PROXIES so hypnotoad resolves the real client
+# IP through a multi-hop proxy chain (upstream ALB -> internal ALB).
+extraEnv: []
+# - name: MOJO_TRUSTED_PROXIES
+#   value: "10.0.0.0/16"

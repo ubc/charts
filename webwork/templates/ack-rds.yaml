@@ -9,9 +9,15 @@ metadata:
   name: {{ include "webwork.fullname" . }}-rds-endpoint
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
-data:
-  endpoint: ""
-  port: ""
+# NOTE: do NOT template `data.endpoint`/`data.port` here. The ACK FieldExport
+# resources below populate those keys from the live DBInstance status. If Helm
+# also manages them, the two field managers fight on every `helm upgrade`:
+# a plain upgrade fails with an apply conflict, and `--force-conflicts` blanks
+# the DB endpoint (pods then start with an empty WEBWORK_DB_HOST and hang on
+# "Waiting for database"). Leaving the keys to the FieldExport makes pods with
+# a required configMapKeyRef wait (CreateContainerConfigError) until the real
+# values land, which is the desired first-boot behavior.
+{{- if not .Values.db.ack.existingSecurityGroupID }}
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: SecurityGroup
@@ -31,6 +37,7 @@ spec:
     ipRanges:
     - cidrIP: {{ . | quote }}
   {{- end }}
+{{- end }}
 ---
 apiVersion: rds.services.k8s.aws/v1alpha1
 kind: DBSubnetGroup
@@ -46,6 +53,26 @@ spec:
   - {{ . | quote }}
   {{- end }}
 ---
+# RDS MariaDB enables binary logging (for backups/replication) but the master
+# user lacks SUPER, so creating stored functions/triggers fails unless
+# log_bin_trust_function_creators=1. WeBWorK's Minion job-queue migration
+# (Mojo::mysql) creates a function and otherwise dies partway, leaving the
+# minion_* schema incomplete and the mojo worker crash-looping on
+# "Table 'minion_workers' doesn't exist". The default RDS parameter group is
+# not editable, so attach a custom one.
+apiVersion: rds.services.k8s.aws/v1alpha1
+kind: DBParameterGroup
+metadata:
+  name: {{ include "webwork.fullname" . }}-pg-{{ .Values.db.ack.engineVersion | replace "." "" }}
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+spec:
+  name: {{ include "webwork.fullname" . }}-pg-{{ .Values.db.ack.engineVersion | replace "." "" }}
+  family: {{ .Values.db.ack.parameterGroupFamily | default (printf "mariadb%s" .Values.db.ack.engineVersion) | quote }}
+  description: "WeBWorK {{ include "webwork.fullname" . }} MariaDB parameters"
+  parameterOverrides:
+    log_bin_trust_function_creators: "1"
+---
 apiVersion: rds.services.k8s.aws/v1alpha1
 kind: DBInstance
 metadata:
@@ -55,23 +82,24 @@ metadata:
 spec:
   dbInstanceIdentifier: {{ include "webwork.fullname" . }}
   dbInstanceClass: {{ .Values.db.ack.dbInstanceClass | quote }}
+  dbParameterGroupName: {{ include "webwork.fullname" . }}-pg-{{ .Values.db.ack.engineVersion | replace "." "" }}
   engine: mariadb
   engineVersion: {{ .Values.db.ack.engineVersion | quote }}
   masterUsername: {{ .Values.db.auth.username | quote }}
   masterUserPassword:
-    name: {{ include "webwork.fullname" . }}-ack-db-password
-    key: password
+    name: {{ if .Values.externalSecrets.enabled }}{{ .Values.externalSecrets.secretName }}{{ else }}{{ include "webwork.fullname" . }}-ack-db-password{{ end }}
+    key: {{ if .Values.externalSecrets.enabled }}db_password{{ else }}password{{ end }}
   dbName: {{ .Values.db.auth.database | quote }}
   allocatedStorage: {{ .Values.db.ack.allocatedStorage }}
   dbSubnetGroupName: {{ include "webwork.fullname" . }}-db-subnet-group
+{{- if .Values.db.ack.existingSecurityGroupID }}
+  vpcSecurityGroupIDs:
+  - {{ .Values.db.ack.existingSecurityGroupID | quote }}
+{{- else }}
   vpcSecurityGroupRefs:
   - from:
       name: {{ include "webwork.fullname" . }}-rds-sg
-  # NOTE: vpcSecurityGroupRefs is an ACK cross-resource reference supported in
-  # rds-controller >= 0.1.x. If your ACK RDS controller version does not support it,
-  # replace with:
-  #   vpcSecurityGroupIDs:
-  #   - <sg-id>   # supply after the SecurityGroup CRD is reconciled
+{{- end }}
   multiAZ: {{ .Values.db.ack.multiAZ }}
   storageType: {{ .Values.db.ack.storageType | quote }}
   storageEncrypted: {{ .Values.db.ack.storageEncrypted }}
@@ -90,7 +118,7 @@ spec:
       name: {{ include "webwork.fullname" . }}
     path: .status.endpoint.address
   to:
-    kind: ConfigMap
+    kind: configmap
     name: {{ include "webwork.fullname" . }}-rds-endpoint
     namespace: {{ .Release.Namespace }}
     key: endpoint
@@ -109,7 +137,7 @@ spec:
       name: {{ include "webwork.fullname" . }}
     path: .status.endpoint.port
   to:
-    kind: ConfigMap
+    kind: configmap
     name: {{ include "webwork.fullname" . }}-rds-endpoint
     namespace: {{ .Release.Namespace }}
     key: port

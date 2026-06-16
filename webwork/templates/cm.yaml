@@ -8,8 +8,10 @@ metadata:
 data:
   localOverrides: |
     {{ (.Values.webworkFiles).localOverrides | nindent 4 }}
+  {{- if (.Values.webworkFiles).authen_saml2 }}
   authen_saml2: |
     {{ (.Values.webworkFiles).authen_saml2 | nindent 4 }}
+  {{- end }}
 {{- end }}
 
 {{- if .Values.shibd.idp.attribute_map }}

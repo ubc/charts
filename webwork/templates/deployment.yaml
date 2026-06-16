@@ -12,6 +12,13 @@ spec:
   selector:
     matchLabels:
       {{- include "webwork.selectorLabels" . | nindent 6 }}
+      # tier scopes the selector to WEB pods: without it the selector also
+      # matches worker pods (superset labels) and the HPA computes utilization
+      # over workers that have no resource requests -> metrics unavailable.
+      # NOTE selector changes are immutable: upgrading an existing release
+      # requires `kubectl delete deployment <fullname> --cascade=orphan` first,
+      # then deleting the orphaned old ReplicaSet after the upgrade.
+      tier: app
   template:
     metadata:
       annotations:
@@ -24,6 +31,7 @@ spec:
         {{- end }}
       labels:
         {{- include "webwork.selectorLabels" . | nindent 8 }}
+        tier: app
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -50,8 +58,8 @@ spec:
             httpGet:
               path: /webwork2
               port: http
-            failureThreshold: 40
-            periodSeconds: 15
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
           readinessProbe:
             httpGet:
               path: /webwork2
@@ -109,7 +117,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-worker-lti1p3
           {{- include "webwork.app.spec" . | indent 10 }}
-          args: ['./lib/DelayedJob/Run/run_all_jobs.pl']
+          args: [{{ include "webwork.dropPrivPrefix" . }} './lib/DelayedJob/Run/run_all_jobs.pl']
           resources:
             {{- toYaml .Values.worker.lti1p3.resources | nindent 12 }}
       volumes:
@@ -164,7 +172,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-worker-mojo
           {{- include "webwork.app.spec" . | indent 10 }}
-          args: ['sudo', '-E', '-u', 'www-data', 'bin/webwork2', 'minion', 'worker', '-m', 'production']
+          args: [{{ include "webwork.dropPrivPrefix" . }} 'bin/webwork2', 'minion', 'worker', '-m', 'production']
           resources:
             {{- toYaml .Values.worker.mojo.resources | nindent 12 }}
       volumes:

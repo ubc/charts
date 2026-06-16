@@ -20,6 +20,7 @@ spec:
       {{- end }}
   selector:
     {{- include "webwork.selectorLabels" . | nindent 4 }}
+    tier: app
 
 {{- if .Values.shibd.enabled }}
 ---
