@@ -4112,6 +4112,16 @@ entries:
   mariadb:
   - apiVersion: v2
     appVersion: "10.6"
+    created: "2026-06-16T20:16:58.411853504Z"
+    description: A Helm chart for MariaDB
+    digest: 3596c6376a5c111d2b5d2437856b35a07c7a5dfae83d061550a3340df1165208
+    name: mariadb
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/mariadb-0.1.25/mariadb-0.1.25.tgz
+    version: 0.1.25
+  - apiVersion: v2
+    appVersion: "10.6"
     created: "2026-05-02T05:12:12.566505329Z"
     description: A Helm chart for MariaDB
     digest: 4e046e8d52f5522dbca4d1f8571776ce73167bde3c82919b285a4cf21968c15d
@@ -4433,6 +4443,33 @@ entries:
     - https://ubc.github.io/charts/mattermost-0.1.0.tgz
     version: 0.1.0
   mediawiki:
+  - apiVersion: v2
+    appVersion: 1.43.4
+    created: "2026-06-16T20:16:58.584775579Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: Extremely powerful, scalable software and a feature-rich wiki implementation
+      that uses PHP to process and display data stored in a database.
+    digest: 62d7409ec928f9a3724e8bcb7d1e26b92035401766703f33986fa8e0b1e5e3c4
+    home: http://www.mediawiki.org/
+    keywords:
+    - mediawiki
+    - wiki
+    - http
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: mediawiki
+    sources:
+    - https://github.com/ubc/mediawiki-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/mediawiki-0.9.5/mediawiki-0.9.5.tgz
+    version: 0.9.5
   - apiVersion: v2
     appVersion: 1.43.4
     created: "2026-05-21T22:43:36.021135118Z"
@@ -5974,6 +6011,35 @@ entries:
     - https://ubc.github.io/charts/mediawiki-0.1.0.tgz
     version: 0.1.0
   moodle:
+  - apiVersion: v2
+    appVersion: 4.5.8
+    created: "2026-06-16T20:16:58.7680448Z"
+    dependencies:
+    - alias: db
+      condition: db.mariadb.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      tags:
+      - moodle-database
+      version: '*'
+    description: Moodle is a learning platform designed to provide educators, administrators
+      and learners with a single robust, secure and integrated system to create personalised
+      learning environments
+    digest: 49d9c0018ea1231d7682c2f31672d25560c87c7e46f65a1d50661184e7c4611f
+    home: http://www.moodle.org/
+    keywords:
+    - moodle
+    - learning
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: moodle
+    sources:
+    - https://github.com/ubc/moodle-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/moodle-0.3.19/moodle-0.3.19.tgz
+    version: 0.3.19
   - apiVersion: v2
     appVersion: 4.5.8
     created: "2026-05-21T16:20:13.48270018Z"
@@ -8860,6 +8926,24 @@ entries:
   webwork:
   - apiVersion: v2
     appVersion: 2.18.0
+    created: "2026-06-16T20:16:58.941582378Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      tags:
+      - webwork-database
+      version: '*'
+    description: A Helm chart to deploy WeBWorK
+    digest: 365663b1c067748ea302aa396b9001d9cc2f30a0741e9a7d327c584b92d57b72
+    name: webwork
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/webwork-0.2.5/webwork-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    appVersion: 2.18.0
     created: "2026-05-11T22:23:30.374141494Z"
     dependencies:
     - alias: db
@@ -9229,4 +9313,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-11T22:52:33.288628182Z"
+generated: "2026-06-16T20:16:58.943172612Z"
