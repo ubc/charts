@@ -108,6 +108,17 @@ phpMemoryLimit: 128M
 ##     ];
 extraConfig: ""
 
+## Extra entries appended to the pod's hostAliases (in addition to the built-in
+## status.localhost). Useful when the pod must reach its own public wwwroot URL,
+## which resolves to an external LB VIP that is unreachable from inside the
+## cluster (hairpin). Point the public hostname at the in-cluster ingress
+## controller ClusterIP instead.
+##   extraHostAliases:
+##     - ip: 10.3.0.68
+##       hostnames:
+##         - moodle.example.ubc.ca
+extraHostAliases: []
+
 # HorizontalPodAutoscaler
 hpa:
   enabled: false

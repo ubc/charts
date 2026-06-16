@@ -38,6 +38,9 @@ spec:
       - ip: "127.0.0.1"
         hostnames:
         - "status.localhost"
+      {{- with .Values.extraHostAliases }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       initContainers:
       - name: init-{{ include "moodle.fullname" . }}
           {{- include "moodle.app.spec" . | indent 8 }}
