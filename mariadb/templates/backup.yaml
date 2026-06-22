@@ -3,6 +3,14 @@ apiVersion: k8s.mariadb.com/v1alpha1
 kind: Backup
 metadata:
   name: {{ include "mariadb.fullname" . }}-backup
+  {{- if .Values.backup.pvc.enabled }}
+  annotations:
+    # spec.storage is immutable (mariadb-operator vbackup webhook). When switching to /
+    # using a PVC, a plain ArgoCD apply fails with "field is immutable"; Force+Replace
+    # makes ArgoCD delete+recreate the Backup so the storage change lands (brief schedule
+    # gap only; backup files on the volume are untouched).
+    argocd.argoproj.io/sync-options: Force=true,Replace=true
+  {{- end }}
 spec:
   mariaDbRef:
     name: {{ include "mariadb.fullname" . }}
