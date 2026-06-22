@@ -31,7 +31,13 @@ spec:
   serviceAccountName: {{ include "mariadb.fullname" . }}-backup
   compression: {{ .Values.backup.compression }}
   storage:
+    {{- if .Values.backup.pvc.enabled }}
+    volume:
+      persistentVolumeClaim:
+        claimName: {{ include "mariadb.fullname" . }}-backup-storage
+    {{- else }}
     {{- toYaml .Values.backup.storage | nindent 4 }}
+    {{- end }}
   {{- if .Values.backup.stagingStorage.enabled }}
   stagingStore:
     {{- omit .Values.backup.stagingStorage "enabled" | toYaml | nindent 4 }}

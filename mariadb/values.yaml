@@ -117,7 +117,19 @@ backup:
     # PodAffinity specifies whether the backup pod should be scheduled on the same node as the MariaDB instance.
     podAffinity: true
   compression: bzip2
-  # Storage for backups
+  # Dynamically-provisioned PVC for backup storage. When enabled, the chart creates a PVC
+  # (<fullname>-backup-storage) and the Backup mounts it via storage.volume.persistentVolumeClaim,
+  # so a dynamic provisioner (e.g. nfs-subdir-external-provisioner) auto-creates the backing
+  # directory — no manual mkdir on the NFS server per instance. Overrides `storage` when enabled.
+  pvc:
+    enabled: false
+    storageClassName: ""
+    accessModes:
+      - ReadWriteMany
+    size: 5Gi
+    # PVC annotations, e.g. nfs.io/storage-path for the nfs-subdir-external-provisioner.
+    annotations: {}
+  # Storage for backups (used only when pvc.enabled is false)
   storage: {}
     # Using PVC for storage
 #    persistentVolumeClaim:
