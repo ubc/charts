@@ -1,0 +1,23 @@
+{{- if and .Values.backup.enabled (eq .Values.backup.type "logical") .Values.backup.pvc.enabled }}
+# Dynamically-provisioned PVC for logical backups. When backup.pvc.enabled is set, the
+# Backup mounts this claim (see backup.yaml storage block) instead of a static volume, so a
+# dynamic provisioner (e.g. nfs-subdir-external-provisioner) auto-creates the backing
+# directory — no manual mkdir on the NFS server per instance.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mariadb.fullname" . }}-backup-storage
+  labels:
+    {{- include "mariadb.labels" . | nindent 4 }}
+  {{- with .Values.backup.pvc.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  storageClassName: {{ .Values.backup.pvc.storageClassName | quote }}
+  accessModes:
+    {{- toYaml .Values.backup.pvc.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.backup.pvc.size | quote }}
+{{- end }}
