@@ -72,6 +72,13 @@ spec:
   description: "WeBWorK {{ include "webwork.fullname" . }} MariaDB parameters"
   parameterOverrides:
     log_bin_trust_function_creators: "1"
+    # Match the app/container timezone so MariaDB TIMESTAMP columns (e.g.
+    # lti_access_tokens.expires_at) are read in the same zone WeBWorK's Perl
+    # localtime uses. RDS defaults to UTC; mismatch makes WeBWorK treat LTI
+    # access tokens as valid ~UTC-offset hours too long → reuses expired
+    # tokens → Canvas 401 "Access token expired" on grade push. RDS only
+    # accepts a fixed named-zone list; US/Pacific == America/Vancouver.
+    time_zone: {{ .Values.db.ack.timeZone | default "US/Pacific" | quote }}
 ---
 apiVersion: rds.services.k8s.aws/v1alpha1
 kind: DBInstance
