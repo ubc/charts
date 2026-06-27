@@ -110,6 +110,10 @@ spec:
   multiAZ: {{ .Values.db.ack.multiAZ }}
   storageType: {{ .Values.db.ack.storageType | quote }}
   storageEncrypted: {{ .Values.db.ack.storageEncrypted }}
+{{- if .Values.db.ack.performanceInsightsEnabled }}
+  performanceInsightsEnabled: true
+  performanceInsightsRetentionPeriod: {{ .Values.db.ack.performanceInsightsRetentionPeriod | default 7 }}
+{{- end }}
 ---
 apiVersion: services.k8s.aws/v1alpha1
 kind: FieldExport

@@ -286,6 +286,10 @@ db:
     storageEncrypted: true
     # Enable Multi-AZ deployment
     multiAZ: false
+    # RDS Performance Insights (DBLoad / top-SQL telemetry). 7-day retention is
+    # the free tier. Off by default; enable per-env in the env values.
+    performanceInsightsEnabled: false
+    performanceInsightsRetentionPeriod: 7
     # VPC ID for the SecurityGroup (required when provider is "ack")
     vpcId: ""
     # Subnet IDs for the DBSubnetGroup (required when provider is "ack"; at least two)
