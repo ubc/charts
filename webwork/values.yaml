@@ -286,6 +286,13 @@ db:
     storageEncrypted: true
     # Enable Multi-AZ deployment
     multiAZ: false
+    # Data protection (FSBP RDS.8 / RDS.11 / RDS.17). Conservative defaults:
+    # deletion protection off so non-prod can be torn down, 7-day automated
+    # backups, and tags copied to snapshots. Override deletionProtection: true
+    # and raise backupRetentionPeriod per environment for production data.
+    deletionProtection: false
+    backupRetentionPeriod: 7
+    copyTagsToSnapshot: true
     # RDS Performance Insights (DBLoad / top-SQL telemetry). 7-day retention is
     # the free tier. Off by default; enable per-env in the env values.
     performanceInsightsEnabled: false

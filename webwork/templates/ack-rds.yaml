@@ -110,6 +110,12 @@ spec:
   multiAZ: {{ .Values.db.ack.multiAZ }}
   storageType: {{ .Values.db.ack.storageType | quote }}
   storageEncrypted: {{ .Values.db.ack.storageEncrypted }}
+  # Data protection (FSBP RDS.8 / RDS.11 / RDS.17). deletionProtection guards the
+  # prod DB against accidental teardown; backupRetentionPeriod sets the automated
+  # PITR window (days); copyTagsToSnapshot carries tags onto automated snapshots.
+  deletionProtection: {{ .Values.db.ack.deletionProtection | default false }}
+  backupRetentionPeriod: {{ .Values.db.ack.backupRetentionPeriod | default 7 }}
+  copyTagsToSnapshot: {{ .Values.db.ack.copyTagsToSnapshot | default true }}
 {{- if .Values.db.ack.performanceInsightsEnabled }}
   performanceInsightsEnabled: true
   performanceInsightsRetentionPeriod: {{ .Values.db.ack.performanceInsightsRetentionPeriod | default 7 }}
