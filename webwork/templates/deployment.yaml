@@ -40,6 +40,10 @@ spec:
       serviceAccountName: {{ include "webwork.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.logShipping.enabled }}
+      initContainers:
+        {{- include "webwork.logShipper.initContainers" . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- include "webwork.app.spec" . | indent 10 }}
@@ -114,6 +118,10 @@ spec:
       serviceAccountName: {{ include "webwork.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.logShipping.enabled }}
+      initContainers:
+        {{- include "webwork.logShipper.initContainers" . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}-worker-lti1p3
           {{- include "webwork.app.spec" . | indent 10 }}
@@ -169,6 +177,10 @@ spec:
       serviceAccountName: {{ include "webwork.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.logShipping.enabled }}
+      initContainers:
+        {{- include "webwork.logShipper.initContainers" . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}-worker-mojo
           {{- include "webwork.app.spec" . | indent 10 }}

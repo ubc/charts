@@ -124,6 +124,61 @@ logsPersistence:
   accessMode: ReadWriteMany
   size: 8Gi
 
+# Ship /opt/webwork/webwork2/logs off-cluster instead of (or in addition to)
+# keeping them on a shared volume. A Fluent Bit *native* sidecar (initContainer +
+# restartPolicy: Always, so cronjob Jobs still complete) tails the log files and
+# HTTP-POSTs them to an on-prem fluentd relay, which fans out to Elasticsearch +
+# an archive server.
+#
+# Typically paired with `logsPersistence.enabled: false` so the logs live on a
+# per-pod emptyDir (no shared EFS RWX, no multi-writer interleaving) — but it also
+# works with the PVC still enabled (useful as a no-data-loss intermediate step
+# during cutover). When enabled and logsPersistence is false, set the rotation
+# guard so the unbounded files (timing.log, webwork2.log) can't fill node disk.
+logShipping:
+  enabled: false
+  image:
+    repository: cr.fluentbit.io/fluent/fluent-bit
+    tag: "3.2.10"
+    pullPolicy: IfNotPresent
+  # Where the on-prem relay ingress lives. The path segment becomes the fluentd
+  # tag (must start with "webwork." to match the relay's <match webwork.**>).
+  endpoint:
+    host: logs-ingest.ctlt.ubc.ca
+    port: 443
+    tls: true
+    uri: /webwork.prod
+  # Labels stamped onto every shipped record (used as ES fields / for filtering).
+  labels:
+    cluster: appcloud-prod
+    service: webwork
+  # basicAuth for the relay ingress. With externalSecret.enabled the username/
+  # password are synced from Vault (secret/logging/webwork-log-relay) by ESO into
+  # `secretName`; otherwise reference an existing Secret with username/password keys.
+  auth:
+    externalSecret:
+      enabled: true
+      secretStoreRef: vault-backend
+      # key is relative to the vault-backend store (path=secret) -> secret/webwork/prod/logging-relay
+      vaultKey: webwork/prod/logging-relay
+    secretName: webwork-log-relay-auth
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits:   { cpu: 200m, memory: 192Mi }
+  # Copytruncate guard for the unbounded logs when on emptyDir. A tiny busybox
+  # native sidecar truncates any *.log over maxBytes every intervalSeconds.
+  # Truncate-in-place is safe with WeBWorK's O_APPEND writers and Fluent Bit tail.
+  rotation:
+    enabled: true
+    maxBytes: 209715200        # 200Mi per file
+    intervalSeconds: 600
+    image:
+      repository: busybox
+      tag: "1.37"
+      pullPolicy: IfNotPresent
+  # sizeLimit for the logs emptyDir (only applied when logsPersistence is off).
+  emptyDirSizeLimit: 4Gi
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
