@@ -17,6 +17,10 @@ spec:
       template:
         spec:
           restartPolicy: {{ .Values.cronjob.lti_update_classlist.restartPolicy }}
+          {{- if .Values.logShipping.enabled }}
+          initContainers:
+            {{- include "webwork.logShipper.initContainers" . | nindent 10 }}
+          {{- end }}
           containers:
           - name: {{ .Chart.Name }}-classlist-cronjob
             {{- include "webwork.app.spec" . | indent 12 }}
@@ -45,6 +49,10 @@ spec:
       template:
         spec:
           restartPolicy: {{ .Values.cronjob.lti_update_grades.restartPolicy }}
+          {{- if .Values.logShipping.enabled }}
+          initContainers:
+            {{- include "webwork.logShipper.initContainers" . | nindent 10 }}
+          {{- end }}
           containers:
           - name: {{ .Chart.Name }}-grades-cronjob
             {{- include "webwork.app.spec" . | indent 12 }}

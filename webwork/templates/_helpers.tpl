@@ -297,6 +297,9 @@ volumeMounts:
 {{- if .Values.logsPersistence.enabled }}
   persistentVolumeClaim:
     claimName: {{ template "webwork.fullname" . }}-logs-pvc
+{{- else if .Values.logShipping.enabled }}
+  emptyDir:
+    sizeLimit: {{ .Values.logShipping.emptyDirSizeLimit }}
 {{- else }}
   emptyDir: {}
 {{- end }}
@@ -323,8 +326,90 @@ volumeMounts:
     - key: authen_saml2
       path: authen_saml2.yml
 {{- end }}
+{{- if .Values.logShipping.enabled }}
+{{- include "webwork.logShipper.volumes" . | nindent 0 }}
+{{- end }}
 
 {{- end }}
+
+{{/*
+Log-shipping native sidecars.
+
+Rendered into each workload's `initContainers:` as native sidecars
+(restartPolicy: Always) — they start before the app and keep running, but
+terminate when the main container exits, so cronjob Jobs still complete. Gated by
+the caller on .Values.logShipping.enabled.
+
+  - log-shipper: Fluent Bit tails /opt/webwork/webwork2/logs/*.log (read-only)
+    and HTTP-POSTs to the on-prem relay (basicAuth from the synced secret).
+  - log-rotate (optional): truncates any *.log over maxBytes; truncate-in-place is
+    safe with WeBWorK's O_APPEND writers and Fluent Bit tail (which re-reads from 0).
+*/}}
+{{- define "webwork.logShipper.initContainers" -}}
+- name: log-shipper
+  image: "{{ .Values.logShipping.image.repository }}:{{ .Values.logShipping.image.tag }}"
+  imagePullPolicy: {{ .Values.logShipping.image.pullPolicy }}
+  restartPolicy: Always
+  args: ["-c", "/fluent-bit/etc/fluent-bit.conf"]
+  env:
+    - name: LOGRELAY_USER
+      valueFrom:
+        secretKeyRef:
+          name: {{ .Values.logShipping.auth.secretName }}
+          key: username
+    - name: LOGRELAY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: {{ .Values.logShipping.auth.secretName }}
+          key: password
+  volumeMounts:
+    - name: webwork-logs-data
+      mountPath: /opt/webwork/webwork2/logs
+      readOnly: true
+    - name: log-shipper-config
+      mountPath: /fluent-bit/etc
+    - name: log-shipper-buffer
+      mountPath: /var/log/fluent-bit
+  resources:
+    {{- toYaml .Values.logShipping.resources | nindent 4 }}
+{{- if .Values.logShipping.rotation.enabled }}
+- name: log-rotate
+  image: "{{ .Values.logShipping.rotation.image.repository }}:{{ .Values.logShipping.rotation.image.tag }}"
+  imagePullPolicy: {{ .Values.logShipping.rotation.image.pullPolicy }}
+  restartPolicy: Always
+  command:
+    - /bin/sh
+    - -c
+    - |
+      MAX={{ .Values.logShipping.rotation.maxBytes }}
+      while true; do
+        for f in /opt/webwork/webwork2/logs/*.log; do
+          [ -f "$f" ] || continue
+          sz=$(wc -c < "$f" 2>/dev/null || echo 0)
+          [ "$sz" -gt "$MAX" ] && : > "$f"
+        done
+        sleep {{ .Values.logShipping.rotation.intervalSeconds }}
+      done
+  volumeMounts:
+    - name: webwork-logs-data
+      mountPath: /opt/webwork/webwork2/logs
+  resources:
+    requests: { cpu: 10m, memory: 16Mi }
+    limits:   { cpu: 50m, memory: 32Mi }
+{{- end }}
+{{- end -}}
+
+{{/*
+Extra volumes for the log-shipping sidecars (Fluent Bit config + buffer).
+Appended to the workload `volumes:` via webwork.app.mounts when logShipping is on.
+*/}}
+{{- define "webwork.logShipper.volumes" -}}
+- name: log-shipper-config
+  configMap:
+    name: {{ include "webwork.fullname" . }}-fluent-bit
+- name: log-shipper-buffer
+  emptyDir: {}
+{{- end -}}
 
 {{/*
 Resolve the effective database provider.
