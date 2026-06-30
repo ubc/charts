@@ -9027,6 +9027,24 @@ entries:
   webwork:
   - apiVersion: v2
     appVersion: 2.18.0
+    created: "2026-06-30T03:33:27.580025898Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      tags:
+      - webwork-database
+      version: '*'
+    description: A Helm chart to deploy WeBWorK
+    digest: ccc03582e5378ac85a6b06460aa3b85b05ebdb381b1aecd662598a030d12388d
+    name: webwork
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/webwork-0.2.7/webwork-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
+    appVersion: 2.18.0
     created: "2026-06-29T17:40:38.699323507Z"
     dependencies:
     - alias: db
@@ -9432,4 +9450,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-29T17:40:38.700162089Z"
+generated: "2026-06-30T03:33:27.580791336Z"
