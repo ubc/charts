@@ -263,6 +263,15 @@ autoscaling:
   # scaleDown stabilization (seconds) — webwork load is bursty around deadlines
   scaleDownStabilizationSeconds: 300
 
+# Rollout strategy for the WEB Deployment only (workers/shibd/r keep the k8s
+# default). Empty = k8s default (RollingUpdate 25%/25%). For zero-downtime
+# rollouts set maxSurge: 1 / maxUnavailable: 0.
+strategy: {}
+#  type: RollingUpdate
+#  rollingUpdate:
+#    maxSurge: 1
+#    maxUnavailable: 0
+
 # PodDisruptionBudget for the WEB deployment only (workers/R excluded): keeps
 # at least minAvailable pod through node consolidation / AMI drift evictions.
 pdb:
