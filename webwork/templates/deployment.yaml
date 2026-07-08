@@ -88,6 +88,36 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.spreadReplicas.enabled }}
+      topologySpreadConstraints:
+        # Keep web replicas on separate nodes so a single node loss or spot
+        # reclamation can't take out every replica at once. DoNotSchedule makes
+        # Karpenter provision a second node rather than co-locate (soft would
+        # let it bin-pack both onto one). matchLabelKeys scopes the skew count
+        # to the current ReplicaSet so rolling updates don't deadlock.
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          matchLabelKeys:
+            - pod-template-hash
+          labelSelector:
+            matchLabels:
+              {{- include "webwork.selectorLabels" . | nindent 14 }}
+              tier: app
+        {{- if .Values.spreadReplicas.zoneSpread }}
+        # Prefer spreading across AZs too, but soft (ScheduleAnyway): don't risk
+        # a Pending replica if one zone's spot capacity is tight.
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          matchLabelKeys:
+            - pod-template-hash
+          labelSelector:
+            matchLabels:
+              {{- include "webwork.selectorLabels" . | nindent 14 }}
+              tier: app
+        {{- end }}
+      {{- end }}
 
 {{- if .Values.worker.lti1p3.enabled }}
 ---

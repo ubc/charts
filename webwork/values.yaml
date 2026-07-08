@@ -284,6 +284,15 @@ tolerations: []
 
 affinity: {}
 
+# Spread the web replicas across nodes (hard) and, softly, across zones so a
+# single node or spot reclamation can't take out every replica at once. Only
+# meaningful when running >= 2 web replicas (replicaCount or autoscaling).
+# The hard hostname constraint forces Karpenter to keep a second node for the
+# web tier (a small baseline-cost trade for HA on the user-facing frontend).
+spreadReplicas:
+  enabled: false
+  zoneSpread: true
+
 
 ##
 ## MariaDB chart configuration
