@@ -24,6 +24,14 @@ appUser: www-data
 # mojolicious secret passphrase - leave empty to auto-generate a stable random value
 secret: ""
 
+# Allow the chart to generate random values for `secret` / db.auth.password on
+# first install (read back via `lookup` on later upgrades). `lookup` returns
+# nothing under `helm template` and GitOps engines (ArgoCD), so generation
+# there would silently rotate credentials and roll every pod on each render —
+# set this to false in those pipelines and the render fails loudly unless the
+# values are supplied explicitly (or externalSecrets is enabled).
+generatePasswords: true
+
 # External Secrets Operator integration. When enabled, the chart does NOT
 # generate the webwork_secret / ack-db-password Secrets; instead it sources
 # webwork_secret + db_password (and, via envFrom, the embedded config secrets

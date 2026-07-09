@@ -122,6 +122,7 @@ db:
 | `rootUrl` | Public URL of the webwork instance | `http://localhost` |
 | `timezone` | Application timezone | `America/Vancouver` |
 | `secret` | Mojolicious secret passphrase (auto-generated if empty) | `""` |
+| `generatePasswords` | Allow random generation of `secret`/`db.auth.password` on install. Set `false` under `helm template`/ArgoCD (where `lookup` can't read back existing values) to fail loudly instead of silently rotating credentials on every render | `true` |
 | `supportEmail` | Support email shown to users | `support@example.edu` |
 | `maxRequestSize` | File upload limit in bytes | `1342177280` (1.25 GiB) |
 
@@ -253,6 +254,29 @@ ltiClient:
 ---
 
 ## Upgrading
+
+### 0.2.10 → 0.3.0 (manual migration required)
+
+The two worker Deployments previously shared an identical label selector
+(`tier: worker`), so each also matched the other's pods — `kubectl logs/exec
+deploy/<worker>` could resolve to the wrong pod. 0.3.0 adds a `worker: mojo` /
+`worker: lti1p3` label to each selector. Selectors are immutable, so upgrading
+an existing release requires deleting both worker Deployments first:
+
+```bash
+kubectl --context <ctx> -n <ns> delete deployment \
+  <release>-worker-mojo <release>-worker-lti1p3
+helm upgrade <release> ubc/webwork --version 0.3.0 -f <values>.yaml ...
+```
+
+The workers are background job processors (minion queue, LTI sync) — the gap
+between delete and upgrade only delays queued jobs; web serving is unaffected.
+
+Also in 0.3.0: `generatePasswords: true` (new) controls random credential
+generation in `secret.yaml`. Default behavior is unchanged; set it to `false`
+in `helm template`/ArgoCD pipelines so a missing explicit `secret` /
+`db.auth.password` fails the render instead of silently rotating credentials
+(the `lookup` function that keeps them stable is unavailable there).
 
 ### 0.2.9 → 0.2.10
 

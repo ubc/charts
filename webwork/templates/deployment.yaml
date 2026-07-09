@@ -128,12 +128,19 @@ metadata:
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
     tier: worker
+    worker: lti1p3
 spec:
   replicas: {{ .Values.worker.lti1p3.replicaCount }}
   selector:
     matchLabels:
       {{- include "webwork.selectorLabels" . | nindent 6 }}
       tier: worker
+      # worker disambiguates the two worker Deployments: with tier alone their
+      # selectors are identical, so each also matches the other's pods
+      # (kubectl logs/exec deploy/<worker> can resolve to the wrong pod).
+      # NOTE selector changes are immutable: upgrading an existing release
+      # requires deleting both worker Deployments first (see README).
+      worker: lti1p3
   template:
     metadata:
       annotations:
@@ -147,6 +154,7 @@ spec:
       labels:
         {{- include "webwork.selectorLabels" . | nindent 8 }}
         tier: worker
+        worker: lti1p3
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -190,12 +198,16 @@ metadata:
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
     tier: worker
+    worker: mojo
 spec:
   replicas: {{ .Values.worker.mojo.replicaCount }}
   selector:
     matchLabels:
       {{- include "webwork.selectorLabels" . | nindent 6 }}
       tier: worker
+      # See the worker-lti1p3 selector comment: disambiguates the two worker
+      # Deployments; selector changes are immutable — migration required (README).
+      worker: mojo
   template:
     metadata:
       annotations:
@@ -209,6 +221,7 @@ spec:
       labels:
         {{- include "webwork.selectorLabels" . | nindent 8 }}
         tier: worker
+        worker: mojo
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
