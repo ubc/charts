@@ -458,6 +458,20 @@ worker:
     resources: {}
 
 cronjob:
+  # Job-level controls shared by both LTI cronjobs. Finished Jobs (and their
+  # pods) are deleted after ttlSecondsAfterFinished — 24h leaves a debugging
+  # window between the daily runs while keeping failed Jobs from pinning
+  # KubeJobFailed alerts forever.
+  ttlSecondsAfterFinished: 86400
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  backoffLimit: 2
+  # Requests-only default: lets the scheduler place the pod properly without
+  # risking an OOM-kill mid grade-sync. Add limits per site if needed.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
   lti_update_classlist:
     enabled: true
     schedule: "0 11 * * *"

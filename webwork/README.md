@@ -2,13 +2,14 @@
 
 A Helm chart to deploy [WeBWorK](https://webwork.maa.org/) — an open-source online homework system — on Kubernetes.
 
-**Chart version:** 0.2.0 | **App version:** 2.18.0
+Current chart/app versions: see [Chart.yaml](Chart.yaml) or the
+[ubc charts index](https://ubc.github.io/charts).
 
 ---
 
 ## Prerequisites
 
-- Kubernetes 1.19+
+- Kubernetes 1.29+ (log shipping uses native sidecar containers)
 - Helm 3.x
 - UBC charts repo added:
 
@@ -203,6 +204,11 @@ Set `enabled: true` and configure `storageClass`, `accessMode`, and `size` for e
 | `cronjob.lti_update_classlist.schedule` | Cron schedule | `0 11 * * *` |
 | `cronjob.lti_update_grades.enabled` | Sync LTI grades daily | `true` |
 | `cronjob.lti_update_grades.schedule` | Cron schedule | `0 13 * * *` |
+| `cronjob.ttlSecondsAfterFinished` | Delete finished Jobs (and pods) after this many seconds | `86400` |
+| `cronjob.successfulJobsHistoryLimit` | Completed Jobs kept by each CronJob | `1` |
+| `cronjob.failedJobsHistoryLimit` | Failed Jobs kept by each CronJob | `3` |
+| `cronjob.backoffLimit` | Pod retries before a Job is marked failed | `2` |
+| `cronjob.resources` | Resources for the cronjob containers | requests `100m` / `512Mi` |
 
 ### R server (`r`)
 
@@ -247,6 +253,19 @@ ltiClient:
 ---
 
 ## Upgrading
+
+### 0.2.9 → 0.2.10
+
+No values changes required. Behavior changes to be aware of:
+
+- Finished cronjob Jobs are now deleted after 24h (`cronjob.ttlSecondsAfterFinished: 86400`),
+  so failed Jobs stop pinning `KubeJobFailed` alerts indefinitely. History limits
+  changed from the Kubernetes defaults (3 successful / 1 failed) to 1 successful /
+  3 failed, and Jobs now retry at most `backoffLimit: 2` times (down from 6).
+- Cronjob containers now get default resource requests (`100m` / `512Mi`);
+  override via `cronjob.resources`.
+- The chart now declares `kubeVersion: ">=1.29.0-0"` — installs on older
+  clusters are refused (native sidecars would not run there anyway).
 
 ### 0.1.x → 0.2.0
 

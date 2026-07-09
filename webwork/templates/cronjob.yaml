@@ -12,8 +12,14 @@ spec:
   startingDeadlineSeconds: {{ .Values.cronjob.lti_update_classlist.startingDeadlineSeconds }}
   {{- end }}
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
   jobTemplate:
     spec:
+      # Finished Jobs (success or failure) are deleted after the TTL so a
+      # failed run can't pin a KubeJobFailed alert forever.
+      ttlSecondsAfterFinished: {{ .Values.cronjob.ttlSecondsAfterFinished }}
+      backoffLimit: {{ .Values.cronjob.backoffLimit }}
       template:
         spec:
           restartPolicy: {{ .Values.cronjob.lti_update_classlist.restartPolicy }}
@@ -24,6 +30,10 @@ spec:
           containers:
           - name: {{ .Chart.Name }}-classlist-cronjob
             {{- include "webwork.app.spec" . | indent 12 }}
+            {{- with .Values.cronjob.resources }}
+            resources:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
             args: [{{ include "webwork.dropPrivPrefix" . }} './lib/LTI1p3/Cron/lti_update_classlist.pl']
           volumes:
             {{- include "webwork.app.mounts" . | indent 10 }}
@@ -44,8 +54,14 @@ spec:
   startingDeadlineSeconds: {{ .Values.cronjob.lti_update_grades.startingDeadlineSeconds }}
   {{- end }}
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
   jobTemplate:
     spec:
+      # Finished Jobs (success or failure) are deleted after the TTL so a
+      # failed run can't pin a KubeJobFailed alert forever.
+      ttlSecondsAfterFinished: {{ .Values.cronjob.ttlSecondsAfterFinished }}
+      backoffLimit: {{ .Values.cronjob.backoffLimit }}
       template:
         spec:
           restartPolicy: {{ .Values.cronjob.lti_update_grades.restartPolicy }}
@@ -56,6 +72,10 @@ spec:
           containers:
           - name: {{ .Chart.Name }}-grades-cronjob
             {{- include "webwork.app.spec" . | indent 12 }}
+            {{- with .Values.cronjob.resources }}
+            resources:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
             args: [{{ include "webwork.dropPrivPrefix" . }} './lib/LTI1p3/Cron/lti_update_grades.pl']
           volumes:
             {{- include "webwork.app.mounts" . | indent 10 }}
