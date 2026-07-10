@@ -146,6 +146,32 @@
         "lti_update_grades": { "$ref": "#/definitions/ltiCronjob" }
       }
     },
+    "webworkcal": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "schedule": { "type": "string" },
+        "calendar": { "type": "string" },
+        "existingSecret": { "type": "string" },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string" },
+            "tag": { "type": ["string", "null"] },
+            "pullPolicy": { "enum": ["Always", "IfNotPresent", "Never"] }
+          }
+        },
+        "externalSecret": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "secretStoreRef": { "type": "string" },
+            "vaultKey": { "type": "string" }
+          }
+        },
+        "resources": { "type": "object" }
+      }
+    },
     "r": {
       "type": "object",
       "properties": {

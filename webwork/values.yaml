@@ -493,6 +493,35 @@ cronjob:
     #startingDeadlineSeconds:
     restartPolicy: Never
 
+# Google Calendar sync cronjob (formerly a standalone webworkcal manifest).
+# Publishes assignment due dates from the webwork DB to a Google calendar.
+# DB access reuses the chart's db.* wiring. The Google service-account key is
+# mounted from a Secret with key `service-account.json`: either synced from
+# Vault via ESO (externalSecret) or a pre-created Secret (existingSecret).
+# Job-level controls (ttl/history/backoff) come from the shared cronjob block.
+webworkcal:
+  enabled: false
+  schedule: "0 9 * * *"
+  image:
+    repository: lthub/webworkcal
+    tag: latest
+    pullPolicy: IfNotPresent
+  # Target Google calendar ID (required when enabled)
+  calendar: ""
+  # Pre-created Secret containing service-account.json
+  # (ignored when externalSecret.enabled)
+  existingSecret: ""
+  externalSecret:
+    enabled: false
+    secretStoreRef: vault-backend
+    # relative to the store's base path (secret/); expects property
+    # service_account_json
+    vaultKey: webwork/prod/webworkcal
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
 # Extra environment variables appended to all webwork containers (web +
 # workers). e.g. MOJO_TRUSTED_PROXIES so hypnotoad resolves the real client
 # IP through a multi-hop proxy chain (upstream ALB -> internal ALB).

@@ -211,6 +211,23 @@ Set `enabled: true` and configure `storageClass`, `accessMode`, and `size` for e
 | `cronjob.backoffLimit` | Pod retries before a Job is marked failed | `2` |
 | `cronjob.resources` | Resources for the cronjob containers | requests `100m` / `512Mi` |
 
+### Google Calendar sync (`webworkcal`)
+
+Optional cronjob that publishes assignment due dates from the webwork DB to a
+Google calendar (migrated from a standalone pre-EKS manifest). DB access uses
+the chart's `db.*` wiring; the Google service-account key is mounted from a
+Secret with key `service-account.json`.
+
+| Parameter | Description | Default |
+|---|---|---|
+| `webworkcal.enabled` | Deploy the calendar sync CronJob | `false` |
+| `webworkcal.schedule` | Cron schedule | `0 9 * * *` |
+| `webworkcal.calendar` | Target Google calendar ID (**required** when enabled) | `""` |
+| `webworkcal.image.repository` | Image | `lthub/webworkcal` |
+| `webworkcal.existingSecret` | Pre-created Secret with `service-account.json` | `""` |
+| `webworkcal.externalSecret.enabled` | Sync the key from Vault via ESO instead | `false` |
+| `webworkcal.externalSecret.vaultKey` | Vault path (relative to the store base), property `service_account_json` | `webwork/prod/webworkcal` |
+
 ### R server (`r`)
 
 | Parameter | Description | Default |
@@ -254,6 +271,13 @@ ltiClient:
 ---
 
 ## Upgrading
+
+### 0.3.1 → 0.3.2
+
+New optional `webworkcal` CronJob (Google Calendar due-date sync), disabled by
+default — no changes for existing releases. Replaces the standalone
+`webworkcal-cronjob.yaml` manifest; the service-account key now lives in Vault
+(`secret/webwork/prod/webworkcal`) instead of a git-tracked file.
 
 ### 0.3.0 → 0.3.1
 

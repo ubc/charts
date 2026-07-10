@@ -1,0 +1,95 @@
+{{- if .Values.webworkcal.enabled }}
+{{- $saSecretName := .Values.webworkcal.existingSecret | default (printf "%s-webworkcal" (include "webwork.fullname" .)) }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "webwork.fullname" . }}-webworkcal-cronjob
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: cronjob
+spec:
+  schedule: {{ .Values.webworkcal.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.cronjob.ttlSecondsAfterFinished }}
+      backoffLimit: {{ .Values.cronjob.backoffLimit }}
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: {{ .Chart.Name }}-webworkcal
+            image: "{{ .Values.webworkcal.image.repository }}:{{ .Values.webworkcal.image.tag }}"
+            imagePullPolicy: {{ .Values.webworkcal.image.pullPolicy }}
+            env:
+            - name: DB_HOST
+              {{- if eq (include "webwork.db.provider" .) "ack" }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+                  key: endpoint
+              {{- else }}
+              value: {{ template "app.db.fullname" . }}
+              {{- end }}
+            - name: DB_PORT
+              {{- if eq (include "webwork.db.provider" .) "ack" }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ printf "%s-rds-endpoint" (include "webwork.fullname" .) }}
+                  key: port
+              {{- else }}
+              value: {{ .Values.db.service.port | quote }}
+              {{- end }}
+            - name: DB_USER
+              value: {{ .Values.db.auth.username | quote }}
+            - name: DB_NAME
+              value: {{ .Values.db.auth.database | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- include "webwork.db.passwordSecretRef" . | nindent 18 }}
+            - name: CALENDAR
+              value: {{ required "webworkcal.calendar is required when webworkcal.enabled" .Values.webworkcal.calendar | quote }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /app/secret/service-account.json
+            {{- with .Values.webworkcal.resources }}
+            resources:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            volumeMounts:
+            - name: service-account
+              mountPath: /app/secret
+              readOnly: true
+          volumes:
+          - name: service-account
+            secret:
+              secretName: {{ $saSecretName }}
+{{- end }}
+
+{{- if and .Values.webworkcal.enabled .Values.webworkcal.externalSecret.enabled }}
+---
+# Google service-account key for the calendar cronjob, synced from Vault by
+# ESO. NOTE: the vault-backend store has path=secret, so the remoteRef key is
+# RELATIVE (webwork/prod/webworkcal, not secret/webwork/...).
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: {{ printf "%s-webworkcal" (include "webwork.fullname" .) }}
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: cronjob
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: {{ .Values.webworkcal.externalSecret.secretStoreRef }}
+    kind: ClusterSecretStore
+  target:
+    name: {{ printf "%s-webworkcal" (include "webwork.fullname" .) }}
+  data:
+    - secretKey: service-account.json
+      remoteRef:
+        key: {{ .Values.webworkcal.externalSecret.vaultKey }}
+        property: service_account_json
+{{- end }}
