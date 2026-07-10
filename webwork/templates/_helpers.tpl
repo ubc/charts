@@ -428,6 +428,25 @@ external
 {{- end }}
 
 {{/*
+Comma-separated names of the ESO-managed Secrets the app pods consume. Used
+for the Reloader annotation so Vault rotations roll the pods (kube keeps env
+secretKeyRefs frozen for a pod's lifetime).
+*/}}
+{{- define "webwork.reloadSecrets" -}}
+{{- $s := list -}}
+{{- if .Values.externalSecrets.enabled -}}
+{{- $s = append $s .Values.externalSecrets.secretName -}}
+{{- with .Values.externalSecrets.saml2SecretName -}}
+{{- $s = append $s . -}}
+{{- end -}}
+{{- end -}}
+{{- if and .Values.logShipping.enabled .Values.logShipping.auth.externalSecret.enabled -}}
+{{- $s = append $s .Values.logShipping.auth.secretName -}}
+{{- end -}}
+{{- join "," $s -}}
+{{- end }}
+
+{{/*
 Returns the secretKeyRef block (name + key lines) for WEBWORK_DB_PASSWORD
 based on the effective provider. Indent with nindent after inclusion.
 */}}

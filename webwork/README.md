@@ -228,6 +228,13 @@ Secret with key `service-account.json`.
 | `webworkcal.externalSecret.enabled` | Sync the key from Vault via ESO instead | `false` |
 | `webworkcal.externalSecret.vaultKey` | Vault path (relative to the store base), property `service_account_json` | `webwork/prod/webworkcal` |
 
+### Secret rotation (`reloader`)
+
+| Parameter | Description | Default |
+|---|---|---|
+| `reloader.enabled` | Deploy namespace-scoped Stakater Reloader + annotate Deployments so ESO secret rotation rolls pods | `false` |
+| `reloader.reloader.*` | Values passed through to the stakater/reloader subchart | `watchGlobally: false` |
+
 ### R server (`r`)
 
 | Parameter | Description | Default |
@@ -271,6 +278,16 @@ ltiClient:
 ---
 
 ## Upgrading
+
+### 0.3.2 → 0.3.3
+
+New optional `reloader.enabled` (default `false`): deploys the
+[Stakater Reloader](https://github.com/stakater/Reloader) subchart scoped to
+the release namespace and annotates the web/worker/shibd Deployments with
+their ESO-managed Secret names (`secret.reloader.stakater.com/reload`).
+Without it, rotating a credential in Vault updates the Secret via ESO but
+running pods keep the stale value until something else rolls them — env
+`secretKeyRef`s are frozen for a pod's lifetime.
 
 ### 0.3.1 → 0.3.2
 

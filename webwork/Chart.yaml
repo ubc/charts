@@ -15,7 +15,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.3.2
+version: 0.3.3
 
 # Log-shipping sidecars are native sidecar containers (initContainers with
 # restartPolicy: Always), which require Kubernetes 1.29+.
@@ -34,3 +34,10 @@ dependencies:
   alias: db
   tags:
     - webwork-database
+# Rolls annotated Deployments when their ESO-synced Secrets change (Vault
+# rotation otherwise leaves running pods on stale credentials). Deployed
+# namespace-scoped (reloader.reloader.watchGlobally: false).
+- name: reloader
+  version: "2.2.14"
+  repository: https://stakater.github.io/stakater-charts
+  condition: reloader.enabled

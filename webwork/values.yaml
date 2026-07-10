@@ -522,6 +522,17 @@ webworkcal:
       cpu: 50m
       memory: 128Mi
 
+# Roll the web/worker/shibd Deployments when their ESO-synced Secrets change
+# (Vault rotation otherwise leaves running pods on stale env credentials —
+# kube never refreshes env secretKeyRefs in a running pod). Deploys the
+# Stakater Reloader subchart scoped to the release namespace and annotates
+# the Deployments with the ESO-managed secret names.
+reloader:
+  enabled: false
+  # values passed through to the stakater/reloader subchart
+  reloader:
+    watchGlobally: false
+
 # Extra environment variables appended to all webwork containers (web +
 # workers). e.g. MOJO_TRUSTED_PROXIES so hypnotoad resolves the real client
 # IP through a multi-hop proxy chain (upstream ALB -> internal ALB).

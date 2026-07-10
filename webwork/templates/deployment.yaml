@@ -5,6 +5,12 @@ metadata:
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
     tier: app
+  {{- if .Values.reloader.enabled }}
+  {{- with include "webwork.reloadSecrets" . }}
+  annotations:
+    secret.reloader.stakater.com/reload: {{ . | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -129,6 +135,12 @@ metadata:
     {{- include "webwork.labels" . | nindent 4 }}
     tier: worker
     worker: lti1p3
+  {{- if .Values.reloader.enabled }}
+  {{- with include "webwork.reloadSecrets" . }}
+  annotations:
+    secret.reloader.stakater.com/reload: {{ . | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   replicas: {{ .Values.worker.lti1p3.replicaCount }}
   selector:
@@ -199,6 +211,12 @@ metadata:
     {{- include "webwork.labels" . | nindent 4 }}
     tier: worker
     worker: mojo
+  {{- if .Values.reloader.enabled }}
+  {{- with include "webwork.reloadSecrets" . }}
+  annotations:
+    secret.reloader.stakater.com/reload: {{ . | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   replicas: {{ .Values.worker.mojo.replicaCount }}
   selector:
@@ -265,6 +283,12 @@ metadata:
   labels:
     {{- include "webwork.labels" . | nindent 4 }}
     tier: auth
+  {{- if .Values.reloader.enabled }}
+  {{- with include "webwork.reloadSecrets" . }}
+  annotations:
+    secret.reloader.stakater.com/reload: {{ . | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   replicas: {{ .Values.shibd.replicas }}
   selector:

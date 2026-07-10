@@ -1,6 +1,9 @@
 dependencies:
 - name: mariadb
   repository: https://ubc.github.io/charts
-  version: 0.1.19
-digest: sha256:8d7664beb16e6a40f470cdcab40903dfc60cf14e171cc0569d8c22218433e2f0
-generated: "2026-04-17T16:43:56.203713-07:00"
+  version: 0.1.27
+- name: reloader
+  repository: https://stakater.github.io/stakater-charts
+  version: 2.2.14
+digest: sha256:8253fb7f62fed4a79a172fd95e865ca84701bd3f9a2cbaf888f9ac623b8e7c12
+generated: "2026-07-09T17:27:18.006591-07:00"

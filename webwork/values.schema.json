@@ -192,6 +192,12 @@
         "enabled": { "type": "boolean" }
       }
     },
+    "reloader": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" }
+      }
+    },
     "coursePersistence": { "$ref": "#/definitions/persistence" },
     "libraryPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsTmpPersistence": { "$ref": "#/definitions/persistence" },

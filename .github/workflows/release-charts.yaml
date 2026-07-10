@@ -31,6 +31,7 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add ubc https://ubc.github.io/charts
+          helm repo add stakater https://stakater.github.io/stakater-charts
           helm repo update
 
       - name: Run chart-releaser
