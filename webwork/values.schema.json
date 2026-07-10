@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "webwork chart values",
+  "description": "Validates the coalesced values for the webwork chart. Top-level keys are closed (typos fail the render); nested objects stay open except where a closed set is meaningful. The db block is passed to the aliased mariadb subchart, so only the keys the parent chart reads are constrained.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "global": { "type": "object" },
+    "nameOverride": { "type": "string" },
+    "fullnameOverride": { "type": "string" },
+    "replicaCount": { "type": "integer", "minimum": 0 },
+    "appUser": { "type": "string" },
+    "secret": { "type": ["string", "null"] },
+    "generatePasswords": { "type": "boolean" },
+    "rootUrl": { "type": "string" },
+    "timezone": { "type": "string" },
+    "systemTimezone": { "type": "string" },
+    "supportEmail": { "type": "string" },
+    "maxRequestSize": { "type": "integer", "minimum": 0 },
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": { "type": "string" },
+        "tag": { "type": ["string", "null"] },
+        "pullPolicy": { "enum": ["Always", "IfNotPresent", "Never"] }
+      }
+    },
+    "imagePullSecrets": { "type": "array" },
+    "smtp": {
+      "type": "object",
+      "properties": {
+        "server": { "type": "string" },
+        "sender": { "type": "string" }
+      }
+    },
+    "extraEnv": { "type": "array" },
+    "webworkFiles": { "type": ["object", "null"] },
+    "externalSecrets": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "secretName": { "type": "string" },
+        "saml2SecretName": { "type": "string" }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": { "type": "boolean" },
+        "annotations": { "type": "object" },
+        "name": { "type": "string" },
+        "imagePullSecrets": { "type": "array" }
+      }
+    },
+    "podAnnotations": { "type": "object" },
+    "podSecurityContext": { "type": "object" },
+    "securityContext": { "type": "object" },
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"] },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "annotations": { "type": "object" },
+        "hostPort": { "type": ["integer", "null"] }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "className": { "type": "string" },
+        "annotations": { "type": "object" },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "host": { "type": "string" },
+              "paths": { "type": "array" }
+            }
+          }
+        },
+        "tls": { "type": "array" }
+      }
+    },
+    "resources": { "type": "object" },
+    "startupProbe": {
+      "type": "object",
+      "properties": {
+        "failureThreshold": { "type": "integer", "minimum": 1 },
+        "periodSeconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "autoscaling": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minReplicas": { "type": "integer", "minimum": 1 },
+        "maxReplicas": { "type": "integer", "minimum": 1 },
+        "targetCPUUtilizationPercentage": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "scaleDownStabilizationSeconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "pdb": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minAvailable": { "type": ["integer", "string"] },
+        "maxUnavailable": { "type": ["integer", "string"] }
+      }
+    },
+    "strategy": { "type": "object" },
+    "spreadReplicas": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "zoneSpread": { "type": "boolean" }
+      }
+    },
+    "nodeSelector": { "type": "object" },
+    "tolerations": { "type": "array" },
+    "affinity": { "type": "object" },
+    "db": {
+      "type": "object",
+      "properties": {
+        "provider": { "enum": ["", "local", "ack", "external"] },
+        "enabled": { "type": "boolean" }
+      }
+    },
+    "worker": {
+      "type": "object",
+      "properties": {
+        "lti1p3": { "$ref": "#/definitions/worker" },
+        "mojo": { "$ref": "#/definitions/worker" }
+      }
+    },
+    "cronjob": {
+      "type": "object",
+      "properties": {
+        "ttlSecondsAfterFinished": { "type": "integer", "minimum": 0 },
+        "successfulJobsHistoryLimit": { "type": "integer", "minimum": 0 },
+        "failedJobsHistoryLimit": { "type": "integer", "minimum": 0 },
+        "backoffLimit": { "type": "integer", "minimum": 0 },
+        "resources": { "type": "object" },
+        "lti_update_classlist": { "$ref": "#/definitions/ltiCronjob" },
+        "lti_update_grades": { "$ref": "#/definitions/ltiCronjob" }
+      }
+    },
+    "r": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "replicas": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "shibd": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "replicas": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "logShipping": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" }
+      }
+    },
+    "coursePersistence": { "$ref": "#/definitions/persistence" },
+    "libraryPersistence": { "$ref": "#/definitions/persistence" },
+    "htdocsTmpPersistence": { "$ref": "#/definitions/persistence" },
+    "htdocsDataPersistence": { "$ref": "#/definitions/persistence" },
+    "logsPersistence": { "$ref": "#/definitions/persistence" },
+    "ltiClient": {
+      "type": ["array", "null"],
+      "description": "DEPRECATED: not read by current templates"
+    },
+    "caliper": { "description": "DEPRECATED: not read by current templates" },
+    "stage": { "description": "DEPRECATED: not read by current templates" },
+    "rHost": { "description": "DEPRECATED: not read by current templates" }
+  },
+  "definitions": {
+    "worker": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "replicaCount": { "type": "integer", "minimum": 0 },
+        "resources": { "type": "object" },
+        "nodeSelector": { "type": "object" },
+        "tolerations": { "type": "array" },
+        "affinity": { "type": "object" }
+      }
+    },
+    "ltiCronjob": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "schedule": { "type": "string" },
+        "restartPolicy": { "enum": ["Never", "OnFailure"] },
+        "startingDeadlineSeconds": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "persistence": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "size": { "type": "string" }
+      }
+    }
+  }
+}

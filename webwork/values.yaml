@@ -327,10 +327,12 @@ db:
     database: &dbName webwork
     #prefix:
 
-    ## If the password is not specified, mariadb will generate a random password
-    ##
-    password: &dbPass randompassword
-    replicationPassword: 'replicationpassword'
+    ## Leave empty to generate a stable random password at install time
+    ## (mariadb subchart for "local", secret.yaml for "ack"; for "external"
+    ## you almost always want to set the real password explicitly).
+    ## See also generatePasswords for helm template/ArgoCD pipelines.
+    password: &dbPass ""
+    replicationPassword: ""
 
   persistence:
     size: 8Gi

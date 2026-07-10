@@ -167,7 +167,7 @@ Set `enabled: true` and configure `storageClass`, `accessMode`, and `size` for e
 | `db.enabled` | Load bundled MariaDB subchart (required for `provider: local`) | `false` |
 | `db.auth.username` | Database username | `webwork` |
 | `db.auth.database` | Database name | `webwork` |
-| `db.auth.password` | Database password (auto-generated if empty for local/ack) | `randompassword` |
+| `db.auth.password` | Database password (auto-generated if empty for local/ack; set explicitly for external) | `""` |
 | `db.service.port` | Database port (local/external) | `3306` |
 | `db.service.name` | External database hostname | `""` |
 | `db.architecture` | MariaDB architecture: `standalone` or `replication` | `standalone` |
@@ -254,6 +254,17 @@ ltiClient:
 ---
 
 ## Upgrading
+
+### 0.3.0 → 0.3.1
+
+- Values are now validated against `values.schema.json` on install/upgrade/
+  template. Unknown **top-level** keys fail the render (catches typos like
+  `spreadreplicas:`); nested blocks stay open. If a legitimate values file is
+  rejected, extend the schema rather than working around it.
+- `db.auth.password` / `db.auth.replicationPassword` no longer default to the
+  literal `randompassword` / `replicationpassword` — empty means a stable
+  random password is generated at install (existing releases keep their
+  current password via `lookup`; explicit values are unaffected).
 
 ### 0.2.10 → 0.3.0 (manual migration required)
 
