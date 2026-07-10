@@ -256,28 +256,29 @@ Secret with key `service-account.json`.
 
 ## LTI 1.3
 
-Configure LTI clients under `ltiClient` (list). Each entry requires:
+LTI is configured through WeBWorK's own config files, not chart values: put
+the LTI 1.3 settings (client/deployment IDs, platform URLs) in
+`webworkFiles.localOverrides` (rendered into `conf/localOverrides.conf`), and
+reference key material from environment variables sourced from an
+ESO/External-Secrets-managed Secret (e.g. `$ENV{WW_LTI_PRIVATE_KEY}`) rather
+than inlining it in values. See `externalSecrets.*`.
 
-```yaml
-ltiClient:
-- client_id: <canvas-client-id>
-  platform_id: https://canvas.example.com
-  oauth2_access_token_url: https://canvas.example.com/login/oauth2/token
-  oidc_auth_url: https://canvas.example.com/api/lti/authorize_redirect
-  platform_security_jwks_url: https://canvas.example.com/api/lti/security/jwks
-  tool_public_key: |
-    -----BEGIN PUBLIC KEY-----
-    ...
-    -----END PUBLIC KEY-----
-  tool_private_key: |
-    -----BEGIN RSA PRIVATE KEY-----
-    ...
-    -----END RSA PRIVATE KEY-----
-```
+> Historical note: a `ltiClient` values list existed in old chart versions but
+> was never read by current templates; it was removed in 0.3.4.
 
 ---
 
 ## Upgrading
+
+### 0.3.3 → 0.3.4 (values cleanup)
+
+Removed values that no template has read for many releases: `ltiClient`,
+`caliper`, `stage`, `rHost`, and `shibd.odbc.port/database/user/password`
+(shibd DB coordinates come from `db.auth` + provider wiring; only
+`shibd.odbc.driver`/`lib` remain). Because the schema closes the top-level
+key set, values files still carrying `ltiClient`/`caliper`/`stage`/`rHost`
+now **fail the render** — delete those keys when upgrading. They were inert,
+so removing them changes nothing about the deployed resources.
 
 ### 0.3.2 → 0.3.3
 

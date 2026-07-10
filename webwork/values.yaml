@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-stage: dev
 
 image:
   repository: lthub/webwork
@@ -45,29 +44,12 @@ externalSecrets:
   # When set, conf/authen_saml2.yml is mounted from it instead of the ConfigMap,
   # keeping the SP keypair out of values.
   saml2SecretName: ""
-rHost: ""
 supportEmail: support@example.edu
 # file upload size limit in bytes
 maxRequestSize: 1342177280 # 1.25 GiB
 smtp:
   server: localhost
   sender: no-reply@example.com
-ltiClient:
-- client_id: example_client_id
-  user_identifier_field: https://purl.imsglobal.org/spec/lti/claim/custom|ubc_puid
-  user_student_number_field: https://purl.imsglobal.org/spec/lti/claim/custom|ubc_student_number
-  platform_id: https://example_platform_id.com
-  oauth2_access_token_url: https://example_platform_id.com/login/oauth2/token
-  oidc_auth_url: https://example_platform_id.com/api/lti/authorize_redirect
-  platform_security_jwks_url: https://example_platform_id.com/api/lti/security/jwks
-  tool_public_key: |
-    -----BEGIN PUBLIC KEY-----
-    ...
-    -----END PUBLIC KEY-----
-  tool_private_key: |
-    -----BEGIN RSA PRIVATE KEY-----
-    ...
-    -----END RSA PRIVATE KEY-----
 
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -323,15 +305,15 @@ db:
     driver: MariaDB
 
   auth:
-    username: &dbUser webwork
-    database: &dbName webwork
+    username: webwork
+    database: webwork
     #prefix:
 
     ## Leave empty to generate a stable random password at install time
     ## (mariadb subchart for "local", secret.yaml for "ack"; for "external"
     ## you almost always want to set the real password explicitly).
     ## See also generatePasswords for helm template/ArgoCD pipelines.
-    password: &dbPass ""
+    password: ""
     replicationPassword: ""
 
   persistence:
@@ -409,13 +391,11 @@ shibd:
     entity_id: https://sp.example.com
     # key:
     # cert:
+  # DB coordinates/credentials come from db.auth + the provider wiring
+  # (rds-endpoint ConfigMap / passwordSecretRef) — only driver/lib are set here.
   odbc:
     driver:        MySQL
     lib:           odbc-store.so
-    port:          3306
-    database:      *dbName
-    user:          *dbUser
-    password:      *dbPass
   service:
     port:             1600
   listener_acl:       0.0.0.0/0
@@ -430,13 +410,6 @@ shibd:
 # webworkFiles:
 #   localOverride: |
 #   authen_saml2: |
-
-# caliper TODO: Add to deployment
-caliper:
-  enabled: false
-  base_url: https://webworkdev.example.com/webwork2/
-  host: https://caliper.endpoint.com
-  api_key: xxxxxxx
 
 r:
   enabled: true

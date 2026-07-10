@@ -202,14 +202,7 @@
     "libraryPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsTmpPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsDataPersistence": { "$ref": "#/definitions/persistence" },
-    "logsPersistence": { "$ref": "#/definitions/persistence" },
-    "ltiClient": {
-      "type": ["array", "null"],
-      "description": "DEPRECATED: not read by current templates"
-    },
-    "caliper": { "description": "DEPRECATED: not read by current templates" },
-    "stage": { "description": "DEPRECATED: not read by current templates" },
-    "rHost": { "description": "DEPRECATED: not read by current templates" }
+    "logsPersistence": { "$ref": "#/definitions/persistence" }
   },
   "definitions": {
     "worker": {
