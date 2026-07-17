@@ -512,3 +512,15 @@ reloader:
 extraEnv: []
 # - name: MOJO_TRUSTED_PROXIES
 #   value: "10.0.0.0/16"
+
+# Extra volumes + volumeMounts appended to all webwork containers (web +
+# workers). e.g. mount an ExternalSecret-backed SP signing keypair for the
+# WeBWorK 2.20 native SAML2 module ($saml2{sp}{certificate_file}/{private_key_file}).
+extraVolumes: []
+# - name: saml2-sp-certs
+#   secret:
+#     secretName: webwork-<env>-saml2-sp
+extraVolumeMounts: []
+# - name: saml2-sp-certs
+#   mountPath: /opt/webwork/webwork2/conf/saml2-sp
+#   readOnly: true

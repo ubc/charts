@@ -260,6 +260,9 @@ volumeMounts:
   mountPath: /opt/webwork/webwork2/conf/authen_saml2.yml
   subPath: authen_saml2.yml
   {{- end }}
+  {{- with .Values.extraVolumeMounts }}
+{{ toYaml . }}
+  {{- end }}
 {{- end }}
 
 
@@ -325,6 +328,9 @@ volumeMounts:
     items:
     - key: authen_saml2
       path: authen_saml2.yml
+{{- end }}
+{{- with .Values.extraVolumes }}
+{{ toYaml . }}
 {{- end }}
 {{- if .Values.logShipping.enabled }}
 {{- include "webwork.logShipper.volumes" . | nindent 0 }}
