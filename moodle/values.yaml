@@ -644,6 +644,14 @@ shib:
     tag: latest
   port: 1600
   replicas: 1
+  # shibd health probes. Leave empty to get the template default
+  # (tcpSocket:1600). Override with a full handler map per instance, e.g.
+  # `livenessProbe: {exec: {command: [pgrep, -x, shibd]}}`, where the TCP
+  # listener is not probe-friendly. Keep this EMPTY here: Helm deep-merges
+  # values, so a populated default would merge with an override and yield two
+  # handler types (which Kubernetes rejects). The default lives in the template.
+  livenessProbe: {}
+  readinessProbe: {}
   # imagePullPolicy:
   idp:
     discoveryUrl: https://example.com

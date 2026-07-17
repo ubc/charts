@@ -340,11 +340,9 @@ spec:
         - name: LOG_LEVEL
           value: {{ default "INFO" .Values.shib.logLevel | quote }}
         livenessProbe:
-          tcpSocket:
-            port: 1600
+          {{- toYaml (.Values.shib.livenessProbe | default (dict "tcpSocket" (dict "port" 1600))) | nindent 10 }}
         readinessProbe:
-          tcpSocket:
-            port: 1600
+          {{- toYaml (.Values.shib.readinessProbe | default (dict "tcpSocket" (dict "port" 1600))) | nindent 10 }}
         resources:
 {{ toYaml .Values.shib.resources | indent 10 }}
     {{ if or .Values.shib.sp.key .Values.shib.sp.existingSecretRef }}
