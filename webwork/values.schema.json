@@ -34,6 +34,8 @@
       }
     },
     "extraEnv": { "type": "array" },
+    "extraVolumes": { "type": "array" },
+    "extraVolumeMounts": { "type": "array" },
     "webworkFiles": { "type": ["object", "null"] },
     "externalSecrets": {
       "type": "object",
