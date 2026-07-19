@@ -83,6 +83,11 @@ secondary:
     recovery:
       enabled: false
       errorDurationThreshold: 5m
+      # Re-issue CHANGE MASTER when a replica's IO thread is stuck on a repl auth
+      # error (1045) past errorDurationThreshold, re-syncing the repl password from
+      # the secret. Lightweight (no backup rebuild); only acts on an already-broken
+      # replica. Requires the operator's reconnectOnAuthError build (ubc fork).
+      reconnectOnAuthError: true
 
 backup:
   enabled: false

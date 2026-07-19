@@ -55,11 +55,14 @@ spec:
       replPasswordSecretKeyRef:
         name: {{ include "mariadb.fullname" . }}-user-password
         key: password-repl
-      {{- if .Values.secondary.replica.recovery.enabled }}
+      {{- if or .Values.secondary.replica.recovery.enabled .Values.secondary.replica.recovery.reconnectOnAuthError }}
       recovery:
-        enabled: true
+        enabled: {{ .Values.secondary.replica.recovery.enabled }}
         {{- if .Values.secondary.replica.recovery.errorDurationThreshold }}
         errorDurationThreshold: {{ .Values.secondary.replica.recovery.errorDurationThreshold }}
+        {{- end }}
+        {{- if .Values.secondary.replica.recovery.reconnectOnAuthError }}
+        reconnectOnAuthError: true
         {{- end }}
       {{- end }}
       {{- if and .Values.backup.enabled (eq .Values.backup.type "physical") }}
