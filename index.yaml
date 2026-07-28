@@ -8181,6 +8181,17 @@ entries:
     urls:
     - https://ubc.github.io/charts/mycertificate-0.1.0.tgz
     version: 0.1.0
+  operations-hub:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-07-28T15:56:39.030688324Z"
+    description: operations-hub
+    digest: 7a76ef244e024959df2b6b0bc7fdead620c6448cd0aecd08f74ea4b6e78c9fee
+    name: operations-hub
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/operations-hub-0.0.1/operations-hub-0.0.1.tgz
+    version: 0.0.1
   orchard:
   - apiVersion: v1
     appVersion: "1.0"
@@ -9697,4 +9708,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-19T01:38:47.235816781Z"
+generated: "2026-07-28T15:56:39.031251396Z"
