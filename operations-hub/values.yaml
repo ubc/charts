@@ -107,3 +107,8 @@ app:
     workers: 3
     timeout: 60
   port: 5000
+  smtp:
+    host: ''
+    port: 25
+    useTls: 1
+    useSsl: 0

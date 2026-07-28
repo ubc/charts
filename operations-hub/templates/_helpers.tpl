@@ -94,4 +94,14 @@ into individual templates.
   value: {{ .Values.app.flask.debug | quote }}
 - name: SECRET_KEY
   value: {{ .Values.app.flask.secretKey }}
+{{- if .Values.app.smtp.host }}
+- name: MAIL_SERVER
+  value: {{ .Values.app.smtp.host }}
+- name: MAIL_PORT
+  value: {{ .Values.app.smtp.port | quote}}
+- name: MAIL_USE_TLS
+  value: {{ .Values.app.smtp.useTls | quote }}
+- name: MAIL_USE_SSL
+  value: {{ .Values.app.smtp.useSsl | quote }}
+{{- end }}
 {{- end -}}
