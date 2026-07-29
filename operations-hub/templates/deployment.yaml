@@ -49,6 +49,13 @@ spec:
           {{- end }}
           env:
             {{- include "operations-hub.podEnv" . | nindent 12 }}
+          volumeMounts:
+            - name: operations-hub-uploads
+              mountPath: /app/instance/uploads
+      volumes:
+        - name: operations-hub-uploads
+          persistentVolumeClaim:
+            claimName: {{ template "operations-hub.fullname" . }}-uploads-pvc
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

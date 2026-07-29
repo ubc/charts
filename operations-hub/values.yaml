@@ -112,3 +112,10 @@ app:
     port: 25
     useTls: 1
     useSsl: 0
+  pvc:
+    uploads:
+      annotations:
+        nfs.io/storage-path: "nfs/uploads"
+      storageClass: "nfs"
+      accessMode: ReadWriteMany
+      size: 2Gi
