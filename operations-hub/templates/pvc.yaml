@@ -1,0 +1,18 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "operations-hub.fullname" . }}-uploads-pvc
+  labels:
+    {{- include "operations-hub.labels" . | nindent 4 }}
+    tier: filestore
+  {{- with .Values.app.pvc.uploads.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.app.pvc.uploads.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.app.pvc.uploads.size | quote }}
+  storageClassName: {{ .Values.app.pvc.uploads.storageClass | quote }}
