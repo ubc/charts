@@ -8184,6 +8184,16 @@ entries:
   operations-hub:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-07-29T10:24:22.157843309Z"
+    description: operations-hub
+    digest: cf7d173256f72e580eeee05e752339ee4e052ccb8ae65ac99ec637edbebe220b
+    name: operations-hub
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/operations-hub-0.0.4/operations-hub-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-07-29T10:07:15.227816418Z"
     description: operations-hub
     digest: 5da0e8008588408381eb66a72fbe3943f289a05c6df0c66d3740edcfef3f73a9
@@ -9728,4 +9738,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-29T10:07:15.228861172Z"
+generated: "2026-07-29T10:24:22.158550622Z"
