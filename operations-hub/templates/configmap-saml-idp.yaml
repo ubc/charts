@@ -1,0 +1,19 @@
+{{- if and .Values.app.saml.enabled .Values.app.saml.idpMetadata }}
+{{- /*
+  UBC IAM's metadata, supplied as a file rather than fetched from a URL at request
+  time: that would put an external dependency in the login path and hand whoever
+  can spoof that host control of the signing certificate the app trusts.
+
+  Public information — it is the IdP's own published description — so a ConfigMap
+  is the right home for it, not a Secret.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "operations-hub.fullname" . }}-saml-idp
+  labels:
+    {{- include "operations-hub.labels" . | nindent 4 }}
+data:
+  idp-metadata.xml: |
+    {{- .Values.app.saml.idpMetadata | nindent 4 }}
+{{- end }}

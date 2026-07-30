@@ -52,10 +52,44 @@ spec:
           volumeMounts:
             - name: operations-hub-uploads
               mountPath: /app/instance/uploads
+            {{- if .Values.app.saml.enabled }}
+            - name: operations-hub-saml
+              mountPath: {{ include "operations-hub.saml.mountPath" . }}
+              readOnly: true
+            {{- end }}
       volumes:
         - name: operations-hub-uploads
           persistentVolumeClaim:
             claimName: {{ template "operations-hub.fullname" . }}-uploads-pvc
+        {{- if .Values.app.saml.enabled }}
+        {{- /*
+          Projected so the Vault-backed keypair and the IdP metadata ConfigMap land
+          in a single directory — the app expects all three files side by side.
+
+          0444: these are mounted root-owned because the pod sets no fsGroup, and the
+          app runs as uid 10001, so anything narrower is unreadable by the process that
+          needs it. Adding fsGroup instead would force a recursive chown of the NFS
+          uploads PVC on every start, which is the more expensive trade.
+        */}}
+        - name: operations-hub-saml
+          projected:
+            defaultMode: 0444
+            sources:
+              - secret:
+                  name: {{ include "operations-hub.fullname" . }}-saml
+                  items:
+                    - key: cert
+                      path: sp.crt
+                    - key: key
+                      path: sp.key
+              {{- if .Values.app.saml.idpMetadata }}
+              - configMap:
+                  name: {{ include "operations-hub.fullname" . }}-saml-idp
+                  items:
+                    - key: idp-metadata.xml
+                      path: idp-metadata.xml
+              {{- end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

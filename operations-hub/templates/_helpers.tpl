@@ -64,6 +64,16 @@ Return the MariaDB Hostname
 {{- end -}}
 
 {{/*
+Directory the SAML SP material is mounted into.
+
+The cert, key and IdP metadata paths are all derived from this one definition so
+the env vars the app reads and the volume that supplies the files cannot drift
+apart — a mismatch between them surfaces only as a 404 on /auth/saml/metadata,
+which is expensive to diagnose.
+*/}}
+{{- define "operations-hub.saml.mountPath" -}}/app/instance/saml{{- end -}}
+
+{{/*
 Common pod env block — used by both the Deployment and the migration Job
 so they stay in sync. Keep this in one place; do not duplicate the env list
 into individual templates.
@@ -103,5 +113,37 @@ into individual templates.
   value: {{ .Values.app.smtp.useTls | quote }}
 - name: MAIL_USE_SSL
   value: {{ .Values.app.smtp.useSsl | quote }}
+{{- end }}
+{{- if .Values.app.saml.enabled }}
+{{- $samlDir := include "operations-hub.saml.mountPath" . }}
+- name: SAML_SP_ENTITY_ID
+  value: {{ .Values.app.saml.spEntityId | quote }}
+- name: SAML_SP_BASE_URL
+  value: {{ .Values.app.saml.baseUrl | quote }}
+- name: SAML_SP_CERT_PATH
+  value: {{ printf "%s/sp.crt" $samlDir | quote }}
+- name: SAML_SP_KEY_PATH
+  value: {{ printf "%s/sp.key" $samlDir | quote }}
+{{- /*
+  Only set once UBC IAM has returned their metadata. Until then the four SP keys
+  above are enough to serve /auth/saml/metadata, which is what they need in order
+  to produce it — requiring their file first would deadlock the exchange.
+*/}}
+{{- if .Values.app.saml.idpMetadata }}
+- name: SAML_IDP_METADATA_PATH
+  value: {{ printf "%s/idp-metadata.xml" $samlDir | quote }}
+{{- end }}
+{{- with .Values.app.saml.contact.name }}
+- name: SAML_CONTACT_NAME
+  value: {{ . | quote }}
+{{- end }}
+{{- with .Values.app.saml.contact.email }}
+- name: SAML_CONTACT_EMAIL
+  value: {{ . | quote }}
+{{- end }}
+{{- if .Values.app.saml.metadataValidDays }}
+- name: SAML_METADATA_VALID_DAYS
+  value: {{ .Values.app.saml.metadataValidDays | quote }}
+{{- end }}
 {{- end }}
 {{- end -}}

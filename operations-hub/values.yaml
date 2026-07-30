@@ -119,3 +119,34 @@ app:
       storageClass: "nfs"
       accessMode: ReadWriteMany
       size: 2Gi
+
+  # SAML SSO. Off by default: with these unset the app returns 404 from
+  # /auth/saml/metadata rather than serving metadata it cannot sign.
+  #
+  # Registering an SP is a two-way exchange, so this is deliberately usable in two
+  # stages — set everything except idpMetadata to publish /auth/saml/metadata and
+  # hand it to UBC IAM, then add idpMetadata from what they send back to enable
+  # sign-in. Note that this block only supplies configuration; showing the SSO
+  # button on the login page is a separate `auth_saml_enabled` setting stored in
+  # the database.
+  saml:
+    enabled: false
+    # The SP's entity id. Conventionally this service's metadata URL.
+    spEntityId: ''
+    # Public origin of this service, no trailing slash. The ACS URL the app
+    # advertises is derived from it as <baseUrl>/auth/saml/acs.
+    baseUrl: ''
+    # UBC IAM's metadata XML, pasted in once they return it. Empty until then.
+    idpMetadata: ''
+    contact:
+      name: 'LTIC Operations Hub'
+      email: ''
+    # Days the published metadata stays valid. 0 keeps the python3-saml default of
+    # 2 days, which suits a URL the IdP re-fetches; raise it when the file is being
+    # emailed once and has to outlive the exchange.
+    metadataValidDays: 0
+    # SP signing keypair in Vault. Never put the private key in a values file.
+    secret:
+      path: operations-hub/saml
+      certKey: cert
+      privateKey: key
