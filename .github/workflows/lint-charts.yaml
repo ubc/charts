@@ -33,3 +33,6 @@ jobs:
 
       - name: Run moodle render assertions
         run: bash moodle/tests/run.sh
+
+      - name: Run operations-hub render assertions
+        run: bash operations-hub/tests/run.sh
