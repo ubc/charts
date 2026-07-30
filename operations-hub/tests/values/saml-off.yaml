@@ -1,0 +1,16 @@
+# SAML on, auto-fetch off. This is the shape of the real staging values file and
+# is the scenario the byte-identical guarantee protects.
+db:
+  host: 'db.example'
+  name: 'operations_hub'
+  secret:
+    path: operations-hub/stg/db
+app:
+  flask:
+    secretKey: testkey
+  saml:
+    enabled: true
+    spEntityId: 'https://ops.example/auth/saml/metadata'
+    baseUrl: 'https://ops.example'
+    secret:
+      path: operations-hub/stg/saml

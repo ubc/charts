@@ -119,3 +119,54 @@ app:
       storageClass: "nfs"
       accessMode: ReadWriteMany
       size: 2Gi
+
+  # SAML SSO. Off by default: with these unset the app returns 404 from
+  # /auth/saml/metadata rather than serving metadata it cannot sign.
+  #
+  # Registering an SP is a two-way exchange, so this is deliberately usable in two
+  # stages — set everything except idpMetadata to publish /auth/saml/metadata and
+  # hand it to UBC IAM, then add idpMetadata from what they send back to enable
+  # sign-in. Note that this block only supplies configuration; showing the SSO
+  # button on the login page is a separate `auth_saml_enabled` setting stored in
+  # the database.
+  saml:
+    enabled: false
+    # The SP's entity id. Conventionally this service's metadata URL.
+    spEntityId: ''
+    # Public origin of this service, no trailing slash. The ACS URL the app
+    # advertises is derived from it as <baseUrl>/auth/saml/acs.
+    baseUrl: ''
+    # UBC IAM's metadata XML. With idpMetadataUrl set this is the fallback baseline
+    # used when a fetch fails; keep it populated with a known-good copy, because a
+    # failed fetch with no baseline stops the pod. Without idpMetadataUrl it is the
+    # only source.
+    idpMetadata: ''
+    # Set to fetch IdP metadata at pod start ALONGSIDE the pasted baseline above,
+    # not instead of it: the URL is what picks up certificate rotation without a
+    # values edit, and the baseline above is what keeps the pod starting when a
+    # fetch fails. Leave idpMetadata empty while this is set and any failed fetch
+    # (a UBC outage, a network blip, a routine pod reschedule) stops the pod.
+    # Empty disables the whole auto-fetch mechanism.
+    #   staging: https://authentication.stg.id.ubc.ca/idp/shibboleth
+    #   prod:    https://authentication.ubc.ca/idp/shibboleth
+    idpMetadataUrl: ''
+    # Required when idpMetadataUrl is set. The fetched document must declare this
+    # entity id or it is rejected. UBC publishes unsigned metadata, so this is the
+    # only integrity check available beyond TLS.
+    idpEntityId: ''
+    # Timeout in seconds for fetching IdP metadata. Exceeding this timeout is treated
+    # as a fetch failure, which falls back to the idpMetadata baseline. The pod will
+    # not fail if a fetch times out and a baseline is available.
+    idpFetchTimeout: 15
+    contact:
+      name: 'LTIC Operations Hub'
+      email: ''
+    # Days the published metadata stays valid. 0 keeps the python3-saml default of
+    # 2 days, which suits a URL the IdP re-fetches; raise it when the file is being
+    # emailed once and has to outlive the exchange.
+    metadataValidDays: 0
+    # SP signing keypair in Vault. Never put the private key in a values file.
+    secret:
+      path: operations-hub/saml
+      certKey: cert
+      privateKey: key

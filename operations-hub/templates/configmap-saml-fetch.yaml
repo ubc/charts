@@ -1,0 +1,15 @@
+{{- if and .Values.app.saml.enabled .Values.app.saml.idpMetadataUrl }}
+{{- /*
+  The fetch script, kept as a real .py file under files/ rather than inlined here,
+  so it can be linted and tested directly instead of only through a rendered pod.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "operations-hub.fullname" . }}-saml-fetch
+  labels:
+    {{- include "operations-hub.labels" . | nindent 4 }}
+data:
+  fetch-idp-metadata.py: |
+    {{- required "files/fetch-idp-metadata.py is missing from the packaged chart -- SSO would silently break" (.Files.Get "files/fetch-idp-metadata.py") | nindent 4 }}
+{{- end }}

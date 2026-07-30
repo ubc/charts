@@ -64,6 +64,22 @@ Return the MariaDB Hostname
 {{- end -}}
 
 {{/*
+Directory the SAML SP material is mounted into.
+
+The cert, key and IdP metadata paths are all derived from this one definition so
+the env vars the app reads and the volume that supplies the files cannot drift
+apart — a mismatch between them surfaces only as a 404 on /auth/saml/metadata,
+which is expensive to diagnose.
+*/}}
+{{- define "operations-hub.saml.mountPath" -}}/app/instance/saml{{- end -}}
+
+{{/*
+IdP metadata lives in its own directory, not alongside the SP keypair: the keypair
+mount is read-only, and the auto-fetch init container has to write this file.
+*/}}
+{{- define "operations-hub.saml.idpDir" -}}/app/instance/saml-idp{{- end -}}
+
+{{/*
 Common pod env block — used by both the Deployment and the migration Job
 so they stay in sync. Keep this in one place; do not duplicate the env list
 into individual templates.
@@ -103,5 +119,61 @@ into individual templates.
   value: {{ .Values.app.smtp.useTls | quote }}
 - name: MAIL_USE_SSL
   value: {{ .Values.app.smtp.useSsl | quote }}
+{{- end }}
+{{- if .Values.app.saml.enabled }}
+{{- $samlDir := include "operations-hub.saml.mountPath" . }}
+- name: SAML_SP_ENTITY_ID
+  value: {{ .Values.app.saml.spEntityId | quote }}
+- name: SAML_SP_BASE_URL
+  value: {{ .Values.app.saml.baseUrl | quote }}
+- name: SAML_SP_CERT_PATH
+  value: {{ printf "%s/sp.crt" $samlDir | quote }}
+- name: SAML_SP_KEY_PATH
+  value: {{ printf "%s/sp.key" $samlDir | quote }}
+{{- /*
+  Only set once UBC IAM has returned their metadata. Until then the four SP keys
+  above are enough to serve /auth/saml/metadata, which is what they need in order
+  to produce it — requiring their file first would deadlock the exchange.
+*/}}
+{{- if or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl }}
+- name: SAML_IDP_METADATA_PATH
+  value: {{ printf "%s/idp-metadata.xml" (include "operations-hub.saml.idpDir" .) | quote }}
+{{- end }}
+{{- with .Values.app.saml.contact.name }}
+- name: SAML_CONTACT_NAME
+  value: {{ . | quote }}
+{{- end }}
+{{- with .Values.app.saml.contact.email }}
+- name: SAML_CONTACT_EMAIL
+  value: {{ . | quote }}
+{{- end }}
+{{- if .Values.app.saml.metadataValidDays }}
+- name: SAML_METADATA_VALID_DAYS
+  value: {{ .Values.app.saml.metadataValidDays | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Fail the render rather than deploy an auto-fetch that would accept any document.
+UBC publishes unsigned metadata, so the pinned entity id is the only integrity
+check there is -- silently omitting it is worse than a loud template error.
+*/}}
+{{- define "operations-hub.saml.validate" -}}
+{{- if and .Values.app.saml.enabled .Values.app.saml.idpMetadataUrl }}
+{{- if not (trim (default "" .Values.app.saml.idpEntityId)) }}
+{{- fail "app.saml.idpEntityId is required when app.saml.idpMetadataUrl is set" }}
+{{- end }}
+{{- /*
+  A whitespace-only idpMetadataUrl is truthy in Go templates, so the outer `if`
+  above still activates auto-fetch for it -- trim before checking or a
+  blank-looking value silently renders IDP_METADATA_URL: "   ". Same reasoning
+  as the scheme check in fetch-idp-metadata.py: http:// (or anything else) would
+  quietly drop the one integrity control this design has, so reject it here too
+  rather than only in the script.
+*/}}
+{{- if not (hasPrefix "https://" (trim (default "" .Values.app.saml.idpMetadataUrl))) }}
+{{- fail "app.saml.idpMetadataUrl must be an https:// URL" }}
+{{- end }}
 {{- end }}
 {{- end -}}
