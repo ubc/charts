@@ -74,6 +74,12 @@ which is expensive to diagnose.
 {{- define "operations-hub.saml.mountPath" -}}/app/instance/saml{{- end -}}
 
 {{/*
+IdP metadata lives in its own directory, not alongside the SP keypair: the keypair
+mount is read-only, and the auto-fetch init container has to write this file.
+*/}}
+{{- define "operations-hub.saml.idpDir" -}}/app/instance/saml-idp{{- end -}}
+
+{{/*
 Common pod env block — used by both the Deployment and the migration Job
 so they stay in sync. Keep this in one place; do not duplicate the env list
 into individual templates.
@@ -129,9 +135,9 @@ into individual templates.
   above are enough to serve /auth/saml/metadata, which is what they need in order
   to produce it — requiring their file first would deadlock the exchange.
 */}}
-{{- if .Values.app.saml.idpMetadata }}
+{{- if or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl }}
 - name: SAML_IDP_METADATA_PATH
-  value: {{ printf "%s/idp-metadata.xml" $samlDir | quote }}
+  value: {{ printf "%s/idp-metadata.xml" (include "operations-hub.saml.idpDir" .) | quote }}
 {{- end }}
 {{- with .Values.app.saml.contact.name }}
 - name: SAML_CONTACT_NAME

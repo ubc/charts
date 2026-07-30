@@ -1,0 +1,19 @@
+db:
+  host: 'db.example'
+  name: 'operations_hub'
+  secret:
+    path: operations-hub/stg/db
+app:
+  flask:
+    secretKey: testkey
+  saml:
+    enabled: true
+    spEntityId: 'https://ops.example/auth/saml/metadata'
+    baseUrl: 'https://ops.example'
+    idpMetadata: |
+      <?xml version="1.0"?>
+      <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://authentication.stg.id.ubc.ca">
+        <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol"/>
+      </EntityDescriptor>
+    secret:
+      path: operations-hub/stg/saml

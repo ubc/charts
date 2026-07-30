@@ -26,6 +26,21 @@ assert_fails_with "autofetch with null idpEntityId is rejected" \
   "$HERE/values/invalid-autofetch-null-entity-id.yaml" \
   "app.saml.idpEntityId is required"
 
+assert_yq_partial "static idp: SAML_IDP_METADATA_PATH points at saml-idp mount" \
+  "$HERE/values/saml-static-idp.yaml" "templates/deployment.yaml" \
+  '.spec.template.spec.containers[0].env[] | select(.name == "SAML_IDP_METADATA_PATH") | .value' \
+  "/app/instance/saml-idp/idp-metadata.xml"
+
+assert_yq_partial "static idp: dedicated volume is mounted" \
+  "$HERE/values/saml-static-idp.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.containers[0].volumeMounts[] | select(.name == "operations-hub-saml-idp")] | length' \
+  "1"
+
+assert_yq_partial "saml-off: no idp volume when no metadata source" \
+  "$HERE/values/saml-off.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.volumes[] | select(.name == "operations-hub-saml-idp")] | length' \
+  "0"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

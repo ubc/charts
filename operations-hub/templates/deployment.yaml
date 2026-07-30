@@ -58,14 +58,22 @@ spec:
               mountPath: {{ include "operations-hub.saml.mountPath" . }}
               readOnly: true
             {{- end }}
+            {{- if or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl }}
+            - name: operations-hub-saml-idp
+              mountPath: {{ include "operations-hub.saml.idpDir" . }}
+              readOnly: true
+            {{- end }}
       volumes:
         - name: operations-hub-uploads
           persistentVolumeClaim:
             claimName: {{ template "operations-hub.fullname" . }}-uploads-pvc
         {{- if .Values.app.saml.enabled }}
         {{- /*
-          Projected so the Vault-backed keypair and the IdP metadata ConfigMap land
-          in a single directory — the app expects all three files side by side.
+          Projected so the Vault-backed cert and key land in a single directory —
+          the app expects both files side by side. The IdP metadata used to be a
+          source here too; it now has its own mount (operations-hub-saml-idp)
+          because a later init container needs to write it, and this one stays
+          read-only.
 
           0444: these are mounted root-owned because the pod sets no fsGroup, and the
           app runs as uid 10001, so anything narrower is unreadable by the process that
@@ -83,13 +91,19 @@ spec:
                       path: sp.crt
                     - key: key
                       path: sp.key
-              {{- if .Values.app.saml.idpMetadata }}
-              - configMap:
-                  name: {{ include "operations-hub.fullname" . }}-saml-idp
-                  items:
-                    - key: idp-metadata.xml
-                      path: idp-metadata.xml
-              {{- end }}
+        {{- end }}
+        {{- if or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl }}
+        - name: operations-hub-saml-idp
+          {{- if .Values.app.saml.idpMetadataUrl }}
+          {{- /* Written by the fetch init container, so it must be writable. */}}
+          emptyDir: {}
+          {{- else }}
+          configMap:
+            name: {{ include "operations-hub.fullname" . }}-saml-idp
+            items:
+              - key: idp-metadata.xml
+                path: idp-metadata.xml
+          {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -6,6 +6,10 @@
 
   Public information — it is the IdP's own published description — so a ConfigMap
   is the right home for it, not a Secret.
+
+  With app.saml.idpMetadataUrl set this doubles as the fallback baseline: when a
+  fetch fails the init container serves this copy, so an IdP outage degrades SSO to
+  stale metadata instead of taking the pod down.
 */}}
 apiVersion: v1
 kind: ConfigMap
