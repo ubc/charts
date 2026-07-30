@@ -164,5 +164,16 @@ check there is -- silently omitting it is worse than a loud template error.
 {{- if not (trim (default "" .Values.app.saml.idpEntityId)) }}
 {{- fail "app.saml.idpEntityId is required when app.saml.idpMetadataUrl is set" }}
 {{- end }}
+{{- /*
+  A whitespace-only idpMetadataUrl is truthy in Go templates, so the outer `if`
+  above still activates auto-fetch for it -- trim before checking or a
+  blank-looking value silently renders IDP_METADATA_URL: "   ". Same reasoning
+  as the scheme check in fetch-idp-metadata.py: http:// (or anything else) would
+  quietly drop the one integrity control this design has, so reject it here too
+  rather than only in the script.
+*/}}
+{{- if not (hasPrefix "https://" (trim (default "" .Values.app.saml.idpMetadataUrl))) }}
+{{- fail "app.saml.idpMetadataUrl must be an https:// URL" }}
+{{- end }}
 {{- end }}
 {{- end -}}

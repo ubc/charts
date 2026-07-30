@@ -14,6 +14,7 @@ an SSO outage into a total one. Exits non-zero only when nothing safe can be ser
 import os
 import sys
 import tempfile
+import urllib.parse
 import urllib.request
 
 from onelogin.saml2.idp_metadata_parser import OneLogin_Saml2_IdPMetadataParser
@@ -24,6 +25,18 @@ def log(level, message):
 
 
 def fetch(url, timeout):
+    """Fetch the metadata document, refusing anything that is not https.
+
+    TLS plus the pinned entity id are the only integrity controls this design
+    has -- UBC's metadata is unsigned. A bare string-prefix check is not enough
+    (e.g. "https.evil.example" or a scheme-relative surprise), so the scheme is
+    parsed properly and compared for exact equality. Raises rather than exits so
+    this flows through the caller's existing failure path (WARNING + baseline
+    fallback) instead of adding a second way for the script to stop.
+    """
+    scheme = urllib.parse.urlsplit(url).scheme
+    if scheme != 'https':
+        raise ValueError(f'refusing non-https URL scheme {scheme!r} for {url!r}')
     with urllib.request.urlopen(url, timeout=timeout) as response:
         return response.read().decode('utf-8')
 
@@ -83,7 +96,30 @@ def main():
                 f'using baseline at {baseline}; SSO may be running on stale metadata')
             try:
                 with open(baseline) as source:
-                    write_atomic(output, source.read())
+                    baseline_xml = source.read()
+            except Exception as fallback_exc:
+                log('ERROR',
+                    f'baseline fallback failed ({type(fallback_exc).__name__}: '
+                    f'{fallback_exc}); nothing safe to serve')
+                return 1
+
+            # Validate with the same parser the app uses, same as the fetched-document
+            # path -- "acceptance here guarantees acceptance there" has to hold on the
+            # fallback branch too, or the operator only finds out the pasted baseline
+            # was bad during the outage that forced this fallback in the first place.
+            # Still write it: a bad baseline is not worse than no file at all, and
+            # stopping the pod here would contradict the approved fail-open design.
+            try:
+                validate(baseline_xml, entity_id)
+            except Exception as validate_exc:
+                log('ERROR',
+                    f'baseline at {baseline} failed validation '
+                    f'({type(validate_exc).__name__}: {validate_exc}); writing it anyway '
+                    f'because a bad baseline still beats no file -- fix the pasted '
+                    f'idpMetadata value')
+
+            try:
+                write_atomic(output, baseline_xml)
             except Exception as fallback_exc:
                 log('ERROR',
                     f'baseline fallback failed ({type(fallback_exc).__name__}: '

@@ -141,9 +141,12 @@ app:
     # failed fetch with no baseline stops the pod. Without idpMetadataUrl it is the
     # only source.
     idpMetadata: ''
-    # Set to fetch IdP metadata at pod start instead of pasting it above, so
-    # certificate rotation is picked up without a values edit. Empty disables the
-    # whole mechanism.
+    # Set to fetch IdP metadata at pod start ALONGSIDE the pasted baseline above,
+    # not instead of it: the URL is what picks up certificate rotation without a
+    # values edit, and the baseline above is what keeps the pod starting when a
+    # fetch fails. Leave idpMetadata empty while this is set and any failed fetch
+    # (a UBC outage, a network blip, a routine pod reschedule) stops the pod.
+    # Empty disables the whole auto-fetch mechanism.
     #   staging: https://authentication.stg.id.ubc.ca/idp/shibboleth
     #   prod:    https://authentication.ubc.ca/idp/shibboleth
     idpMetadataUrl: ''

@@ -54,12 +54,35 @@ grep -q "baseline" "$WORK/out3.xml" \
   && { echo "PASS entityId mismatch used fallback content"; PASS=$((PASS+1)); } \
   || { echo "FAIL entityId mismatch did not use fallback content"; FAIL=$((FAIL+1)); }
 
-# 4. Malformed XML falls back
-printf 'not xml at all' > "$WORK/bad.xml"
-IDP_METADATA_URL="file://$WORK/bad.xml" IDP_ENTITY_ID="$ENTITY" \
-  IDP_OUTPUT_PATH="$WORK/out4.xml" IDP_BASELINE_PATH="$WORK/baseline.xml" \
-  python3 "$SCRIPT"; check "malformed falls back" 0 $?
-grep -q "baseline" "$WORK/out4.xml" \
+# 4a. Non-https scheme is rejected before ever fetching/parsing, falls back.
+# file:// used to double as the malformed-XML fixture below, but now that the
+# script rejects non-https schemes up front (finding: scheme was unfiltered),
+# it never reaches the parser -- so this only proves scheme rejection, and a
+# separate case (4b) proves the malformed-XML fallback path over https. The
+# referenced path does not need to exist: the scheme check rejects it before
+# the file would ever be opened.
+STDERR4A=$(IDP_METADATA_URL="file://$WORK/does-not-exist.xml" IDP_ENTITY_ID="$ENTITY" \
+  IDP_OUTPUT_PATH="$WORK/out4a.xml" IDP_BASELINE_PATH="$WORK/baseline.xml" \
+  python3 "$SCRIPT" 2>&1 >/dev/null)
+check "non-https scheme rejected, falls back" 0 $?
+if [[ "$STDERR4A" == *"non-https"* ]]; then
+  echo "PASS non-https scheme rejected before fetch/parse"; PASS=$((PASS+1))
+else
+  echo "FAIL non-https scheme rejection message not found: $STDERR4A"; FAIL=$((FAIL+1))
+fi
+grep -q "baseline" "$WORK/out4a.xml" \
+  && { echo "PASS non-https rejection used fallback content"; PASS=$((PASS+1)); } \
+  || { echo "FAIL non-https rejection did not use fallback content"; FAIL=$((FAIL+1)); }
+
+# 4b. Malformed XML (fetched successfully over https, but not well-formed) falls
+# back. example.com is IANA-reserved for exactly this kind of illustrative use
+# and its HTML body is not well-formed XML (unclosed void elements), so it
+# reliably fails OneLogin_Saml2_IdPMetadataParser.parse without needing a
+# throwaway https server in this test.
+IDP_METADATA_URL="https://example.com/" IDP_ENTITY_ID="$ENTITY" \
+  IDP_OUTPUT_PATH="$WORK/out4b.xml" IDP_BASELINE_PATH="$WORK/baseline.xml" \
+  python3 "$SCRIPT"; check "malformed XML over https falls back" 0 $?
+grep -q "baseline" "$WORK/out4b.xml" \
   && { echo "PASS malformed used fallback content"; PASS=$((PASS+1)); } \
   || { echo "FAIL malformed did not use fallback content"; FAIL=$((FAIL+1)); }
 

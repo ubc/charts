@@ -11,5 +11,5 @@ metadata:
     {{- include "operations-hub.labels" . | nindent 4 }}
 data:
   fetch-idp-metadata.py: |
-    {{- .Files.Get "files/fetch-idp-metadata.py" | nindent 4 }}
+    {{- required "files/fetch-idp-metadata.py is missing from the packaged chart -- SSO would silently break" (.Files.Get "files/fetch-idp-metadata.py") | nindent 4 }}
 {{- end }}

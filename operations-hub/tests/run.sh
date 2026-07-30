@@ -26,6 +26,14 @@ assert_fails_with "autofetch with null idpEntityId is rejected" \
   "$HERE/values/invalid-autofetch-null-entity-id.yaml" \
   "app.saml.idpEntityId is required"
 
+assert_fails_with "autofetch with non-https idpMetadataUrl is rejected" \
+  "$HERE/values/invalid-autofetch-http-url.yaml" \
+  "app.saml.idpMetadataUrl must be an https:// URL"
+
+assert_fails_with "autofetch with whitespace-only idpMetadataUrl is rejected" \
+  "$HERE/values/invalid-autofetch-blank-url.yaml" \
+  "app.saml.idpMetadataUrl must be an https:// URL"
+
 assert_yq_partial "static idp: SAML_IDP_METADATA_PATH points at saml-idp mount" \
   "$HERE/values/saml-static-idp.yaml" "templates/deployment.yaml" \
   '.spec.template.spec.containers[0].env[] | select(.name == "SAML_IDP_METADATA_PATH") | .value' \
