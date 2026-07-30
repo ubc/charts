@@ -14,6 +14,10 @@ FAIL=0
 
 assert_renders "saml on, autofetch off" "$HERE/values/saml-off.yaml"
 
+assert_fails_with "autofetch without idpEntityId is rejected" \
+  "$HERE/values/invalid-autofetch-no-entity-id.yaml" \
+  "app.saml.idpEntityId is required"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

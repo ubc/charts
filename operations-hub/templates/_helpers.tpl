@@ -147,3 +147,16 @@ into individual templates.
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Fail the render rather than deploy an auto-fetch that would accept any document.
+UBC publishes unsigned metadata, so the pinned entity id is the only integrity
+check there is -- silently omitting it is worse than a loud template error.
+*/}}
+{{- define "operations-hub.saml.validate" -}}
+{{- if and .Values.app.saml.enabled .Values.app.saml.idpMetadataUrl }}
+{{- if not .Values.app.saml.idpEntityId }}
+{{- fail "app.saml.idpEntityId is required when app.saml.idpMetadataUrl is set" }}
+{{- end }}
+{{- end }}
+{{- end -}}

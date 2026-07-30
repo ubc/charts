@@ -136,8 +136,22 @@ app:
     # Public origin of this service, no trailing slash. The ACS URL the app
     # advertises is derived from it as <baseUrl>/auth/saml/acs.
     baseUrl: ''
-    # UBC IAM's metadata XML, pasted in once they return it. Empty until then.
+    # UBC IAM's metadata XML. With idpMetadataUrl set this is the fallback baseline
+    # used when a fetch fails; keep it populated with a known-good copy, because a
+    # failed fetch with no baseline stops the pod. Without idpMetadataUrl it is the
+    # only source.
     idpMetadata: ''
+    # Set to fetch IdP metadata at pod start instead of pasting it above, so
+    # certificate rotation is picked up without a values edit. Empty disables the
+    # whole mechanism.
+    #   staging: https://authentication.stg.id.ubc.ca/idp/shibboleth
+    #   prod:    https://authentication.ubc.ca/idp/shibboleth
+    idpMetadataUrl: ''
+    # Required when idpMetadataUrl is set. The fetched document must declare this
+    # entity id or it is rejected. UBC publishes unsigned metadata, so this is the
+    # only integrity check available beyond TLS.
+    idpEntityId: ''
+    idpFetchTimeout: 15
     contact:
       name: 'LTIC Operations Hub'
       email: ''
