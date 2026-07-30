@@ -28,6 +28,41 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if and .Values.app.saml.enabled .Values.app.saml.idpMetadataUrl }}
+      {{- /*
+        Runs the application image so validation uses the very parser the app uses,
+        making acceptance here a guarantee of acceptance there.
+      */}}
+      initContainers:
+        - name: fetch-idp-metadata
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["python3", "/saml-scripts/fetch-idp-metadata.py"]
+          env:
+            - name: IDP_METADATA_URL
+              value: {{ .Values.app.saml.idpMetadataUrl | quote }}
+            - name: IDP_ENTITY_ID
+              value: {{ .Values.app.saml.idpEntityId | quote }}
+            - name: IDP_FETCH_TIMEOUT
+              value: {{ .Values.app.saml.idpFetchTimeout | quote }}
+            - name: IDP_OUTPUT_PATH
+              value: {{ printf "%s/idp-metadata.xml" (include "operations-hub.saml.idpDir" .) | quote }}
+            {{- if .Values.app.saml.idpMetadata }}
+            - name: IDP_BASELINE_PATH
+              value: "/saml-baseline/idp-metadata.xml"
+            {{- end }}
+          volumeMounts:
+            - name: operations-hub-saml-idp
+              mountPath: {{ include "operations-hub.saml.idpDir" . }}
+            - name: operations-hub-saml-fetch
+              mountPath: /saml-scripts
+              readOnly: true
+            {{- if .Values.app.saml.idpMetadata }}
+            - name: operations-hub-saml-baseline
+              mountPath: /saml-baseline
+              readOnly: true
+            {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -104,6 +139,20 @@ spec:
               - key: idp-metadata.xml
                 path: idp-metadata.xml
           {{- end }}
+        {{- end }}
+        {{- if and .Values.app.saml.enabled .Values.app.saml.idpMetadataUrl }}
+        - name: operations-hub-saml-fetch
+          configMap:
+            name: {{ include "operations-hub.fullname" . }}-saml-fetch
+            defaultMode: 0555
+        {{- if .Values.app.saml.idpMetadata }}
+        - name: operations-hub-saml-baseline
+          configMap:
+            name: {{ include "operations-hub.fullname" . }}-saml-idp
+            items:
+              - key: idp-metadata.xml
+                path: idp-metadata.xml
+        {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

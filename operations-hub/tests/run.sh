@@ -51,6 +51,47 @@ assert_yq_partial "static idp: volume exists and is configMap-backed" \
   '[.spec.template.spec.volumes[] | select(.name == "operations-hub-saml-idp") | .configMap] | length' \
   "1"
 
+assert_yq_partial "autofetch: init container present" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '.spec.template.spec.initContainers[0].name' "fetch-idp-metadata"
+
+assert_yq_partial "autofetch: init container uses the app image" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '.spec.template.spec.initContainers[0].image == .spec.template.spec.containers[0].image' \
+  "true"
+
+assert_yq_partial "autofetch: URL passed to init container" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '.spec.template.spec.initContainers[0].env[] | select(.name == "IDP_METADATA_URL") | .value' \
+  "https://authentication.stg.id.ubc.ca/idp/shibboleth"
+
+assert_yq_partial "autofetch: idp volume is an emptyDir" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.volumes[] | select(.name == "operations-hub-saml-idp") | .emptyDir] | length' \
+  "1"
+
+assert_yq_partial "static idp: no init container" \
+  "$HERE/values/saml-static-idp.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.initContainers // []] | flatten | length' "0"
+
+assert_yq_exists "autofetch: script ConfigMap rendered" \
+  "$HERE/values/saml-autofetch.yaml" \
+  'select(.kind == "ConfigMap" and (.metadata.name | test("saml-fetch$")))'
+
+assert_yq_absent "saml-off: no script ConfigMap" \
+  "$HERE/values/saml-off.yaml" \
+  'select(.kind == "ConfigMap" and (.metadata.name | test("saml-fetch$")))'
+
+assert_yq_partial "autofetch: init container mounts idp dir writable" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '.spec.template.spec.initContainers[0].volumeMounts[] | select(.name == "operations-hub-saml-idp") | .readOnly // false' \
+  "false"
+
+assert_yq_partial "autofetch: app mounts idp dir read-only" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '.spec.template.spec.containers[0].volumeMounts[] | select(.name == "operations-hub-saml-idp") | .readOnly' \
+  "true"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"
