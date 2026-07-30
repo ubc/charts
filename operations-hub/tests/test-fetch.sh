@@ -50,12 +50,18 @@ grep -q "baseline" "$WORK/out2.xml" \
 IDP_METADATA_URL="$URL" IDP_ENTITY_ID="https://wrong.example" \
   IDP_OUTPUT_PATH="$WORK/out3.xml" IDP_BASELINE_PATH="$WORK/baseline.xml" \
   python3 "$SCRIPT"; check "entityId mismatch falls back" 0 $?
+grep -q "baseline" "$WORK/out3.xml" \
+  && { echo "PASS entityId mismatch used fallback content"; PASS=$((PASS+1)); } \
+  || { echo "FAIL entityId mismatch did not use fallback content"; FAIL=$((FAIL+1)); }
 
 # 4. Malformed XML falls back
 printf 'not xml at all' > "$WORK/bad.xml"
 IDP_METADATA_URL="file://$WORK/bad.xml" IDP_ENTITY_ID="$ENTITY" \
   IDP_OUTPUT_PATH="$WORK/out4.xml" IDP_BASELINE_PATH="$WORK/baseline.xml" \
   python3 "$SCRIPT"; check "malformed falls back" 0 $?
+grep -q "baseline" "$WORK/out4.xml" \
+  && { echo "PASS malformed used fallback content"; PASS=$((PASS+1)); } \
+  || { echo "FAIL malformed did not use fallback content"; FAIL=$((FAIL+1)); }
 
 # 5. Failure with no baseline is fatal
 IDP_METADATA_URL="https://127.0.0.1:1/nope" IDP_ENTITY_ID="$ENTITY" \

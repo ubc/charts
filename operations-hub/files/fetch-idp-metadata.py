@@ -46,11 +46,18 @@ def validate(xml, expected_entity_id):
 
 def write_atomic(path, content):
     """Write via a temp file and rename, so a crash mid-write cannot leave a
-    truncated document where the application expects valid XML."""
+    truncated document where the application expects valid XML.
+
+    mkstemp() creates the temp file mode 0600 (owner-only). Widen it to 0644
+    explicitly before the rename: os.replace() preserves whatever mode the temp
+    file had, and this file's readability by the app container should be a
+    stated property of this script, not an inherited tempfile default.
+    """
     directory = os.path.dirname(path) or '.'
     os.makedirs(directory, exist_ok=True)
     handle, tmp = tempfile.mkstemp(dir=directory)
     try:
+        os.fchmod(handle, 0o644)
         with os.fdopen(handle, 'w') as out:
             out.write(content)
         os.replace(tmp, path)
@@ -74,8 +81,14 @@ def main():
         if baseline and os.path.isfile(baseline):
             log('WARNING',
                 f'using baseline at {baseline}; SSO may be running on stale metadata')
-            with open(baseline) as source:
-                write_atomic(output, source.read())
+            try:
+                with open(baseline) as source:
+                    write_atomic(output, source.read())
+            except Exception as fallback_exc:
+                log('ERROR',
+                    f'baseline fallback failed ({type(fallback_exc).__name__}: '
+                    f'{fallback_exc}); nothing safe to serve')
+                return 1
             return 0
         log('ERROR', 'fetch failed and no baseline is available; nothing safe to serve')
         return 1
