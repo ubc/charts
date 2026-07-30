@@ -1,0 +1,16 @@
+db:
+  host: 'db.example'
+  name: 'operations_hub'
+  secret:
+    path: operations-hub/stg/db
+app:
+  flask:
+    secretKey: testkey
+  saml:
+    enabled: true
+    spEntityId: 'https://ops.example/auth/saml/metadata'
+    baseUrl: 'https://ops.example'
+    idpMetadataUrl: 'https://authentication.stg.id.ubc.ca/idp/shibboleth'
+    idpEntityId: 'https://authentication.stg.id.ubc.ca'
+    secret:
+      path: operations-hub/stg/saml

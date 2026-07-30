@@ -92,6 +92,32 @@ assert_yq_partial "autofetch: app mounts idp dir read-only" \
   '.spec.template.spec.containers[0].volumeMounts[] | select(.name == "operations-hub-saml-idp") | .readOnly' \
   "true"
 
+assert_yq_partial "autofetch: entity id is passed to init container" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '.spec.template.spec.initContainers[0].env[] | select(.name == "IDP_ENTITY_ID") | .value' \
+  "https://authentication.stg.id.ubc.ca"
+
+assert_yq_partial "autofetch: init writes exactly where the app reads" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '(.spec.template.spec.initContainers[0].env[] | select(.name=="IDP_OUTPUT_PATH") | .value) == (.spec.template.spec.containers[0].env[] | select(.name=="SAML_IDP_METADATA_PATH") | .value)' \
+  "true"
+
+assert_yq_partial "autofetch with baseline: IDP_BASELINE_PATH set" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.initContainers[0].env[] | select(.name == "IDP_BASELINE_PATH")] | length' "1"
+
+assert_yq_partial "autofetch with baseline: baseline volume mounted in init" \
+  "$HERE/values/saml-autofetch.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.initContainers[0].volumeMounts[] | select(.name == "operations-hub-saml-baseline")] | length' "1"
+
+assert_yq_partial "autofetch without baseline: no IDP_BASELINE_PATH" \
+  "$HERE/values/saml-autofetch-no-baseline.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.initContainers[0].env[] | select(.name == "IDP_BASELINE_PATH")] | length' "0"
+
+assert_yq_partial "autofetch without baseline: no baseline volume" \
+  "$HERE/values/saml-autofetch-no-baseline.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.volumes[] | select(.name == "operations-hub-saml-baseline")] | length' "0"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

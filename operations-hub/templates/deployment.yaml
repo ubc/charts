@@ -38,13 +38,17 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["python3", "/saml-scripts/fetch-idp-metadata.py"]
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             - name: IDP_METADATA_URL
               value: {{ .Values.app.saml.idpMetadataUrl | quote }}
             - name: IDP_ENTITY_ID
               value: {{ .Values.app.saml.idpEntityId | quote }}
             - name: IDP_FETCH_TIMEOUT
-              value: {{ .Values.app.saml.idpFetchTimeout | quote }}
+              value: {{ .Values.app.saml.idpFetchTimeout | default 15 | quote }}
             - name: IDP_OUTPUT_PATH
               value: {{ printf "%s/idp-metadata.xml" (include "operations-hub.saml.idpDir" .) | quote }}
             {{- if .Values.app.saml.idpMetadata }}
