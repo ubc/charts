@@ -58,7 +58,7 @@ spec:
               mountPath: {{ include "operations-hub.saml.mountPath" . }}
               readOnly: true
             {{- end }}
-            {{- if or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl }}
+            {{- if and .Values.app.saml.enabled (or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl) }}
             - name: operations-hub-saml-idp
               mountPath: {{ include "operations-hub.saml.idpDir" . }}
               readOnly: true
@@ -92,7 +92,7 @@ spec:
                     - key: key
                       path: sp.key
         {{- end }}
-        {{- if or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl }}
+        {{- if and .Values.app.saml.enabled (or .Values.app.saml.idpMetadata .Values.app.saml.idpMetadataUrl) }}
         - name: operations-hub-saml-idp
           {{- if .Values.app.saml.idpMetadataUrl }}
           {{- /* Written by the fetch init container, so it must be writable. */}}

@@ -41,6 +41,16 @@ assert_yq_partial "saml-off: no idp volume when no metadata source" \
   '[.spec.template.spec.volumes[] | select(.name == "operations-hub-saml-idp")] | length' \
   "0"
 
+assert_yq_partial "disabled: no idp volume even when idpMetadata set" \
+  "$HERE/values/saml-disabled-with-idp.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.volumes[] | select(.name == "operations-hub-saml-idp")] | length' \
+  "0"
+
+assert_yq_partial "static idp: volume exists and is configMap-backed" \
+  "$HERE/values/saml-static-idp.yaml" "templates/deployment.yaml" \
+  '[.spec.template.spec.volumes[] | select(.name == "operations-hub-saml-idp") | .configMap] | length' \
+  "1"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"
