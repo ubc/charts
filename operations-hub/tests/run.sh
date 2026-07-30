@@ -18,6 +18,10 @@ assert_fails_with "autofetch without idpEntityId is rejected" \
   "$HERE/values/invalid-autofetch-no-entity-id.yaml" \
   "app.saml.idpEntityId is required"
 
+assert_fails_with "autofetch with whitespace-only idpEntityId is rejected" \
+  "$HERE/values/invalid-autofetch-blank-entity-id.yaml" \
+  "app.saml.idpEntityId is required"
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

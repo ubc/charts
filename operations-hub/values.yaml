@@ -151,6 +151,9 @@ app:
     # entity id or it is rejected. UBC publishes unsigned metadata, so this is the
     # only integrity check available beyond TLS.
     idpEntityId: ''
+    # Timeout in seconds for fetching IdP metadata. Exceeding this timeout is treated
+    # as a fetch failure, which falls back to the idpMetadata baseline. The pod will
+    # not fail if a fetch times out and a baseline is available.
     idpFetchTimeout: 15
     contact:
       name: 'LTIC Operations Hub'
