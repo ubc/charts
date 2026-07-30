@@ -155,7 +155,7 @@ check there is -- silently omitting it is worse than a loud template error.
 */}}
 {{- define "operations-hub.saml.validate" -}}
 {{- if and .Values.app.saml.enabled .Values.app.saml.idpMetadataUrl }}
-{{- if not (trim .Values.app.saml.idpEntityId) }}
+{{- if not (trim (default "" .Values.app.saml.idpEntityId)) }}
 {{- fail "app.saml.idpEntityId is required when app.saml.idpMetadataUrl is set" }}
 {{- end }}
 {{- end }}
