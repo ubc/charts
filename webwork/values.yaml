@@ -22,6 +22,10 @@ systemTimezone: America/Vancouver
 appUser: www-data
 # mojolicious secret passphrase - leave empty to auto-generate a stable random value
 secret: ""
+lti:
+  admin:
+    password: "REPLACE ME"
+    totp: "" # if empty, falls back to webwork generating MFA secret on login
 
 # Allow the chart to generate random values for `secret` / db.auth.password on
 # first install (read back via `lookup` on later upgrades). `lookup` returns

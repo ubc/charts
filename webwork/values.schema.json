@@ -11,6 +11,18 @@
     "replicaCount": { "type": "integer", "minimum": 0 },
     "appUser": { "type": "string" },
     "secret": { "type": ["string", "null"] },
+    "lti": {
+      "type": "object",
+      "properties": {
+        "admin": {
+          "type": "object",
+          "properties": {
+            "password": { "type": "string" },
+            "totp": { "type": "string" }
+          }
+        }
+      }
+    },
     "generatePasswords": { "type": "boolean" },
     "rootUrl": { "type": "string" },
     "timezone": { "type": "string" },

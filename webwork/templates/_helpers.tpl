@@ -188,6 +188,10 @@ env:
   value: "1"
 - name: LOG_LEVEL
   value: {{ .Values.shibd.log_level | quote }}
+- name: LTI_ADMIN_PASSWORD
+  value: {{ .Values.lti.admin.password | quote }}
+- name: LTI_ADMIN_TOTP
+  value: {{ .Values.lti.admin.totp | quote }}
 - name: SHIBBOLETH_IDP_DISCOVERY_URL
   value: {{ .Values.shibd.idp.discovery_url | quote }}
 - name: SHIBBOLETH_IDP_ENTITY_ID
