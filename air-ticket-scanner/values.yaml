@@ -1,0 +1,64 @@
+# Default values for a REUSABLE, shareable chart. Environment-specific and
+# internal values (image repo, Vault paths, hostnames, recipients) are set in the
+# private per-env values file (values_staging.yaml in the config repo), NOT here.
+
+# Environment name (staging, prod). Set per env; drives labels.
+env: ""
+
+image:
+  # Overridden per env with your registry path. Left generic here so the public
+  # chart does not reveal internal infrastructure.
+  repository: registry.example.com/ORG/air-ticket-scanner
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# The cluster pulls from a private registry, so the kubelet needs an image pull
+# secret. Create a kubernetes.io/dockerconfigjson secret in the app namespace
+# (see RUNBOOK.md) and set its name in the per-env values file.
+imagePullSecrets: []
+#  - name: registry-pull-secret
+
+# CronJob schedule and run behaviour
+schedule: "*/15 * * * *"
+concurrencyPolicy: Forbid
+successfulJobsHistoryLimit: 3
+failedJobsHistoryLimit: 1
+backoffLimit: 0
+
+serviceAccount:
+  name: air-ticket-scanner
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "200m"
+
+# External Secrets: which store to read from, and where the ServiceNow creds live.
+# SMTP creds are intentionally absent — the internal relay needs no authentication.
+externalSecrets:
+  # Reference to your External Secrets store. Set the real name and kind
+  # (SecretStore or ClusterSecretStore) in the private per-env values file so the
+  # public chart does not reveal them.
+  secretStoreRef:
+    name: secret-store
+    kind: SecretStore
+  refreshInterval: "24h"
+  servicenow:
+    # Overridden per env with your real Vault path. Generic here so the public
+    # chart does not reveal your Vault layout.
+    path: "path/to/servicenow/serviceaccount"
+    usernameProperty: username
+    passwordProperty: password
+
+# Non-sensitive config -> ConfigMap -> env vars. SMTP_PORT MUST stay a quoted string.
+config:
+  SERVICENOW_INSTANCE_URL: ""
+  SMTP_HOST: ""
+  SMTP_PORT: "25"
+  ALERT_FROM: ""
+  ALERT_TO: ""
+  TICKET_DESCRIPTION_PREFIX: ""
+  TICKET_COMPANY: ""

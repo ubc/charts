@@ -1,0 +1,7 @@
+apiVersion: v2
+name: air-ticket-scanner
+description: ServiceNow incident alert CronJob (AIR ticket scanner)
+type: application
+# Bump on every helm push to the OCI registry; ApplicationSet chartVersion must match.
+version: 0.1.0
+appVersion: "1.0.0"

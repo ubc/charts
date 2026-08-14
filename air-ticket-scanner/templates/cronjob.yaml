@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "ats.name" . }}
+  labels:
+    {{- include "ats.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.backoffLimit }}
+      template:
+        metadata:
+          labels:
+            {{- include "ats.labels" . | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          serviceAccountName: {{ .Values.serviceAccount.name }}
+          {{- with .Values.imagePullSecrets }}
+          # Required for on-prem nodes to authenticate to Artifact Registry.
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+            - name: {{ include "ats.name" . }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              # ConfigMap (non-sensitive) + Vault-backed Secret (ServiceNow creds)
+              # together cover the 9 required env vars. SMTP creds are optional.
+              envFrom:
+                - configMapRef:
+                    name: {{ include "ats.configName" . }}
+                - secretRef:
+                    name: {{ include "ats.secretName" . }}
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}

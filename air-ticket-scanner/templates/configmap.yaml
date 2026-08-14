@@ -1,0 +1,11 @@
+# Non-sensitive, env-specific configuration. Injected via envFrom/configMapRef.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ats.configName" . }}
+  labels:
+    {{- include "ats.labels" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.config }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
