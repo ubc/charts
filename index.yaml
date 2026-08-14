@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  air-ticket-scanner:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-08-14T22:54:42.925581454Z"
+    description: ServiceNow incident alert CronJob (AIR ticket scanner)
+    digest: 7467f9d772be90f1cd665ea9ec4891a8a6e02f6fa851ef86e6c47a9088689832
+    name: air-ticket-scanner
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/air-ticket-scanner-0.1.0/air-ticket-scanner-0.1.0.tgz
+    version: 0.1.0
   alchemy:
   - apiVersion: v1
     appVersion: 1.1.0
@@ -9771,4 +9782,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-07T22:24:33.139817629Z"
+generated: "2026-08-14T22:54:42.926353155Z"
