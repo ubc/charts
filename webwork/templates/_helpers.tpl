@@ -188,10 +188,27 @@ env:
   value: "1"
 - name: LOG_LEVEL
   value: {{ .Values.shibd.log_level | quote }}
+{{- /*
+Sourced from a Secret rather than an inline value so the credentials never land
+in the PodSpec (readable by anyone with namespace get on the Deployment) or in
+the Helm release Secret. Same indirection as WEBWORK_SECRET above.
+`optional: true` keeps pods schedulable when the keys are absent -- notably when
+upgrading an externalSecrets install before the new Vault keys are in place, and
+for lti.admin.totp, whose empty value legitimately means "let WeBWorK generate
+the MFA secret on login".
+*/}}
 - name: LTI_ADMIN_PASSWORD
-  value: {{ .Values.lti.admin.password | quote }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ if .Values.externalSecrets.enabled }}{{ .Values.externalSecrets.secretName }}{{ else }}{{ include "webwork.fullname" . }}{{ end }}
+      key: lti_admin_password
+      optional: true
 - name: LTI_ADMIN_TOTP
-  value: {{ .Values.lti.admin.totp | quote }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ if .Values.externalSecrets.enabled }}{{ .Values.externalSecrets.secretName }}{{ else }}{{ include "webwork.fullname" . }}{{ end }}
+      key: lti_admin_totp
+      optional: true
 - name: SHIBBOLETH_IDP_DISCOVERY_URL
   value: {{ .Values.shibd.idp.discovery_url | quote }}
 - name: SHIBBOLETH_IDP_ENTITY_ID
