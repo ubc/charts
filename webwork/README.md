@@ -263,12 +263,49 @@ reference key material from environment variables sourced from an
 ESO/External-Secrets-managed Secret (e.g. `$ENV{WW_LTI_PRIVATE_KEY}`) rather
 than inlining it in values. See `externalSecrets.*`.
 
+### LTI admin credentials
+
+`lti.admin.password` / `lti.admin.totp` reach the container as
+`LTI_ADMIN_PASSWORD` / `LTI_ADMIN_TOTP`, injected via `secretKeyRef` so they
+never appear in the PodSpec or the Helm release Secret.
+
+With `externalSecrets.enabled: true` the values are **ignored** and the
+credentials are read from these keys in `externalSecrets.secretName`:
+
+| Secret key | Env var |
+|---|---|
+| `lti_admin_password` | `LTI_ADMIN_PASSWORD` |
+| `lti_admin_totp` | `LTI_ADMIN_TOTP` |
+
+Add both to your Vault-backed ExternalSecret. The refs are `optional: true`, so
+a missing key leaves the variable unset rather than blocking pod start — and an
+empty `lti_admin_totp` legitimately means "let WeBWorK generate the MFA secret
+on login".
+
 > Historical note: a `ltiClient` values list existed in old chart versions but
 > was never read by current templates; it was removed in 0.3.4.
 
 ---
 
 ## Upgrading
+
+### 0.3.6 → 0.3.7 (LTI admin credentials out of the PodSpec)
+
+`LTI_ADMIN_PASSWORD` / `LTI_ADMIN_TOTP` were previously rendered as inline
+`value:` entries, which put the credentials in the Deployment PodSpec (readable
+with `get deploy`) and in the Helm release Secret. They are now sourced via
+`secretKeyRef`.
+
+**If you use `externalSecrets`:** add `lti_admin_password` and `lti_admin_totp`
+to the Secret named by `externalSecrets.secretName` *before* upgrading, then
+drop `lti.admin.*` from your values file. The refs are optional, so upgrading
+first is not an outage — the variables are simply unset until the keys appear.
+
+**Otherwise:** no action. The chart-managed Secret now carries both keys,
+populated from `lti.admin.*` as before.
+
+Credentials previously set inline are in your values file and git history.
+Treat them as exposed and rotate rather than relocate.
 
 ### 0.3.3 → 0.3.4 (values cleanup)
 

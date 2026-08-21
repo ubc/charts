@@ -22,6 +22,11 @@ systemTimezone: America/Vancouver
 appUser: www-data
 # mojolicious secret passphrase - leave empty to auto-generate a stable random value
 secret: ""
+# LTI admin credentials. These are injected via secretKeyRef, never as an inline
+# PodSpec value, so they are not readable from the Deployment or the Helm release.
+# With externalSecrets.enabled the values below are IGNORED and the credentials
+# come from keys `lti_admin_password` / `lti_admin_totp` in
+# externalSecrets.secretName -- add them to your Vault-backed ExternalSecret.
 lti:
   admin:
     password: "REPLACE ME"
