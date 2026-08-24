@@ -105,6 +105,22 @@
         "periodSeconds": { "type": "integer", "minimum": 1 }
       }
     },
+    "livenessProbe": {
+      "type": "object",
+      "properties": {
+        "timeoutSeconds": { "type": "integer", "minimum": 1 },
+        "periodSeconds": { "type": "integer", "minimum": 1 },
+        "failureThreshold": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "readinessProbe": {
+      "type": "object",
+      "properties": {
+        "timeoutSeconds": { "type": "integer", "minimum": 1 },
+        "periodSeconds": { "type": "integer", "minimum": 1 },
+        "failureThreshold": { "type": "integer", "minimum": 1 }
+      }
+    },
     "autoscaling": {
       "type": "object",
       "properties": {
