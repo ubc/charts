@@ -68,6 +68,9 @@ spec:
             httpGet:
               path: /webwork2
               port: http
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           startupProbe:
             httpGet:
               path: /webwork2
@@ -78,6 +81,9 @@ spec:
             httpGet:
               path: /webwork2
               port: http
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
