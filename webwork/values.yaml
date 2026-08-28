@@ -65,7 +65,7 @@ smtp:
 ##
 ## storageClass guidance (EKS/EFS): the WeBWorK web + workers all run as
 ## www-data (uid 33). For the WRITABLE mounts the app must own/edit — course,
-## htdocsTmp, htdocsData, logs — use an access point that enforces uid=33 so
+## htdocsTmp, htdocsData, uploadCache, logs — use an access point that enforces uid=33 so
 ## files are born www-data-owned (no chown/group-write dependency, no orphan
 ## *_tmp dirs). On this platform that is StorageClass `efs-sc-uid33`. Keep the
 ## read-only OPL `library` on `efs-sc` (uid=0): it is consumed via the
@@ -112,6 +112,33 @@ htdocsDataPersistence:
   storageClass: ""
   accessMode: ReadWriteMany
   size: 8Gi
+
+## The File Manager upload cache ($webworkDirs{uploadCache}, which resolves to
+## /opt/webwork/webwork2/DATA/uploads). Uploading a file is a TWO-request flow:
+## the first request writes the file plus a <tmpfile>.info descriptor into this
+## directory, and the confirm request reads it back by id. With more than one
+## replica and no load balancer session affinity the confirm request usually
+## lands on a different pod, which has no such file, and WeBWorK::Upload::retrieve
+## dies with "no upload matches the ID specified" — a 500 for the instructor.
+##
+## So enable this whenever replicaCount > 1 (or the HPA can scale above 1) and
+## use a uid=33 access point (`efs-sc-uid33`), since www-data writes here.
+##
+## Note this mounts only the `uploads` subdirectory, NOT all of
+## /opt/webwork/webwork2/DATA — that parent also holds Saml2IDPs (Net::SAML2
+## metadata cache), which is fine per-pod and must not be shadowed.
+##
+## Leave disabled for single-replica installs; the mount is then omitted
+## entirely and the image's own directory is used exactly as before.
+uploadCachePersistence:
+  enabled: false
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  annotations: {}
+  storageClass: ""
+  accessMode: ReadWriteMany
+  size: 1Gi
 
 logsPersistence:
   enabled: false

@@ -85,6 +85,28 @@ spec:
   storageClassName: {{ .Values.htdocsDataPersistence.storageClass | quote }}
 {{- end }}
 
+{{- if .Values.uploadCachePersistence.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "webwork.fullname" . }}-upload-cache-pvc
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: filestore
+  {{- with .Values.uploadCachePersistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.uploadCachePersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.uploadCachePersistence.size | quote }}
+  storageClassName: {{ .Values.uploadCachePersistence.storageClass | quote }}
+{{- end }}
+
 {{- if .Values.logsPersistence.enabled }}
 ---
 kind: PersistentVolumeClaim

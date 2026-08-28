@@ -269,6 +269,11 @@ volumeMounts:
   mountPath: /opt/webwork/webwork2/htdocs/tmp
 - name: webwork-htdocs-data-data
   mountPath: /opt/webwork/webwork2/htdocs/DATA
+  {{- if .Values.uploadCachePersistence.enabled }}
+  {{/* Only the uploads subdirectory. The DATA parent also holds the per-pod Saml2IDPs cache. */}}
+- name: webwork-upload-cache-data
+  mountPath: /opt/webwork/webwork2/DATA/uploads
+  {{- end }}
 - name: webwork-logs-data
   mountPath: /opt/webwork/webwork2/logs
   {{- if (.Values.webworkFiles).localOverrides }}
@@ -316,6 +321,11 @@ volumeMounts:
     claimName: {{ template "webwork.fullname" . }}-htdocs-data-pvc
 {{- else }}
   emptyDir: {}
+{{- end }}
+{{- if .Values.uploadCachePersistence.enabled }}
+- name: webwork-upload-cache-data
+  persistentVolumeClaim:
+    claimName: {{ template "webwork.fullname" . }}-upload-cache-pvc
 {{- end }}
 - name: webwork-logs-data
 {{- if .Values.logsPersistence.enabled }}

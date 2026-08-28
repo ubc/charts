@@ -232,6 +232,7 @@
     "libraryPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsTmpPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsDataPersistence": { "$ref": "#/definitions/persistence" },
+    "uploadCachePersistence": { "$ref": "#/definitions/persistence" },
     "logsPersistence": { "$ref": "#/definitions/persistence" }
   },
   "definitions": {
