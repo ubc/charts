@@ -48,6 +48,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "webwork.serviceAccountName" . }}
+      {{- if .Values.gracefulShutdown.enabled }}
+      terminationGracePeriodSeconds: {{ .Values.gracefulShutdown.terminationGracePeriodSeconds }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.logShipping.enabled }}
@@ -57,6 +60,17 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           {{- include "webwork.app.spec" . | indent 10 }}
+          {{- if .Values.gracefulShutdown.enabled }}
+          # Keep serving while the load balancer deregisters this pod. Deleting a pod
+          # marks it Terminating and signals the container at the same time, but the
+          # AWS LB controller needs a moment to pull the pod IP out of the target
+          # group. Without this pause the LB keeps sending new requests to a process
+          # that is already shutting down, and they fail.
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "{{ .Values.gracefulShutdown.drainSeconds }}"]
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080

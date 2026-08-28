@@ -113,6 +113,29 @@ htdocsDataPersistence:
   accessMode: ReadWriteMany
   size: 8Gi
 
+## Graceful shutdown for the web Deployment (the only workload behind the load
+## balancer; the workers and cronjobs are not targets and are left alone).
+##
+## Deleting a pod marks it Terminating and signals the container at the same
+## moment, but the AWS load balancer controller needs a moment to remove the pod
+## IP from the target group. In that gap the LB still routes new requests to a
+## process that is already tearing down, so they fail — as ELB 5XX if the socket
+## is gone, or as target 5XX if the app answers with its resources half closed.
+##
+## preStop delays the signal so deregistration wins the race.
+## `terminationGracePeriodSeconds` covers the whole sequence, so keep it
+## comfortably larger than drainSeconds — the app only gets the remainder to
+## finish in-flight work before SIGKILL.
+##
+## Relevant whenever pods are replaced: rollouts, HPA scale-in, and Karpenter
+## node consolidation.
+gracefulShutdown:
+  enabled: true
+  ## Seconds to keep serving after the pod is marked Terminating.
+  drainSeconds: 20
+  ## Must exceed drainSeconds; the difference is the app's window to drain.
+  terminationGracePeriodSeconds: 60
+
 ## The File Manager upload cache ($webworkDirs{uploadCache}, which resolves to
 ## /opt/webwork/webwork2/DATA/uploads). Uploading a file is a TWO-request flow:
 ## the first request writes the file plus a <tmpfile>.info descriptor into this

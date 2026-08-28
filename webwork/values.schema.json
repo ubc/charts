@@ -232,6 +232,14 @@
     "libraryPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsTmpPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsDataPersistence": { "$ref": "#/definitions/persistence" },
+    "gracefulShutdown": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "drainSeconds": { "type": "integer", "minimum": 0 },
+        "terminationGracePeriodSeconds": { "type": "integer", "minimum": 1 }
+      }
+    },
     "uploadCachePersistence": { "$ref": "#/definitions/persistence" },
     "logsPersistence": { "$ref": "#/definitions/persistence" }
   },
