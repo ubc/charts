@@ -27,6 +27,9 @@ spec:
 
   myCnf: |
 {{ .Values.myCnf | indent 4 }}
+{{- if .Values.encryption.enabled }}
+{{ .Values.encryption.config | indent 4 }}
+{{- end }}
   resources:
     {{- toYaml .Values.resources | nindent 4 }}
 
@@ -123,4 +126,15 @@ spec:
     passwordSecretKeyRef:
       {{- toYaml .Values.metrics.passwordSecretKeyRef | nindent 6 }}
     {{- end }}
+  {{- end }}
+  {{- if .Values.encryption.enabled }}
+  volumes:
+    - name: {{ .Values.encryption.keysVolumeName }}
+      secret:
+        secretName: {{ .Values.encryption.secretName }}
+        defaultMode: 256 # equivalent to chmod 0400
+  volumeMounts:
+    - name: {{ .Values.encryption.keysVolumeName }}
+      mountPath: {{ .Values.encryption.keysPath }}
+      readOnly: true
   {{- end }}
