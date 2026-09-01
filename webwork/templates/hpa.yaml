@@ -30,6 +30,11 @@ spec:
           averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
   behavior:
+    scaleUp:
+      # a single 15s CPU sample over target must not double the deployment: a
+      # webwork pod needs ~4 min to reach Ready, so sub-minute spikes are long
+      # over before the new replicas could serve. Scale on sustained load only.
+      stabilizationWindowSeconds: {{ .Values.autoscaling.scaleUpStabilizationSeconds }}
     scaleDown:
       # webwork load is bursty (assignment deadlines); don't thrash on dips
       stabilizationWindowSeconds: {{ .Values.autoscaling.scaleDownStabilizationSeconds }}

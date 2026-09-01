@@ -243,6 +243,33 @@ Secret with key `service-account.json`.
 | `r.image.repository` | RServe image | `ubcctlt/rserve` |
 | `r.replicas` | RServe replicas | `1` |
 
+### Autoscaling (`autoscaling`)
+
+Requires metrics-server on the cluster and `resources.requests` on the web
+container — utilization is a percentage of the request. WeBWorK is memory-heavy
+at idle (~2Gi), so scale on CPU, not memory.
+
+| Parameter | Description | Default |
+|---|---|---|
+| `autoscaling.enabled` | Create a HorizontalPodAutoscaler for the web Deployment | `false` |
+| `autoscaling.minReplicas` | Lower bound | `1` |
+| `autoscaling.maxReplicas` | Upper bound | `100` |
+| `autoscaling.targetCPUUtilizationPercentage` | Target CPU as a % of requests | `80` |
+| `autoscaling.targetMemoryUtilizationPercentage` | Target memory as a % of requests (commented out by default) | — |
+| `autoscaling.scaleUpStabilizationSeconds` | Sustained-load window before scaling up | `120` |
+| `autoscaling.scaleDownStabilizationSeconds` | Cool-off window before scaling down | `300` |
+
+The two stabilization windows exist because WeBWorK pods are slow to start
+(~4 minutes to Ready) and the load is spiky. Without a scale-up window the HPA's
+default behaviour (`+100% every 15s`, no stabilization) lets one 15-second CPU
+sample double the deployment; the replicas then arrive minutes after the spike
+has passed and are torn down almost immediately. With the window set, the HPA
+uses the *lowest* recommendation over the last `scaleUpStabilizationSeconds`, so
+only genuinely sustained load scales the deployment.
+
+Raise the window if you still see churn; lower it (or set `0` for the Kubernetes
+default) only if your pods start fast enough to be useful within a spike.
+
 ### Shibboleth (`shibd`)
 
 | Parameter | Description | Default |
@@ -288,6 +315,16 @@ on login".
 ---
 
 ## Upgrading
+
+### 0.3.10 → 0.3.11 (HPA scale-up stabilization)
+
+`autoscaling.scaleUpStabilizationSeconds` is new and defaults to **120**, where
+the previous behaviour was the Kubernetes default of `0`. If `autoscaling` is
+enabled, the deployment will no longer scale up on brief CPU spikes — it now
+requires load sustained over two minutes.
+
+No action needed to adopt it. To keep the old instant-reaction behaviour, set
+`autoscaling.scaleUpStabilizationSeconds: 0`.
 
 ### 0.3.6 → 0.3.7 (LTI admin credentials out of the PodSpec)
 

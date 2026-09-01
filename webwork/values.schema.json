@@ -128,6 +128,7 @@
         "minReplicas": { "type": "integer", "minimum": 1 },
         "maxReplicas": { "type": "integer", "minimum": 1 },
         "targetCPUUtilizationPercentage": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "scaleUpStabilizationSeconds": { "type": "integer", "minimum": 0 },
         "scaleDownStabilizationSeconds": { "type": "integer", "minimum": 0 }
       }
     },
