@@ -323,6 +323,12 @@ autoscaling:
   # memory-heavy at idle (~2Gi) — scale on CPU, not memory.
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+  # scaleUp stabilization (seconds) — the HPA takes the *lowest* recommendation
+  # over this window, so a brief CPU spike no longer triggers a scale-up. A
+  # webwork pod takes ~4 min to reach Ready; anything shorter than this window
+  # is over before the extra replicas can serve traffic. 0 = react instantly
+  # (Kubernetes default).
+  scaleUpStabilizationSeconds: 120
   # scaleDown stabilization (seconds) — webwork load is bursty around deadlines
   scaleDownStabilizationSeconds: 300
 
