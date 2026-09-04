@@ -108,6 +108,59 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `metrics.username` | Username of the monitoring user. | `""` |
 | `metrics.passwordSecretKeyRef` | Reference to the password secret for the monitoring user. | `{}` |
 | `databases` | List of custom databases and users to create (each item should have `name`, `user`, `password`). | `[]` |
+| `encryption.enabled` | Whether NEW writes get encrypted. See [Encryption](#encryption) before setting this to `false` on a release that's had it `true` before. | `false` |
+| `encryption.forceProvision` | Keeps the plugin/key/config provisioned even when `enabled` is `false`. Must be set manually — see [Encryption](#encryption). | `false` |
+| `encryption.keysPath` | Directory the keys Secret is mounted into inside the container. | `/etc/mysql/encryption-keys` |
+| `encryption.encryptionKeysFile` | Filename (under `keysPath`) for the openssl-encrypted key manifest. | `keyfile.enc` |
+| `encryption.keyFile` | Filename (under `keysPath`) for the raw file key that decrypts `encryptionKeysFile`. | `keyfile.key` |
+| `encryption.confPath` | Directory the generated `encryption.cnf` is mounted into | `/etc/mysql/encryption-conf` |
+| `encryption.confFile` | Filename (under `confPath`) for the generated encryption plugin config. | `encryption.cnf` |
+| `encryption.vaultKeysPath` | Base Vault path; the actual secret is looked up at `<vaultKeysPath>/<release fullname>`, so every release reads its own key. | `mariadb-operator/encryption` |
+| `encryption.vaultKeyKeysFile` | Vault property holding the base64 of the encrypted key manifest | `keyfile_b64` |
+| `encryption.vaultKeyFileKey` | Vault property holding the raw file key | `filekey` |
+
+## Encryption
+
+MariaDB data-at-rest encryption (TDE) via the `file_key_management` plugin.
+
+### Vault
+
+The chart looks up a Vault secret at `<encryption.vaultKeysPath>/<release fullname>` (e.g. `mariadb-operator/encryption/hotcrp-mariadb`), and is expected to hold two values:
+
+| Property (Vault) | Maps to | Content |
+| --- | --- | --- |
+| `keyfile_b64` | `encryption.encryptionKeysFile` (`keyfile.enc`) | **Base64** encoded version of the openssl-encrypted key manifest, not the raw binary. The `ExternalSecret` base64-*decodes* this before creating the Kubernetes Secret. |
+| `filekey` | `encryption.keyFile` (`keyfile.key`) | The raw file key, stored **as-is** — no base64. This is used verbatim as the password that decrypts `keyfile.enc`. |
+
+
+### Generating the key pair
+
+The key manifest holds one or more `<key_id>;<hex-key>` lines and is itself encrypted at rest with a separate file key, per [MariaDB's file_key_management docs](https://mariadb.com/docs/server/security/encryption/data-at-rest-encryption/key-management-and-encryption-plugins/file-key-management-encryption-plugin):
+
+```bash
+# 1. Key manifest: one "<key_id>;<hex-key>" line per key ID you want available.
+#    Key ID 1 is what innodb_encryption_key_id defaults to.
+echo "1;$(openssl rand -hex 32)" > keyfile.txt
+
+# 2. File key: the password used to encrypt the manifest above.
+openssl rand -hex 128 > keyfile.key
+
+# 3. Encrypt the manifest with the file key (pre-12.0.1 flags — use
+#    `-md sha256 -pbkdf2` instead of `-md sha1` on MariaDB 12.0.1+).
+openssl enc -aes-256-cbc -md sha1 -pass file:keyfile.key -in keyfile.txt -out keyfile.enc
+
+# 4. Write both into Vault at mariadb-operator/encryption/<release fullname>:
+#    - keyfile_b64: base64 -i keyfile.enc  (base64-encoded)
+#    - filekey:     contents of keyfile.key (raw, not base64)
+```
+
+Discard `keyfile.txt` (the unencrypted manifest) once `keyfile.enc` is written — only `keyfile.enc` and `keyfile.key` go into vault.
+
+### Rolling Back
+
+Setting `encryption.enabled: false` does not *instantly* decrypt existing data, but it does kick off MariaDB's own background decryption: InnoDB's encryption threads (`innodb_encryption_threads`) walk existing tablespaces and decrypt them once `innodb_encrypt_tables` flips to `OFF`. **That background decryption can't run at all without the plugin and key still in place** — so don't just flip `enabled` to `false`. Set `encryption.forceProvision: true` at the same time (or beforehand); this keeps the plugin, key material, and config provisioned regardless of `enabled`'s value.
+
+`forceProvision` is a manual flag, not inferred automatically — set it to `true` as soon as encryption has ever been turned on for a release, and leave it `true` even after setting `enabled: false`, until you've confirmed decryption has actually finished (query `information_schema.INNODB_TABLESPACES_ENCRYPTION` and check that nothing is still reported as encrypted). Only then is it safe to set `forceProvision: false` and remove the Vault secret or the `<fullname>-encryption-keys` Kubernetes Secret — doing so any earlier leaves tablespaces that are still encrypted and now permanently unreadable.
 
 ## Testing
 ```bash
