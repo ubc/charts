@@ -27,6 +27,9 @@ spec:
 
   myCnf: |
 {{ .Values.myCnf | indent 4 }}
+{{- if eq (include "mariadb.encryptionProvisioned" .) "true" }}
+    !include {{ .Values.encryption.confPath }}/{{ .Values.encryption.confFile }}
+{{- end }}
   resources:
     {{- toYaml .Values.resources | nindent 4 }}
 
@@ -123,4 +126,10 @@ spec:
     passwordSecretKeyRef:
       {{- toYaml .Values.metrics.passwordSecretKeyRef | nindent 6 }}
     {{- end }}
+  {{- end }}
+  {{- if eq (include "mariadb.encryptionProvisioned" .) "true" }}
+  volumes:
+    {{- include "mariadb.encryptionVolumes" . | nindent 4 }}
+  volumeMounts:
+    {{- include "mariadb.encryptionVolumeMounts" . | nindent 4 }}
   {{- end }}
