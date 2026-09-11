@@ -31,10 +31,15 @@ spec:
     {{- end }}
   behavior:
     scaleUp:
-      # a single 15s CPU sample over target must not double the deployment: a
-      # webwork pod needs ~4 min to reach Ready, so sub-minute spikes are long
-      # over before the new replicas could serve. Scale on sustained load only.
+      # Bound the RATE of scale-up rather than delaying the decision. A
+      # stabilization window here takes the *minimum* recommendation over the
+      # window, so oscillating load (repeatedly dipping under target) never
+      # scales at all — see the 2026-09-11 incident note in README.md.
       stabilizationWindowSeconds: {{ .Values.autoscaling.scaleUpStabilizationSeconds }}
+      {{- with .Values.autoscaling.scaleUpPolicies }}
+      policies:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     scaleDown:
       # webwork load is bursty (assignment deadlines); don't thrash on dips
       stabilizationWindowSeconds: {{ .Values.autoscaling.scaleDownStabilizationSeconds }}

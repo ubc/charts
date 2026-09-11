@@ -323,12 +323,21 @@ autoscaling:
   # memory-heavy at idle (~2Gi) — scale on CPU, not memory.
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-  # scaleUp stabilization (seconds) — the HPA takes the *lowest* recommendation
-  # over this window, so a brief CPU spike no longer triggers a scale-up. A
-  # webwork pod takes ~4 min to reach Ready; anything shorter than this window
-  # is over before the extra replicas can serve traffic. 0 = react instantly
-  # (Kubernetes default).
-  scaleUpStabilizationSeconds: 120
+  # scaleUp stabilization (seconds). Keep this at 0. A non-zero window makes the
+  # HPA use the *lowest* recommendation over the window, so load that repeatedly
+  # dips below target never scales — it stays blind until the load stops
+  # dipping, which is exactly when you most need capacity. Spike-damping belongs
+  # in scaleUpPolicies below, which bounds how fast it reacts without blinding
+  # it. See the 2026-09-11 incident note in README.md.
+  scaleUpStabilizationSeconds: 0
+  # Rate limit on scale-up. Kubernetes' default (+100% or +4 pods every 15s,
+  # whichever is larger) lets one 15-second CPU sample quadruple the deployment.
+  # Doubling at most once a minute stays responsive while capping the overshoot.
+  # Empty list = Kubernetes defaults.
+  scaleUpPolicies:
+    - type: Percent
+      value: 100
+      periodSeconds: 60
   # scaleDown stabilization (seconds) — webwork load is bursty around deadlines
   scaleDownStabilizationSeconds: 300
 
