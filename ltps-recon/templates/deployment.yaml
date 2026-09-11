@@ -31,7 +31,7 @@ spec:
             "--logging.level.ca.ubc={{ .Values.logging.level }}",
             "--logging.level.edu.ksu.canvas.net={{ .Values.logging.rest}}",
             "--canvas.url={{ .Values.canvas.url }}",
-            "--canvas.token={{ .Values.canvas.token }}",
+            "--canvas.token=$(CANVAS_TOKEN)",
             "--canvas.timeout.connect={{ .Values.canvas.timeout.connect }}",
             "--canvas.timeout.read={{ .Values.canvas.timeout.read }}",
             "--server.ssl.enabled={{ .Values.server.ssl.enabled }}",
@@ -45,9 +45,9 @@ spec:
             {{- end }}
             "--ltps.v2.url={{ .Values.ltps.v2.url }}",
             "--ltps.v2.username={{ .Values.ltps.v2.username }}",
-            "--ltps.v2.password={{ .Values.ltps.v2.password }}",
+            "--ltps.v2.password=$(LTPS_V2_PASSWORD)",
             "--recon.username={{ .Values.recon.username }}",
-            "--recon.password={{ .Values.recon.password }}",
+            "--recon.password=$(RECON_PASSWORD)",
             "--recon.validation.abortOnMissingPUIDs={{ .Values.recon.validation.abortOnMissingPUIDs }}",
             "--recon.validation.abortOnMissingEnrollmentsAnySection={{ .Values.recon.validation.abortOnMissingEnrollmentsAnySection }}",
             "--recon.validation.abortOnMissingEnrollmentsAllSections={{ .Values.recon.validation.abortOnMissingEnrollmentsAllSections }}",
@@ -57,6 +57,22 @@ spec:
             "--devMode.puid={{ .Values.devmode.puid }}"
             {{- end }}
           ]
+          env:
+            - name: CANVAS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.canvas.vault.token_secret }}
+            - name: LTPS_V2_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.ltps.v2.vault.password_secret }}
+            - name: RECON_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.recon.vault.password_secret }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:

@@ -37,7 +37,7 @@ spec:
             "--logging.level.edu.ksu.canvas.net={{ .Values.logging.rest}}",
             "--logging.level.org.springframework.web={{ .Values.logging.web}}",
             "--canvas.url={{ .Values.canvas.url }}",
-            "--canvas.token={{ .Values.canvas.token }}",
+            "--canvas.token=$(CANVAS_TOKEN)",
             "--canvas.timeout.connect={{ .Values.canvas.timeout.connect }}",
             "--canvas.timeout.read={{ .Values.canvas.timeout.read }}",
             "--server.ssl.enabled={{ .Values.server.ssl.enabled }}",
@@ -50,9 +50,9 @@ spec:
             {{- end }}
             {{- end }}
             "--saml.sp.key-store={{ .Values.saml.sp.keyStore }}",
-            "--saml.sp.key-store-password={{ .Values.saml.sp.keyStorePassword }}",
+            "--saml.sp.key-store-password=$(SAML_SP_KEYSTORE_PASSWORD)",
             "--saml.sp.key-name={{ .Values.saml.sp.keyName }}",
-            "--saml.sp.key-password={{ .Values.saml.sp.keyPassword }}",
+            "--saml.sp.key-password=$(SAML_SP_KEY_PASSWORD)",
             "--saml.sp.entityId={{ .Values.saml.sp.entityId }}",
             "--saml.sp.entityBaseUrl={{ .Values.saml.sp.entityBaseUrl }}",
             "--saml.idp.metadata.uri={{ .Values.saml.idp.metadataUri }}",
@@ -65,10 +65,10 @@ spec:
             "--saml.logging.messages={{ .Values.saml.logging.messages }}",
             "--ltps.v1.url={{ .Values.ltps.v1.url }}",
             "--ltps.v1.username={{ .Values.ltps.v1.username }}",
-            "--ltps.v1.password={{ .Values.ltps.v1.password }}",
+            "--ltps.v1.password=$(LTPS_V1_PASSWORD)",
             "--ltps.v2.url={{ .Values.ltps.v2.url }}",
             "--ltps.v2.username={{ .Values.ltps.v2.username }}",
-            "--ltps.v2.password={{ .Values.ltps.v2.password }}",
+            "--ltps.v2.password=$(LTPS_V2_PASSWORD)",
             "--config.reconEnabled={{ .Values.config.reconEnabled }}",
             "--config.wdstuEnabled={{ .Values.config.wdstuEnabled }}",
             "--config.llisEnabled={{ .Values.config.llisEnabled }}",
@@ -77,6 +77,32 @@ spec:
             "--devMode.puid={{ .Values.devmode.puid }}"
             {{- end }}
           ]
+          env:
+            - name: CANVAS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.canvas.vault.token_secret }}
+            - name: LTPS_V1_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.ltps.v1.vault.password_secret }}
+            - name: LTPS_V2_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.ltps.v2.vault.password_secret }}
+            - name: SAML_SP_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.saml.sp.vault.key_secret }}
+            - name: SAML_SP_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.secretName }}
+                  key: {{ .Values.saml.sp.vault.keystore_secret }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:
