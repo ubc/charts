@@ -256,19 +256,37 @@ at idle (~2Gi), so scale on CPU, not memory.
 | `autoscaling.maxReplicas` | Upper bound | `100` |
 | `autoscaling.targetCPUUtilizationPercentage` | Target CPU as a % of requests | `80` |
 | `autoscaling.targetMemoryUtilizationPercentage` | Target memory as a % of requests (commented out by default) | — |
-| `autoscaling.scaleUpStabilizationSeconds` | Sustained-load window before scaling up | `120` |
+| `autoscaling.scaleUpStabilizationSeconds` | Scale-up stabilization window — **keep at 0**, see below | `0` |
+| `autoscaling.scaleUpPolicies` | Rate limit on scale-up | `100% / 60s` |
 | `autoscaling.scaleDownStabilizationSeconds` | Cool-off window before scaling down | `300` |
 
-The two stabilization windows exist because WeBWorK pods are slow to start
-(~4 minutes to Ready) and the load is spiky. Without a scale-up window the HPA's
-default behaviour (`+100% every 15s`, no stabilization) lets one 15-second CPU
-sample double the deployment; the replicas then arrive minutes after the spike
-has passed and are torn down almost immediately. With the window set, the HPA
-uses the *lowest* recommendation over the last `scaleUpStabilizationSeconds`, so
-only genuinely sustained load scales the deployment.
+WeBWorK pods are slow to start (~4 minutes to Ready) and the load is spiky, so
+scale-up needs damping. **Damp the rate, not the decision.**
 
-Raise the window if you still see churn; lower it (or set `0` for the Kubernetes
-default) only if your pods start fast enough to be useful within a spike.
+Kubernetes' default scale-up policy (`+100%` or `+4 pods` every 15s, whichever is
+larger) lets a single 15-second CPU sample quadruple the deployment. The fix is
+`scaleUpPolicies` — doubling at most once a minute keeps the response immediate
+while capping the overshoot.
+
+> **Do not set `scaleUpStabilizationSeconds` above 0.** A stabilization window
+> makes the HPA use the *lowest* recommendation over the window. Load that
+> oscillates around the target — dipping below it every minute or so, which is
+> what a real WeBWorK rush looks like — resets that minimum on every dip, and the
+> deployment never scales at all. It stays blind for as long as the load keeps
+> dipping, which is precisely when capacity is needed.
+>
+> **Incident, 2026-09-11 (webwork-prod).** With a 120s window, CPU crossed the
+> 70% target at 13:29:14 and the HPA did not act until **13:36:44** — 7.5
+> minutes. Load was oscillating (89%, 71%, 112%, 98%, 59%, 87%, 37%, 73%…) and
+> every dip re-suppressed it. By 13:33 all three replicas were failing their
+> readiness probes simultaneously, which pulled every target out of the ALB and
+> returned 502s to users; CPU only reached 246–298% afterwards, once saturation
+> was total. Fixed by moving the damping into `scaleUpPolicies` and setting the
+> window to 0.
+
+`scaleDownStabilizationSeconds` is a different matter and stays at 300 — taking
+the *highest* recommendation over a window is the right behaviour for scale-down,
+where the risk is releasing capacity too eagerly.
 
 ### Shibboleth (`shibd`)
 
@@ -315,6 +333,20 @@ on login".
 ---
 
 ## Upgrading
+
+### 0.3.11 → 0.3.12 (HPA scale-up: rate limit, not stabilization)
+
+0.3.11 defaulted `autoscaling.scaleUpStabilizationSeconds` to 120. That turned
+out to suppress scaling entirely under oscillating load and contributed to a
+prod outage — see the incident note under **Autoscaling** above.
+
+This release sets that default back to **0** and adds
+`autoscaling.scaleUpPolicies`, defaulting to `100% / 60s`, which damps the
+overshoot without delaying the reaction.
+
+**No action needed to adopt it.** If you explicitly set
+`scaleUpStabilizationSeconds` in your values, remove it — an override will
+survive this upgrade and reintroduce the problem.
 
 ### 0.3.10 → 0.3.11 (HPA scale-up stabilization)
 
