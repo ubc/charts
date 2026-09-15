@@ -225,6 +225,20 @@ logShipping:
       repository: busybox
       tag: "1.37"
       pullPolicy: IfNotPresent
+    # No cpu limit on purpose. This sidecar sleeps for intervalSeconds, then
+    # forks a `wc -c` per log file -- idle-then-bursty. Measured on webwork-prod
+    # it used 0.01m (p95) while throttling on up to 81% of CFS periods against
+    # the previous 50m limit: 50m is 5ms per 100ms period, and the fork burst
+    # overruns that instantly. That fired CPUThrottlingHigh continuously with
+    # nothing actually wrong. CPU is compressible and the request already
+    # guarantees share under contention, so the limit bought nothing. The memory
+    # limit is kept -- memory is NOT compressible.
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi
+      limits:
+        memory: 32Mi
   # sizeLimit for the logs emptyDir (only applied when logsPersistence is off).
   emptyDirSizeLimit: 4Gi
 

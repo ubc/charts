@@ -431,8 +431,7 @@ the caller on .Values.logShipping.enabled.
     - name: webwork-logs-data
       mountPath: /opt/webwork/webwork2/logs
   resources:
-    requests: { cpu: 10m, memory: 16Mi }
-    limits:   { cpu: 50m, memory: 32Mi }
+    {{- toYaml .Values.logShipping.rotation.resources | nindent 4 }}
 {{- end }}
 {{- end -}}
 
