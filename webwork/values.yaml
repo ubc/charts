@@ -301,6 +301,30 @@ ingress:
 startupProbe:
   failureThreshold: 40
   periodSeconds: 15
+  # Probe path. Defaults to /webwork2 when unset.
+  #
+  # ⚠ /webwork2 is the course-list page: it enumerates EVERY course directory
+  # and stats <course>/hide_directory in each. On EFS-backed courses volumes
+  # that is the dominant source of NFS metadata load, and it is paid on every
+  # probe of every pod forever, whether or not anyone is using the site.
+  # Traced on webwork-verf 2026-09-17: an idle pod issued 126 stat syscalls
+  # (one per course) every ~3s, purely from liveness + readiness + the ALB
+  # health check. Cost scales with replicas x courses, so it grows exactly when
+  # the HPA scales out.
+  #
+  # /lti1p3/jwks is the recommended alternative: a real application route
+  # (Mojolicious dispatches it and renders JSON from the LTI key config, so it
+  # proves the Perl app is executing, unlike a static file), it costs ZERO
+  # course-directory stats, and it is ~20x faster (11ms vs 223ms measured on
+  # webwork-prod). /favicon.ico is cheaper still but only exercises the static
+  # handler.
+  #
+  # NOTE the trade-off: /webwork2 reaches the database, so moving liveness off
+  # it means a DB outage no longer marks pods unhealthy. That is usually what
+  # you want -- on 2026-09-11 an RDS restart drove availableReplicas to 0
+  # because liveness killed every pod at once -- but cover the database with
+  # its own alarms.
+  path: ""
 
 # Liveness/readiness tuning. The Kubernetes defaults (timeoutSeconds 1,
 # failureThreshold 3) are too tight for this app: rendering a problem set or
@@ -311,10 +335,14 @@ livenessProbe:
   timeoutSeconds: 5
   periodSeconds: 10
   failureThreshold: 6
+  # See the startupProbe.path note above. Defaults to /webwork2 when unset.
+  path: ""
 readinessProbe:
   timeoutSeconds: 5
   periodSeconds: 10
   failureThreshold: 3
+  # See the startupProbe.path note above. Defaults to /webwork2 when unset.
+  path: ""
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
