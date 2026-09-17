@@ -80,20 +80,20 @@ spec:
               {{- end }}
           livenessProbe:
             httpGet:
-              path: /webwork2
+              path: {{ .Values.livenessProbe.path | default "/webwork2" }}
               port: http
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           startupProbe:
             httpGet:
-              path: /webwork2
+              path: {{ .Values.startupProbe.path | default "/webwork2" }}
               port: http
             failureThreshold: {{ .Values.startupProbe.failureThreshold }}
             periodSeconds: {{ .Values.startupProbe.periodSeconds }}
           readinessProbe:
             httpGet:
-              path: /webwork2
+              path: {{ .Values.readinessProbe.path | default "/webwork2" }}
               port: http
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
