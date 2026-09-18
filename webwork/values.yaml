@@ -595,6 +595,33 @@ cronjob:
     schedule: "0 13 * * *"
     #startingDeadlineSeconds:
     restartPolicy: Never
+  # Prune the generated-content cache under htdocs/tmp. Upstream documents this
+  # as routine maintenance (Installation Manual 2.20, "Remove temporary files")
+  # and a VM install does it from root's crontab; a containerised deployment has
+  # no crontab, so without this the cache grows without bound.
+  #
+  # Default OFF so upgrading the chart never starts deleting files on a
+  # deployment that has not opted in.
+  #
+  # Schedule is UTC, like the LTI jobs above. 10:30 UTC is 03:30 PDT / 02:30 PST,
+  # inside the measured overnight traffic trough on webwork-prod (~380 req/hr at
+  # 03:00 local, against ~60k/hr at the 20:00-22:00 peak). Daily, not upstream's
+  # twice-yearly: on EFS a large directory is pathologically expensive to read,
+  # so the cache must be kept small continuously rather than swept twice a year.
+  #
+  # retentionDays is matched against mtime, which for this write-once cache is
+  # creation time -- so an image still in use but older than this is deleted and
+  # regenerated once. That is a bounded, one-render cost; it is NOT "unused for
+  # N days".
+  htdocs_tmp_cleanup:
+    enabled: false
+    schedule: "30 10 * * *"
+    retentionDays: 7
+    # 4h ceiling. The first sweep of a neglected cache is slow (deleting ~125k
+    # files over NFS is itself heavy metadata work); steady-state runs are short.
+    activeDeadlineSeconds: 14400
+    #startingDeadlineSeconds:
+    restartPolicy: Never
 
 # Google Calendar sync cronjob (formerly a standalone webworkcal manifest).
 # Publishes assignment due dates from the webwork DB to a Google calendar.

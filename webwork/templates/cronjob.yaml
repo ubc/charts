@@ -80,3 +80,92 @@ spec:
           volumes:
             {{- include "webwork.app.mounts" . | indent 10 }}
 {{- end }}
+
+{{- if .Values.cronjob.htdocs_tmp_cleanup.enabled }}
+---
+# Prune WeBWorK's generated-content cache under htdocs/tmp.
+#
+# Upstream documents this as routine maintenance and states it is safe:
+# "It is safe to delete everything in these tmp directories"
+# (Installation Manual for 2.20, "Remove temporary files"). On a VM it is a
+# twice-yearly root crontab entry. Containerised deployments have no crontab,
+# so the task was silently dropped -- and on EFS the consequences are far worse
+# than on local disk.
+#
+# Measured on webwork-prod 2026-09-17: one course's images directory held
+# 124,760 files (a 14 MB directory), and READDIR against that mount cost
+# 929 ms/op -- 41,237 s of cumulative NFS wait on a single pod, ~97% of all its
+# NFS wait, versus 708 s for the courses mount. A directory that size is cheap
+# to read on local disk and pathological over NFS, which is why upstream's
+# twice-yearly cadence is far too slow here.
+#
+# Deliberately deletes by age rather than upstream's delete-everything: active
+# problems keep their cached images, so enabling this does not trigger a
+# fleet-wide LaTeX/dvisvgm regeneration burst during term. Note -mtime is
+# effectively creation time for this write-once cache, so a heavily used image
+# older than retentionDays is deleted and regenerated once -- bounded, and the
+# cost is one render.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "webwork.fullname" . }}-htdocs-tmp-cleanup
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: cronjob
+spec:
+  schedule: {{ .Values.cronjob.htdocs_tmp_cleanup.schedule | quote }}
+  {{- if .Values.cronjob.htdocs_tmp_cleanup.startingDeadlineSeconds }}
+  startingDeadlineSeconds: {{ .Values.cronjob.htdocs_tmp_cleanup.startingDeadlineSeconds }}
+  {{- end }}
+  # A second sweep while one is still running would double the metadata load on
+  # the very filesystem this job exists to relieve.
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.cronjob.ttlSecondsAfterFinished }}
+      # Idempotent maintenance: a failed sweep is retried by the next schedule,
+      # not by a backoff that would pile more metadata load on a struggling EFS.
+      backoffLimit: 0
+      activeDeadlineSeconds: {{ .Values.cronjob.htdocs_tmp_cleanup.activeDeadlineSeconds }}
+      template:
+        metadata:
+          annotations:
+            # Karpenter consolidation has killed long-running WeBWorK jobs before
+            # (see the OPL-update job); the first sweep of a large cache is long.
+            karpenter.sh/do-not-disrupt: "true"
+        spec:
+          restartPolicy: {{ .Values.cronjob.htdocs_tmp_cleanup.restartPolicy }}
+          containers:
+          - name: {{ .Chart.Name }}-htdocs-tmp-cleanup
+            {{- include "webwork.app.spec" . | indent 12 }}
+            {{- with .Values.cronjob.resources }}
+            resources:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            # -mindepth 1 protects the mount root itself. The second pass reclaims
+            # per-course directories emptied by the first. Both tolerate a missing
+            # tree (|| true) so a fresh deployment does not fail the job.
+            # dropPrivPrefix emits a FLOW-style fragment ("'sudo', '-E', ...") meant
+            # for `args: [ ... ]`, so it cannot be used inside a block sequence.
+            # Expanded here instead, honouring the same .Values.appUser.
+            args:
+              - 'sudo'
+              - '-E'
+              - '-u'
+              - {{ .Values.appUser | default "www-data" | squote }}
+              - 'sh'
+              - '-c'
+              - >-
+                set -u;
+                T=/opt/webwork/webwork2/htdocs/tmp;
+                echo "pruning $T, retention {{ .Values.cronjob.htdocs_tmp_cleanup.retentionDays }} days";
+                before=$(find "$T" -mindepth 1 -type f 2>/dev/null | wc -l);
+                find "$T" -mindepth 1 -type f -mtime +{{ .Values.cronjob.htdocs_tmp_cleanup.retentionDays }} ! -name README -delete 2>/dev/null || true;
+                find "$T" -mindepth 1 -type d -empty -delete 2>/dev/null || true;
+                after=$(find "$T" -mindepth 1 -type f 2>/dev/null | wc -l);
+                echo "files before=$before after=$after removed=$((before-after))"
+          volumes:
+            {{- include "webwork.app.mounts" . | indent 10 }}
+{{- end }}
