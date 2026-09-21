@@ -43,4 +43,11 @@ spec:
     scaleDown:
       # webwork load is bursty (assignment deadlines); don't thrash on dips
       stabilizationWindowSeconds: {{ .Values.autoscaling.scaleDownStabilizationSeconds }}
+      # The window only delays the DECISION. Without policies Kubernetes then
+      # removes up to 100% of the surplus every 15s, so a peak fleet drops straight
+      # to minReplicas and every user lands on a pod with a cold NFS cache at once.
+      {{- with .Values.autoscaling.scaleDownPolicies }}
+      policies:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}

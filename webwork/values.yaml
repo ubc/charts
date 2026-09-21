@@ -382,6 +382,16 @@ autoscaling:
       periodSeconds: 60
   # scaleDown stabilization (seconds) — webwork load is bursty around deadlines
   scaleDownStabilizationSeconds: 300
+  # Rate limit on scale-down, applied once the window above has passed. Empty
+  # list = Kubernetes defaults (remove up to 100% of the surplus every 15s),
+  # which collapses a peak fleet to minReplicas in one step. On NFS-backed
+  # deployments that turns one load dip into a fleet-wide cold-cache event.
+  # Example, at most two pods a minute:
+  #   scaleDownPolicies:
+  #     - type: Pods
+  #       value: 2
+  #       periodSeconds: 60
+  scaleDownPolicies: []
 
 # Rollout strategy for the WEB Deployment only (workers/shibd/r keep the k8s
 # default). Empty = k8s default (RollingUpdate 25%/25%). For zero-downtime
