@@ -222,6 +222,7 @@ metrics:
 encryption:
   enabled: false
   forceProvision: false
+  keyId: 1
   keysPath: /etc/mysql/encryption-keys
   encryptionKeysFile: keyfile.enc
   keyFile: keyfile.key

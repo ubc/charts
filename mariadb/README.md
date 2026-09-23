@@ -110,6 +110,7 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `databases` | List of custom databases and users to create (each item should have `name`, `user`, `password`). | `[]` |
 | `encryption.enabled` | Whether NEW writes get encrypted. See [Encryption](#encryption) before setting this to `false` on a release that's had it `true` before. | `false` |
 | `encryption.forceProvision` | Keeps the plugin/key/config provisioned even when `enabled` is `false`. Must be set manually — see [Encryption](#encryption). | `false` |
+| `encryption.keyId` | The `key_id` (from the key manifest) new writes get encrypted under. Bump this after rotating — see [Generating the key pair](#generating-the-key-pair). | `1` |
 | `encryption.keysPath` | Directory the keys Secret is mounted into inside the container. | `/etc/mysql/encryption-keys` |
 | `encryption.encryptionKeysFile` | Filename (under `keysPath`) for the openssl-encrypted key manifest. | `keyfile.enc` |
 | `encryption.keyFile` | Filename (under `keysPath`) for the raw file key that decrypts `encryptionKeysFile`. | `keyfile.key` |
@@ -135,24 +136,23 @@ The chart looks up a Vault secret at `<encryption.vaultKeysPath>/<release fullna
 
 ### Generating the key pair
 
-The key manifest holds one or more `<key_id>;<hex-key>` lines and is itself encrypted at rest with a separate file key, per [MariaDB's file_key_management docs](https://mariadb.com/docs/server/security/encryption/data-at-rest-encryption/key-management-and-encryption-plugins/file-key-management-encryption-plugin):
+The key manifest holds one or more `<key_id>;<hex-key>` lines and is itself encrypted at rest with a separate file key, per [MariaDB's file_key_management docs](https://mariadb.com/docs/server/security/encryption/data-at-rest-encryption/key-management-and-encryption-plugins/file-key-management-encryption-plugin).
+
+Run [`scripts/generate-encryption-keys.sh`](./scripts/generate-encryption-keys.sh) to generate a fresh key pair for a new release:
 
 ```bash
-# 1. Key manifest: one "<key_id>;<hex-key>" line per key ID you want available.
-#    Key ID 1 is what innodb_encryption_key_id defaults to.
-echo "1;$(openssl rand -hex 32)" > keyfile.txt
-
-# 2. File key: the password used to encrypt the manifest above.
-openssl rand -hex 128 > keyfile.key
-
-# 3. Encrypt the manifest with the file key (pre-12.0.1 flags — use
-#    `-md sha256 -pbkdf2` instead of `-md sha1` on MariaDB 12.0.1+).
-openssl enc -aes-256-cbc -md sha1 -pass file:keyfile.key -in keyfile.txt -out keyfile.enc
-
-# 4. Write both into Vault at mariadb-operator/encryption/<release fullname>:
-#    - keyfile_b64: base64 -i keyfile.enc  (base64-encoded)
-#    - filekey:     contents of keyfile.key (raw, not base64)
+./scripts/generate-encryption-keys.sh
 ```
+
+This writes `keyfile.enc`, `keyfile.enc.b64` (already base64-encoded), and `keyfile.key` to the current directory, and prints exactly what to write into Vault at `mariadb-operator/encryption/<release fullname>` (`keyfile_b64` / `filekey`). The plaintext manifest is never written to disk outside a shredded temp file — add `--keep-manifest` if you want to inspect it as `keyfile.txt` before pushing to Vault, then discard it yourself once done.
+
+**Rotating an existing key pair?** Use `--rotate` instead of generating fresh — this appends a new `key_id` to the existing manifest rather than replacing it. Anything ever encrypted under an older `key_id` — live tablespaces MariaDB hasn't gotten around to re-encrypting yet, older backups, anything — needs that `key_id` to still be in the manifest to stay readable. Dropping an old `key_id` makes whatever it protected permanently unrecoverable, so `--rotate` only ever adds, never removes:
+
+```bash
+./scripts/generate-encryption-keys.sh --rotate <existing-keyfile.enc> <existing-keyfile.key>
+```
+
+Rotating updates the manifest, but MariaDB doesn't pick the new `key_id` up on its own — it keeps using whichever `key_id` `encryption.keyId` is set to (default `1`) for new writes, regardless of what else is in the manifest. After pushing the rotated manifest to Vault, bump `encryption.keyId` to the new value and roll the release, or run `SET GLOBAL innodb_default_encryption_key_id = <new_id>` for immediate effect without a restart (that alone won't survive the next restart — `encryption.keyId` is what makes it durable).
 
 Discard `keyfile.txt` (the unencrypted manifest) once `keyfile.enc` is written — only `keyfile.enc` and `keyfile.key` go into vault.
 
