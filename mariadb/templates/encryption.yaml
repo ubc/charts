@@ -1,0 +1,79 @@
+{{/*
+Whether the encryption apparatus (keys, plugin config, mounts) should be
+provisioned: either encryption is currently on, or forceProvision says data on
+this release's PVC may still be encrypted.
+*/}}
+{{- define "mariadb.encryptionProvisioned" -}}
+{{- if or (.Values.encryption).enabled (.Values.encryption).forceProvision -}}true{{- end -}}
+{{- end -}}
+
+{{- if eq (include "mariadb.encryptionProvisioned" .) "true" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mariadb.fullname" . }}-encryption-conf
+data:
+  {{ .Values.encryption.confFile }}: |
+    {{- $encState := .Values.encryption.enabled | ternary "ON" "OFF" }}
+
+    [mariadb]
+
+    plugin_load_add = file_key_management
+
+    file_key_management_filename  = {{ .Values.encryption.keysPath }}/{{ .Values.encryption.encryptionKeysFile }}
+    file_key_management_filekey   = FILE:{{ .Values.encryption.keysPath }}/{{ .Values.encryption.keyFile }}
+
+    file_key_management_encryption_algorithm = AES_CTR
+
+    innodb_encrypt_tables           = {{ $encState }}
+    innodb_encrypt_log              = {{ $encState }}
+    innodb_encrypt_temporary_tables = {{ $encState }}
+    innodb_encryption_threads       = 4
+
+    aria_encrypt_tables             = {{ $encState }}
+    encrypt_tmp_disk_tables         = {{ $encState }}
+    encrypt_tmp_files               = {{ $encState }}
+    encrypt_binlog                  = {{ $encState }}
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: {{ include "mariadb.fullname" . }}-encryption-keys
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: {{ include "mariadb.fullname" . }}-encryption-keys
+    creationPolicy: Owner
+  data:
+    - secretKey: {{ .Values.encryption.encryptionKeysFile }}
+      remoteRef:
+        key: {{ .Values.encryption.vaultKeysPath }}/{{ include "mariadb.fullname" . }}
+        property: {{ .Values.encryption.vaultKeyKeysFile }}
+        decodingStrategy: Base64
+    - secretKey: {{ .Values.encryption.keyFile }}
+      remoteRef:
+        key: {{ .Values.encryption.vaultKeysPath }}/{{ include "mariadb.fullname" . }}
+        property: {{ .Values.encryption.vaultKeyFileKey }}
+{{- end }}
+
+{{- define "mariadb.encryptionVolumes" -}}
+- name: mariadb-tde-keys-volume
+  secret:
+    secretName: {{ include "mariadb.fullname" . }}-encryption-keys
+    defaultMode: 256 # equivalent to chmod 0400
+- name: mariadb-encryption-conf-volume
+  configMap:
+    name: {{ include "mariadb.fullname" . }}-encryption-conf
+{{- end -}}
+
+{{- define "mariadb.encryptionVolumeMounts" -}}
+- name: mariadb-tde-keys-volume
+  mountPath: {{ .Values.encryption.keysPath }}
+  readOnly: true
+- name: mariadb-encryption-conf-volume
+  mountPath: {{ .Values.encryption.confPath }}
+  readOnly: true
+{{- end -}}

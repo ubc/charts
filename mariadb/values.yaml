@@ -219,3 +219,14 @@ metrics:
   username:
   # PasswordSecretKeyRef is a reference to the password of the monitoring user used by the exporter.
   passwordSecretKeyRef: {}
+encryption:
+  enabled: false
+  forceProvision: false
+  keysPath: /etc/mysql/encryption-keys
+  encryptionKeysFile: keyfile.enc
+  keyFile: keyfile.key
+  confPath: /etc/mysql/encryption-conf
+  confFile: encryption.cnf
+  vaultKeysPath: mariadb-operator/encryption
+  vaultKeyKeysFile: keyfile_b64
+  vaultKeyFileKey: filekey
