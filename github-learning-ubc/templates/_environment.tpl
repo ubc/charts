@@ -2,12 +2,7 @@
 Runtime environment variables
 */}}
 {{- define "glu.environment" }}
-- name: SECRET_KEY
-  value: {{ .Values.secretKey | quote }}
-  # valueFrom:
-  #   secretKeyRef:
-  #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: secret_key
+{{ include "glu.secretEnv" (dict "root" $ "name" "SECRET_KEY" "key" "secret_key" "value" $.Values.secretKey) }}
 - name: GLU_BATCH_ENABLED
   value: {{ .Values.glu.batchEnabled | quote }}
 - name: GLU_BATCH_GROUP_SYNC_SCHEDULE
@@ -34,12 +29,7 @@ Runtime environment variables
   value: {{ .Values.saml.attributeLastName | quote }}
 - name: SAML_SETTINGS_FILE
   value: {{ .Values.saml.settingsFile | quote }}
-- name: SAML_SETTINGS
-  value: {{ .Values.saml.settings | quote }}
-  # valueFrom:
-  #   secretKeyRef:
-  #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: saml_settings
+{{ include "glu.secretEnv" (dict "root" $ "name" "SAML_SETTINGS" "key" "saml_settings" "value" $.Values.saml.settings) }}
 - name: SAML_METADATA_URL
   value: {{ .Values.saml.metadataUrl | quote }}
 - name: SAML_METADATA_ENTITY_ID
@@ -64,12 +54,7 @@ Runtime environment variables
   value: {{ .Values.ldap.idmActiveUrl | quote }}
 - name: LDAP_IDM_ACTIVE_SERVICE_BIND_DN
   value: {{ .Values.ldap.idmActiveServiceBindDn | quote }}
-- name: LDAP_IDM_ACTIVE_SERVICE_PASSWORD
-  value: {{ .Values.ldap.idmActiveServicePassword | quote }}
-  # valueFrom:
-  #   secretKeyRef:
-  #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: ldap_idm_active_service_password
+{{ include "glu.secretEnv" (dict "root" $ "name" "LDAP_IDM_ACTIVE_SERVICE_PASSWORD" "key" "ldap_idm_active_service_password" "value" $.Values.ldap.idmActiveServicePassword) }}
 - name: LDAP_IDM_ACTIVE_USER_BASE_DN
   value: {{ .Values.ldap.idmActiveUserBaseDn | quote }}
 - name: LDAP_IDM_ACTIVE_USER_UNIQUE_IDENTIFIER
@@ -78,12 +63,7 @@ Runtime environment variables
   value: {{ .Values.ldap.idmConsumerUrl | quote }}
 - name: LDAP_IDM_CONSUMER_SERVICE_BIND_DN
   value: {{ .Values.ldap.idmConsumerServiceBindDn | quote }}
-- name: LDAP_IDM_CONSUMER_SERVICE_PASSWORD
-  value: {{ .Values.ldap.idmConsumerServicePassword | quote }}
-  # valueFrom:
-  #   secretKeyRef:
-  #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: ldap_idm_consumer_service_password
+{{ include "glu.secretEnv" (dict "root" $ "name" "LDAP_IDM_CONSUMER_SERVICE_PASSWORD" "key" "ldap_idm_consumer_service_password" "value" $.Values.ldap.idmConsumerServicePassword) }}
 - name: LDAP_IDM_CONSUMER_USER_BASE_DN
   value: {{ .Values.ldap.idmConsumerUserBaseDn | quote }}
 - name: LDAP_IDM_CONSUMER_USER_UNIQUE_IDENTIFIER
@@ -92,22 +72,12 @@ Runtime environment variables
   value: {{ .Values.ldap.intProviderUrl | quote }}
 - name: LDAP_INT_PROVIDER_SERVICE_BIND_DN
   value: {{ .Values.ldap.intProviderServiceBindDn | quote }}
-- name: LDAP_INT_PROVIDER_SERVICE_PASSWORD
-  value: {{ .Values.ldap.intProviderServicePassword | quote }}
-  # valueFrom:
-  #   secretKeyRef:
-  #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: ldap_int_provider_service_password
+{{ include "glu.secretEnv" (dict "root" $ "name" "LDAP_INT_PROVIDER_SERVICE_PASSWORD" "key" "ldap_int_provider_service_password" "value" $.Values.ldap.intProviderServicePassword) }}
 - name: LDAP_INT_CONSUMER_URL
   value: {{ .Values.ldap.intConsumerUrl | quote }}
 - name: LDAP_INT_CONSUMER_SERVICE_BIND_DN
   value: {{ .Values.ldap.intConsumerServiceBindDn | quote }}
-- name: LDAP_INT_CONSUMER_SERVICE_PASSWORD
-  value: {{ .Values.ldap.intConsumerServicePassword | quote }}
-  # valueFrom:
-  #   secretKeyRef:
-  #     name: {{ template "github-learning-ubc.fullname" . }}
-  #     key: ldap_int_consumer_service_password
+{{ include "glu.secretEnv" (dict "root" $ "name" "LDAP_INT_CONSUMER_SERVICE_PASSWORD" "key" "ldap_int_consumer_service_password" "value" $.Values.ldap.intConsumerServicePassword) }}
 - name: LDAP_INT_USER_UNIQUE_IDENTIFIER
   value: {{ .Values.ldap.intUserUniqueIdentifier | quote }}
 - name: LDAP_INT_USER_BASE_DN
@@ -118,6 +88,21 @@ Runtime environment variables
   value: {{ .Values.ldap.intGroupsBaseDn | quote }}
 - name: GITHUB_API_URL
   value: {{ .Values.github.apiUrl | quote }}
-- name: GITHUB_API_TOKEN
-  value: {{ .Values.github.apiToken | quote }}
+{{ include "glu.secretEnv" (dict "root" $ "name" "GITHUB_API_TOKEN" "key" "github_api_token" "value" $.Values.github.apiToken) }}
+{{- end }}
+
+{{/*
+One sensitive env var: read from .Values.existingSecret (key `key`) when that is
+set, otherwise inlined from values as before.
+*/}}
+{{- define "glu.secretEnv" -}}
+- name: {{ .name }}
+{{- if .root.Values.existingSecret }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .root.Values.existingSecret }}
+      key: {{ .key }}
+{{- else }}
+  value: {{ .value | quote }}
+{{- end }}
 {{- end }}

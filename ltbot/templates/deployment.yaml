@@ -28,7 +28,13 @@ spec:
               value: {{ .Values.bot.backend | quote }}
             - name: STORAGE
               value: {{ .Values.bot.storage | quote }}
-            {{- if .Values.bot.token }}
+            {{- if .Values.existingSecret }}
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: bot_token
+            {{- else if .Values.bot.token }}
             - name: BOT_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -44,7 +50,14 @@ spec:
             - name: CHATROOM_FN
               value: {{ .Values.bot.chatroomFN | quote }}
             - name: ENCRYPTION_KEY
+            {{- if .Values.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: encryption_key
+            {{- else }}
               value: {{ .Values.bot.encryptionKey | quote }}
+            {{- end }}
             - name: BOT_PLUGIN_INDEXES
               value: {{ .Values.bot.pluginIndexes | quote }}
             {{- if .Values.bot.logLevel }}
