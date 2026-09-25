@@ -128,5 +128,9 @@ echo "  filekey:     contents of $OUT_DIR/keyfile.key"
 
 if [[ "$rotated" == true ]]; then
 	echo
-	echo "After pushing to Vault, set encryption.keyId: $next_id and roll the release"
+	echo "This only affects new writes — existing tables stay on their old key_id until"
+	echo "you ALTER TABLE ... ENCRYPTION_KEY_ID=$next_id them individually."
+	echo
+	echo "See README.md's \"What rotation does — and doesn't"
+	echo "do\" section."
 fi
