@@ -71,8 +71,16 @@ into individual templates.
 {{- define "security-dashboard.podEnv" -}}
 - name: POSTGRES_USER
   value: {{ .Values.db.username }}
+{{- if .Values.existingSecret }}
+- name: POSTGRES_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.existingSecret }}
+      key: db_password
+{{- else }}
 - name: POSTGRES_PASSWORD
   value: {{ .Values.db.password }}
+{{- end }}
 - name: POSTGRES_DB
   value: {{ .Values.db.name }}
 - name: POSTGRES_HOST
@@ -83,8 +91,16 @@ into individual templates.
   value: {{ .Values.app.flask.env }}
 - name: FLASK_DEBUG
   value: {{ .Values.app.flask.debug | quote }}
+{{- if .Values.existingSecret }}
+- name: SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.existingSecret }}
+      key: secret_key
+{{- else }}
 - name: SECRET_KEY
   value: {{ .Values.app.flask.secretKey }}
+{{- end }}
 - name: PASSWORD_RESET_TOKEN_MAX_AGE
   value: {{ .Values.app.tokenMaxAge.passwordReset | quote }}
 - name: PASSWORD_RESET_SELF_TOKEN_MAX_AGE
