@@ -71,22 +71,57 @@ into individual templates.
 {{- define "ltic-access-request.podEnv" -}}
 - name: POSTGRES_USER
   value: {{ .Values.db.username }}
+{{- if .Values.existingSecret }}
+- name: POSTGRES_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.existingSecret }}
+      key: db_password
+{{- else }}
 - name: POSTGRES_PASSWORD
   value: {{ .Values.db.password }}
+{{- end }}
 - name: POSTGRES_DB
   value: {{ .Values.db.name }}
 - name: POSTGRES_HOST
   value: {{ .Values.db.host }}
 - name: DATABASE_URL
+{{- if .Values.existingSecret }}
+  # $(POSTGRES_PASSWORD) is expanded by the kubelet from the env var above.
+  value: {{ printf "postgresql+psycopg://%s:$(POSTGRES_PASSWORD)@%s:5432/%s" .Values.db.username .Values.db.host .Values.db.name | quote }}
+{{- else }}
   value: {{ printf "postgresql+psycopg://%s:%s@%s:5432/%s" .Values.db.username .Values.db.password .Values.db.host .Values.db.name | quote }}
+{{- end }}
+{{- if .Values.existingSecret }}
+- name: DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.existingSecret }}
+      key: db_password
+{{- else }}
 - name: DB_PASSWORD
   value: {{ .Values.db.password }}
+{{- end }}
 - name: FLASK_ENV
   value: {{ .Values.app.flask.env }}
+{{- if .Values.existingSecret }}
+- name: SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.existingSecret }}
+      key: secret_key
+- name: ANALYTICS_PEPPER
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.existingSecret }}
+      key: analytics_pepper
+      optional: true
+{{- else }}
 - name: SECRET_KEY
   value: {{ .Values.app.flask.secretKey }}
 - name: ANALYTICS_PEPPER
   value: {{ .Values.app.flask.analyticsPepper }}
+{{- end }}
 - name: SMTP_HOST
   value: {{ .Values.app.smtp.host }}
 - name: SMTP_PORT
@@ -95,8 +130,17 @@ into individual templates.
   value: {{ .Values.app.smtp.useTls | quote }}
 - name: SMTP_USER
   value: {{ .Values.app.smtp.user }}
+{{- if .Values.existingSecret }}
+- name: SMTP_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.existingSecret }}
+      key: smtp_password
+      optional: true
+{{- else }}
 - name: SMTP_PASSWORD
   value: {{ .Values.app.smtp.password }}
+{{- end }}
 - name: SMTP_FROM
   value: {{ .Values.app.smtp.from }}
 - name: ALLOWED_EMAIL_DOMAINS
