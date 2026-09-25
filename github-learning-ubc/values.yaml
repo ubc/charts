@@ -3,6 +3,18 @@
 # Declare variables to be passed into your templates.
 stage: dev
 secretKey: PLEASE_GENERATE_A_RANDOM_KEY
+# Name of an existing Secret (e.g. synced from Vault by an ExternalSecret) with
+# the app's credentials. When set, the inline values secretKey, saml.settings,
+# ldap.*ServicePassword and github.apiToken are ignored, and the Secret must
+# contain these keys:
+#   secret_key                          -> SECRET_KEY
+#   saml_settings                       -> SAML_SETTINGS (JSON, includes the SP private key)
+#   ldap_idm_active_service_password    -> LDAP_IDM_ACTIVE_SERVICE_PASSWORD
+#   ldap_idm_consumer_service_password  -> LDAP_IDM_CONSUMER_SERVICE_PASSWORD
+#   ldap_int_provider_service_password  -> LDAP_INT_PROVIDER_SERVICE_PASSWORD
+#   ldap_int_consumer_service_password  -> LDAP_INT_CONSUMER_SERVICE_PASSWORD
+#   github_api_token                    -> GITHUB_API_TOKEN
+existingSecret: ""
 workerSchedulerEnabled: false
 cForceRoot: true
 workerSchedulerEnabled: false
