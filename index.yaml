@@ -2092,6 +2092,16 @@ entries:
   github-learning-ubc:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-09-25T21:51:41.314507795Z"
+    description: GitHub Service for Learning at UBC
+    digest: d68187a304aa11ec950edb0bd9822c05626d15dbe0182e988d3e9cdc2166a400
+    name: github-learning-ubc
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/github-learning-ubc-0.3.0/github-learning-ubc-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-02-24T23:11:02.299632376Z"
     description: GitHub Service for Learning at UBC
     digest: cd8ca8eb17616b4d4b8f1f2e2badcbf2e4fd7ba81893fb8458263eb4961f68d2
@@ -3613,6 +3623,14 @@ entries:
     - https://github.com/ubc/charts/releases/download/ladistra-0.0.1/ladistra-0.0.1.tgz
     version: 0.0.1
   ltbot:
+  - apiVersion: v1
+    created: "2026-09-25T21:51:41.511139399Z"
+    description: A Helm chart for deploying LTBot
+    digest: f3ca5ff7e9c185f283af6b73859fef6d2011ece066b26bd392288b987d5a3911
+    name: ltbot
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltbot-0.4.0/ltbot-0.4.0.tgz
+    version: 0.4.0
   - apiVersion: v1
     created: "2022-10-07T02:53:18.348909835Z"
     description: A Helm chart for deploying LTBot
@@ -10022,4 +10040,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-23T20:49:53.46815261Z"
+generated: "2026-09-25T21:51:41.511648091Z"
