@@ -25,6 +25,8 @@ data:
 
     file_key_management_encryption_algorithm = AES_CTR
 
+    innodb_default_encryption_key_id = {{ .Values.encryption.keyId | default 1 }}
+
     innodb_encrypt_tables           = {{ $encState }}
     innodb_encrypt_log              = {{ $encState }}
     innodb_encrypt_temporary_tables = {{ $encState }}

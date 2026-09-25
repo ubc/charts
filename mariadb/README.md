@@ -110,6 +110,7 @@ The following table lists the configurable parameters of the MariaDB chart and t
 | `databases` | List of custom databases and users to create (each item should have `name`, `user`, `password`). | `[]` |
 | `encryption.enabled` | Whether NEW writes get encrypted. See [Encryption](#encryption) before setting this to `false` on a release that's had it `true` before. | `false` |
 | `encryption.forceProvision` | Keeps the plugin/key/config provisioned even when `enabled` is `false`. Must be set manually — see [Encryption](#encryption). | `false` |
+| `encryption.keyId` | The `key_id` (from the key manifest) new writes get encrypted under. Bump this after rotating — see [Generating the key pair](#generating-the-key-pair). | `1` |
 | `encryption.keysPath` | Directory the keys Secret is mounted into inside the container. | `/etc/mysql/encryption-keys` |
 | `encryption.encryptionKeysFile` | Filename (under `keysPath`) for the openssl-encrypted key manifest. | `keyfile.enc` |
 | `encryption.keyFile` | Filename (under `keysPath`) for the raw file key that decrypts `encryptionKeysFile`. | `keyfile.key` |
@@ -135,24 +136,49 @@ The chart looks up a Vault secret at `<encryption.vaultKeysPath>/<release fullna
 
 ### Generating the key pair
 
-The key manifest holds one or more `<key_id>;<hex-key>` lines and is itself encrypted at rest with a separate file key, per [MariaDB's file_key_management docs](https://mariadb.com/docs/server/security/encryption/data-at-rest-encryption/key-management-and-encryption-plugins/file-key-management-encryption-plugin):
+The key manifest holds one or more `<key_id>;<hex-key>` lines and is itself encrypted at rest with a separate file key, per [MariaDB's file_key_management docs](https://mariadb.com/docs/server/security/encryption/data-at-rest-encryption/key-management-and-encryption-plugins/file-key-management-encryption-plugin).
+
+Run [`scripts/generate-encryption-keys.sh`](./scripts/generate-encryption-keys.sh) to generate a fresh key pair for a new release:
 
 ```bash
-# 1. Key manifest: one "<key_id>;<hex-key>" line per key ID you want available.
-#    Key ID 1 is what innodb_encryption_key_id defaults to.
-echo "1;$(openssl rand -hex 32)" > keyfile.txt
-
-# 2. File key: the password used to encrypt the manifest above.
-openssl rand -hex 128 > keyfile.key
-
-# 3. Encrypt the manifest with the file key (pre-12.0.1 flags — use
-#    `-md sha256 -pbkdf2` instead of `-md sha1` on MariaDB 12.0.1+).
-openssl enc -aes-256-cbc -md sha1 -pass file:keyfile.key -in keyfile.txt -out keyfile.enc
-
-# 4. Write both into Vault at mariadb-operator/encryption/<release fullname>:
-#    - keyfile_b64: base64 -i keyfile.enc  (base64-encoded)
-#    - filekey:     contents of keyfile.key (raw, not base64)
+./scripts/generate-encryption-keys.sh
 ```
+
+This writes `keyfile.enc`, `keyfile.enc.b64` (already base64-encoded), and `keyfile.key` to the current directory, and prints exactly what to write into Vault at `mariadb-operator/encryption/<release fullname>` (`keyfile_b64` / `filekey`). The plaintext manifest only ever exists as a temp file, which gets deleted once it's encrypted. Add `--keep-manifest` if you want to inspect it as `keyfile.txt` before pushing to Vault, then discard it yourself once done.
+
+**Rotating an existing key pair?** Use `--rotate` instead of generating fresh — this appends a new `key_id` to the existing manifest rather than replacing it. Anything ever encrypted under an older `key_id` — tables still on that key, older backups, anything — needs that `key_id` to still be in the manifest to stay readable. Dropping an old `key_id` makes whatever it protected permanently unrecoverable, so `--rotate` only ever adds, never removes:
+
+```bash
+./scripts/generate-encryption-keys.sh --rotate <existing-keyfile.enc> <existing-keyfile.key>
+```
+
+`--rotate` regenerates the file key too, so `keyfile_b64` and `filekey` must be updated together in Vault — they're both properties of the same secret, so a single write covers it, just don't push one without the other.
+
+#### What rotation does — and doesn't do
+
+This chart runs MariaDB 10.6 Community Server. `file_key_management` on Community does not support key rotation in the Enterprise sense — there's no `FLUSH FILE_KEY_MANAGEMENT_KEYS`, and the plugin only reads the manifest once, at startup. `--rotate` and `encryption.keyId` only ever influence **new writes**:
+
+- Bumping `encryption.keyId` and restarting changes which `key_id` *new* tables get created under. It does **not** touch existing tables — they stay on whatever `key_id` they were created with, indefinitely.
+- `innodb_encryption_rotate_key_age`'s background re-encryption only rotates a tablespace to a newer *version* of the same `key_id`; it never moves a tablespace to a different `key_id`.
+- The redo log and temporary tablespace are always encrypted under `key_id` 1, regardless of `encryption.keyId`. Practically, `key_id` 1 can never be fully retired.
+
+To move an **existing** table onto the new key, run this per table (rebuilds it, so plan for the I/O and lock time on anything large):
+
+```sql
+ALTER TABLE <table> ENCRYPTION_KEY_ID=<new_id>;
+```
+
+To apply the new default for future tables, in order:
+
+1. Push the rotated manifest to Vault (`keyfile_b64` and `filekey` together).
+2. Confirm the `ExternalSecret` has actually synced — it refreshes hourly by default, so either wait for that or force it — **before** the next step. Restarting while the mounted Secret still has the old manifest points MariaDB at a `key_id` it doesn't have yet.
+3. Set `encryption.keyId` to the new value, then restart the pod(s) explicitly. Changing `encryption.keyId` only edits the encryption `ConfigMap`, which the operator doesn't watch (only `myCnf`, Galera config, TLS certs, and the metrics secret trigger its own safe rolling-restart), so nothing restarts on its own. `kubectl rollout restart` is also a no-op here — the StatefulSet uses `OnDelete`, so it only stages a template annotation; nothing actually deletes pods to pick it up.
+
+   Deleting a pod doesn't touch its data — each pod has its own PVC, decoupled from the pod's lifecycle, and Kubernetes recreates the pod against the *same* PVC. The risk below isn't data loss; it's an *unplanned primary/replica role swap* if you delete the wrong pod in a replication setup.
+   - `architecture: standalone`: one pod — `kubectl delete pod <fullname>-mariadb-0` is safe, there's nothing to fail over to.
+   - `architecture: replication`: **don't delete the primary pod directly.** `autoFailoverDelay` defaults to `0`, so a `NotReady` primary gets a replica promoted almost immediately — that's a real failover, not a like-for-like restart. Restart replica pods first, one at a time, letting each rejoin before moving to the next. Once they're updated, either trigger a manual switchover onto an already-updated replica (`spec.replication.primary.podIndex`) before restarting the original primary, or restart it during a window where a brief real failover is acceptable.
+
+Do not use `SET GLOBAL innodb_default_encryption_key_id` as a way to apply a new key without restarting. The plugin never re-reads the manifest after startup, so on a server that's still running with the old one loaded, this doesn't just fail to help — it makes the *next* `CREATE TABLE` fail outright (`errno: 140`), even once the correct key material is already sitting in the mounted Secret.
 
 Discard `keyfile.txt` (the unencrypted manifest) once `keyfile.enc` is written — only `keyfile.enc` and `keyfile.key` go into vault.
 
