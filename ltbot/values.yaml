@@ -41,6 +41,13 @@ persistent:
   accessMode: ReadWriteOnce
   size: 2Gi
 
+# Name of an existing Secret (e.g. synced from Vault by an ExternalSecret) that
+# holds the bot's credentials. When set, bot.token and bot.encryptionKey are
+# ignored, the chart creates no Secret of its own, and the Secret must contain:
+#   bot_token       -> BOT_TOKEN
+#   encryption_key  -> ENCRYPTION_KEY
+existingSecret: ""
+
 bot:
   backend: Text
   storage: Shelf
