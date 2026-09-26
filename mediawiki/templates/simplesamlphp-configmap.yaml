@@ -9,8 +9,10 @@ metadata:
 data:
   crt:
     {{ toYaml .Values.simplesamlphp.sp.certs.crt | indent 2 }}
+  {{- if not .Values.existingSecret }}
   pem:
     {{ toYaml .Values.simplesamlphp.sp.certs.pem | indent 2 }}
+  {{- end }}
 
 {{- end -}}
 

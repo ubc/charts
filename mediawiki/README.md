@@ -55,6 +55,7 @@ The following tables lists the configurable parameters of the MediaWiki chart an
 | `mediawikiPassword`                  | Application password                     | _random 10 character long alphanumeric string_          |
 | `mediawikiEmail`                     | Admin email                              | `user@example.com`                                      |
 | `mediawikiName`                      | Name for the wiki                        | `My Wiki`                                               |
+| `existingSecret`                     | Existing Secret holding the app credentials (`mediawiki_secret_key`, `simplesamlphp_secret_salt`, `simplesamlphp_admin_password`, `simplesamlphp_cron_secret`, `simplesamlphp_sp_pem`; optional `ldap_proxy_password`, `caliper_api_key`, `google_map_api_key`). When set, the matching inline values are ignored. See `values.yaml`. | `""` |
 | `smtpHost`                           | SMTP host                                | `nil`                                                   |
 | `smtpPort`                           | SMTP port                                | `nil`                                                   |
 | `smtpHostID`                         | SMTP host ID                             | `nil`                                                   |

@@ -124,6 +124,21 @@ build_id: "{{ .Values.CI_BUILD_ID }}"
 {{- end }}
 {{- end }}
 
+{{/*
+Env var read from .Values.existingSecret. Pass a dict with "ctx" (root), "name"
+(env var) and "key" (secret key); "optional" true tolerates a missing key.
+*/}}
+{{- define "mediawiki.existingSecretEnv" -}}
+- name: {{ .name }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .ctx.Values.existingSecret }}
+      key: {{ .key }}
+{{- if .optional }}
+      optional: true
+{{- end }}
+{{- end -}}
+
 {{/* SimpleSAMLphp container spec */}}
 
 {{- define "simplesamlphp.domain" -}}
@@ -137,12 +152,18 @@ https://{{ template "simplesamlphp.domain" . }}
 {{- end -}}
 
 {{- define "simplesamlphp.app.spec.env" }}
+{{- if .Values.existingSecret }}
+{{ include "mediawiki.existingSecretEnv" (dict "ctx" . "name" "SIMPLESAMLPHP_SECRET_SALT" "key" "simplesamlphp_secret_salt") }}
+{{ include "mediawiki.existingSecretEnv" (dict "ctx" . "name" "SIMPLESAMLPHP_ADMIN_PASSWORD" "key" "simplesamlphp_admin_password") }}
+{{ include "mediawiki.existingSecretEnv" (dict "ctx" . "name" "SIMPLESAMLPHP_CRON_SECRET" "key" "simplesamlphp_cron_secret") }}
+{{- else }}
 - name: SIMPLESAMLPHP_SECRET_SALT
   value: {{ .Values.simplesamlphp.secretSalt | quote }}
 - name: SIMPLESAMLPHP_ADMIN_PASSWORD
   value: {{ .Values.simplesamlphp.adminPassword | quote }}
 - name: SIMPLESAMLPHP_CRON_SECRET
   value: {{ .Values.simplesamlphp.cronSecret | quote }}
+{{- end }}
 - name: SIMPLESAMLPHP_MEMCACHED_SERVER
   value: {{ template "mediawiki.fullname" . }}-memcached
 - name: SIMPLESAMLPHP_TRUSTED_DOMAIN
@@ -255,7 +276,9 @@ env:
     secretKeyRef:
       name: {{ template "mediawiki.fullname" . }}
       key: smtp_password
-{{- if .Values.mediawikiSecretKey  }}
+{{- if .Values.existingSecret }}
+{{ include "mediawiki.existingSecretEnv" (dict "ctx" . "name" "MEDIAWIKI_SECRET_KEY" "key" "mediawiki_secret_key") }}
+{{- else if .Values.mediawikiSecretKey  }}
 - name: MEDIAWIKI_SECRET_KEY
   value: {{ .Values.mediawikiSecretKey | quote }}
 {{- end }}
@@ -288,7 +311,9 @@ env:
 - name: LDAP_PROXY_AGENT
   value: {{ .Values.ldap.proxyAgent }}
 {{- end }}
-{{- if .Values.ldap.proxyPassword }}
+{{- if .Values.existingSecret }}
+{{ include "mediawiki.existingSecretEnv" (dict "ctx" . "name" "LDAP_PROXY_PASSWORD" "key" "ldap_proxy_password" "optional" true) }}
+{{- else if .Values.ldap.proxyPassword }}
 - name: LDAP_PROXY_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -351,7 +376,9 @@ env:
 {{- if .Values.caliper.enabled }}
 - name: CALIPER_HOST
   value: {{ .Values.caliper.host | quote }}
-{{- if .Values.caliper.api_key }}
+{{- if .Values.existingSecret }}
+{{ include "mediawiki.existingSecretEnv" (dict "ctx" . "name" "CALIPER_API_KEY" "key" "caliper_api_key" "optional" true) }}
+{{- else if .Values.caliper.api_key }}
 - name: CALIPER_API_KEY
   valueFrom:
     secretKeyRef:
@@ -396,7 +423,9 @@ env:
 - name: GOOGLE_ANALYTICS_METRICS_VIEWID
   value: {{ .Values.googleAnalytics.metricsViewID | quote }}
 {{- end }}
-{{- if .Values.googleMap.apiKey }}
+{{- if .Values.existingSecret }}
+{{ include "mediawiki.existingSecretEnv" (dict "ctx" . "name" "GOOGLE_MAP_API_KEY" "key" "google_map_api_key" "optional" true) }}
+{{- else if .Values.googleMap.apiKey }}
 - name: GOOGLE_MAP_API_KEY
   value: {{ .Values.googleMap.apiKey | quote }}
 {{- end }}

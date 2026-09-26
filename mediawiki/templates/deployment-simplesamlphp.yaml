@@ -69,9 +69,17 @@ spec:
             - key: crt
               path: wiki-sp.crt
         - name: simplesamlphp-pem
+          {{- if .Values.existingSecret }}
+          secret:
+            secretName: {{ .Values.existingSecret }}
+            items:
+            - key: simplesamlphp_sp_pem
+              path: wiki-sp.pem
+          {{- else }}
           configMap:
             name: {{ template "mediawiki.fullname" . }}-simplesamlphp
             items:
             - key: pem
               path: wiki-sp.pem
+          {{- end }}
 {{- end -}}
