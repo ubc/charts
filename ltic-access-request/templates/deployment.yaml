@@ -60,12 +60,28 @@ spec:
               value: {{ .Values.db.auth.database }}
             - name: DB_USER
               value: {{ .Values.db.auth.username }}
+            {{- if .Values.existingSecret }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: db_password
+            {{- else }}
             - name: DB_PASSWORD
               value: {{ .Values.db.auth.password }}
+            {{- end }}
             - name: FLASK_ENV
               value: {{ .Values.app.flask.env }}
+            {{- if .Values.existingSecret }}
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: secret_key
+            {{- else }}
             - name: SECRET_KEY
               value: {{ .Values.app.flask.secretKey }}
+            {{- end }}
             {{- if .Values.mailpit.enabled }}
             - name: SMTP_HOST
               value: {{ include "ltic-access-request.fullname" . }}-mailpit
@@ -83,8 +99,17 @@ spec:
             {{- end }}
             - name: SMTP_USER
               value: {{ .Values.app.smtp.user }}
+            {{- if .Values.existingSecret }}
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: smtp_password
+                  optional: true
+            {{- else }}
             - name: SMTP_PASSWORD
               value: {{ .Values.app.smtp.password }}
+            {{- end }}
             - name: SMTP_FROM
               value: {{ .Values.app.smtp.from }}
             - name: ALLOWED_EMAIL_DOMAINS

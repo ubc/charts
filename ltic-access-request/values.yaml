@@ -90,6 +90,16 @@ tolerations: []
 
 affinity: {}
 
+# Name of an existing Secret (e.g. synced from Vault by an ExternalSecret) holding
+# the app's credentials. When set, db.auth.password, app.flask.secretKey and
+# app.smtp.password are ignored for the app, and the Secret provides:
+#   db_password    -> DB_PASSWORD
+#   secret_key     -> SECRET_KEY
+#   smtp_password  -> SMTP_PASSWORD  (optional)
+# To make the bundled MariaDB user use the same password, also set
+#   db.auth.existingSecret: <this Secret>   and   db.auth.userPasswordKey: db_password
+existingSecret: ""
+
 db:
   enabled: true
   architecture: standalone
