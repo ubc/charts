@@ -69,8 +69,16 @@ spec:
               value: {{ .Values.app.name | quote }}
             - name: APP_ENV
               value: {{ .Values.app.env | quote }}
+            {{- if .Values.existingSecret }}
             - name: APP_KEY
-              value: {{ .Values.app.key | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: app_key
+            {{- else }}
+            - name: APP_KEY
+              value: {{ required "app.key is required (or set existingSecret)" .Values.app.key | quote }}
+            {{- end }}
             - name: APP_DEBUG
               value: {{ .Values.app.debug | quote }}
             - name: APP_TIMEZONE
@@ -91,14 +99,30 @@ spec:
               value: {{ .Values.db.name | quote }}
             - name: DB_USERNAME
               value: {{ .Values.db.name | quote }}
+            {{- if .Values.existingSecret }}
             - name: DB_PASSWORD
-              value: {{ .Values.db.pass | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: db_password
+            {{- else }}
+            - name: DB_PASSWORD
+              value: {{ required "db.pass is required (or set existingSecret)" .Values.db.pass | quote }}
+            {{- end }}
             - name: CARDAPI_URL
               value: {{ .Values.app.cardapi.url | quote }}
             - name: CARDAPI_ID
               value: {{ .Values.app.cardapi.id | quote }}
+            {{- if .Values.existingSecret }}
             - name: CARDAPI_SECRET
-              value: {{ .Values.app.cardapi.secret | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: cardapi_secret
+            {{- else }}
+            - name: CARDAPI_SECRET
+              value: {{ required "app.cardapi.secret is required (or set existingSecret)" .Values.app.cardapi.secret | quote }}
+            {{- end }}
             - name: LTI_PLATFORM_NAME
               value: {{ .Values.lti.platform.name | quote }}
             - name: LTI_PLATFORM_URL

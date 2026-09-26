@@ -100,12 +100,21 @@ tolerations: []
 affinity: {}
 
 
+# Name of an existing Secret (e.g. synced from Vault by an ExternalSecret) holding
+# the app's credentials. When set, app.key, db.pass and app.cardapi.secret are
+# ignored, and the Secret must provide:
+#   app_key         -> APP_KEY         (Laravel encryption key: carry it over, never regenerate)
+#   db_password     -> DB_PASSWORD
+#   cardapi_secret  -> CARDAPI_SECRET
+existingSecret: ""
+
 app:
   name: 'Exam Card Scanner'
   env: 'staging'
   # WARNING: generate a new one using 'php artisan key:generate --show', do
   # not use this one as it's public
-  key: 'base64:6yrh4e4azSkY9YZwmoPJZ/hOtdQxa563JF8F1G850FU='
+  # No default on purpose: this file is public. Provide it per release, or use existingSecret.
+  key: ""
   debug: 'true'
   timezone: 'UTC'
   url: 'https://cardscanner.lthub.ubc.ca'
@@ -114,7 +123,8 @@ app:
   cardapi:
     url: 'https://cardsapi.example.com'
     id: 'client'
-    secret: 'secret'
+    # No default on purpose: this file is public. Provide it per release, or use existingSecret.
+    secret: ""
   pvc:
     storage:
       annotations:
@@ -135,7 +145,8 @@ db:
   port: '5432'
   name: 'myDbName'
   user: 'myUsername'
-  pass: 'myPassword'
+  # No default on purpose: this file is public. Provide it per release, or use existingSecret.
+  pass: ""
 
 
 worker:
