@@ -102,6 +102,11 @@ app:
   flask:
     env: production
     secretKey: BzioL2JzzQlxwWpE6B00rn7tlzxTscZj
+    # Vault path for the Flask SECRET_KEY (ClusterSecretStore vault-backend). When set,
+    # the chart renders <release>-app ExternalSecret and secretKey above is ignored.
+    secret:
+      path: ""
+      key: secret_key
     debug: 0 # debug 0 disables flask dev server for gunicorn
   gunicorn:
     workers: 3
