@@ -90,7 +90,6 @@ into individual templates.
     secretKeyRef:
       name:  {{ include "operations-hub.fullname" . }}-db
       key: username
-  value: {{ .Values.db.username }}
 - name: POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:
