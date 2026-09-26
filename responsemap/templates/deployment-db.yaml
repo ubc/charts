@@ -5,6 +5,10 @@ metadata:
   labels:
     {{- include "responsemap.labels" . | nindent 4 }}
 spec:
+  strategy:
+    # The DB volume is ReadWriteOnce: a rolling update deadlocks (Multi-Attach)
+    # whenever the new pod lands on another node.
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "responsemap.fullname" . }}-db
