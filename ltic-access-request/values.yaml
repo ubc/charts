@@ -106,14 +106,16 @@ db:
   auth:
     database: ltic-access-request
     username: ltic-access-request
-    password: ltic-access-request
+    # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+    password: ""
   persistence:
     size: 1Gi
 
 app:
   flask:
     env: staging
-    secretKey: YrMPnLidOFprMuNmxpIc3dT1sd0LErZy
+    # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+    secretKey: ""
   port: 5000
   smtp:
     host: mail.example.com

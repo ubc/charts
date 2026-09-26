@@ -68,7 +68,7 @@ spec:
                   key: db_password
             {{- else }}
             - name: DB_PASSWORD
-              value: {{ .Values.db.auth.password }}
+              value: {{ (required "db.auth.password is required (or set existingSecret)" .Values.db.auth.password) }}
             {{- end }}
             - name: FLASK_ENV
               value: {{ .Values.app.flask.env }}
@@ -80,7 +80,7 @@ spec:
                   key: secret_key
             {{- else }}
             - name: SECRET_KEY
-              value: {{ .Values.app.flask.secretKey }}
+              value: {{ (required "app.flask.secretKey is required (or set existingSecret)" .Values.app.flask.secretKey) }}
             {{- end }}
             {{- if .Values.mailpit.enabled }}
             - name: SMTP_HOST

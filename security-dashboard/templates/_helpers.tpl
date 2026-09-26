@@ -79,7 +79,7 @@ into individual templates.
       key: db_password
 {{- else }}
 - name: POSTGRES_PASSWORD
-  value: {{ .Values.db.password }}
+  value: {{ (required "db.password is required (or set existingSecret)" .Values.db.password) }}
 {{- end }}
 - name: POSTGRES_DB
   value: {{ .Values.db.name }}
@@ -99,7 +99,7 @@ into individual templates.
       key: secret_key
 {{- else }}
 - name: SECRET_KEY
-  value: {{ .Values.app.flask.secretKey }}
+  value: {{ (required "app.flask.secretKey is required (or set existingSecret)" .Values.app.flask.secretKey) }}
 {{- end }}
 - name: PASSWORD_RESET_TOKEN_MAX_AGE
   value: {{ .Values.app.tokenMaxAge.passwordReset | quote }}

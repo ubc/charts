@@ -100,14 +100,16 @@ existingSecret: ""
 db:
   name: security-dashboard
   username: security-dashboard
-  password: security-dashboard
+  # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+  password: ""
   host: somehost
 
 app:
   flask:
     app: "wsgi:app"
     env: staging
-    secretKey: teRmH9x0a6yJHb7TC1AML7hklPcoFD4J
+    # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+    secretKey: ""
     debug: 1
   gunicorn:
     workers: 3
