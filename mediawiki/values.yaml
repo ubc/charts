@@ -86,6 +86,21 @@ mediawikiUserRedirect:
 # mediawiki's $wgSecretKey, recommended to be a 64 character random string
 mediawikiSecretKey: 'REPLACE_ME'
 
+## Name of an existing Secret (e.g. from an ExternalSecret) holding the app
+## credentials. When set, the inline values below are ignored and these keys
+## are read instead:
+##   mediawiki_secret_key          -> MEDIAWIKI_SECRET_KEY    (replaces mediawikiSecretKey)
+##   simplesamlphp_secret_salt     -> simplesamlphp.secretSalt
+##   simplesamlphp_admin_password  -> simplesamlphp.adminPassword
+##   simplesamlphp_cron_secret     -> simplesamlphp.cronSecret
+##   simplesamlphp_sp_pem          -> simplesamlphp.sp.certs.pem (SP private key)
+##   ldap_proxy_password           -> ldap.proxyPassword      (optional)
+##   caliper_api_key               -> caliper.api_key         (optional)
+##   google_map_api_key            -> googleMap.apiKey        (optional)
+## The simplesamlphp_* keys are only needed when simplesamlphp.enabled.
+## The DB password is separate: use db.auth.existingSecret/db.auth.userPasswordKey.
+existingSecret: ""
+
 googleAnalytics:
   # Google Analytics Tracking Token
   id: G-XXXXXXXX-XX
