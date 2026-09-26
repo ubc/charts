@@ -8655,6 +8655,18 @@ entries:
   responsemap:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-09-26T06:52:48.221952522Z"
+    description: The response map is an LTI tool that allows students to respond to
+      a question or give feedback and have the responses show up on a world map based
+      on the location that they enter in.
+    digest: 51ea0f2d6d60e535be5115ac26987f65af9b490e3a048cce6a8e2521b6765b78
+    name: responsemap
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/responsemap-0.1.1/responsemap-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-09-26T06:30:56.442966348Z"
     description: The response map is an LTI tool that allows students to respond to
       a question or give feedback and have the responses show up on a world map based
@@ -10191,4 +10203,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-26T06:30:56.443963512Z"
+generated: "2026-09-26T06:52:48.222567809Z"
