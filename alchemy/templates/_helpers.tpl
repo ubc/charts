@@ -23,3 +23,10 @@ Parse hostname from service URL passed from gitlab CI_ENVIRONMENT_URL
 {{- printf "%s" $temp._2 -}}
 {{- end -}}
 
+{{/*
+Secret holding mysql_password, rails_secret and lrs_password: .Values.existingSecret
+when set, otherwise the chart-rendered one.
+*/}}
+{{- define "alchemy.secretName" -}}
+{{- default (include "fullname" .) .Values.existingSecret -}}
+{{- end -}}

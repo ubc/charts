@@ -6,6 +6,17 @@ dbPort: "3306"
 dbName: alchemy
 dbUsername: alchemy
 dbPassword: PLEASE_CHANGE_ME
+## Name of an existing Secret (e.g. from an ExternalSecret). When set, the chart
+## does not render its own Secret and reads these keys from it instead:
+##   mysql_password  -> dbPassword (app, worker and MySQL user/root)
+##   rails_secret    -> secret
+##   lrs_password    -> xapi.lrsPassword (optional)
+existingSecret: ""
+
+## Auto DevOps passes service.url (CI_ENVIRONMENT_URL); the ingress hostname is
+## parsed from it. This default only keeps `helm lint`/`helm template` working.
+service:
+  url: http://localhost
 adminDefaultPassword: PLEASE_CHANGE_ME
 appLoginEnabled: true
 casLoginEnabled: false

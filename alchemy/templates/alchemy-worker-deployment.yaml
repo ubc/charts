@@ -51,7 +51,7 @@ spec:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ include "alchemy.secretName" . }}
               key: mysql_password
         - name: DB_NAME
           value: {{ .Values.dbName }}
@@ -70,7 +70,7 @@ spec:
         - name: SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ include "alchemy.secretName" . }}
               key: rails_secret
         - name: XAPI_ENABLED
           value: {{ .Values.xapi.enabled | quote }}
@@ -81,12 +81,15 @@ spec:
           value: {{ .Values.xapi.lrsStatementEndpoint | quote }}
         - name: LRS_USERNAME
           value: {{ .Values.xapi.lrsUsername | quote }}
-        {{- if .Values.xapi.lrsPassword }}
+        {{- if or .Values.existingSecret .Values.xapi.lrsPassword }}
         - name: LRS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ include "alchemy.secretName" . }}
               key: lrs_password
+              {{- if .Values.existingSecret }}
+              optional: true
+              {{- end }}
         {{- end }}
         - name: LRS_ACTOR_ACCOUNT_USE_CAS
           value: {{ .Values.xapi.lrsActorAccountUseCas | quote }}
