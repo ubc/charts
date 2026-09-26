@@ -108,8 +108,16 @@ into individual templates.
   value: {{ .Values.app.flask.env | quote }}
 - name: FLASK_DEBUG
   value: {{ .Values.app.flask.debug | quote }}
+{{- if .Values.app.flask.secret.path }}
+- name: SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "operations-hub.fullname" . }}-app
+      key: secret_key
+{{- else }}
 - name: SECRET_KEY
   value: {{ .Values.app.flask.secretKey }}
+{{- end }}
 {{- if .Values.app.smtp.host }}
 - name: MAIL_SERVER
   value: {{ .Values.app.smtp.host }}
