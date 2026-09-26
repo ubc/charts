@@ -8584,6 +8584,16 @@ entries:
   security-dashboard:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-09-26T00:00:41.615996882Z"
+    description: security-dashboard
+    digest: 2e6f3fcfbd2a54814ffb4abc343273ac7512db049dd8c483d35af955b4366145
+    name: security-dashboard
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/security-dashboard-0.1.0/security-dashboard-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-06-11T22:52:33.287863091Z"
     description: security-dashboard
     digest: fe2c57491c7b9c922823bcf200450e130228087d32a40385cddd55c37d9ad8ff
@@ -10050,4 +10060,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-25T23:41:51.223262354Z"
+generated: "2026-09-26T00:00:41.61730851Z"
