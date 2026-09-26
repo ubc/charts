@@ -25,14 +25,30 @@ spec:
             - name: responsemap-db
               mountPath: /var/lib/mysql
           env:
+            {{- if .Values.existingSecret }}
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: db_root_password
+            {{- else }}
             - name: MARIADB_ROOT_PASSWORD
               value: {{ .Values.db.rootPass }}
+            {{- end }}
             - name: MARIADB_DATABASE
               value: {{ .Values.db.name }}
             - name: MARIADB_USER
               value: {{ .Values.db.user }}
+            {{- if .Values.existingSecret }}
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: db_password
+            {{- else }}
             - name: MARIADB_PASSWORD
               value: {{ .Values.db.pass }}
+            {{- end }}
             {{- if .Values.db.autoUpgrade }}
             - name: MARIADB_AUTO_UPGRADE
               value: "1"

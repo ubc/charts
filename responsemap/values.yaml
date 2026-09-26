@@ -64,6 +64,16 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+## Name of an existing Secret (e.g. from an ExternalSecret) holding the credentials.
+## When set, the inline values are ignored and these keys are read instead:
+##   db_password        -> db.pass (app DB_PASSWORD and MARIADB_PASSWORD)
+##   db_root_password   -> db.rootPass
+##   admin_password     -> app.adminPassword (the /admin/ response export page)
+##   oauth_consumer     -> app.oauthConsumer (LTI 1.1 JSON {"key": "secret"})
+##   google_api_key     -> app.google.apiKey    (optional)
+##   google_server_key  -> app.google.serverKey (optional)
+existingSecret: ""
+
 app:
   adminPassword: admin
   # LTI 1.1 credentials
