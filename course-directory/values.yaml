@@ -105,14 +105,17 @@ existingSecret: ""
 db:
   name: course-directory
   username: course-directory
-  password: course-directory
+  # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+  password: ""
   host: somehost
 
 app:
   flask:
     env: staging
-    secretKey: YrMPnLidOFprMuNmxpIc3dT1sd0LErZy
-  analyticsPepper: XySNgbIi6VW59iZjZlTeKazYKUYh1w74
+    # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+    secretKey: ""
+  # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+  analyticsPepper: ""
   port: 5000
   smtp:
     host: mail.example.com

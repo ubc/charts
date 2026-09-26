@@ -101,7 +101,8 @@ db:
 app:
   flask:
     env: production
-    secretKey: BzioL2JzzQlxwWpE6B00rn7tlzxTscZj
+    # No default on purpose: this file is public. Provide it per release, or use Vault (existingSecret).
+    secretKey: ""
     # Vault path for the Flask SECRET_KEY (ClusterSecretStore vault-backend). When set,
     # the chart renders <release>-app ExternalSecret and secretKey above is ignored.
     secret:

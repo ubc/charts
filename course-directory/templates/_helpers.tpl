@@ -79,7 +79,7 @@ into individual templates.
       key: db_password
 {{- else }}
 - name: POSTGRES_PASSWORD
-  value: {{ .Values.db.password }}
+  value: {{ (required "db.password is required (or set existingSecret)" .Values.db.password) }}
 {{- end }}
 - name: POSTGRES_DB
   value: {{ .Values.db.name }}
@@ -90,7 +90,7 @@ into individual templates.
   # $(POSTGRES_PASSWORD) is expanded by the kubelet from the env var above.
   value: {{ printf "postgresql+psycopg://%s:$(POSTGRES_PASSWORD)@%s:5432/%s" .Values.db.username .Values.db.host .Values.db.name | quote }}
 {{- else }}
-  value: {{ printf "postgresql+psycopg://%s:%s@%s:5432/%s" .Values.db.username .Values.db.password .Values.db.host .Values.db.name | quote }}
+  value: {{ printf "postgresql+psycopg://%s:%s@%s:5432/%s" .Values.db.username (required "db.password is required (or set existingSecret)" .Values.db.password) .Values.db.host .Values.db.name | quote }}
 {{- end }}
 {{- if .Values.existingSecret }}
 - name: DB_PASSWORD
@@ -100,7 +100,7 @@ into individual templates.
       key: db_password
 {{- else }}
 - name: DB_PASSWORD
-  value: {{ .Values.db.password }}
+  value: {{ (required "db.password is required (or set existingSecret)" .Values.db.password) }}
 {{- end }}
 - name: FLASK_ENV
   value: {{ .Values.app.flask.env }}
@@ -118,7 +118,7 @@ into individual templates.
       optional: true
 {{- else }}
 - name: SECRET_KEY
-  value: {{ .Values.app.flask.secretKey }}
+  value: {{ (required "app.flask.secretKey is required (or set existingSecret)" .Values.app.flask.secretKey) }}
 - name: ANALYTICS_PEPPER
   value: {{ .Values.app.flask.analyticsPepper }}
 {{- end }}

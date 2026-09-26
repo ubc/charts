@@ -116,7 +116,7 @@ into individual templates.
       key: secret_key
 {{- else }}
 - name: SECRET_KEY
-  value: {{ .Values.app.flask.secretKey }}
+  value: {{ (required "app.flask.secretKey is required (or set app.flask.secret.path)" .Values.app.flask.secretKey) }}
 {{- end }}
 {{- if .Values.app.smtp.host }}
 - name: MAIL_SERVER
