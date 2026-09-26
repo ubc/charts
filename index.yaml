@@ -1999,6 +1999,16 @@ entries:
   course-directory:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-09-26T02:55:12.284964955Z"
+    description: Course Directory
+    digest: c6a23de9025cf4e1230c188c323b85afabf0639397a9fc7c7e3608309d69ec80
+    name: course-directory
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/course-directory-0.4.0/course-directory-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-09-25T23:41:51.222487471Z"
     description: Course Directory
     digest: b0da2499752fc03f9c725c1665d77301e0eef947d1d6bbd5faf4f90db71d343a
@@ -3891,6 +3901,22 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.1.0.tgz
     version: 0.1.0
   ltic-access-request:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-09-26T02:55:12.48777259Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: LTIC Access Request Hub
+    digest: 17a8890617277a2755b48129c31c65a95607f2175d31fc9cb54644b6ed70c882
+    name: ltic-access-request
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltic-access-request-0.2.0/ltic-access-request-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v2
     appVersion: 0.0.1
     created: "2026-09-26T00:10:59.662902578Z"
@@ -8249,6 +8275,16 @@ entries:
   operations-hub:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-09-26T02:55:12.830671878Z"
+    description: operations-hub
+    digest: ab7cd02aa9a2d4083df20364e4d77784b9b0978345dff005651753ec7718f459
+    name: operations-hub
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/operations-hub-0.2.0/operations-hub-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-09-26T02:02:16.218386745Z"
     description: operations-hub
     digest: 71a6c176a969a5dcf6107444cc8de06030b439337caa8622ef60bcbf2d2b7174
@@ -8608,6 +8644,16 @@ entries:
     - https://ubc.github.io/charts/satis-0.1.0.tgz
     version: 0.1.0
   security-dashboard:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-09-26T02:55:13.012007258Z"
+    description: security-dashboard
+    digest: a4e328ad97ccd1fffd92cd65a69f3b81ac0b5fa4b297592aa1b13eba2234320f
+    name: security-dashboard
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/security-dashboard-0.2.0/security-dashboard-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v2
     appVersion: 0.0.1
     created: "2026-09-26T00:00:41.615996882Z"
@@ -10086,4 +10132,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-26T02:02:16.219687111Z"
+generated: "2026-09-26T02:55:13.012628497Z"
