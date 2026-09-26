@@ -50,6 +50,35 @@ spec:
               value: {{ .Values.db.name }}
             - name: DB_USERNAME
               value: {{ .Values.db.user }}
+            {{- if .Values.existingSecret }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: db_password
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: admin_password
+            - name: OAUTH_CONSUMER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: oauth_consumer
+            - name: GOOGLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: google_api_key
+                  optional: true
+            - name: GOOGLE_KEY_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: google_server_key
+                  optional: true
+            {{- else }}
             - name: DB_PASSWORD
               value: {{ .Values.db.pass }}
             - name: ADMIN_PASSWORD
@@ -60,6 +89,7 @@ spec:
               value: {{ .Values.app.google.apiKey | quote }}
             - name: GOOGLE_KEY_SERVER
               value: {{ .Values.app.google.serverKey | quote }}
+            {{- end }}
       volumes:
         - name: responsemap-upload-data
           persistentVolumeClaim:
