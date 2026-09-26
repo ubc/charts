@@ -39,7 +39,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ include "alchemy.secretName" . }}
               key: mysql_password
         - name: MYSQL_DATABASE
           value: {{ .Values.dbName | quote }}
@@ -48,7 +48,7 @@ spec:
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ include "alchemy.secretName" . }}
               key: mysql_password
         ports:
         - containerPort: 3306
