@@ -568,6 +568,10 @@ worker:
   lti1p3:
     enabled: true
     replicaCount: 1
+    # Pod annotations for this worker only, added after the shared podAnnotations.
+    # E.g. karpenter.sh/do-not-disrupt: "true" so node consolidation cannot evict
+    # a worker mid-job (a killed job stays locked for DELAYED_JOB_GRAB_FOR, 2h).
+    podAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
@@ -575,6 +579,7 @@ worker:
   mojo:
     enabled: true
     replicaCount: 1
+    podAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
