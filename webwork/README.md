@@ -194,8 +194,10 @@ Set `enabled: true` and configure `storageClass`, `accessMode`, and `size` for e
 |---|---|---|
 | `worker.lti1p3.enabled` | Enable LTI 1.3 background worker | `true` |
 | `worker.lti1p3.replicaCount` | LTI worker replicas | `1` |
+| `worker.lti1p3.podAnnotations` | Pod annotations for the LTI worker only (added after `podAnnotations`), e.g. `karpenter.sh/do-not-disrupt: "true"` | `{}` |
 | `worker.mojo.enabled` | Enable Mojolicious Minion worker | `true` |
 | `worker.mojo.replicaCount` | Mojo worker replicas | `1` |
+| `worker.mojo.podAnnotations` | Pod annotations for the Mojo worker only (added after `podAnnotations`) | `{}` |
 
 ### Cronjobs
 

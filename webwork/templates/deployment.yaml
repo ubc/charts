@@ -183,6 +183,9 @@ spec:
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with .Values.worker.lti1p3.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       labels:
         {{- include "webwork.selectorLabels" . | nindent 8 }}
         tier: worker
@@ -254,6 +257,9 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/cm.yaml") . | sha256sum }}
         {{- end }}
         {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.worker.mojo.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
