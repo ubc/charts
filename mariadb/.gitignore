@@ -1,0 +1,5 @@
+# TDE key material produced by generate-encryption-keys.sh
+keyfile.txt
+keyfile.key
+keyfile.enc
+keyfile.enc.b64

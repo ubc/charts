@@ -1,0 +1,28 @@
+# Patterns to ignore when building packages.
+# This supports shell glob matching, relative path matching, and
+# negation (prefixed with !). Only one pattern per line.
+.DS_Store
+# Common VCS dirs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*~
+# Various IDEs
+.project
+.idea/
+*.tmproj
+# tooling — not part of the deployed chart
+scripts/
+# TDE key material produced by scripts/generate-encryption-keys.sh — never publish these
+keyfile.txt
+keyfile.key
+keyfile.enc
+keyfile.enc.b64
