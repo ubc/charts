@@ -15,6 +15,7 @@ metadata:
 data:
   {{ .Values.encryption.confFile }}: |
     {{- $encState := .Values.encryption.enabled | ternary "ON" "OFF" }}
+    {{- $tablesState := .Values.encryption.enabled | ternary "FORCE" "OFF" }}
 
     [mariadb]
 
@@ -27,7 +28,7 @@ data:
 
     innodb_default_encryption_key_id = {{ .Values.encryption.keyId | default 1 }}
 
-    innodb_encrypt_tables           = {{ $encState }}
+    innodb_encrypt_tables           = {{ $tablesState }}
     innodb_encrypt_log              = {{ $encState }}
     innodb_encrypt_temporary_tables = {{ $encState }}
     innodb_encryption_threads       = 4
