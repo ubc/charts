@@ -207,6 +207,30 @@ assert_yq_absent "mailpit: no mailpit Deployment when disabled" \
   "$HERE/values/internal-mariadb.yaml" \
   'select(.kind == "Deployment" and (.metadata.labels.tier // "") == "mail")'
 
+# === cron wrapper ===
+# Run the rendered cron script with sudo+php swapped for a stub. cron_rc is
+# cron.php's exit code, pending_rc is upgrade.php --is-pending's (2 = pending).
+assert_cron_exit() {
+  local name=$1 cron_rc=$2 pending_rc=$3 expected=$4
+  local script actual stub
+  script=$(helm template "$RELEASE" "$CHART" -f "$HERE/values/internal-mariadb.yaml" -s templates/cronjob.yaml 2>/dev/null \
+    | yq -r '.spec.jobTemplate.spec.template.spec.containers[0].command[2]' \
+    | sed 's|/usr/bin/sudo -E -H -u www-data /usr/local/bin/php|php_stub|')
+  stub="php_stub() { case \"\$1\" in admin/cli/cron.php) return $cron_rc ;; *) return $pending_rc ;; esac; }"
+  actual=$(sh -c "$stub
+$script" >/dev/null 2>&1; echo $?)
+  if [[ "$actual" == "$expected" ]]; then
+    echo "PASS [cron] $name"; PASS=$((PASS+1))
+  else
+    echo "FAIL [cron] $name -- expected exit $expected, got $actual"; FAIL=$((FAIL+1))
+  fi
+}
+
+assert_cron_exit "cron: success exits 0" 0 0 0
+assert_cron_exit "cron: upgrade pending exits 0" 1 2 0
+assert_cron_exit "cron: other failure keeps cron.php exit code" 1 0 1
+assert_cron_exit "cron: failure + failed pending check keeps exit code" 255 1 255
+
 if (( FAIL > 0 )); then
   echo
   echo "FAILED $FAIL  PASSED $PASS"

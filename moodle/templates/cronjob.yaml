@@ -28,7 +28,22 @@ spec:
             # -H resets HOME to the target user's home (/var/www) so libpq's
             # client-cert lookup at ~/.postgresql/postgresql.crt doesn't EACCES
             # against root's home (/root, mode 0700) on postgres deployments.
-            - /usr/bin/sudo -E -H -u www-data /usr/local/bin/php admin/cli/cron.php
+            #
+            # cron.php exits 1 while a Moodle upgrade is pending (e.g. during an
+            # image bump, before the upgrade finishes). With OnFailure that burns
+            # through backoffLimit and leaves a failed Job behind, so treat
+            # "upgrade pending" (upgrade.php --is-pending exits 2) as a skip.
+            - |
+              run() { /usr/bin/sudo -E -H -u www-data /usr/local/bin/php "$@"; }
+              run admin/cli/cron.php
+              rc=$?
+              [ "$rc" -eq 0 ] && exit 0
+              run admin/cli/upgrade.php --is-pending >/dev/null 2>&1
+              if [ "$?" -eq 2 ]; then
+                echo "Moodle upgrade pending; skipping this cron run."
+                exit 0
+              fi
+              exit "$rc"
           restartPolicy: OnFailure
           volumes:
             {{- include "moodle.app.mounts" . | indent 12 }}
