@@ -1,6 +1,6 @@
 dependencies:
 - name: mariadb
   repository: https://ubc.github.io/charts
-  version: 0.1.17
-digest: sha256:5d4a8fd1eb953edbf79518cc212ac659fe5ae06e426e654e90f6818b0e16316d
-generated: "2026-03-07T23:02:01.784152-08:00"
+  version: 0.1.30
+digest: sha256:26d66887aa5e5caaf7f1e04626dde49a68c4631a1a3aa7769c84ef18f5274d30
+generated: "2026-10-01T20:28:13.430552216Z"
