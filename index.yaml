@@ -737,6 +737,34 @@ entries:
   compair:
   - apiVersion: v2
     appVersion: 1.3.7
+    created: "2026-10-01T22:23:53.305736332Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: Pairing peer answers for deeper learning through comparison
+    digest: 85b7c8aa2981db02c67faec77c59a04dfb12318ef77ef59317eec94a0b7d768e
+    home: http://ubc.github.io/compair/
+    keywords:
+    - compair
+    - acj
+    - peer learning
+    - education
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    - email: andrew.gardener@ubc.ca
+      name: Andrew Gardener
+    name: compair
+    sources:
+    - http://github.com/ubc/compair
+    urls:
+    - https://github.com/ubc/charts/releases/download/compair-0.10.13/compair-0.10.13.tgz
+    version: 0.10.13
+  - apiVersion: v2
+    appVersion: 1.3.7
     created: "2026-05-04T20:56:37.359917933Z"
     dependencies:
     - alias: db
@@ -2228,6 +2256,33 @@ entries:
   hotcrp:
   - apiVersion: v2
     appVersion: sha-b72192d
+    created: "2026-10-01T22:23:53.520212783Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: A Helm chart for Hotcrp
+    digest: c7202a80b9cc482a3efd4139de10bb62e0315bb9facda7c686b10697969aacc3
+    keywords:
+    - application
+    - http
+    - php
+    - web
+    - hotcrp
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: hotcrp
+    sources:
+    - https://github.com/ubc/charts/tree/master/hotcrp
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/hotcrp-0.3.14/hotcrp-0.3.14.tgz
+    version: 0.3.14
+  - apiVersion: v2
+    appVersion: sha-b72192d
     created: "2026-07-19T01:38:47.234717333Z"
     dependencies:
     - alias: db
@@ -2807,6 +2862,24 @@ entries:
     - https://github.com/ubc/charts/releases/download/hotcrp-0.1.0/hotcrp-0.1.0.tgz
     version: 0.1.0
   ipeer:
+  - apiVersion: v2
+    appVersion: 3.4.10
+    created: "2026-10-01T22:23:53.726655035Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: iPeer Helm Chart
+    digest: b749bffc0be208d53232c1fe08e944627786aad3e8d2267810515696322d4e33
+    name: ipeer
+    sources:
+    - https://github.com/ubc/charts/tree/master/ipeer
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ipeer-0.7.5/ipeer-0.7.5.tgz
+    version: 0.7.5
   - apiVersion: v2
     appVersion: 3.4.10
     created: "2026-05-04T19:46:29.57857194Z"
@@ -3926,6 +3999,22 @@ entries:
     - https://ubc.github.io/charts/lti-shim-0.1.0.tgz
     version: 0.1.0
   ltic-access-request:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-10-01T22:23:53.92203513Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: LTIC Access Request Hub
+    digest: ec6039f76bba8e3a508e7743c4e456409cff1f9d050d27606b2362bc2cbd99a1
+    name: ltic-access-request
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltic-access-request-0.2.2/ltic-access-request-0.2.2.tgz
+    version: 0.2.2
   - apiVersion: v2
     appVersion: 0.0.1
     created: "2026-09-26T02:55:12.48777259Z"
@@ -10336,4 +10425,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-01T21:27:58.305476795Z"
+generated: "2026-10-01T22:23:53.923596647Z"
