@@ -9545,6 +9545,29 @@ entries:
   webwork:
   - apiVersion: v2
     appVersion: 2.18.0
+    created: "2026-10-02T00:23:37.07610297Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      tags:
+      - webwork-database
+      version: '*'
+    - condition: reloader.enabled
+      name: reloader
+      repository: https://stakater.github.io/stakater-charts
+      version: 2.2.14
+    description: A Helm chart to deploy WeBWorK
+    digest: c8b7a0c0381b4cf0fa9f3fb4fb2f89cc491a3f705ad3410f5b2f4842b361f196
+    kubeVersion: '>=1.29.0-0'
+    name: webwork
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/webwork-0.3.18/webwork-0.3.18.tgz
+    version: 0.3.18
+  - apiVersion: v2
+    appVersion: 2.18.0
     created: "2026-09-28T16:56:42.253084546Z"
     dependencies:
     - alias: db
@@ -10425,4 +10448,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-01T22:23:53.923596647Z"
+generated: "2026-10-02T00:23:37.077332964Z"
