@@ -572,6 +572,13 @@ worker:
     # E.g. karpenter.sh/do-not-disrupt: "true" so node consolidation cannot evict
     # a worker mid-job (a killed job stays locked for DELAYED_JOB_GRAB_FOR, 2h).
     podAnnotations: {}
+    # Drain on shutdown: a preStop hook sends SIGQUIT so the worker finishes
+    # its current job and exits, instead of dying on SIGTERM mid-job (scale-down,
+    # rollout, node drain). Set terminationGracePeriodSeconds above the longest
+    # job you expect; the pod stays Terminating until the job ends.
+    gracefulShutdown:
+      enabled: false
+      terminationGracePeriodSeconds: 10800
     nodeSelector: {}
     tolerations: []
     affinity: {}

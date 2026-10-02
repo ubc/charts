@@ -196,6 +196,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "webwork.serviceAccountName" . }}
+      {{- if .Values.worker.lti1p3.gracefulShutdown.enabled }}
+      terminationGracePeriodSeconds: {{ .Values.worker.lti1p3.gracefulShutdown.terminationGracePeriodSeconds }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.logShipping.enabled }}
@@ -206,6 +209,18 @@ spec:
         - name: {{ .Chart.Name }}-worker-lti1p3
           {{- include "webwork.app.spec" . | indent 10 }}
           args: [{{ include "webwork.dropPrivPrefix" . }} './lib/DelayedJob/Run/run_all_jobs.pl']
+          {{- if .Values.worker.lti1p3.gracefulShutdown.enabled }}
+          # Let the job in flight finish before the pod goes. run_all_jobs.pl
+          # stops after the current job on SIGQUIT, but Kubernetes sends SIGTERM,
+          # which kills it mid-job; TheSchwartz then keeps that job locked for its
+          # grab_for (8h for PushClassGrades) before anyone retries it. So send
+          # QUIT (sudo, PID 1, relays it) and wait for the worker to exit. SIGTERM
+          # only follows if this outlasts terminationGracePeriodSeconds.
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "kill -QUIT 1; while kill -0 1 2>/dev/null; do sleep 2; done"]
+          {{- end }}
           resources:
             {{- toYaml .Values.worker.lti1p3.resources | nindent 12 }}
       volumes:
