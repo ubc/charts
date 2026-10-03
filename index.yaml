@@ -4771,6 +4771,33 @@ entries:
   mediawiki:
   - apiVersion: v2
     appVersion: 1.43.4
+    created: "2026-10-03T03:39:13.026746657Z"
+    dependencies:
+    - alias: db
+      condition: db.enabled
+      name: mariadb
+      repository: https://ubc.github.io/charts
+      version: '*'
+    description: Extremely powerful, scalable software and a feature-rich wiki implementation
+      that uses PHP to process and display data stored in a database.
+    digest: d93f110fc46aa528b6e416da49e44b0e603e6b7a93af71ee1d389e450df78c54
+    home: http://www.mediawiki.org/
+    keywords:
+    - mediawiki
+    - wiki
+    - http
+    - php
+    maintainers:
+    - email: pan.luo@ubc.ca
+      name: Pan Luo
+    name: mediawiki
+    sources:
+    - https://github.com/ubc/mediawiki-docker
+    urls:
+    - https://github.com/ubc/charts/releases/download/mediawiki-0.10.2/mediawiki-0.10.2.tgz
+    version: 0.10.2
+  - apiVersion: v2
+    appVersion: 1.43.4
     created: "2026-10-01T21:13:31.971962278Z"
     dependencies:
     - alias: db
@@ -10448,4 +10475,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-02T00:23:37.077332964Z"
+generated: "2026-10-03T03:39:13.027443523Z"
