@@ -320,6 +320,28 @@ ingress:
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 20m
 
+## Probes for the main wiki container.
+## Both default to rendering Main_Page, which needs the database. When the DB is slow
+## (e.g. under scraper load) the liveness probe then fails on every pod and the kubelet
+## restarts them all, which makes things worse. Consider pointing livenessProbe at a
+## static file (e.g. /resources/assets/poweredby_mediawiki.svg) and keeping readinessProbe
+## on Main_Page so slow pods are only taken out of rotation.
+livenessProbe:
+  httpGet:
+    path: /index.php/Main_Page
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 10
+  periodSeconds: 20
+
+readinessProbe:
+  httpGet:
+    path: /index.php/Main_Page
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 10
+  periodSeconds: 20
+
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
