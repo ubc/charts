@@ -36,6 +36,9 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        {{- with .Values.app.uwsgiProcesses }}
+        args: ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini", "--processes", {{ . | quote }}]
+        {{- end }}
         env:
         - name: DB_HOST
           value: {{ include "compair.databaseHost" .}}
@@ -283,15 +286,12 @@ spec:
           value: {{ .Values.loginAdditionalInstructionsHTML | quote }}
         {{- end }}
         ports:
-        - containerPort: {{ .Values.app.service.internalPort }}
+        - name: http
+          containerPort: {{ .Values.app.service.internalPort }}
         livenessProbe:
-          httpGet:
-            path: /app/
-            port: {{ .Values.app.service.internalPort }}
+{{ toYaml .Values.app.livenessProbe | indent 10 }}
         readinessProbe:
-          httpGet:
-            path: /app/
-            port: {{ .Values.app.service.internalPort }}
+{{ toYaml .Values.app.readinessProbe | indent 10 }}
         resources:
 {{ toYaml .Values.app.resources | indent 10 }}
       {{- if .Values.app.persistence.enabled }}
