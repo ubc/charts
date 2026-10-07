@@ -167,6 +167,15 @@ app:
     annotations:
       kubernetes.io/tls-acme: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: *uploadLimit
+  uwsgiProcesses:
+  livenessProbe:
+    httpGet:
+      path: /app/
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /app/
+      port: http
   resources:
     limits:
     #  cpu: 100m
