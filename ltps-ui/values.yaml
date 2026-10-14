@@ -2,6 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
+
+vault:
+  path:
+  secretName:
+
 image:
   repository: gcr.io/ctlt-apps/ltps-ui
   tag: latest
@@ -49,7 +54,8 @@ logging:
   web: INFO
 canvas:
   url: https://beta.instructure.com
-  token:
+  vault:
+    token_secret:
   timeout:
     connect: 5000 # in ms
     read: 120000 # in ms
@@ -59,11 +65,12 @@ server:
 saml:
   sp:
     keyStore: /data/conf/saml.jks
-    keyStorePassword:
     keyName:
-    keyPassword:
     entityId:
     entityBaseUrl:
+    vault:
+      keystore_secret:
+      key_secret:
   idp:
     metadataUri: https://shibboleth2.stg.id.ubc.ca/metadata/ubcit-idp-metadata.xml
     attribute:
@@ -81,11 +88,13 @@ ltps:
   v1:
     url: http://localhost:8080/ctcwebservices
     username:
-    password:
+    vault:
+      password_secret:
   v2:
     url: http://localhost:8080/ctc-ws-v2
     username:
-    password:
+    vault:
+      password_secret:
     
 config:
   reconEnabled: true
