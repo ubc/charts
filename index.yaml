@@ -4157,6 +4157,14 @@ entries:
     version: 0.0.1
   ltps-recon:
   - apiVersion: v1
+    created: "2026-10-14T20:42:46.479363089Z"
+    description: A Helm chart for LTPS-Recon
+    digest: 67e65d746167a6183b4d7df76b145722f37519aaa3b7461d0d6abe574c6e2b81
+    name: ltps-recon
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltps-recon-0.2.0/ltps-recon-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v1
     created: "2024-10-31T22:51:51.006969396Z"
     description: A Helm chart for LTPS-Recon
     digest: eefe134c393c7f5460d25964911ee31dedfcad84f04e7a14d43991033620a0cd
@@ -4181,6 +4189,14 @@ entries:
     - https://github.com/ubc/charts/releases/download/ltps-recon-0.1.0/ltps-recon-0.1.0.tgz
     version: 0.1.0
   ltps-ui:
+  - apiVersion: v1
+    created: "2026-10-14T20:42:46.863225363Z"
+    description: A Helm chart for LTPS-UI
+    digest: 85a380b59a6094efa270e421cb794bd0cd1452c23422f98359d26736f1c90211
+    name: ltps-ui
+    urls:
+    - https://github.com/ubc/charts/releases/download/ltps-ui-0.5.0/ltps-ui-0.5.0.tgz
+    version: 0.5.0
   - apiVersion: v1
     created: "2024-05-14T18:57:03.840754709Z"
     description: A Helm chart for LTPS-UI
@@ -10503,4 +10519,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-07T22:38:50.724556473Z"
+generated: "2026-10-14T20:42:46.864246078Z"
