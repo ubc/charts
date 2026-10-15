@@ -62,5 +62,10 @@ spec:
     {{- end }}
       volumes:
         - name: config-volume
+          {{- if .Values.configSecretName }}
+          secret:
+            secretName: {{ .Values.configSecretName }}
+          {{- else }}
           configMap:
             name: mycertificate-configmap
+          {{- end }}
