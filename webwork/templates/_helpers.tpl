@@ -414,18 +414,28 @@ the caller on .Values.logShipping.enabled.
   image: "{{ .Values.logShipping.rotation.image.repository }}:{{ .Values.logShipping.rotation.image.tag }}"
   imagePullPolicy: {{ .Values.logShipping.rotation.image.pullPolicy }}
   restartPolicy: Always
+  {{- /*
+  int64: Helm reads YAML numbers as float64 and prints large ones as
+  2.097152e+08, which busybox's [ -gt ] rejects ("bad number").
+  The trap: a shell running as PID 1 ignores SIGTERM unless it traps it, and
+  it only runs the trap once the foreground command returns, so the sleep
+  runs in the background and `wait` returns as soon as the signal arrives.
+  Without both, the pod stays Terminating until its grace period ends.
+  */}}
   command:
     - /bin/sh
     - -c
     - |
-      MAX={{ .Values.logShipping.rotation.maxBytes }}
+      trap 'exit 0' TERM INT
+      MAX={{ .Values.logShipping.rotation.maxBytes | int64 }}
       while true; do
         for f in /opt/webwork/webwork2/logs/*.log; do
           [ -f "$f" ] || continue
           sz=$(wc -c < "$f" 2>/dev/null || echo 0)
           [ "$sz" -gt "$MAX" ] && : > "$f"
         done
-        sleep {{ .Values.logShipping.rotation.intervalSeconds }}
+        sleep {{ .Values.logShipping.rotation.intervalSeconds | int64 }} &
+        wait $!
       done
   volumeMounts:
     - name: webwork-logs-data
