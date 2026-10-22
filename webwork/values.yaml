@@ -103,6 +103,28 @@ htdocsTmpPersistence:
   accessMode: ReadWriteMany
   size: 8Gi
 
+## WeBWorK's own scratch directory, $webworkDirs{tmp} = /opt/webwork/webwork2/tmp.
+## This is NOT htdocs/tmp. Hardcopy (PDF) generation builds its TeX in
+## <tmp>/<course>/hardcopy/<user>/work.*/ and, when generation reports a
+## warning or TeX error, leaves the finished PDF there and renders a page with a
+## "Download Hardcopy" link instead of streaming the file. That link is a second
+## request that the load balancer sends to ANY replica, so with this volume left
+## on the pod's local disk every replica other than the one that generated the
+## file answers "The requested file ... does not exist on the server". Measured
+## on webwork-prod 2026-10-08: 61 of 63 cross-replica downloads failed, and 32%
+## of all hardcopy generations took the warning route. Enable this on any
+## deployment with more than one web replica. Also pruned by htdocs_tmp_cleanup.
+## History: hardcopy lived under htdocs/tmp (already shared) until upstream
+## webwork2 2.17 moved it here (commit d65d25cc, 2022-03); this chart predates
+## that and never followed. Hardcopy runs as the app user and never chowns, so
+## the EFS chown failure that hit a root OPL-update extract does not apply.
+tmpPersistence:
+  enabled: false
+  annotations: {}
+  storageClass: ""
+  accessMode: ReadWriteMany
+  size: 2Gi
+
 htdocsDataPersistence:
   enabled: false
   ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>

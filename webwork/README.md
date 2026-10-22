@@ -147,17 +147,24 @@ db:
 
 ### Persistence
 
-Five volumes can be persisted independently. All default to `emptyDir` (data lost on pod restart).
+Six volumes can be persisted independently. All but `tmpPersistence` default to `emptyDir` (data lost on pod restart); `tmpPersistence` defaults to the container filesystem.
 
 | Parameter | Mount path | Default size |
 |---|---|---|
 | `coursePersistence` | `/opt/webwork/courses` | `8Gi` |
 | `libraryPersistence` | `/opt/webwork/libraries` | `8Gi` |
 | `htdocsTmpPersistence` | `/opt/webwork/webwork2/htdocs/tmp` | `8Gi` |
+| `tmpPersistence` | `/opt/webwork/webwork2/tmp` | `2Gi` |
 | `htdocsDataPersistence` | `/opt/webwork/webwork2/htdocs/DATA` | `8Gi` |
 | `logsPersistence` | `/opt/webwork/webwork2/logs` | `8Gi` |
 
 Set `enabled: true` and configure `storageClass`, `accessMode`, and `size` for each as needed.
+
+`tmpPersistence` is WeBWorK's `$webworkDirs{tmp}`, where hardcopy generation keeps its work
+directories and, after a warning or TeX error, the finished PDF behind a "Download Hardcopy"
+link. That link is a separate request, so with more than one web replica it must be on shared
+storage or most downloads fail with "The requested file ... does not exist on the server".
+When enabled it is pruned by `cronjob.htdocs_tmp_cleanup` together with htdocs/tmp.
 
 ### Database (`db`)
 

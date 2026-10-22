@@ -267,6 +267,11 @@ volumeMounts:
   mountPath: /opt/webwork/libraries
 - name: webwork-htdocs-tmp-data
   mountPath: /opt/webwork/webwork2/htdocs/tmp
+  {{- if .Values.tmpPersistence.enabled }}
+  {{/* $webworkDirs{tmp}: hardcopy work dirs must be shared across replicas, see values.yaml */}}
+- name: webwork-tmp-data
+  mountPath: /opt/webwork/webwork2/tmp
+  {{- end }}
 - name: webwork-htdocs-data-data
   mountPath: /opt/webwork/webwork2/htdocs/DATA
   {{- if .Values.uploadCachePersistence.enabled }}
@@ -314,6 +319,11 @@ volumeMounts:
     claimName: {{ template "webwork.fullname" . }}-htdocs-tmp-pvc
 {{- else }}
   emptyDir: {}
+{{- end }}
+{{- if .Values.tmpPersistence.enabled }}
+- name: webwork-tmp-data
+  persistentVolumeClaim:
+    claimName: {{ template "webwork.fullname" . }}-tmp-pvc
 {{- end }}
 - name: webwork-htdocs-data-data
 {{- if .Values.htdocsDataPersistence.enabled }}
