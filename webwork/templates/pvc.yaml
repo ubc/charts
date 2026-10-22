@@ -63,6 +63,28 @@ spec:
   storageClassName: {{ .Values.htdocsTmpPersistence.storageClass | quote }}
 {{- end }}
 
+{{- if .Values.tmpPersistence.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "webwork.fullname" . }}-tmp-pvc
+  labels:
+    {{- include "webwork.labels" . | nindent 4 }}
+    tier: filestore
+  {{- with .Values.tmpPersistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.tmpPersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.tmpPersistence.size | quote }}
+  storageClassName: {{ .Values.tmpPersistence.storageClass | quote }}
+{{- end }}
+
 {{- if .Values.htdocsDataPersistence.enabled }}
 ---
 kind: PersistentVolumeClaim

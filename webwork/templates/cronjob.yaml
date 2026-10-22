@@ -147,6 +147,9 @@ spec:
             # -mindepth 1 protects the mount root itself. The second pass reclaims
             # per-course directories emptied by the first. Both tolerate a missing
             # tree (|| true) so a fresh deployment does not fail the job.
+            # With tmpPersistence enabled the same sweep also covers the shared
+            # $webworkDirs{tmp}, where hardcopy generation leaves work.* dirs and
+            # PDFs behind whenever it reports a warning (see values.yaml).
             # dropPrivPrefix emits a FLOW-style fragment ("'sudo', '-E', ...") meant
             # for `args: [ ... ]`, so it cannot be used inside a block sequence.
             # Expanded here instead, honouring the same .Values.appUser.
@@ -159,13 +162,14 @@ spec:
               - '-c'
               - >-
                 set -u;
-                T=/opt/webwork/webwork2/htdocs/tmp;
+                for T in /opt/webwork/webwork2/htdocs/tmp{{ if .Values.tmpPersistence.enabled }} /opt/webwork/webwork2/tmp{{ end }}; do
                 echo "pruning $T, retention {{ .Values.cronjob.htdocs_tmp_cleanup.retentionDays }} days";
                 before=$(find "$T" -mindepth 1 -type f 2>/dev/null | wc -l);
                 find "$T" -mindepth 1 -type f -mtime +{{ .Values.cronjob.htdocs_tmp_cleanup.retentionDays }} ! -name README -delete 2>/dev/null || true;
                 find "$T" -mindepth 1 -type d -empty -delete 2>/dev/null || true;
                 after=$(find "$T" -mindepth 1 -type f 2>/dev/null | wc -l);
-                echo "files before=$before after=$after removed=$((before-after))"
+                echo "files before=$before after=$after removed=$((before-after))";
+                done
           volumes:
             {{- include "webwork.app.mounts" . | indent 10 }}
 {{- end }}

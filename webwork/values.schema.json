@@ -258,6 +258,7 @@
     "coursePersistence": { "$ref": "#/definitions/persistence" },
     "libraryPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsTmpPersistence": { "$ref": "#/definitions/persistence" },
+    "tmpPersistence": { "$ref": "#/definitions/persistence" },
     "htdocsDataPersistence": { "$ref": "#/definitions/persistence" },
     "gracefulShutdown": {
       "type": "object",
