@@ -77,8 +77,10 @@ spec:
     # localtime uses. RDS defaults to UTC; mismatch makes WeBWorK treat LTI
     # access tokens as valid ~UTC-offset hours too long → reuses expired
     # tokens → Canvas 401 "Access token expired" on grade push. RDS only
-    # accepts a fixed named-zone list; US/Pacific == America/Vancouver.
-    time_zone: {{ .Values.db.ack.timeZone | default "US/Pacific" | quote }}
+    # accepts a fixed named-zone list, without America/Vancouver. BC has been
+    # on permanent UTC-7 since 2026-03-08 (no fall back on 2026-11-01), so
+    # US/Pacific no longer matches it; America/Phoenix (UTC-7 all year) does.
+    time_zone: {{ .Values.db.ack.timeZone | default "America/Phoenix" | quote }}
 ---
 apiVersion: rds.services.k8s.aws/v1alpha1
 kind: DBInstance
