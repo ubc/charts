@@ -1,0 +1,6 @@
+{{- if .Values.ingress.enabled }}
+SCORE: https://{{ replace "http://" "" .Values.ingress.host }}
+{{- end }}
+
+On a first deployment, open /setup at that address straight away and create
+the first Admin: until then, whoever opens /setup first becomes the Admin.

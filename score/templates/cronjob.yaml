@@ -1,0 +1,58 @@
+{{- if .Values.prune.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "score.fullname" . }}-prune
+  labels:
+    {{- include "score.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.prune.schedule | quote }}
+  timeZone: {{ .Values.app.displayTimezone | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            {{- include "score.jobLabels" (dict "root" . "component" "prune") | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          {{- include "score.imagePullSecrets" . | nindent 10 }}
+          automountServiceAccountToken: false
+          {{- with .Values.podSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+            - name: prune
+              {{- with .Values.securityContext }}
+              securityContext:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              image: "{{ include "score.image" . }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command: ["flask", "prune"]
+              {{- with .Values.prune.resources }}
+              resources:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              env:
+                {{- include "score.podEnv" . | nindent 16 }}
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir: {}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
