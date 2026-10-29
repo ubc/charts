@@ -2,5 +2,14 @@
 SCORE: https://{{ replace "http://" "" .Values.ingress.host }}
 {{- end }}
 
-On a first deployment, open /setup at that address straight away and create
-the first Admin: until then, whoever opens /setup first becomes the Admin.
+On a first deployment, create the first Admin straight away: until then,
+whoever opens /setup first becomes the Admin. Either:
+
+  - open /setup at the address above, or
+  - create the Admin from the pod, before anyone can reach /setup:
+
+      kubectl exec -it -n {{ .Release.Namespace }} deploy/{{ include "score.fullname" . }} -- flask users create-admin
+
+    Then sign in and set the public URL in Settings. /setup records it
+    automatically; create-admin doesn't, and until it's set, reset and
+    invite links are built from whatever host the request came in on.
