@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "score.fullname" . }}
+  name: {{ include "score-hiring-reviews.fullname" . }}
   labels:
-    {{- include "score.labels" . | nindent 4 }}
+    {{- include "score-hiring-reviews.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "score.selectorLabels" . | nindent 6 }}
+      {{- include "score-hiring-reviews.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,12 +18,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "score.labels" . | nindent 8 }}
+        {{- include "score-hiring-reviews.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "score.imagePullSecrets" . | nindent 6 }}
+      {{- include "score-hiring-reviews.imagePullSecrets" . | nindent 6 }}
       # SCORE doesn't use the Kubernetes API.
       automountServiceAccountToken: false
       {{- with .Values.podSecurityContext }}
@@ -36,7 +36,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ include "score.image" . }}"
+          image: "{{ include "score-hiring-reviews.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -55,7 +55,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-            {{- include "score.podEnv" . | nindent 12 }}
+            {{- include "score-hiring-reviews.podEnv" . | nindent 12 }}
           volumeMounts:
             - name: tmp
               mountPath: /tmp

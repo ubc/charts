@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "score.fullname" . }}-migrate
+  name: {{ include "score-hiring-reviews.fullname" . }}-migrate
   labels:
-    {{- include "score.labels" . | nindent 4 }}
+    {{- include "score-hiring-reviews.labels" . | nindent 4 }}
   annotations:
     # Runs before the Deployment is created or updated; Argo CD treats these
     # as PreSync hooks.
@@ -17,10 +17,10 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "score.jobLabels" (dict "root" . "component" "migrate") | nindent 8 }}
+        {{- include "score-hiring-reviews.jobLabels" (dict "root" . "component" "migrate") | nindent 8 }}
     spec:
       restartPolicy: Never
-      {{- include "score.imagePullSecrets" . | nindent 6 }}
+      {{- include "score-hiring-reviews.imagePullSecrets" . | nindent 6 }}
       automountServiceAccountToken: false
       {{- with .Values.podSecurityContext }}
       securityContext:
@@ -32,7 +32,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ include "score.image" . }}"
+          image: "{{ include "score-hiring-reviews.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           # The same two steps entrypoint.sh runs when RUN_MIGRATIONS=1.
           command: ["sh", "-c", "flask db upgrade && flask permissions sync"]
@@ -41,7 +41,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-            {{- include "score.podEnv" . | nindent 12 }}
+            {{- include "score-hiring-reviews.podEnv" . | nindent 12 }}
           volumeMounts:
             - name: tmp
               mountPath: /tmp

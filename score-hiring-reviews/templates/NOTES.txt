@@ -8,7 +8,7 @@ whoever opens /setup first becomes the Admin. Either:
   - open /setup at the address above, or
   - create the Admin from the pod, before anyone can reach /setup:
 
-      kubectl exec -it -n {{ .Release.Namespace }} deploy/{{ include "score.fullname" . }} -- flask users create-admin
+      kubectl exec -it -n {{ .Release.Namespace }} deploy/{{ include "score-hiring-reviews.fullname" . }} -- flask users create-admin
 
     Then sign in and set the public URL in Settings. /setup records it
     automatically; create-admin doesn't, and until it's set, reset and

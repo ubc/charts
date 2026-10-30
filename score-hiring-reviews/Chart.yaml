@@ -1,5 +1,5 @@
 apiVersion: v2
-name: score
+name: score-hiring-reviews
 description: SCORE (Selection Committee Online Review Environment)
 
 # A chart can be either an 'application' or a 'library' chart.

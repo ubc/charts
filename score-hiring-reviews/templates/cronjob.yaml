@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "score.fullname" . }}-prune
+  name: {{ include "score-hiring-reviews.fullname" . }}-prune
   labels:
-    {{- include "score.labels" . | nindent 4 }}
+    {{- include "score-hiring-reviews.labels" . | nindent 4 }}
 spec:
   schedule: {{ .Values.prune.schedule | quote }}
   timeZone: {{ .Values.app.displayTimezone | quote }}
@@ -17,10 +17,10 @@ spec:
       template:
         metadata:
           labels:
-            {{- include "score.jobLabels" (dict "root" . "component" "prune") | nindent 12 }}
+            {{- include "score-hiring-reviews.jobLabels" (dict "root" . "component" "prune") | nindent 12 }}
         spec:
           restartPolicy: Never
-          {{- include "score.imagePullSecrets" . | nindent 10 }}
+          {{- include "score-hiring-reviews.imagePullSecrets" . | nindent 10 }}
           automountServiceAccountToken: false
           {{- with .Values.podSecurityContext }}
           securityContext:
@@ -32,7 +32,7 @@ spec:
               securityContext:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
-              image: "{{ include "score.image" . }}"
+              image: "{{ include "score-hiring-reviews.image" . }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               command: ["flask", "prune"]
               {{- with .Values.prune.resources }}
@@ -40,7 +40,7 @@ spec:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               env:
-                {{- include "score.podEnv" . | nindent 16 }}
+                {{- include "score-hiring-reviews.podEnv" . | nindent 16 }}
               volumeMounts:
                 - name: tmp
                   mountPath: /tmp

@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "score.name" -}}
+{{- define "score-hiring-reviews.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "score.fullname" -}}
+{{- define "score-hiring-reviews.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "score.chart" -}}
+{{- define "score-hiring-reviews.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "score.labels" -}}
-helm.sh/chart: {{ include "score.chart" . }}
-{{ include "score.selectorLabels" . }}
+{{- define "score-hiring-reviews.labels" -}}
+helm.sh/chart: {{ include "score-hiring-reviews.chart" . }}
+{{ include "score-hiring-reviews.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,8 +45,8 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "score.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "score.name" . }}
+{{- define "score-hiring-reviews.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "score-hiring-reviews.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
@@ -55,9 +55,9 @@ Labels for the migration and prune Job pods. Deliberately not the selector
 labels, so the Service never sends traffic to them. Call with
 (dict "root" . "component" "migrate").
 */}}
-{{- define "score.jobLabels" -}}
-helm.sh/chart: {{ include "score.chart" .root }}
-app.kubernetes.io/name: {{ include "score.name" .root }}-{{ .component }}
+{{- define "score-hiring-reviews.jobLabels" -}}
+helm.sh/chart: {{ include "score-hiring-reviews.chart" .root }}
+app.kubernetes.io/name: {{ include "score-hiring-reviews.name" .root }}-{{ .component }}
 app.kubernetes.io/instance: {{ .root.Release.Name }}
 app.kubernetes.io/component: {{ .component }}
 app.kubernetes.io/managed-by: {{ .root.Release.Service }}
@@ -67,7 +67,7 @@ app.kubernetes.io/managed-by: {{ .root.Release.Service }}
 Image pull secrets: imagePullSecrets plus image.secrets, which GitLab Auto
 Deploy sets to the gitlab-registry-<project> secret it creates.
 */}}
-{{- define "score.imagePullSecrets" -}}
+{{- define "score-hiring-reviews.imagePullSecrets" -}}
 {{- with concat (.Values.imagePullSecrets | default list) (.Values.image.secrets | default list) }}
 imagePullSecrets:
   {{- toYaml . | nindent 2 }}
@@ -77,7 +77,7 @@ imagePullSecrets:
 {{/*
 Container image, shared by the Deployment and the Jobs.
 */}}
-{{- define "score.image" -}}
+{{- define "score-hiring-reviews.image" -}}
 {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
 {{- end }}
 
@@ -86,7 +86,7 @@ Common pod env block — used by the Deployment, the migration Job and the
 prune CronJob so they stay in sync. Keep this in one place; do not duplicate
 the env list into individual templates.
 */}}
-{{- define "score.podEnv" -}}
+{{- define "score-hiring-reviews.podEnv" -}}
 - name: SCORE_ENV
   value: {{ .Values.app.env | quote }}
 {{- if .Values.existingSecret }}

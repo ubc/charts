@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "score.fullname" . }}
+  name: {{ include "score-hiring-reviews.fullname" . }}
   labels:
-    {{- include "score.labels" . | nindent 4 }}
+    {{- include "score-hiring-reviews.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -17,7 +17,7 @@ spec:
       paths:
       - backend:
           service:
-            name: {{ template "score.fullname" . }}
+            name: {{ template "score-hiring-reviews.fullname" . }}
             port:
               number: {{ $.Values.service.port }}
         path: /
@@ -26,6 +26,6 @@ spec:
   tls:
     - hosts:
       - {{ replace "http://" "" .Values.ingress.host }}
-      secretName: {{ template "score.fullname" . }}-tls
+      secretName: {{ template "score-hiring-reviews.fullname" . }}-tls
   {{- end }}
 {{- end }}
