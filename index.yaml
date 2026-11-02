@@ -8984,6 +8984,17 @@ entries:
     urls:
     - https://ubc.github.io/charts/satis-0.1.0.tgz
     version: 0.1.0
+  score-hiring-reviews:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-11-02T21:00:21.294404823Z"
+    description: SCORE (Selection Committee Online Review Environment)
+    digest: 714e5c7bff62a5fb33f3aef87d8e9edb5d14a425401f52b9c1cfb02382d57d7a
+    name: score-hiring-reviews
+    type: application
+    urls:
+    - https://github.com/ubc/charts/releases/download/score-hiring-reviews-0.1.0/score-hiring-reviews-0.1.0.tgz
+    version: 0.1.0
   security-dashboard:
   - apiVersion: v2
     appVersion: 0.0.1
@@ -10588,4 +10599,4 @@ entries:
     urls:
     - https://ubc.github.io/charts/zoom-captions-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-23T18:40:31.934452149Z"
+generated: "2026-11-02T21:00:21.296825404Z"
