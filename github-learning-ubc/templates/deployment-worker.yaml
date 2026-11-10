@@ -38,7 +38,7 @@ spec:
       - name: {{ .Chart.Name }}-worker
         image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
         imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
-        command: ["celery", "worker", "--app=glu.celery_worker.celery", "--loglevel=INFO"]
+        command: ["celery", "--app=glu.celery_worker.celery", "worker", "--loglevel=INFO"]
         env:
         {{- include "glu.environment" . | indent 8 }}
         - name: C_FORCE_ROOT

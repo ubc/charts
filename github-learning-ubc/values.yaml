@@ -83,6 +83,10 @@ github:
 
 ui:
   replicaCount: 1
+  # GitHub instance URL the UI links to, e.g. https://github.example.org.
+  # When set, passed to the UI container at runtime as
+  # REACT_APP_GITHUB_LEARNING_URL; when empty, no variable is added.
+  react_app_github_learning_url: ""
   image:
     repository: gcr.io/ctlt-apps/glu-ui
     tag: latest

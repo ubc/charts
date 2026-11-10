@@ -41,6 +41,10 @@ spec:
         env:
           - name: NGINX_FORWARD_API_SERVICE_URL
             value: http://{{ template "github-learning-ubc.fullname" . }}-app:{{ .Values.app.service.externalPort }}
+          {{- with .Values.ui.react_app_github_learning_url }}
+          - name: REACT_APP_GITHUB_LEARNING_URL
+            value: {{ . | quote }}
+          {{- end }}
         ports:
         - containerPort: {{ .Values.ui.service.internalPort }}
         livenessProbe:
