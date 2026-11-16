@@ -202,7 +202,7 @@ When enabled it is pruned by `cronjob.htdocs_tmp_cleanup` together with htdocs/t
 | `worker.lti1p3.enabled` | Enable LTI 1.3 background worker | `true` |
 | `worker.lti1p3.replicaCount` | LTI worker replicas | `1` |
 | `worker.lti1p3.podAnnotations` | Pod annotations for the LTI worker only (added after `podAnnotations`), e.g. `karpenter.sh/do-not-disrupt: "true"` | `{}` |
-| `worker.lti1p3.gracefulShutdown.enabled` | On shutdown, a preStop hook sends SIGQUIT so the worker finishes its current job and exits, instead of being killed mid-job by SIGTERM (a killed job stays locked for its `grab_for`) | `false` |
+| `worker.lti1p3.gracefulShutdown.enabled` | On shutdown, a preStop hook sends SIGQUIT so the worker finishes its current job and exits, instead of being killed mid-job by SIGTERM (a killed job stays locked for its `grab_for`). If the pod is stopped while still starting up, the hook waits until the worker can handle the signal, then sends it | `false` |
 | `worker.lti1p3.gracefulShutdown.terminationGracePeriodSeconds` | Upper bound on that wait; set it above the longest job (a whole-class grade push can take hours) | `10800` |
 | `worker.mojo.enabled` | Enable Mojolicious Minion worker | `true` |
 | `worker.mojo.replicaCount` | Mojo worker replicas | `1` |
