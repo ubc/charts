@@ -216,10 +216,38 @@ spec:
           # grab_for (8h for PushClassGrades) before anyone retries it. So send
           # QUIT (sudo, PID 1, relays it) and wait for the worker to exit. SIGTERM
           # only follows if this outlasts terminationGracePeriodSeconds.
+          #
+          # The QUIT is only heard once run_all_jobs.pl has loaded and set its
+          # handler. Until then PID 1 is the image entrypoint (bash, which as PID 1
+          # ignores QUIT) and then perl still loading; on a fresh node that takes
+          # minutes, and a QUIT sent in that window is lost, so the worker would
+          # take jobs until the grace period ran out. So first wait for a perl
+          # run_all_jobs.pl process that catches QUIT (signal 3, the 4 bit of the
+          # SigCgt mask in /proc/<pid>/status; only the last hex digit is read, so
+          # the shell never parses all 64 bits). sudo also has run_all_jobs.pl in
+          # its command line and catches QUIT to relay it, hence the comm check.
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "kill -QUIT 1; while kill -0 1 2>/dev/null; do sleep 2; done"]
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    ready() {
+                      for p in /proc/[0-9]*; do
+                        [ "$(cat "$p/comm" 2>/dev/null)" = perl ] || continue
+                        case "$(tr '\0' ' ' <"$p/cmdline" 2>/dev/null)" in *run_all_jobs.pl*) ;; *) continue ;; esac
+                        m=$(sed -n 's/^SigCgt:[[:space:]]*//p' "$p/status" 2>/dev/null)
+                        [ -n "$m" ] && [ $((0x${m#"${m%?}"} & 4)) -ne 0 ] && return 0
+                      done
+                      return 1
+                    }
+                    until ready; do
+                      kill -0 1 2>/dev/null || exit 0
+                      sleep 2
+                    done
+                    kill -QUIT 1
+                    while kill -0 1 2>/dev/null; do sleep 2; done
           {{- end }}
           resources:
             {{- toYaml .Values.worker.lti1p3.resources | nindent 12 }}
