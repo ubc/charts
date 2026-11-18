@@ -30,6 +30,9 @@ spec:
       serviceAccountName: {{ include "compair.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.app.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         securityContext:
@@ -283,6 +286,10 @@ spec:
 {{ toYaml .Values.app.livenessProbe | indent 10 }}
         readinessProbe:
 {{ toYaml .Values.app.readinessProbe | indent 10 }}
+        {{- with .Values.app.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         resources:
 {{ toYaml .Values.app.resources | indent 10 }}
       {{- if .Values.app.persistence.enabled }}
