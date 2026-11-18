@@ -168,6 +168,17 @@ app:
       kubernetes.io/tls-acme: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: *uploadLimit
   uwsgiProcesses:
+  # Seconds an app pod gets to shut down before it is killed, including the
+  # preStop hook. uWSGI finishes the requests in progress on SIGTERM, so a
+  # longer value only matters for very long requests.
+  terminationGracePeriodSeconds: 30
+  # Runs before the container gets SIGTERM. uWSGI stops accepting connections
+  # on SIGTERM; the sleep keeps it serving while the ingress controller removes
+  # the pod from its endpoints, so no request is sent to a closed socket.
+  lifecycle:
+    preStop:
+      exec:
+        command: ["sleep", "5"]
   livenessProbe:
     httpGet:
       path: /app/
