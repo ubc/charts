@@ -187,16 +187,7 @@ spec:
           value: {{ .Values.lrs.userInputFieldSizeLimit | quote }}
         - name: ASSET_LOCATION
           value: {{ .Values.assetLocation | quote }}
-        - name: SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-          {{- if .Values.existingSecretKeyRef }}
-              name: {{ .Values.existingSecretKeyRef }}
-              key: {{ .Values.existingSecretKeyKey }}
-          {{- else }}
-              name: {{ include "compair.fullname" . }}
-              key: secret_key
-          {{- end }}
+        {{- include "compair.secretKeyEnv" . | nindent 8 }}
         - name: ENFORCE_SSL
           value: {{ .Values.enforceSSL | quote }}
         - name: DEMO_INSTALLATION
@@ -341,6 +332,7 @@ spec:
               key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
           value: {{ include "compair.databaseName" .}}
+        {{- include "compair.secretKeyEnv" . | nindent 8 }}
       {{- end }}
       - name: upgrade-db
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
@@ -360,3 +352,4 @@ spec:
               key: {{ include "compair.databaseSecretKey" . }}
         - name: DB_NAME
           value: {{ include "compair.databaseName" .}}
+        {{- include "compair.secretKeyEnv" . | nindent 8 }}

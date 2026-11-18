@@ -193,3 +193,21 @@ Return the MariaDB Root Secret Key
     {{- printf "%s-externaldb" (include "compair.fullname" .) -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+SECRET_KEY env entry. Every container that runs ComPAIR code needs it, including
+the init-db and upgrade-db init containers: since ComPAIR #1123, create_app()
+refuses to start when SECRET_KEY is unset or the old built-in default.
+*/}}
+{{- define "compair.secretKeyEnv" -}}
+- name: SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+    {{- if .Values.existingSecretKeyRef }}
+      name: {{ .Values.existingSecretKeyRef }}
+      key: {{ .Values.existingSecretKeyKey }}
+    {{- else }}
+      name: {{ include "compair.fullname" . }}
+      key: secret_key
+    {{- end }}
+{{- end -}}
