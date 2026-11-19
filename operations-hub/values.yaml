@@ -94,6 +94,10 @@ db:
   name: operations_hub
   host: somehost
   secret:
+    # The store the login is read from, e.g. a SecretStore for the postgres-operator's
+    # credentials Secret (then path is that Secret's name, keys username and password).
+    storeName: vault-backend
+    storeKind: ClusterSecretStore
     path: operations-hub/db
     usernameKey: username
     passwordKey: password
