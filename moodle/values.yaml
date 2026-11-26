@@ -546,7 +546,7 @@ mailpit:
   enabled: false
   image:
     repository: axllent/mailpit
-    tag: v1.21.5
+    tag: v1.34.0
   imagePullPolicy: IfNotPresent
   replicas: 1
   resources:
